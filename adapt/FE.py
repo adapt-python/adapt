@@ -58,7 +58,7 @@ class FE(object):
         return self
     
     
-    def predict(self, X):
+    def predict(self, X, domain):
         """
         Predict method: return the prediction of estimator
         on the augmented features
