@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='adapt',
+    name='adaptation',
     version='0.0.0',
     description='Awesome Domain Adaptation Package Toolbox',
     url='https://github.com/antoinedemathelin/adapt.git',
