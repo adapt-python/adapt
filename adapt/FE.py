@@ -21,7 +21,7 @@ class FE(object):
         self.kwargs = kwargs
 
     
-    def fit(self, X, y, index, **fit_params):
+    def fit(self, X, y, src_index, tgt_index, **fit_params):
         """
         Fit FE
         
@@ -30,11 +30,8 @@ class FE(object):
         X, y: numpy arrays
             Input data
             
-        index: iterable
-            Index should contains 2 lists or 1D-arrays
-            corresponding to:
-            index[0]: indexes of source labeled data in X, y
-            index[1]: indexes of target labeled data in X, y
+        src_index: iterable
+            indexes of source labeled data in X, y
             
         fit_params: key, value arguments
             Arguments to pass to the fit method (epochs, batch_size...)
@@ -44,10 +41,10 @@ class FE(object):
         self 
         """
         
-        Xs = X[index[0]]
-        ys = y[index[0]]
-        Xt = X[index[1]]
-        yt = y[index[1]]
+        Xs = X[src_index]
+        ys = y[src_index]
+        Xt = X[tgt_index]
+        yt = y[tgt_index]
             
         self.estimator_ = self.get_estimator(**self.kwargs)
         
