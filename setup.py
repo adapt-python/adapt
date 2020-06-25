@@ -7,7 +7,7 @@ setup(
     url='https://github.com/antoinedemathelin/adapt.git',
     author='Antoine de Mathelin',
     author_email='antoine.de_mathelin@cmla.ens-cachan.fr',
-    license='unlicense',
+    license='BSD-2',
     packages=['adapt'],
     zip_safe=False
 )
