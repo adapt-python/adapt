@@ -33,6 +33,9 @@ class FE(object):
         src_index: iterable
             indexes of source labeled data in X, y
             
+        tgt_index: iterable
+            indexes of target labeled data in X, y
+            
         fit_params: key, value arguments
             Arguments to pass to the fit method (epochs, batch_size...)
             
@@ -58,7 +61,7 @@ class FE(object):
         return self
     
     
-    def predict(self, X, domain):
+    def predict(self, X, domain="target"):
         """
         Predict method: return the prediction of estimator
         on the augmented features
