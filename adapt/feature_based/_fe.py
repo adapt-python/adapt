@@ -89,7 +89,7 @@ class FE(object):
         self : returns an instance of self
         """
 
-        check = check_indexes(src_index, tgt_index)
+        check_indexes(src_index, tgt_index)
 
         Xs = X[src_index]
         ys = y[src_index]
