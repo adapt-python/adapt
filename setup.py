@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='adaptation',
@@ -8,6 +8,6 @@ setup(
     author='Antoine de Mathelin',
     author_email='antoine.de_mathelin@cmla.ens-cachan.fr',
     license='BSD-2',
-    packages=['adapt'],
+    packages=find_packages(),
     zip_safe=False
 )
