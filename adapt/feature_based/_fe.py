@@ -25,7 +25,7 @@ class FE(object):
     - Specific target features (third part of the augmented vector) which give the specific
       behaviour on target domain.
 
-    This feature-based method uses a few labeled target data and belongs to "supervised" 
+    This feature-based method uses a few labeled target data and belongs to "supervised"
     domain adaptation methods.
 
     As FE consists only in a preprocessing step, any kind of estimator can be used to
@@ -48,11 +48,12 @@ class FE(object):
     Attributes
     ----------
     estimator_ : object
-        Fitted estimator.    
+        Fitted estimator.
 
     References
     ----------
-    .. [1] `[1] <https://arxiv.org/pdf/0907.1815.pdf>`_ Daume III, H. "Frustratingly easy domain adaptation". In ACL, 2007.
+    .. [1] `[1] <https://arxiv.org/pdf/0907.1815.pdf>`_ Daume III,
+    H. "Frustratingly easy domain adaptation". In ACL, 2007.
     """
     def __init__(self, get_estimator, **kwargs):
         self.get_estimator = get_estimator
