@@ -21,7 +21,7 @@ coverage:
         target: auto  # target "X%" coverage to hit on project
         threshold: 1% # allow this much decrease from base
         if_ci_failed: error
-    patch:
+    patch: off
       default:
         base: auto      # target to compare against
         target: 50%     # target "X%" coverage to hit on patch
