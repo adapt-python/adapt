@@ -1,3 +1,3 @@
-from .FE import FE
+from ._fe import FE
 
 __all__ = ["FE"]
