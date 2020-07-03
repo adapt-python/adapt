@@ -25,12 +25,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint pytest pytest-cov codecov
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with pylint
-      run: |
-        pylint
     - name: Install adapt
       run: |
         pip install -e .
+    - name: Lint with pylint
+      run: |
+        pylint adapt
     - name: Test with pytest
       run: |
         pytest --cov=adapt
