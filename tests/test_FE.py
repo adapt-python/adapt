@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from adapt import FE
+from adapt.feature_based import FE
 
 class DummyEstimator(object):
     
