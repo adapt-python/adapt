@@ -1,3 +1,7 @@
+"""
+ADAPT: Awesome Domain Adaptation Package Toolbox
+"""
+
 from adapt import feature_based
 from adapt import instance_based
 from adapt import parameter_based

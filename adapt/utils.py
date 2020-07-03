@@ -1,3 +1,7 @@
+"""
+Utility functions for adapt package.
+"""
+
 import warnings
 
 def check_indexes(src_index, tgt_index, tgt_index_labeled=None):
