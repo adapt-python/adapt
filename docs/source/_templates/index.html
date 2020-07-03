@@ -1,0 +1,130 @@
+{% extends "!layout.html" %}
+
+{%- block extrahead %}
+<link rel="stylesheet" href="_static/css/custom_index.css" type="text/css" />
+{% endblock %}
+
+{% set title = _('Welcome!') %}
+
+{% block sidebartitle %}
+<div class="left-title">
+	<p class="main-title">ADAPT   <span class="italic">Awesome Domain Adaptation Package Toolbox</span></p>
+	<div class="some-buttons">
+	<a class="btn btn-top" role="button">Install</a>
+	<a class="btn btn-top" role="button" href="{{ pathto("contents") }}">Content</a>
+	<a class="btn btn-top" role="button">GitHub</a>
+	</div>
+</div>
+{{ super() }}
+{% endblock %}
+
+{% block body %}
+  <h1>{{ _('Welcome') }}</h1>
+  
+  <h2> Modules </h2>
+  
+  <div class="row">
+	  <div class="three-cards">
+		  <div class="card h-100">
+			<div class="card-body">
+			  <a><h4 class="card-title">Feature-Based</h4></a>
+			  <p class="card-text">Identifying which category an object belongs to.</p>
+			  <p class="card-text"><strong>Algorithms:</strong>
+			  <a href="{{ pathto("generated/adapt.feature_based.FE") }}">FE</a>, ...
+			</p>
+			</div>
+			
+			<div class="image">
+			  <a href="{{ pathto("contents") }}#adapt-feature-based">
+			  <img src="_static/images/feature_based.PNG" class="sk-index-img" style="width:400px;height:200px;" alt="Feature-Based">
+			  </a>
+			</div>
+			  <a class="btn btn-below" role="button" href="{{ pathto("contents") }}#adapt-feature-based">See all methods</a>
+		  </div>
+		</div>
+		  
+		<div class="three-cards">
+		  <div class="card h-100">
+			<div class="card-body">
+			  <a><h4 class="card-title">Instance-Based</h4></a>
+			  <p class="card-text">Identifying which category an object belongs to. bababa</p>
+			  <p class="card-text"><strong>Algorithms:</strong>
+			</p>
+			</div>
+			
+			<div class="image">
+			  <a href="{{ pathto("contents") }}#adapt-instance-based">
+			  <img src="_static/images/instance_based.PNG" class="sk-index-img" style="width:400px;height:200px;" alt="Instance-Based">
+			  </a>
+			</div>
+			  <a class="btn btn-below" role="button" href="{{ pathto("contents") }}#adapt-instance-based">See all methods</a>
+		  </div>
+		</div>
+		 
+		<div class="three-cards">
+		  <div class="card h-100">
+			<div class="card-body">
+			  <a><h4 class="card-title">Parameter-Based</h4></a>
+			  <p class="card-text">Identifying which category an object belongs to.</p>
+			  <p class="card-text"><strong>Algorithms:</strong>
+			</p>
+			</div>
+			
+			<div class="image">
+			  <a href="{{ pathto("contents") }}#adapt-parameter-based">
+			  <img src="_static/images/parameter_based.PNG" class="sk-index-img" style="width:400px;height:200px;"  alt="Parameter-Based">
+			  </a>
+			</div>
+			  <a class="btn btn-below" role="button" href="{{ pathto("contents") }}#adapt-parameter-based">See all methods</a>
+		  </div>
+	  </div>
+  </div>
+  
+  <h2> Exemples </h2>
+
+  <div class="row">
+	  <div class="two-cards first">
+		  <div class="card h-100">
+			<div class="card-body">
+			  <a><h4 class="card-title">Feature-Based</h4></a>
+			  <p class="card-text">Identifying which category an object belongs to.</p>
+			  <p class="card-text"><strong>Algorithms:</strong>
+			  <a>FE</a>, ...
+			</p>
+			</div>
+			
+			<div class="image">
+			  <a>
+			  <img src="_static/images/feature_based.PNG" class="sk-index-img" style="width:400px;height:200px;" alt="Feature-Based">
+			  </a>
+			</div>
+			  <a class="btn btn-below" role="button">See all methods</a>
+		  </div>
+		</div>
+		
+		  
+		<div class="two-cards second">
+		  <div class="card h-100">
+			<div class="card-body">
+			  <a><h4 class="card-title">Instance-Based</h4></a>
+			  <p class="card-text">Identifying which category an object belongs to.</p>
+			  <p class="card-text"><strong>Algorithms:</strong>
+			</p>
+			</div>
+			
+			<div class="image">
+			  <a>
+			  <img src="_static/images/instance_based.PNG" class="sk-index-img" style="width:400px;height:200px;" alt="Instance-Based">
+			  </a>
+			</div>
+			  <a class="btn btn-below" role="button">See all methods</a>
+		  </div>
+		</div>
+  </div>
+  
+  <br>
+
+ 
+{% endblock %}
+
+	
