@@ -67,7 +67,7 @@ def check_estimator(get_estimator, **kwargs):
     else:
         raise ValueError("get_estimator has no attribute __call__ nor __init__")
 
-    if hasattr(estimator, "fit") and hasattr(estimator, "predict"):
-        return estimator
-    else:
+    if not hasattr(estimator, "fit") or not hasattr(estimator, "predict"):
         raise ValueError("Built estimator does not implement fit and predict methods")
+
+    return estimator
