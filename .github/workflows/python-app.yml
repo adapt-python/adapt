@@ -30,7 +30,9 @@ jobs:
         pip install -e .
     - name: Lint with pylint
       run: |
-        pylint adapt || exit 0
+        mkdir -p public
+        chmod +x pylint_badge.sh
+        ./pylint_badge.sh adapt
     - name: Test with pytest
       run: |
         pytest --cov=adapt
