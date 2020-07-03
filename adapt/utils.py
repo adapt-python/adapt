@@ -27,7 +27,7 @@ def check_indexes(src_index, tgt_index, tgt_index_labeled=None):
         names.append("tgt_index_labeled")
         
     for index, name in zip(list_index, names):
-        if not hasattr(indexes, "__iter__"):
+        if not hasattr(index, "__iter__"):
             raise ValueError("%s is not an iterable."%name)
             
     if len(set(src_index) & set(tgt_index)) > 0:
