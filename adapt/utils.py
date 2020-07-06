@@ -3,6 +3,7 @@ Utility functions for adapt package.
 """
 
 import warnings
+import inspect
 
 def check_indexes(src_index, tgt_index, tgt_index_labeled=None):
     """
@@ -48,8 +49,8 @@ def check_estimator(get_estimator, **kwargs):
     """
     Build and check estimator.
 
-    Check that ``get_estimator`` have a ``__call__`` or ``__init__``
-    attribute. Then, build an estimator and check that it
+    Check that ``get_estimator`` is a callable or is a class.
+    Then, build an estimator and check that it
     implements ``fit`` and ``predict`` methods.
 
     Parameters
@@ -60,12 +61,11 @@ def check_estimator(get_estimator, **kwargs):
     kwargs : key, value arguments, optional
         Additional arguments for the constructor.
     """
-    if hasattr(get_estimator, "__call__"):
+    if (hasattr(get_estimator, "__call__")
+        or inspect.isclass(get_estimator)):
         estimator = get_estimator(**kwargs)
-    elif hasattr(get_estimator, "__init__"):
-        estimator = get_estimator.__init__(**kwargs)
     else:
-        raise ValueError("get_estimator has no attribute __call__ nor __init__")
+        raise ValueError("get_estimator is neither a callable nor a class")
 
     if not hasattr(estimator, "fit") or not hasattr(estimator, "predict"):
         raise ValueError("Built estimator does not implement fit and predict methods")

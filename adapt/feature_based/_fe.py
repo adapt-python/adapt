@@ -43,8 +43,8 @@ class FE:
         Constructor for the estimator.
         If a callable function is given it should return an estimator
         object (with ``fit`` and ``predict`` methods).
-        If an estimator object is given, its ``__init__`` method will
-        be called to build the estimator.
+        If a class is given, a new instance of this class will
+        be built and used as estimator.
         If get_estimator is ``None``, a ``LinearRegression`` object will be
         used by default as estimator.
 
