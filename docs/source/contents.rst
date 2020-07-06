@@ -56,6 +56,7 @@ and **target** distributions. The **task** is then learned in this **encoded fea
    :template: class.rst
 
    feature_based.FE
+   feature_based.CORAL
    
    
 .. _adapt.instance_based:

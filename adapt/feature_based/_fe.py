@@ -98,7 +98,6 @@ class FE:
         -------
         self : returns an instance of self
         """
-
         check_indexes(src_index, tgt_index)
 
         Xs = X[src_index]
@@ -145,7 +144,7 @@ class FE:
         Returns
         -------
         y_pred : array
-            Prediction of task network.
+            Prediction of ``estimator_``.
 
         Notes
         -----
