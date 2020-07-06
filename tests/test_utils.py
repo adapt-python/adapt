@@ -14,18 +14,18 @@ def _get_estimator(**kwargs):
     return Ridge(**kwargs)
 
 
-def _get_no_estimator(**kwargs):
+def _get_no_estimator():
     return None
 
 
 class _DummyClassWhithoutFit:
     def __init__(self):
         pass
-    
+
     def predict(self):
         pass
-    
-    
+
+
 class _DummyClassWhithoutPredict:
     def __init__(self):
         pass
@@ -84,10 +84,10 @@ def test_check_estimator_class():
 
 def test_check_estimator_error():
     with pytest.raises(ValueError) as excinfo:
-        est = check_estimator(Ridge())
+        check_estimator(Ridge())
     assert "callable" in str(excinfo.value)
     with pytest.raises(ValueError) as excinfo:
-        est = check_estimator([1, 2, 3])
+        check_estimator([1, 2, 3])
     assert "callable" in str(excinfo.value)
 
 

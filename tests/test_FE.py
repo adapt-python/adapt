@@ -12,26 +12,26 @@ from adapt.feature_based import FE
 
 X = np.ones((100, 10))
 y = np.concatenate((np.ones(75), np.zeros(25)))
-  
 
-def test_fit():   
+
+def test_fit():
     model = FE(Ridge, fit_intercept=False)
     model.fit(X, y, range(75), range(75, 100))
     assert isinstance(model.estimator_, Ridge)
     assert len(model.estimator_.coef_) == 3 * X.shape[1]
-    assert np.abs(np.sum(model.estimator_.coef_[:X.shape[1]]) + 
+    assert np.abs(np.sum(model.estimator_.coef_[:X.shape[1]]) +
                   np.sum(model.estimator_.coef_[-X.shape[1]:]) - 1) < 0.01
-    assert np.abs(np.sum( model.estimator_.coef_[X.shape[1]:])) < 0.01
-    
-    
-def test_fit_index():   
+    assert np.abs(np.sum(model.estimator_.coef_[X.shape[1]:])) < 0.01
+
+
+def test_fit_index():
     model = FE(Ridge, fit_intercept=False)
     model.fit(X, y, range(75, 100), range(75))
     assert isinstance(model.estimator_, Ridge)
     assert len(model.estimator_.coef_) == 3 * X.shape[1]
     assert np.abs(np.sum(model.estimator_.coef_[:X.shape[1]]) +
                   np.sum(model.estimator_.coef_[-X.shape[1]:])) < 0.01
-    assert np.abs(np.sum( model.estimator_.coef_[X.shape[1]:]) - 1) < 0.01
+    assert np.abs(np.sum(model.estimator_.coef_[X.shape[1]:]) - 1) < 0.01
 
 
 def test_fit_default():
