@@ -61,12 +61,12 @@ class FE:
     .. [1] `[1] <https://arxiv.org/pdf/0907.1815\
 .pdf>`_ Daume III, H. "Frustratingly easy domain adaptation". In ACL, 2007.
     """
-    def __init__(self, get_estimator, **kwargs):
+    def __init__(self, get_estimator=None, **kwargs):
         self.get_estimator = get_estimator
         self.kwargs = kwargs
 
         if self.get_estimator is None:
-            self.get_estimator = LinearRegression()
+            self.get_estimator = LinearRegression
 
 
     def fit(self, X, y, src_index, tgt_index, sample_weight=None, **fit_params):
