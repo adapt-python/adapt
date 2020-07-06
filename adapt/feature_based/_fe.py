@@ -57,7 +57,8 @@ class FE:
 
     References
     ----------
-    .. [1] `[1] <https://arxiv.org/pdf/0907.1815.pdf>`_ Daume III, H. "Frustratingly easy domain adaptation". In ACL, 2007.
+    .. [1] `[1] <https://arxiv.org/pdf/0907.1815\
+.pdf>`_ Daume III, H. "Frustratingly easy domain adaptation". In ACL, 2007.
     """
     def __init__(self, get_estimator, **kwargs):
         self.get_estimator = get_estimator
@@ -67,7 +68,7 @@ class FE:
             self.get_estimator = LinearRegression()
 
 
-    def fit(self, X, y, src_index, tgt_index, **fit_params):
+    def fit(self, X, y, src_index, tgt_index, sample_weight=None, **fit_params):
         """
         Fit estimator on the augmented feature space.
 
@@ -84,7 +85,7 @@ class FE:
 
         tgt_index : iterable
             indexes of target labeled data in X, y.
-            
+
         sample_weight : numpy array, optional (default=None)
             Individual weights for each sample.
 
