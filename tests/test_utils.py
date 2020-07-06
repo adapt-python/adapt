@@ -93,13 +93,13 @@ def test_check_estimator_error():
 
 def test_check_estimator_no_fit_predict():
     with pytest.raises(ValueError) as excinfo:
-        est = check_estimator(_get_no_estimator)
+        check_estimator(_get_no_estimator)
     assert "methods" in str(excinfo.value)
     with pytest.raises(ValueError) as excinfo:
-        est = check_estimator(_DummyClassWhithoutFit)
+        check_estimator(_DummyClassWhithoutFit)
     assert "methods" in str(excinfo.value)
     with pytest.raises(ValueError) as excinfo:
-        est = check_estimator(_DummyClassWhithoutPredict)
+        check_estimator(_DummyClassWhithoutPredict)
     assert "methods" in str(excinfo.value)
 
 

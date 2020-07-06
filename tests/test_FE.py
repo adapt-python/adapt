@@ -63,4 +63,4 @@ def test_predict():
     y_pred = model.predict(X, domain="source")
     assert np.all(y_pred - 1 < 0.01)
     with pytest.raises(ValueError):
-        y_pred = model.predict(X, domain="tirelipimpon")
+        model.predict(X, domain="tirelipimpon")
