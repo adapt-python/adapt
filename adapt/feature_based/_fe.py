@@ -84,6 +84,9 @@ class FE:
 
         tgt_index : iterable
             indexes of target labeled data in X, y.
+            
+        sample_weight : numpy array, optional (default=None)
+            Individual weights for each sample.
 
         fit_params : key, value arguments
             Arguments given to the fit method of the estimator
@@ -103,13 +106,22 @@ class FE:
 
         self.estimator_ = check_estimator(self.get_estimator, **self.kwargs)
 
-        X_augmented_src = np.concatenate((Xs, np.zeros(Xs.shape), Xs), axis=-1)
-        X_augmented_tgt = np.concatenate((np.zeros(Xt.shape), Xt, Xt), axis=-1)
+        Xs = np.concatenate((Xs, np.zeros(Xs.shape), Xs), axis=-1)
+        Xt = np.concatenate((np.zeros(Xt.shape), Xt, Xt), axis=-1)
 
-        X = np.concatenate((X_augmented_src, X_augmented_tgt))
+        X = np.concatenate((Xs, Xt))
         y = np.concatenate((ys, yt))
 
-        self.estimator_.fit(X, y, **fit_params)
+        if sample_weight is None:
+            self.estimator_.fit(X, y, **fit_params)
+        else:
+            sample_weight = np.concatenate((
+                sample_weight[src_index],
+                sample_weight[tgt_index]
+            ))
+            self.estimator_.fit(X, y, sample_weight=sample_weight,
+                                **fit_params)
+
         return self
 
 
@@ -131,7 +143,7 @@ class FE:
         Returns
         -------
         y_pred : array
-            prediction of task network
+            Prediction of task network.
 
         Notes
         -----
@@ -139,9 +151,9 @@ class FE:
         domain of ``X`` in order to apply the appropriate feature transformation.
         """
         if domain == "target":
-            X_augmented = np.concatenate((np.zeros(X.shape), X, X), axis=1)
+            X = np.concatenate((np.zeros(X.shape), X, X), axis=1)
         elif domain == "source":
-            X_augmented = np.concatenate((X, np.zeros(X.shape), X), axis=1)
+            X = np.concatenate((X, np.zeros(X.shape), X), axis=1)
         else:
             raise ValueError("Choose between source or target for domain name")
-        return self.estimator_.predict(X_augmented)
+        return self.estimator_.predict(X)
