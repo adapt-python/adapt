@@ -14,5 +14,5 @@ disable=
     too-many-instance-attributes,
     too-many-locals,
     too-many-public-methods,
-	W0201,
-	C0114
+    W0201,
+    C0114
