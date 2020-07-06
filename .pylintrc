@@ -15,4 +15,4 @@ disable=
     too-many-locals,
     too-many-public-methods,
     W0201,
-    C0114
+    C0116
