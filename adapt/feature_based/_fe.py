@@ -8,6 +8,7 @@ from sklearn.linear_model import LinearRegression
 
 from ..utils import check_indexes, check_estimator
 
+
 class FE:
     """
     FE: Frustratingly Easy Domain Adaptation.
