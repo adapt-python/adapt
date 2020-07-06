@@ -1,3 +1,8 @@
+"""
+Frustratingly Easy Domain Adaptation module.
+"""
+
+
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
@@ -52,13 +57,12 @@ class FE:
 
     References
     ----------
-    .. [1] `[1] <https://arxiv.org/pdf/0907.1815.pdf>`_ Daume III,
-    H. "Frustratingly easy domain adaptation". In ACL, 2007.
+    .. [1] `[1] <https://arxiv.org/pdf/0907.1815.pdf>`_ Daume III, H. "Frustratingly easy domain adaptation". In ACL, 2007.
     """
     def __init__(self, get_estimator, **kwargs):
         self.get_estimator = get_estimator
         self.kwargs = kwargs
-        
+
         if self.get_estimator is None:
             self.get_estimator = LinearRegression()
 
@@ -114,13 +118,13 @@ class FE:
         Return the predictions of ``estimator_`` on the augmented feature space.
 
         ``domain`` arguments specify how features from ``X`` will be considered:
-        as ``"source"`` or ``"target"`` features. 
+        as ``"source"`` or ``"target"`` features.
 
         Parameters
         ----------
         X : array
             Input data.
-    
+
         domain : str, optional (default="target")
             Choose between ``"source"`` and ``"target"`` pre-processing.
 

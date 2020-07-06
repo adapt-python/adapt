@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block body %}
-  <h1>{{ _('Welcome') }}</h1>
+  <h1 class="index-title">Welcome to the ADAPT package!</h1>
   
   <h2> Modules </h2>
   
@@ -28,7 +28,8 @@
 		  <div class="card h-100">
 			<div class="card-body">
 			  <a><h4 class="card-title">Feature-Based</h4></a>
-			  <p class="card-text">Identifying which category an object belongs to.</p>
+			  <p class="card-text">Feature-based methods are based on the research of common features which have similar 
+			  behaviour with respect to the task on source and target domain. </p>
 			  <p class="card-text"><strong>Algorithms:</strong>
 			  <a href="{{ pathto("generated/adapt.feature_based.FE") }}">FE</a>, ...
 			</p>
@@ -36,7 +37,7 @@
 			
 			<div class="image">
 			  <a href="{{ pathto("contents") }}#adapt-feature-based">
-			  <img src="_static/images/feature_based.PNG" class="sk-index-img" style="width:400px;height:200px;" alt="Feature-Based">
+			  <img src="_static/images/feature_based.PNG" class="sk-index-img" alt="Feature-Based">
 			  </a>
 			</div>
 			  <a class="btn btn-below" role="button" href="{{ pathto("contents") }}#adapt-feature-based">See all methods</a>
@@ -47,14 +48,15 @@
 		  <div class="card h-100">
 			<div class="card-body">
 			  <a><h4 class="card-title">Instance-Based</h4></a>
-			  <p class="card-text">Identifying which category an object belongs to. bababa</p>
+			  <p class="card-text">Feature-based methods are based on the research of common features
+			  which have similar behaviour with respect to the task on source and target domain. </p>
 			  <p class="card-text"><strong>Algorithms:</strong>
 			</p>
 			</div>
 			
 			<div class="image">
 			  <a href="{{ pathto("contents") }}#adapt-instance-based">
-			  <img src="_static/images/instance_based.PNG" class="sk-index-img" style="width:400px;height:200px;" alt="Instance-Based">
+			  <img src="_static/images/instance_based.PNG" class="sk-index-img" alt="Instance-Based">
 			  </a>
 			</div>
 			  <a class="btn btn-below" role="button" href="{{ pathto("contents") }}#adapt-instance-based">See all methods</a>
@@ -65,14 +67,15 @@
 		  <div class="card h-100">
 			<div class="card-body">
 			  <a><h4 class="card-title">Parameter-Based</h4></a>
-			  <p class="card-text">Identifying which category an object belongs to.</p>
+			  <p class="card-text">In parameter-based methods, the parameters of one or few pre-trained models built with
+			  the source data are adapted to build a suited model for the task on the target domain.</p>
 			  <p class="card-text"><strong>Algorithms:</strong>
 			</p>
 			</div>
 			
 			<div class="image">
 			  <a href="{{ pathto("contents") }}#adapt-parameter-based">
-			  <img src="_static/images/parameter_based.PNG" class="sk-index-img" style="width:400px;height:200px;"  alt="Parameter-Based">
+			  <img src="_static/images/parameter_based.PNG" class="sk-index-img" alt="Parameter-Based">
 			  </a>
 			</div>
 			  <a class="btn btn-below" role="button" href="{{ pathto("contents") }}#adapt-parameter-based">See all methods</a>
@@ -86,19 +89,17 @@
 	  <div class="two-cards first">
 		  <div class="card h-100">
 			<div class="card-body">
-			  <a><h4 class="card-title">Feature-Based</h4></a>
+			  <a><h4 class="card-title">Classification</h4></a>
 			  <p class="card-text">Identifying which category an object belongs to.</p>
-			  <p class="card-text"><strong>Algorithms:</strong>
-			  <a>FE</a>, ...
 			</p>
 			</div>
 			
 			<div class="image">
 			  <a>
-			  <img src="_static/images/feature_based.PNG" class="sk-index-img" style="width:400px;height:200px;" alt="Feature-Based">
+			  <img src="_static/images/classification.png" class="sk-index-img" style="width:400px;height:200px;" alt="Feature-Based">
 			  </a>
 			</div>
-			  <a class="btn btn-below" role="button">See all methods</a>
+			  <a class="btn btn-below" role="button">See examples</a>
 		  </div>
 		</div>
 		
@@ -106,18 +107,17 @@
 		<div class="two-cards second">
 		  <div class="card h-100">
 			<div class="card-body">
-			  <a><h4 class="card-title">Instance-Based</h4></a>
-			  <p class="card-text">Identifying which category an object belongs to.</p>
-			  <p class="card-text"><strong>Algorithms:</strong>
+			  <a><h4 class="card-title">Regression</h4></a>
+			  <p class="card-text">Predicting a real value.</p>
 			</p>
 			</div>
 			
 			<div class="image">
 			  <a>
-			  <img src="_static/images/instance_based.PNG" class="sk-index-img" style="width:400px;height:200px;" alt="Instance-Based">
+			  <img src="_static/images/regression.png" class="sk-index-img" style="width:400px;height:200px;" alt="Instance-Based">
 			  </a>
 			</div>
-			  <a class="btn btn-below" role="button">See all methods</a>
+			  <a class="btn btn-below" role="button">See examples</a>
 		  </div>
 		</div>
   </div>
