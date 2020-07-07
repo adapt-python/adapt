@@ -71,3 +71,42 @@ def check_estimator(get_estimator, **kwargs):
         raise ValueError("Built estimator does not implement fit and predict methods")
 
     return estimator
+
+
+def check_network(get_model, constructor_name="get_model",
+                  shape_arg=False, **kwargs):
+    """
+    Build and check network.
+
+    Check that ``get_model`` is a callable.
+    Then, build an estimator and check that it is an 
+    instance of tensorflow Model.
+    
+    If ``shape_arg`` is True, the function checks that
+    the built estimator takes a ``shape`` arguments.
+
+    Parameters
+    ----------
+    get_model : object
+        Constructor for the estimator.
+
+    constructor_name: str, optional (default="get_model")
+        Name of contructor variable.
+        
+    shape_args: boolean, optional (default=False)
+        If True, check that the estimator takes
+        a ``shape`` argument.
+    
+    kwargs : key, value arguments, optional
+        Additional arguments for the constructor.
+    """
+    if (hasattr(get_estimator, "__call__")
+        or inspect.isclass(get_estimator)):
+        estimator = get_estimator(**kwargs)
+    else:
+        raise ValueError("get_estimator is neither a callable nor a class")
+
+    if not hasattr(estimator, "fit") or not hasattr(estimator, "predict"):
+        raise ValueError("Built estimator does not implement fit and predict methods")
+
+    return estimator
