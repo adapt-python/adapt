@@ -105,7 +105,7 @@ def check_network(get_model, constructor_name="get_model",
     kwargs : key, value arguments, optional
         Additional arguments for the constructor.
     """
-    if (hasattr(get_model, "__call__"):
+    if hasattr(get_model, "__call__"):
         if (shape_arg and not
             "input_shape" in inspect.getfullargspec(get_model)[0]):
             raise ValueError("Constructor %s must take "
