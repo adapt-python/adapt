@@ -2,8 +2,12 @@
 Utility functions for adapt package.
 """
 
+
 import warnings
 import inspect
+
+from tensorflow.keras import Model
+
 
 def check_indexes(src_index, tgt_index, tgt_index_labeled=None):
     """
@@ -68,7 +72,8 @@ def check_estimator(get_estimator, **kwargs):
         raise ValueError("get_estimator is neither a callable nor a class")
 
     if not hasattr(estimator, "fit") or not hasattr(estimator, "predict"):
-        raise ValueError("Built estimator does not implement fit and predict methods")
+        raise ValueError("Built estimator does "
+                         "not implement fit and predict methods")
 
     return estimator
 
@@ -100,13 +105,16 @@ def check_network(get_model, constructor_name="get_model",
     kwargs : key, value arguments, optional
         Additional arguments for the constructor.
     """
-    if (hasattr(get_estimator, "__call__")
-        or inspect.isclass(get_estimator)):
-        estimator = get_estimator(**kwargs)
+    if (hasattr(get_model, "__call__"):
+        if (shape_arg and not
+            "input_shape" in inspect.getfullargspec(get_model)[0]):
+            raise ValueError("Constructor %s must take "
+                             "an 'input_shape' argument"%constructor_name)
+        model = get_model(**kwargs)
     else:
-        raise ValueError("get_estimator is neither a callable nor a class")
+        raise ValueError("%s is not a callable"%constructor_name)
 
-    if not hasattr(estimator, "fit") or not hasattr(estimator, "predict"):
-        raise ValueError("Built estimator does not implement fit and predict methods")
+    if not isinstance(model, Model):
+        raise ValueError("Built model is not a tensorflow Model instance")
 
-    return estimator
+    return model
