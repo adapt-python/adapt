@@ -58,6 +58,9 @@ and **target** distributions. The **task** is then learned in this **encoded fea
    feature_based.FE
    feature_based.CORAL
    feature_based.DeepCORAL
+   feature_based.DANN
+   feature_based.ADDA
+   feature_based.mSDA
    
    
 .. _adapt.instance_based:
@@ -123,3 +126,4 @@ This module contains utility functions used in the previous modules.
 
    utils.check_indexes
    utils.check_estimator
+   utils.check_network
