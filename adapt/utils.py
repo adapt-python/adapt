@@ -83,7 +83,7 @@ def check_network(get_model, constructor_name="get_model",
     instance of tensorflow Model.
     
     If ``shape_arg`` is True, the function checks that
-    the built estimator takes a ``shape`` arguments.
+    the built estimator takes an ``input_shape`` arguments.
 
     Parameters
     ----------
@@ -95,7 +95,7 @@ def check_network(get_model, constructor_name="get_model",
         
     shape_args: boolean, optional (default=False)
         If True, check that the estimator takes
-        a ``shape`` argument.
+        an ``input_shape`` argument.
     
     kwargs : key, value arguments, optional
         Additional arguments for the constructor.

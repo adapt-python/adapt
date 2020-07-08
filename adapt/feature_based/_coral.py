@@ -15,15 +15,16 @@ class CORAL:
     """
     CORAL: CORrelation ALignment
     
-    CORAL is a feature based domain adaptation method which minimizes domain shift
-    by aligning the second-order statistics of source and target distributions.
+    CORAL is a feature based domain adaptation method which minimizes
+    domain shift by aligning the second-order statistics of source and
+    target distributions.
     
-    The method transforms source features in order to minimize the Frobenius norm
-    between the correlation matrix of the input target data and the one of the 
-    transformed input source data.
+    The method transforms source features in order to minimize the
+    Frobenius norm between the correlation matrix of the input target
+    data and the one of the transformed input source data.
     
-    The source features transformation is described by the following optimization
-    problem:
+    The source features transformation is described by the following
+    optimization problem:
     
     .. math::
         
@@ -34,17 +35,19 @@ class CORAL:
     - :math:`C_S` is the correlation matrix of input source data
     - :math:`C_T` is the correlation matrix of input target data
     
-    The solution of this OP can be written with an explicit formula and the features
-    transformation can be computed through this four steps algorithm:
+    The solution of this OP can be written with an explicit formula
+    and the features transformation can be computed through this
+    four steps algorithm:
     
     - :math:`C_S = Cov(X_S) + I_p`
     - :math:`C_S = Cov(X_T) + I_p`
     - :math:`X_S = X_S C_S^{-\\frac{1}{2}}`
     - :math:`X_S = X_S C_T^{\\frac{1}{2}}`
     
-    Notice that CORAL only uses labeled source and unlabeled target data. It belongs
-    then to "unsupervised" domain adaptation methods. However, labeled target data
-    can be added to the training process straightforwardly.
+    Notice that CORAL only uses labeled source and unlabeled target data.
+    It belongs then to "unsupervised" domain adaptation methods.
+    However, labeled target data can be added to the training process
+    straightforwardly.
     
     Parameters
     ----------
@@ -184,15 +187,16 @@ class DeepCORAL:
     """
     DeepCORAL: Deep CORrelation ALignment
     
-    DeepCORAL is an extension of CORAL method. It learns a nonlinear transformation
-    which aligns correlations of layer activations in deep neural networks.
+    DeepCORAL is an extension of CORAL method. It learns a nonlinear
+    transformation which aligns correlations of layer activations in
+    deep neural networks.
     
-    The method consist in training both an **encoder** and a **task** network.
-    The **encoder** network maps input features into new encoded ones on which 
-    the **task** network is trained.
+    The method consist in training both an **encoder** and a **task**
+    network. The **encoder** network maps input features into new
+    encoded ones on which the **task** network is trained.
     
-    The parameters of the two networks are optimized in order to minimize the 
-    following loss function:
+    The parameters of the two networks are optimized in order to
+    minimize the following loss function:
     
     .. math::
     
@@ -200,33 +204,40 @@ class DeepCORAL:
         
     Where:
     
-    - :math:`\mathcal{L}_{task}` is the task loss computed with source
-      and labeled target data.
-    - :math:`C_S` is the correlation matrix of source data in the encoded feature space.
-    - :math:`C_T` is the correlation matrix of target data in the encoded feature space.
+    - :math:`\mathcal{L}_{task}` is the task loss computed with
+      source and labeled target data.
+    - :math:`C_S` is the correlation matrix of source data in the
+      encoded feature space.
+    - :math:`C_T` is the correlation matrix of target data in the
+      encoded feature space.
     - :math:`||.||_F` is the Frobenius norm.
     
-    Thus the **encoder** network learn a new feature representation on wich the 
-    correlation matrixes of source and target data are "close" and where a **task**
-    network is able to learn the task with source labeled data.
+    Thus the **encoder** network learn a new feature representation
+    on wich the correlation matrixes of source and target data are
+    "close" and where a **task** network is able to learn the task
+    with source labeled data.
     
-    Notice that DeepCORAL only uses labeled source and unlabeled target data. It belongs
-    then to "unsupervised" domain adaptation methods. However, labeled target data
-    can be added to the training process straightforwardly.
+    Notice that DeepCORAL only uses labeled source and unlabeled target
+    data. It belongs then to "unsupervised" domain adaptation methods.
+    However, labeled target data can be added to the training process
+    straightforwardly.
     
     Parameters
     ----------
-    get_encoder: callable, optional
+    get_encoder: callable, optional (default=None)
         Constructor for encoder network.
         The constructor should return a tensorflow compiled Model. 
-        It should also take at least a ``shape`` argument giving
-        the input shape of the network.
+        It should also take at least an ``input_shape`` argument
+        giving the input shape of the network.
+        If ``None``, a shallow network with 10 neurons is used
+        as encoder network.
         
-    get_task: callable, optional
+    get_task: callable, optional (default=None)
         Constructor for task network.
         The constructor should return a tensorflow compiled Model. 
-        It should also take at least a ``shape`` argument giving
-        the input shape of the network.
+        It should also take at least an ``input_shape`` argument
+        giving the input shape of the network.
+        If ``None``, a linear network is used as task network.
                
     enc_params: dict, optional (default={})
         Additional arguments for ``get_encoder``
@@ -243,13 +254,13 @@ class DeepCORAL:
     Attributes
     ----------
     encoder_ : tensorflow Model
-        encoder network
+        Fitted encoder network.
         
     task_ : tensorflow Model
-        task network
+        Fitted task network.
     
     model_ : tensorflow Model
-        model network, i.e the union of
+        Fitted model: the union of
         encoder and task networks.
         
     See also

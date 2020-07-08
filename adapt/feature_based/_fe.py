@@ -21,21 +21,22 @@ class FE:
 
     Where **0** refers to the null vector of same size as Xs and Xt.
 
-    The goal of this feature augmentation is to help an estimator (given by ``get_estimator``)
-    to separate features into the three following classes:
+    The goal of this feature augmentation is to help an estimator (given by
+    ``get_estimator``) to separate features into the three following classes:
 
-    - General features (first part of the augmented vector) which have the same behaviour
-      with respect to the task on both source and target domains.
-    - Specific source features (second part of the augmented vector) which give the specific
-      behaviour on source domain.
-    - Specific target features (third part of the augmented vector) which give the specific
-      behaviour on target domain.
+    - General features (first part of the augmented vector) which have the
+      same behaviour with respect to the task on both source and target domains.
+    - Specific source features (second part of the augmented vector)  which gives
+      the specific behaviour on source domain.
+    - Specific target features (third part of the augmented vector) which gives
+      the specific behaviour on target domain.
 
-    This feature-based method uses a few labeled target data and belongs to "supervised"
-    domain adaptation methods.
+    This feature-based method uses a few labeled target data and belongs to
+    "supervised" domain adaptation methods.
 
-    As FE consists only in a preprocessing step, any kind of estimator can be used to
-    learn the task. This method handles both regression and classification tasks.
+    As FE consists only in a preprocessing step, any kind of estimator
+    can be used to learn the task. This method handles both regression
+    and classification tasks.
 
     Parameters
     ----------
