@@ -4,6 +4,14 @@ Discriminative Adversarial Neural Network
 
 
 
+
+from adapt.utils import (check_indexes,
+                         check_network,
+                         get_default_encoder,
+                         get_default_task,
+                         GradientReversal)
+
+
 class DANN:
     """
     DANN: Discriminative Adversarial Neural Network
@@ -61,8 +69,9 @@ class DANN:
         Constructor for task network.
         The constructor should return a tensorflow compiled Model. 
         It should also take at least an ``input_shape`` argument
-        giving the input shape of the network.
-        If ``None``, a linear network is used as task network.
+        giving the input shape of the network and an ``output_shape``
+        argument giving the shape of the last layer.
+        If ``None``, a shallow network is used as task network.
         
     get_discriminator : callable, optional (default=None)
         Constructor for discriminator network.
@@ -151,7 +160,7 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
 
         tgt_index : iterable
             indexes of target unlabeled data in X, y.
-            
+
         tgt_index_labeled : iterable, optional (default=None)
             indexes of target labeled data in X, y.
 
@@ -163,7 +172,49 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         -------
         self : returns an instance of self
         """
-        pass
+        check_indexes(src_index, tgt_index, tgt_index_labeled)
+            
+        self._create_model(shape=X.shape[1:])
+        
+        task_index = src_index
+        disc_index = np.concatenate((src_index, tgt_index))
+        labels = np.array([0] * len(src_index) + [1] * len(tgt_index))
+        max_size = len(disc_index)
+        resize_task_ind = np.array([task_index[i%len(task_index)]
+                                   for i in range(max_size)])
+        self.model.fit([X[resize_task_ind], X[disc_index]], [y[resize_task_ind], labels],
+                      **fit_params)
+        return self
+    
+    
+    def _create_model(self, shape):
+
+        self.encoder_ = self.get_encoder(shape=shape,
+                                         **self.kwargs)
+        self.task_ = self.get_task(shape=self.encoder.output_shape[1:],
+                                   **self.kwargs)
+        self.discriminator_ = self.get_task(shape=self.encoder.output_shape[1:],
+                                          **self.kwargs)
+
+        input_task = Input(shape)
+        input_disc = Input(shape)
+
+        encoded_task = self.encoder(input_task)
+        encoded_disc = self.encoder(input_disc)
+
+        tasked = self.task(encoded_task)
+        discrimined =  _GradReverse()(encoded_disc)
+        discrimined = self.discriminer(discrimined)
+
+        self.model = Model([input_task, input_disc],
+                           [tasked, discrimined], name="DANN")
+        self.model.compile(optimizer=self.optimizer,
+                           loss=[self.loss, "binary_crossentropy"])
+
+        self.task_to_save = Model(input_task, tasked)
+        self.task_to_save.compile(optimizer="adam", loss="mean_squared_error")
+
+        return self
 
 
     def predict(self, X):

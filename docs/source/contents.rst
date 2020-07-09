@@ -84,9 +84,21 @@ The **reweighted** training instances are then directly used to learn the task.
 .. automodule: adapt.instance_based
 	:no-members:
     :no-inherited-members:
-	
-	
-	
+
+.. currentmodule:: adapt
+
+.. rubric:: Methods
+
+.. autosummary::
+   :toctree: generated/
+   :template: class.rst
+
+   instance_based.KLIEP
+   instance_based.KMM
+   instance_based.TrAdaBoost
+   instance_based.TrAdaBoostR2
+   instance_based.TwoStageTrAdaBoostR2
+
 .. _adapt.parameter_based:
 
 :ref:`adapt.parameter_based <adapt.parameter_based>`: Parameter-Based Methods
@@ -104,9 +116,19 @@ the **source** data are adapted to build a suited model for the **task** on the 
 .. automodule: adapt.parameter_based
 	:no-members:
     :no-inherited-members:
-	
-	
-	
+
+.. currentmodule:: adapt
+
+.. rubric:: Methods
+
+.. autosummary::
+   :toctree: generated/
+   :template: class.rst
+
+   parameter_based.RegularTransferLR
+   parameter_based.RegularTransferLC
+   parameter_based.RegularTransferNN
+
 .. _adapt.utils:
 
 :ref:`adapt.utils <adapt.utils>`: Utility Functions

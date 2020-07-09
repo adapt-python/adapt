@@ -54,7 +54,7 @@ class ADDA:
     ----------
     get_encoder : callable, optional (default=None)
         Constructor for source and target encoder networks.
-        The constructor should return a tensorflow compiled Model. 
+        The constructor should return a tensorflow compiled Model.
         It should also take at least an ``input_shape`` argument
         giving the input shape of the network.
         If ``None``, shallow networks with 10 neurons are used

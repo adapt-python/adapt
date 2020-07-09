@@ -6,7 +6,9 @@ Utility functions for adapt package.
 import warnings
 import inspect
 
+import tensorflow as tf
 from tensorflow.keras import Model
+from tensorflow.keras.layers import Layer, Input, Dense, Flatten, Reshape
 
 
 def check_indexes(src_index, tgt_index, tgt_index_labeled=None):
@@ -79,7 +81,8 @@ def check_estimator(get_estimator, **kwargs):
 
 
 def check_network(get_model, constructor_name="get_model",
-                  shape_arg=False, **kwargs):
+                  input_shape_arg=False, output_shape_arg=False,
+                  **kwargs):
     """
     Build and check network.
 
@@ -87,8 +90,11 @@ def check_network(get_model, constructor_name="get_model",
     Then, build an estimator and check that it is an 
     instance of tensorflow Model.
     
-    If ``shape_arg`` is True, the function checks that
+    If ``input_shape_arg`` is True, the function checks that
     the built estimator takes an ``input_shape`` arguments.
+    
+    If ``output_shape_arg`` is True, the function checks that
+    the built estimator takes an ``output_shape`` arguments.
 
     Parameters
     ----------
@@ -97,19 +103,27 @@ def check_network(get_model, constructor_name="get_model",
 
     constructor_name: str, optional (default="get_model")
         Name of contructor variable.
-        
-    shape_args: boolean, optional (default=False)
+
+    input_shape_arg: boolean, optional (default=False)
         If True, check that the estimator takes
         an ``input_shape`` argument.
-    
+
+    output_shape_arg: boolean, optional (default=False)
+        If True, check that the estimator takes
+        an ``output_shape`` argument.
+
     kwargs : key, value arguments, optional
         Additional arguments for the constructor.
     """
     if hasattr(get_model, "__call__"):
-        if (shape_arg and not
+        if (input_shape_arg and not
             "input_shape" in inspect.getfullargspec(get_model)[0]):
             raise ValueError("Constructor %s must take "
                              "an 'input_shape' argument"%constructor_name)
+        if (output_shape_arg and not
+            "output_shape" in inspect.getfullargspec(get_model)[0]):
+            raise ValueError("Constructor %s must take "
+                             "an 'output_shape' argument"%constructor_name)
         model = get_model(**kwargs)
     else:
         raise ValueError("%s is not a callable"%constructor_name)
@@ -118,3 +132,84 @@ def check_network(get_model, constructor_name="get_model",
         raise ValueError("Built model is not a tensorflow Model instance")
 
     return model
+
+
+def get_default_encoder(input_shape):
+    """
+    Return a compiled tensorflow Model of a shallow network
+    with 10 neurons and a linear activation.
+
+    Parameters
+    ----------
+    input_shape: tuple
+        Network input_shape
+
+    Returns
+    -------
+    tensorflow Model
+    """
+    inputs = Input(shape=input_shape)
+    flattened = Flatten(inputs)
+    outputs = Dense(10)(flattened)
+    model = Model(inputs, outputs)
+    model.compile(loss="mean_squared_error", optimizer="adam")
+    return model
+
+
+def get_default_task(input_shape, output_shape):
+    """
+    Return a compiled tensorflow Model of a linear network
+    with a linear activation.
+
+    Parameters
+    ----------
+    input_shape: tuple
+        Network input_shape
+
+    output_shape: tuple
+        Network output_shape
+
+    Returns
+    -------
+    tensorflow Model
+    """
+    inputs = Input(shape=input_shape)
+    flattened = Flatten(inputs)
+    outputs = Dense(np.prod(output_shape))(flattened)
+    outputs = Reshape(output_shape)(outputs)
+    model = Model(inputs, outputs)
+    model.compile(loss="mean_squared_error", optimizer="adam")
+    return model
+
+
+@tf.custom_gradient
+def _grad_reverse(x):
+    y = tf.identity(x)
+    def custom_grad(dy):
+        return -dy
+    return y, custom_grad
+
+
+class GradientReversal(Layer):
+    """
+    Inverse sign of gradient during backpropagation.
+
+    Act as identity in forward step.
+    """
+    def __init__(self):
+        super().__init__()
+
+    def call(self, x):
+        """
+        Call gradient reversal.
+        
+        Parameters
+        ----------
+        x: object
+            Inputs
+            
+        Returns
+        -------
+        func: gradient reversal function.
+        """
+        return _grad_reverse(x)
