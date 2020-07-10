@@ -69,7 +69,16 @@ def check_estimator(get_estimator, **kwargs):
     """
     if (hasattr(get_estimator, "__call__")
         or inspect.isclass(get_estimator)):
-        estimator = get_estimator(**kwargs)
+        try:
+            estimator = get_estimator(**kwargs)
+        except Exception as err_info:
+            raise ValueError("Failed to build estimator with"
+                             " 'get_estimator'. "
+                             "Please provide a builder function wich "
+                             "returns a valid estimator object or "
+                             "check the given additional arguments. \n \n"
+                             "Exception message: %s"%err_info)
+        
     else:
         raise ValueError("get_estimator is neither a callable nor a class")
 
@@ -108,19 +117,27 @@ def check_network(get_model, constructor_name="get_model", **kwargs):
     if hasattr(get_model, "__call__"):
         if ("input_shape" in kwargs and not
             "input_shape" in inspect.getfullargspec(get_model)[0]):
-            raise ValueError("Constructor %s must take "
+            raise ValueError("Constructor '%s' must take "
                              "an 'input_shape' argument"%constructor_name)
         if ("output_shape" in kwargs and not
             "output_shape" in inspect.getfullargspec(get_model)[0]):
-            raise ValueError("Constructor %s must take "
+            raise ValueError("Constructor '%s' must take "
                              "an 'output_shape' argument"%constructor_name)
-        model = get_model(**kwargs)
+        try:
+            model = get_model(**kwargs)
+        except Exception as err_info:
+            raise ValueError("Failed to build model with constructor '%s'. "
+                             "Please provide a builder function wich "
+                             "returns a compiled tensorflow Model or "
+                             "check the given additional arguments. \n \n"
+                             "Exception message: %s"%(constructor_name,
+                             err_info))
     else:
-        raise ValueError("%s is not a callable"%constructor_name)
+        raise ValueError("'%s' is not a callable"%constructor_name)
 
     if not isinstance(model, Model):
-        raise ValueError("Built model is not a tensorflow Model instance")
-
+        raise ValueError("Built model from '%s' is not "
+                         "a tensorflow Model instance"%constructor_name)
     return model
 
 
