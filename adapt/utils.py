@@ -80,9 +80,7 @@ def check_estimator(get_estimator, **kwargs):
     return estimator
 
 
-def check_network(get_model, constructor_name="get_model",
-                  input_shape_arg=False, output_shape_arg=False,
-                  **kwargs):
+def check_network(get_model, constructor_name="get_model", **kwargs):
     """
     Build and check network.
 
@@ -90,10 +88,10 @@ def check_network(get_model, constructor_name="get_model",
     Then, build an estimator and check that it is an 
     instance of tensorflow Model.
     
-    If ``input_shape_arg`` is True, the function checks that
+    If ``input_shape`` is in kwargs, the function checks that
     the built estimator takes an ``input_shape`` arguments.
     
-    If ``output_shape_arg`` is True, the function checks that
+    If ``output_shape`` is in kwargs, the function checks that
     the built estimator takes an ``output_shape`` arguments.
 
     Parameters
@@ -104,23 +102,15 @@ def check_network(get_model, constructor_name="get_model",
     constructor_name: str, optional (default="get_model")
         Name of contructor variable.
 
-    input_shape_arg: boolean, optional (default=False)
-        If True, check that the estimator takes
-        an ``input_shape`` argument.
-
-    output_shape_arg: boolean, optional (default=False)
-        If True, check that the estimator takes
-        an ``output_shape`` argument.
-
     kwargs : key, value arguments, optional
         Additional arguments for the constructor.
     """
     if hasattr(get_model, "__call__"):
-        if (input_shape_arg and not
+        if ("input_shape" in kwargs and not
             "input_shape" in inspect.getfullargspec(get_model)[0]):
             raise ValueError("Constructor %s must take "
                              "an 'input_shape' argument"%constructor_name)
-        if (output_shape_arg and not
+        if ("output_shape" in kwargs and not
             "output_shape" in inspect.getfullargspec(get_model)[0]):
             raise ValueError("Constructor %s must take "
                              "an 'output_shape' argument"%constructor_name)
@@ -156,7 +146,7 @@ def get_default_encoder(input_shape):
     return model
 
 
-def get_default_task(input_shape, output_shape):
+def get_default_task(input_shape, output_shape=(1,)):
     """
     Return a compiled tensorflow Model of a linear network
     with a linear activation.
@@ -166,7 +156,7 @@ def get_default_task(input_shape, output_shape):
     input_shape: tuple
         Network input_shape
 
-    output_shape: tuple
+    output_shape: tuple, optional (default=(1,))
         Network output_shape
 
     Returns

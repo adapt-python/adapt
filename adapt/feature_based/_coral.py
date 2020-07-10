@@ -323,18 +323,15 @@ class DeepCORAL:
         
         self._create_model(X.shape[1:], y.shape[1:])
         
-        if tgt_index_labeled is not None:
-            task_index = np.concatenate((src_index, tgt_index_labeled))
-        else:
+        if tgt_index_labeled is None:
             task_index = src_index
+        else:
+            task_index = np.concatenate((src_index, tgt_index_labeled))
         
         max_size = max((len(src_index), len(tgt_index)), len(task_index))
-        resized_src_ind = np.array([src_index[i%len(src_index)]
-                                   for i in range(max_size)])
-        resized_tgt_ind = np.array([tgt_index[i%len(tgt_index)]
-                                   for i in range(max_size)])
-        resized_task_ind = np.array([task_index[i%len(task_index)]
-                                   for i in range(max_size)])
+        resized_src_ind = np.resize(src_index, max_size)
+        resized_tgt_ind = np.resize(tgt_index, max_size)
+        resized_task_ind = np.resize(task_index, max_size)
         
         self.model_.fit([X[resized_src_ind], X[resized_tgt_ind],
                          X[resized_task_ind], y[resized_src_ind]],

@@ -2,7 +2,15 @@
 Marginalized Stacked Denoising Autoencoder
 """
 
+import numpy as np
+from tensorflow.keras import Model
+from tensorflow.keras.layers import Input, GaussianNoise
 
+from adapt.utils import (check_indexes,
+                         check_network,
+                         check_estimator,
+                         get_default_encoder,
+                         get_default_task)
 
 class mSDA:
     """
@@ -41,8 +49,7 @@ class mSDA:
         It should also take at least an ``input_shape`` argument giving
         the input shape of the network and an ``output_shape``
         argument giving the shape of the last layer.
-        If ``None``, a shallow network with ``X.shape[1:]`` neurons
-        is used.
+        If ``None``, a shallow network is used.
     
     get_estimator : callable or object, optional (default=None)
         Constructor for the estimator.
@@ -57,10 +64,10 @@ class mSDA:
         Standard deviation of gaussian noise added to the input data
         in the denoising autoencoder.
         
-    enc_params : dict, optional (default={})
+    enc_params : dict, optional (default=None)
         Additional arguments for ``get_encoder``.
         
-    dec_params : dict, optional (default={})
+    dec_params : dict, optional (default=None)
         Additional arguments for ``get_decoder``.
         
     compil_params : key, value arguments, optional
@@ -98,6 +105,16 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
         self.enc_params = enc_params
         self.dec_params = dec_params
         self.compil_params = compil_params
+        
+        if self.get_encoder is None:
+            self.get_encoder = get_default_encoder
+        if self.get_decoder is None:
+            self.get_decoder = get_default_task
+
+        if self.enc_params is None:
+            self.enc_params = {}
+        if self.dec_params is None:
+            self.dec_params = {}
 
 
     def fit(self, X, y, src_index, tgt_index, tgt_index_labeled=None,
@@ -135,7 +152,46 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
         -------
         self : returns an instance of self
         """
-        pass
+        check_indexes(src_index, tgt_index, tgt_index_labeled)
+        
+        if fit_params_ae is None:
+            fit_params_ae = fit_params
+
+        ae_index = np.concatenate((src_index, tgt_index))
+        if tgt_index_labeled is None:
+            task_index = src_index
+        else:
+            task_index = np.concatenate((src_index, tgt_index_labeled))
+        
+        self.encoder_ = check_network(self.get_encoder,
+                                "get_encoder",
+                                input_shape=X.shape[1:],
+                                **self.enc_params)
+        self.decoder_ = check_network(self.get_decoder,
+                                input_shape=self.encoder.output_shape[1:],
+                                output_shape=X.shape[1:],
+                                **self.dec_params)
+        self.estimator_ = check_estimator(self.get_estimator,
+                                          **self.kwargs)
+        
+        inputs = Input(X.shape[1:])
+        noised = GaussianNoise(self.noise_lvl)(inputs)
+        encoded = self.encoder_(noised)
+        decoded = self.decoder_(encoded)
+        self.autoencoder_ = Model(inputs, decoded, name="AutoEncoder")
+        
+        compil_params = self.compil_params.deepcopy()
+        if not "loss" in compil_params:
+            compil_params["loss"] = "mean_squared_error"        
+        if not "optimizer" in compil_params:
+            compil_params["optimizer"] = "adam"
+        
+        self.autoencoder_.compile(**compil_params)
+        
+        self.autoencoder_.fit(X[ae_index], X[ae_index], **fit_ae_params)
+        self.estimator_.fit(self.encoder.predict(X[task_index]),
+                            y[task_index], **fit_params)
+        return self
 
 
     def predict(self, X):
@@ -153,5 +209,4 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
         y_pred : array
             Prediction of ``estimator_``.
         """
-        pass
-
+        return self.estimator_.predict(self.encoder_.predict(X))

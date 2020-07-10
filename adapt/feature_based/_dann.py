@@ -2,14 +2,31 @@
 Discriminative Adversarial Neural Network
 """
 
+import warning
 
-
+import numpy as np
+from tensorflow.keras import Model
+from tensorflow.keras.layers import Input
+from tensorflow.keras.callbacks import Callback
+import tensorflow.keras.backend as K
 
 from adapt.utils import (check_indexes,
                          check_network,
                          get_default_encoder,
                          get_default_task,
                          GradientReversal)
+
+
+class _IncreaseLambda(Callback):
+    """
+    Callback for increasing trade-off parameter.
+    """
+    def __init__(self, lambdap, gamma):
+        self.lambdap = lambdap
+        self.gamma = gamma
+        
+    def on_epoch_end(self, epoch, logs={}):
+        self.lambdap = 2 / (1 + K.exp(-self.gamma * epoch)) - 1
 
 
 class DANN:
@@ -92,13 +109,13 @@ class DANN:
         Characterized increase of trade-off parameter if
         ``lambdap`` is set to ``None``.
     
-    enc_params : dict, optional (default={})
+    enc_params : dict, optional (default=None)
         Additional arguments for ``get_encoder``.
         
-    task_params : dict, optional (default={})
+    task_params : dict, optional (default=None)
         Additional arguments for ``get_task``.
         
-    disc_params : dict, optional (default={})
+    disc_params : dict, optional (default=None)
         Additional arguments for ``get_task``.
         
     compil_params : key, value arguments, optional
@@ -129,8 +146,8 @@ E. Ustinova, H. Ajakan, P. Germain, H. Larochelle, F. Laviolette, M. Marchand, \
 and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 2016.
     """
     def __init__(self, get_encoder=None, get_task=None, get_discriminator=None,
-                 lambdap=1.0, gamma=10.0, enc_params={}, task_params={},
-                 disc_params={}, **compil_params):
+                 lambdap=1.0, gamma=10.0, enc_params=None, task_params=None,
+                 disc_params=None, **compil_params):
         self.get_encoder = get_encoder
         self.get_task = get_task
         self.get_discriminator = get_discriminator
@@ -140,6 +157,20 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         self.task_params = task_params
         self.disc_params = disc_params
         self.compil_params = compil_params
+        
+        if self.get_encoder is None:
+            self.get_encoder = get_default_encoder
+        if self.get_task is None:
+            self.get_task = get_default_task
+        if self.get_discriminator is None:
+            self.get_discriminator = get_default_task
+        
+        if self.enc_params is None:
+            self.enc_params = {}
+        if self.task_params is None:
+            self.task_params = {}
+        if self.disc_params is None:
+            self.disc_params = {}
 
         
     def fit(self, X, y, src_index, tgt_index, tgt_index_labeled=None,
@@ -173,46 +204,85 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         self : returns an instance of self
         """
         check_indexes(src_index, tgt_index, tgt_index_labeled)
-            
-        self._create_model(shape=X.shape[1:])
         
-        task_index = src_index
+        if self.lambdap is None:
+            self.lambdap = K.variable(0)
+        
+        self._create_model(X.shape[1:], y.shape[1:])
+        
+        if tgt_index_labeled is None:
+            task_index = src_index
+        else:
+            task_index = np.concatenate((src_index, tgt_index_labeled))
         disc_index = np.concatenate((src_index, tgt_index))
         labels = np.array([0] * len(src_index) + [1] * len(tgt_index))
-        max_size = len(disc_index)
-        resize_task_ind = np.array([task_index[i%len(task_index)]
-                                   for i in range(max_size)])
-        self.model.fit([X[resize_task_ind], X[disc_index]], [y[resize_task_ind], labels],
-                      **fit_params)
+        
+        max_size = max(len(disc_index), len(task_index))
+        resized_task_ind = np.resize(task_index, max_size)
+        resized_disc_ind = np.resize(disc_index, max_size)
+        
+        if self.lambdap is None:
+            callback = _IncreaseLambda(self.lambdap, self.gamma)
+            if "callbacks" in fit_prams:
+                fit_prams["callbacks"].append(callback)
+            else:
+                fit_prams["callbacks"] = [callback]
+
+        self.model_.fit([X[resized_task_ind], X[resized_disc_ind]],
+                       [y[resized_task_ind], labels[resized_disc_ind]],
+                       **fit_params)
         return self
     
     
-    def _create_model(self, shape):
+    def _create_model(self, shape_X, shape_y):
 
-        self.encoder_ = self.get_encoder(shape=shape,
-                                         **self.kwargs)
-        self.task_ = self.get_task(shape=self.encoder.output_shape[1:],
-                                   **self.kwargs)
-        self.discriminator_ = self.get_task(shape=self.encoder.output_shape[1:],
-                                          **self.kwargs)
+        self.encoder_ = check_network(self.get_encoder, 
+                            "get_encoder",
+                            input_shape=shape_X,
+                            **self.enc_params)
+        self.task_ = check_network(self.get_task,
+                            "get_task",
+                            input_shape=self.encoder.output_shape[1:],
+                            output_shape=shape_y,
+                            **self.task_params)
+        self.discriminator_ = check_network(self.get_discriminator,
+                            "get_discriminator",
+                            input_shape=self.encoder.output_shape[1:],
+                            **self.disc_params)
 
-        input_task = Input(shape)
-        input_disc = Input(shape)
+        input_task = Input(shape_X)
+        input_disc = Input(shape_X)
 
-        encoded_task = self.encoder(input_task)
-        encoded_disc = self.encoder(input_disc)
+        encoded_task = self.encoder_(input_task)
+        encoded_disc = self.encoder_(input_disc)
 
-        tasked = self.task(encoded_task)
-        discrimined =  _GradReverse()(encoded_disc)
-        discrimined = self.discriminer(discrimined)
+        tasked = self.task_(encoded_task)
+        discrimined =  GradientReversal()(encoded_disc)
+        discrimined = self.discriminator_(discrimined)
 
-        self.model = Model([input_task, input_disc],
+        self.model_ = Model([input_task, input_disc],
                            [tasked, discrimined], name="DANN")
-        self.model.compile(optimizer=self.optimizer,
-                           loss=[self.loss, "binary_crossentropy"])
-
-        self.task_to_save = Model(input_task, tasked)
-        self.task_to_save.compile(optimizer="adam", loss="mean_squared_error")
+        
+        compil_params = self.compil_params.deepcopy()
+        if "loss" in compil_params:
+            task_loss = self.compil_params["loss"]
+            compil_params.pop('loss')
+        else:
+            task_loss = "binary_crossentropy"
+        
+        if not "optimizer" in compil_params:
+            compil_params["optimizer"] = "adam"
+            
+        if "loss_weights" in compil_params:
+            compil_params.pop("loss_weights")
+            warning.warns("loss_weights compil param has been overwritten "
+                          "by [1., lambdap]")
+        
+        lambdap = K.variable()
+        
+        self.model_.compile(loss=[task_loss, "binary_crossentropy"],
+                            loss_weights=[1., self.lambdap],
+                            **compil_params)
 
         return self
 
@@ -231,5 +301,4 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         y_pred: array
             prediction of task network
         """
-        pass
-
+        return self.task_.predict(self.encoder_.predict(X))

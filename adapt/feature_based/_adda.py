@@ -2,7 +2,16 @@
 Adversarial Discriminative Domain Adaptation
 """
 
+import numpy as np
+from tensorflow.keras import Model
+from tensorflow.keras.layers import Input
+import tensorflow.keras.backend as K
 
+from adapt.utils import (check_indexes,
+                         check_network,
+                         get_default_encoder,
+                         get_default_task,
+                         GradientReversal)
 
 class ADDA:
     """
@@ -52,8 +61,16 @@ class ADDA:
     
     Parameters
     ----------
-    get_encoder : callable, optional (default=None)
-        Constructor for source and target encoder networks.
+    get_src_encoder : callable, optional (default=None)
+        Constructor for source encoder networks.
+        The constructor should return a tensorflow compiled Model.
+        It should also take at least an ``input_shape`` argument
+        giving the input shape of the network.
+        If ``None``, shallow networks with 10 neurons are used
+        as encoder networks.
+        
+    get_tgt_encoder : callable, optional (default=None)
+        Constructor for target encoder networks.
         The constructor should return a tensorflow compiled Model.
         It should also take at least an ``input_shape`` argument
         giving the input shape of the network.
@@ -64,7 +81,8 @@ class ADDA:
         Constructor for task network.
         The constructor should return a tensorflow compiled Model. 
         It should also take at least an ``input_shape`` argument
-        giving the input shape of the network.
+        giving the input shape of the network and an ``output_shape``
+        argument giving the shape of the last layer.
         If ``None``, a linear network is used as task network.
         
     get_discriminator : callable, optional (default=None)
@@ -75,13 +93,16 @@ class ADDA:
         If ``None``, a linear network is used as discriminator
         network.
     
-    enc_params : dict, optional (default={})
-        Additional arguments for ``get_encoder``.
+    src_enc_params : dict, optional (default=None)
+        Additional arguments for ``get_src_encoder``.
         
-    task_params : dict, optional (default={})
+    tgt_enc_params : dict, optional (default=None)
+        Additional arguments for ``get_tgt_encoder``.
+        
+    task_params : dict, optional (default=None)
         Additional arguments for ``get_task``.
         
-    disc_params : dict, optional (default={})
+    disc_params : dict, optional (default=None)
         Additional arguments for ``get_task``.
         
     compil_params : key, value arguments, optional
@@ -92,8 +113,11 @@ class ADDA:
 
     Attributes
     ----------
-    encoder_ : tensorflow Model
-        Fitted encoder network.
+    src_encoder_ : tensorflow Model
+        Fitted source encoder network.
+        
+    tgt_encoder_ : tensorflow Model
+        Fitted source encoder network.
         
     task_ : tensorflow Model
         Fitted task network.
@@ -101,9 +125,13 @@ class ADDA:
     discriminator_ : tensorflow Model
         Fitted discriminator network.
     
-    model_ : tensorflow Model
-        Fitted model: the union of
-        encoder, task and discriminator networks.
+    src_model_ : tensorflow Model
+        Fitted source model: the union of
+        source encoder and task networks.
+        
+    tgt_model_ : tensorflow Model
+        Fitted target model: the union of
+        target encoder, task and discriminator networks.
 
     References
     ----------
@@ -111,15 +139,37 @@ class ADDA:
 K. Saenko, and T. Darrell. "Adversarial discriminative domain adaptation". \
 In CVPR, 2017.
     """
-    def __init__(self, get_encoder=None, get_task=None, get_discriminator=None,
-                 enc_params={}, task_params={}, disc_params={}, **compil_params):
-        self.get_encoder = get_encoder
+    def __init__(self, get_src_encoder=None, get_tgt_encoder=None,
+                 get_task=None, get_discriminator=None,
+                 src_enc_params={}, tgt_enc_params={}, task_params={},
+                 disc_params={}, **compil_params):
+        self.get_src_encoder = get_src_encoder
+        self.get_tgt_encoder = get_tgt_encoder
         self.get_task = get_task
         self.get_discriminator = get_discriminator
-        self.enc_params = enc_params
+        self.src_enc_params = src_enc_params
+        self.tgt_enc_params = tgt_enc_params
         self.task_params = task_params
         self.disc_params = disc_params
         self.compil_params = compil_params
+        
+        if self.get_src_encoder is None:
+            self.get_src_encoder = get_default_encoder
+        if self.get_tgt_encoder is None:
+            self.get_tgt_encoder = get_default_encoder
+        if self.get_task is None:
+            self.get_task = get_default_task
+        if self.get_discriminator is None:
+            self.get_discriminator = get_default_task
+            
+        if self.src_enc_params is None:
+            self.src_enc_params = {}
+        if self.tgt_enc_params is None:
+            self.tgt_enc_params = {}
+        if self.task_params is None:
+            self.task_params = {}
+        if self.disc_params is None:
+            self.disc_params = {}
 
 
     def fit(self, X, y, src_index, tgt_index, tgt_index_labeled=None,
@@ -158,7 +208,86 @@ In CVPR, 2017.
         -------
         self : returns an instance of self
         """
-        pass
+        check_indexes(src_index, tgt_index, tgt_index_labeled)
+        
+        if fit_params_src is None:
+            fit_params_src = fit_params_tgt
+        
+        if tgt_index_labeled is None:
+            src_index_bis = src_index
+        else:
+            src_index_bis = np.concatenate((src_index, tgt_index_labeled))
+                 
+        self._create_model(X.shape[1:], y.shape[1:])
+        
+        max_size = max(len(src_index_bis), len(tgt_index))
+        resize_tgt_ind = np.resize(tgt_index, max_size)
+        resize_src_ind = np.resize(src_index_bis, max_size)
+        
+        self.src_model_.fit(X[src_index_bis], y[src_index_bis],
+                            **fit_params_src)
+        
+        self.tgt_model_.fit([self.src_encoder_.predict(X[resize_src_ind]),
+                            X[resize_tgt_ind]],
+                            **fit_params_tgt)
+        return self
+    
+    
+    def _create_model(self, shape_X, shape_y):
+        
+        compil_params = self.compil_params.deepcopy()
+        if not "loss" in compil_params:
+            compil_params["loss"] = "binary_crossentropy"        
+        if not "optimizer" in compil_params:
+            compil_params["optimizer"] = "adam"
+        
+        self.src_encoder_ = check_network(self.get_src_encoder,
+                            "get_src_encoder",
+                            input_shape=shape_X,
+                            **self.src_enc_params)
+        self.tgt_encoder_ = check_network(self.get_tgt_encoder,
+                            "get_tgt_encoder",
+                            input_shape=shape_X,
+                            **self.tgt_enc_params)
+
+        if self.src_encoder_.output_shape != self.tgt_encoder_.output_shape:
+            raise ValueError("Target encoder output shape does not match "
+                             "the one of source encoder.")
+
+        self.task_ = check_network(self.get_task,
+                            "get_task",
+                            input_shape=self.src_encoder_.output_shape[1:],
+                            output_shape=shape_y,
+                            **self.task_params)
+        self.discriminator_ = check_network(self.get_discriminator,
+                            "get_discriminator",
+                            input_shape=self.src_encoder_.output_shape[1:],
+                            **self.disc_params)
+        
+        input_task = Input(shape_X)
+        encoded_source = self.src_encoder_(input_task)
+        tasked = self.task_(encoded_source)
+        self.src_model_ = Model(input_task, tasked, name="ModelSource")
+        self.src_model_.compile(**compil_params)
+               
+        input_source = Input(shape)
+        input_target = Input(shape)
+        encoded_target = self.tgt_encoder_(input_target)
+        discrimined_target = GradientReversal()(encoded_target)
+        discrimined_target = self.discriminator_(discrimined_target)
+        discrimined_source = self.discriminator_(input_source)
+        
+        loss = (-K.mean(K.log(discrimined_target)) -
+                K.mean(K.log(1 - discrimined_source)))
+        
+        self.tgt_model_ = Model([input_source, input_target],
+                                [discrimined_source, discrimined_target],
+                                name="ModelTarget")
+        self.tgt_model_.add_loss(loss)
+        
+        compil_params.pop("loss")
+        self.tgt_model_.compile(**compil_params)        
+        return self
 
 
     def predict(self, domain="target"):
@@ -189,5 +318,10 @@ In CVPR, 2017.
         indicates the domain of ``X`` in order to apply the appropriate
         feature transformation.
         """
-        pass
-
+        if domain == "target":
+            X = self.tgt_encoder_.predict(X)
+        elif domain == "source":
+            X = self.src_encoder_.predict(X)
+        else:
+            raise ValueError("Choose between source or target for domain name")
+        return self.task_.predict(X)
