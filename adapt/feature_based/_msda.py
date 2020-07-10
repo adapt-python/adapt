@@ -105,7 +105,7 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
         self.enc_params = enc_params
         self.dec_params = dec_params
         self.compil_params = compil_params
-        
+
         if self.get_encoder is None:
             self.get_encoder = get_default_encoder
         if self.get_decoder is None:

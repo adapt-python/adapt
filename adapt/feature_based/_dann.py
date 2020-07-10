@@ -2,7 +2,7 @@
 Discriminative Adversarial Neural Network
 """
 
-import warning
+import warnings
 
 import numpy as np
 from tensorflow.keras import Model
@@ -275,7 +275,7 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
             
         if "loss_weights" in compil_params:
             compil_params.pop("loss_weights")
-            warning.warns("loss_weights compil param has been overwritten "
+            warnings.warn("loss_weights compil param has been overwritten "
                           "by [1., lambdap]")
         
         lambdap = K.variable()
