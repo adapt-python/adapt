@@ -2,10 +2,10 @@
 Utility functions for adapt package.
 """
 
-
 import warnings
 import inspect
 
+import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Layer, Input, Dense, Flatten, Reshape
@@ -156,7 +156,7 @@ def get_default_encoder(input_shape):
     tensorflow Model
     """
     inputs = Input(shape=input_shape)
-    flattened = Flatten(inputs)
+    flattened = Flatten()(inputs)
     outputs = Dense(10)(flattened)
     model = Model(inputs, outputs)
     model.compile(loss="mean_squared_error", optimizer="adam")
@@ -181,7 +181,7 @@ def get_default_task(input_shape, output_shape=(1,)):
     tensorflow Model
     """
     inputs = Input(shape=input_shape)
-    flattened = Flatten(inputs)
+    flattened = Flatten()(inputs)
     outputs = Dense(np.prod(output_shape))(flattened)
     outputs = Reshape(output_shape)(outputs)
     model = Model(inputs, outputs)

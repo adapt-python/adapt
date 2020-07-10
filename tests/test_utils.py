@@ -5,11 +5,14 @@ Test functions for utils module.
 
 import numpy as np
 import pytest
+import tensorflow as tf
+import tensorflow.keras.backend as K
 from sklearn.linear_model import Ridge
 from tensorflow.keras import Model, Sequential
 from tensorflow.keras.layers import Input, Dense, Flatten, Reshape
 from tensorflow.python.keras.engine.input_layer import InputLayer
 from tensorflow.keras.optimizers import Adam
+
 
 
 from adapt.utils import *
@@ -216,3 +219,41 @@ def test_check_network_Model():
         check_network(_get_estimator)
     assert "get_model" in str(excinfo.value)
     assert "Model" in str(excinfo.value)
+
+
+def test_get_default_encoder():
+    model = get_default_encoder((15, 8))
+    assert model.input_shape == (None, 15, 8)
+    assert model.output_shape == (None, 10)
+    assert model.loss == "mean_squared_error"
+    assert isinstance(model.optimizer, Adam)
+    assert len(model.layers) == 3
+    assert isinstance(model.layers[0], InputLayer)
+    assert isinstance(model.layers[1], Flatten)
+    assert isinstance(model.layers[2], Dense)
+
+
+def test_get_default_task():
+    model = get_default_task((15, 8), (24, 12, 1))
+    assert model.input_shape == (None, 15, 8)
+    assert model.output_shape == (None, 24, 12, 1)
+    assert model.loss == "mean_squared_error"
+    assert isinstance(model.optimizer, Adam)
+    assert len(model.layers) == 4
+    assert isinstance(model.layers[0], InputLayer)
+    assert isinstance(model.layers[1], Flatten)
+    assert isinstance(model.layers[2], Dense)
+    assert isinstance(model.layers[3], Reshape)
+    
+    model = get_default_task((15, 8))
+    assert model.output_shape == (None, 1)
+
+
+def test_gradientreversal():
+    grad_reverse = GradientReversal()
+    inputs = K.variable([1, 2, 3])
+    assert np.all(grad_reverse(inputs) == inputs)
+    with tf.GradientTape() as tape:
+        gradient = tape.gradient(grad_reverse(inputs),
+                                 inputs)
+    assert np.all(gradient == -np.ones(3))
