@@ -2,41 +2,51 @@
 Transfer Adaboost
 """
 
+import numpy as np
 
-class _AdaBoostR2Prime:
-    """
-    AdaBoostR2Prime
-    """
-
-    def __init__(self):
-        pass
+from adapt.utils import check_indexes, check_estimator
 
 
-    def fit(self):
-        """
-        Fit 
-        
-        Parameters
-        ----------
-        
-        Returns
-        -------
-        """
-        pass
+def _get_median_predict(X, predictions, weights):
+    # Sort the predictions
+    sorted_idx = np.argsort(predictions, axis=1)
+
+    # Find index of median prediction for each sample
+    weight_cdf = np.cumsum(weights[sorted_idx], axis=1)
+    median_or_above = weight_cdf >= 0.5 * weight_cdf[:, -1][:, np.newaxis]
+    median_idx = median_or_above.argmax(axis=1)
+    median_estimators = sorted_idx[np.arange(len(X)), median_idx]
+
+    # Return median predictions
+    return predictions[np.arange(len(X)), median_estimators]
 
 
-    def predict(self):
-        """
-        Predict
-        
-        Parameters
-        ----------
-        
-        Returns
-        -------
-        """
-        pass
-
+def _binary_seach(func):
+    left=0
+    right=1
+    tol=1.e-3
+    best=1
+    best_score=1
+    for i in range(1000):
+        if np.abs(func(left)) < tol:
+            best = left
+            break
+        elif np.abs(func(right)) < tol:
+            best = right
+            break
+        else:
+            midle = (left + right) / 2
+            if func(midle) < best_score:
+                best = midle
+                best_score = func(midle)
+            if func(midle) * func(left) <= 0:
+                right = midle
+            else:
+                left = midle
+    if i >= 999:
+        print("Binary search has not converged."
+              " Set value to the current best.")
+    return best
 
 
 class TrAdaBoost:
@@ -76,8 +86,8 @@ class TrAdaBoost:
     - **6.** Return to step **1** and loop until the number :math:`N`
       of boosting iteration is reached.
       
-    The prediction are then given by the vote of the :math:`N`
-    computed estimators weighted by their respective parameter
+    The prediction are then given by the vote of the :math:`N \\setminus 2`
+    last computed estimators weighted by their respective parameter
     :math:`\\beta_T`.
     
     Parameters
@@ -91,7 +101,7 @@ class TrAdaBoost:
         If get_estimator is ``None``, a ``LinearRegression`` object will be
         used by default as estimator.
         
-    n_estimator : int, optional (default=10)
+    n_estimators : int, optional (default=10)
         Number of boosting iteration.
         
     kwargs : key, value arguments, optional
@@ -105,6 +115,12 @@ class TrAdaBoost:
     estimator_errors_ : list of float
         List of weighted estimator errors computed on
         labeled target data.
+        
+    sample_weights_src_ : list of numpy arrays
+        List of source sample weight for each iteration.
+        
+    sample_weights_tgt_ : list of numpy arrays
+        List of target sample weight for each iteration.
 
     References
     ----------
@@ -112,38 +128,181 @@ class TrAdaBoost:
 Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, get_estimator, n_estimators, **kwargs):
+        self.get_estimator = get_estimator
+        self.n_estimators = n_estimators
+        self.kwargs = kwargs
 
 
-    def fit(self):
+    def fit(self, X, y, src_index, tgt_index,
+            sample_weight, **fit_params):
         """
-        Fit 
+        Fit TrAdaBoost
         
         Parameters
         ----------
+        X : numpy array
+            Input data.
+
+        y : numpy array
+            Output data. Binary: {0, 1}.
+
+        src_index : iterable
+            indexes of source labeled data in X, y.
+
+        tgt_index : iterable
+            indexes of target unlabeled data in X, y.
+
+        sample_weight : numpy array, optional (default=None)
+            Individual weights for each sample.
         
+        fit_params : key, value arguments
+            Arguments given to the fit method of the estimator
+            (epochs, batch_size...).
+
         Returns
         -------
+        self : returns an instance of self
         """
-        pass
+        check_indexes(src_index, tgt_index)
+        
+        n_s = len(src_index) 
+        n_t = len(tgt_index)
+        
+        if sample_weight is None:
+            sample_weight_src = np.ones(n_s + n_t) / (n_s + n_t)
+            sample_weight_tgt = np.ones(n_s + n_t) / (n_s + n_t)
+        else:
+            sum_weights = (sample_weight[src_index].sum() +
+                           sample_weight[tgt_index].sum())
+            sample_weight_src = sample_weight[src_index] / sum_weights
+            sample_weight_tgt = sample_weight[tgt_index] / sum_weights
 
 
-    def predict(self):
+        self.sample_weights_src_ = []
+        self.sample_weights_tgt_ = []
+        self.estimators_ = []
+        self.estimator_errors_ = []
+
+        for iboost in range(self.n_estimators):
+            self.sample_weights_src_.append(sample_weight_src)
+            self.sample_weights_tgt_.append(sample_weight_tgt)
+
+            sample_weight_src, sample_weight_tgt = self._boost(
+                iboost, X, y, src_index, tgt_index,
+                sample_weight_src, sample_weight_tgt,
+                **fit_params
+            )
+
+            if sample_weight_src is None:
+                break
+
+            sum_weights = (sample_weight_src.sum() +
+                           sample_weight_tgt.sum())
+            sample_weight_src = sample_weight_src / sum_weights
+            sample_weight_tgt = sample_weight_src / sum_weights
+
+        self.estimator_errors_ = np.array(self.estimator_errors_)
+        return self
+        
+        
+    def _boost(self, iboost, X, y, src_index, tgt_index, 
+               sample_weight_src, sample_weight_tgt, **fit_params):
+        
+        index = np.concatenate((src_index, tgt_index))
+        sample_weight = np.concatenate((sample_weight_src,
+                                        sample_weight_tgt))
+        
+        estimator = check_estimator(self.get_estimator, **self.kwargs)
+        
+        if hasattr(estimator, "sample_weight"):
+            estimator.fit(X[index], y[index], 
+                          sample_weight=sample_weight,
+                          **fit_params)
+        else:
+            bootstrap_index = np.choice(
+            index, size=len(index), replace=True,
+            p=sample_weight)
+            estimator.fit(X[bootstrap_index], y[bootstrap_index],
+                          **fit_params)
+        
+        error_vect_src = np.abs(
+            estimator.predict(X[src_index]).ravel() - y[src_index])
+        error_vect_tgt = np.abs(
+            estimator.predict(X[tgt_index]).ravel() - y[tgt_index])
+        error_vect = np.concatenate((error_vect_src, error_vect_tgt))
+        
+        if isinstance(self, TrAdaBoostR2) or isinstance(self, _AdaBoostR2):
+            error_max = error_vect.max()
+            if error_max != 0:
+                error_vect /= error_max
+                error_vect_src /= error_max
+                error_vect_tgt /= error_max
+
+        if isinstance(self, _AdaBoostR2):
+            estimator_error = (sample_weight * error_vect).sum()
+        else:
+            estimator_error = (sample_weight_tgt * error_vect_tgt).sum()
+
+        if estimator_error >= 0.5:
+            return None, None
+        
+        beta_t = estimator_error / (1. - estimator_error)
+        
+        beta_s = 1. / (1. + np.sqrt(
+            2. * np.log(len(src_index)) / self.n_estimators
+        ))
+        
+        if not iboost == self.n_estimators - 1:
+            if isinstance(self, _AdaBoostR2):
+                sample_weight_tgt = (sample_weight_tgt *
+                np.power(beta_t, (1 - error_vect_tgt)))
+
+                sample_weight_tgt *= ((1. - sample_weight_src.sum()) /
+                                      sample_weight_tgt.sum())
+            else:
+                # Source updating weights
+                sample_weight_src *= np.power(
+                    beta_s, error_vect_src)
+
+                # Target updating weights
+                sample_weight_tgt *= np.power(
+                    beta_t, - error_vect_tgt)
+
+        self.estimators_.append(estimator)
+        self.estimator_errors_.append(estimator_error)
+        
+        return sample_weight_src, sample_weight_tgt
+
+
+    def predict(self, X):
         """
-        Predict
+        Return weighted vote of estimators.
         
         Parameters
         ----------
-        
+        X : array
+            Input data.
+
         Returns
         -------
+        y_pred : array
+            Vote results.
         """
-        pass
+        N = len(self.estimators_)
+        weights = np.log(self.estimator_errors_ / 
+                         (1 - self.estimator_errors_))
+        weights = weights[int(N/2):]
+        predictions = np.array([
+            est.predict(X).ravel()
+            for est in self.estimators_[int(N/2):]])
+        
+        return (np.dot(weights, predictions) /
+                weights.sum() > 0.5).astype(float)
 
 
 
-class TrAdaBoostR2:
+class TrAdaBoostR2(TrAdaBoost):
     """
     Transfer AdaBoost for Regression
     
@@ -218,42 +377,118 @@ class TrAdaBoostR2:
         List of weighted estimator errors computed on
         labeled target data.
 
+    sample_weights_src_ : list of numpy arrays
+        List of source sample weight for each iteration.
+        
+    sample_weights_tgt_ : list of numpy arrays
+        List of target sample weight for each iteration.
+
     References
     ----------
     .. [1] `[1] <https://www.cs.utexas.edu/~dpardoe/papers/ICML10.pdf>`_ \
 D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, get_estimator, n_estimators, **kwargs):
+        self.get_estimator = get_estimator
+        self.n_estimators = n_estimators
+        self.kwargs = kwargs
 
 
-    def fit(self):
+    def fit(self, X, y, src_index, tgt_index,
+            sample_weight, **fit_params):
         """
-        Fit 
+        Fit TrAdaBoostR2
         
         Parameters
         ----------
+        X : numpy array
+            Input data.
+
+        y : numpy array
+            Output data.
+
+        src_index : iterable
+            indexes of source labeled data in X, y.
+
+        tgt_index : iterable
+            indexes of target unlabeled data in X, y.
+
+        sample_weight : numpy array, optional (default=None)
+            Individual weights for each sample.
         
+        fit_params : key, value arguments
+            Arguments given to the fit method of the estimator
+            (epochs, batch_size...).
+
         Returns
         -------
+        self : returns an instance of self
         """
-        pass
+        return super().fit(X, y, src_index, tgt_index,
+                           sample_weight, **fit_params)
 
 
     def predict(self):
         """
-        Predict
+        Return weighted median of estimators.
         
         Parameters
         ----------
-        
+        X : array
+            Input data.
+
         Returns
         -------
+        y_pred : array
+            Median results.
         """
-        pass
-    
-    
+        N = len(self.estimators_)
+        weights = np.log(self.estimator_errors_ / 
+                         (1 - self.estimator_errors_))
+        weights = weights[int(N/2):]
+        predictions = np.array([
+            est.predict(X).ravel()
+            for est in self.estimators_[int(N/2):]])
+        
+        return _get_median_predict(X, predictions, weights)
+
+
+class _AdaBoostR2(TrAdaBoost):
+    """
+    AdaBoostR2 object with fixed sample weights.
+    """
+    def __init__(self,
+                 get_estimator=None,
+                 n_estimators=10,
+                 **kwargs):
+        self.get_estimator = get_estimator
+        self.n_estimators = n_estimators
+        self.kwargs = kwargs
+
+
+    def fit(self, X, y, src_index, tgt_index,
+            sample_weight, **fit_params):
+        """
+        Fit AdaBoostR2
+        """
+        return super().fit(X, y, src_index, tgt_index,
+                           sample_weight, **fit_params)
+
+
+    def predict(self):
+        """
+        Predict AdaBoostR2
+        """
+        weights = np.log(self.estimator_errors_ / 
+                         (1 - self.estimator_errors_))
+        predictions = np.array([
+            est.predict(X).ravel()
+            for est in self.estimators_])
+        
+        return (np.dot(weights, predictions) /
+                weights.sum() > 0.5).astype(float)
+
     
 class TwoStageTrAdaBoostR2:
     """
@@ -353,37 +588,218 @@ class TwoStageTrAdaBoostR2:
     estimator_scores_ : list of float
         List of cross-validation scores of estimators.
 
+    sample_weights_src_ : list of numpy arrays
+        List of source sample weight for each iteration.
+
+    sample_weights_tgt_ : list of numpy arrays
+        List of target sample weight for each iteration.
+
     References
     ----------
     .. [1] `[1] <https://www.cs.utexas.edu/~dpardoe/papers/ICML10.pdf>`_ \
 D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
     """
+    def __init__(self,
+                 get_estimator=None,
+                 n_estimators=10,
+                 n_estimator_fs=10,
+                 cv=5,
+                 **kwargs):
+        self.get_estimator = get_estimator
+        self.n_estimators = n_estimators
+        self.n_estimators_fs = n_estimators_fs
+        self.cv = cv
+        self.kwargs = kwargs
 
-    def __init__(self):
-        pass
 
-
-    def fit(self):
+    def fit(self, X, y, src_index, tgt_index, ):
         """
-        Fit 
+        Fit TwoStageTrAdaBoostR2.
         
         Parameters
         ----------
+        X : numpy array
+            Input data.
+
+        y : numpy array
+            Output data.
+
+        src_index : iterable
+            indexes of source labeled data in X, y.
+
+        tgt_index : iterable
+            indexes of target unlabeled data in X, y.
+
+        sample_weight : numpy array, optional (default=None)
+            Individual weights for each sample.
         
+        fit_params : key, value arguments
+            Arguments given to the fit method of the estimator
+            (epochs, batch_size...).
+
         Returns
         -------
+        self : returns an instance of self
         """
-        pass
+        check_indexes(src_index, tgt_index)
+        
+        n_s = len(src_index) 
+        n_t = len(tgt_index)
+        
+        if sample_weight is None:
+            sample_weight_src = np.ones(n_s + n_t) / (n_s + n_t)
+            sample_weight_tgt = np.ones(n_s + n_t) / (n_s + n_t)
+        else:
+            sum_weights = (sample_weight[src_index].sum() +
+                           sample_weight[tgt_index].sum())
+            sample_weight_src = sample_weight[src_index] / sum_weights
+            sample_weight_tgt = sample_weight[tgt_index] / sum_weights
+
+
+        self.sample_weights_src_ = []
+        self.sample_weights_tgt_ = []
+        self.estimators_ = []
+        self.estimator_errors_ = []
+
+        for iboost in range(self.n_estimators):
+            self.sample_weights_src_.append(sample_weight_src)
+            self.sample_weights_tgt_.append(sample_weight_tgt)
+
+            cv_score = self._cross_val_score(
+                X, y, src_index, tgt_index,
+                sample_weight_src, sample_weight_tgt,
+                **fit_params
+            )
+            
+            self.estimator_errors_.append(cv_score.mean())
+            
+            sample_weight_src, sample_weight_tgt = self._boost(
+                iboost, X, y, src_index, tgt_index,
+                sample_weight_src, sample_weight_tgt,
+                **fit_params
+            )
+
+            if sample_weight_src is None:
+                break
+
+            sum_weights = (sample_weight_src.sum() +
+                           sample_weight_tgt.sum())
+            sample_weight_src = sample_weight_src / sum_weights
+            sample_weight_tgt = sample_weight_src / sum_weights
+
+        self.estimator_errors_ = np.array(self.estimator_errors_)
+        return self
+
+
+    def _boost(self, iboost, X, y, src_index, tgt_index, 
+               sample_weight_src, sample_weight_tgt, **fit_params):
+
+        estimator = _AdaBoostR2(self.get_estimator,
+                                self.n_estimators_fs,
+                                **self.kwargs)
+        
+        sample_weight_fill = np.array([np.nan] * len(X))
+        sample_weight_fill[src_index] = sample_weight_src
+        sample_weight_fill[tgt_index] = sample_weight_tgt
+        
+        estimator.fit(X, y, src_index, tgt_index,
+                      sample_weight=sample_weight_fill,
+                      **fit_params)
+        
+        error_vect_src = np.abs(
+            estimator.predict(X[src_index]).ravel() - y[src_index])
+        error_vect_tgt = np.abs(
+            estimator.predict(X[tgt_index]).ravel() - y[tgt_index])
+        error_vect = np.concatenate((error_vect_src, error_vect_tgt))
+        
+        error_max = error_vect.max()
+        if error_max != 0:
+            error_vect /= error_max
+            error_vect_src /= error_max
+            error_vect_tgt /= error_max
+
+        beta = self._get_beta(iboost,
+                              sample_weight_src,
+                              sample_weight_tgt,
+                              error_vect_src,
+                              error_vect_tgt)
+        
+        if not iboost == self.n_estimators - 1:
+            sample_weight_src *= np.power(
+                beta, error_vect_src
+            )
+
+        self.estimators_.append(estimator)
+        return sample_weight_src, sample_weight_tgt
+
+
+    def _get_beta(self, iboost, sample_weight_src, sample_weight_tgt,
+                  error_vect_src, error_vect_tgt):
+
+        n_s = len(sample_weight_src)
+        n_t = len(sample_weight_tgt)
+
+        K_t = (n_t/(n_s + n_t) + (iboost/(self.n_estimators - 1)) *
+               (1 - n_t/(n_s + n_t)))
+        C_t = sample_weight_tgt * ((1 - K_t) / K_t)
+        
+        def func(x):
+            return np.dot(sample_weight_src,
+                   np.power(x, error_vect_src)) - C_t
+        return _binary_search(func)
+
+
+    def _cross_val_score(self, X, y, src_index, tgt_index,
+                         sample_weight_src, sample_weight_tgt,
+                         **fit_params):
+        
+        split = int(len(tgt_index) / cv)
+        scores = []
+        for i in range(cv):
+            if i == cv-1:
+                test_index = tgt_index[i * split:]
+            else:
+                test_index = tgt_index[i * split: (i + 1) * split]
+            train_index = np.array(list(set(tgt_index) - set(test_index)))
+            
+            estimator = _AdaBoostR2(self.get_estimator,
+                                    self.n_estimators_fs,
+                                    **self.kwargs)
+
+            sample_weight_fill = np.array([np.nan] * len(X))
+            sample_weight_fill[src_index] = sample_weight_src
+            sample_weight_fill[tgt_index] = sample_weight_tgt
+            
+            sample_weight_fill[train_index] *= (
+                sample_weight_tgt.sum() / 
+                sample_weight_fill[train_index].sum()
+            )
+
+            estimator.fit(X, y, src_index, train_index,
+                          sample_weight=sample_weight_fill,
+                          **fit_params)
+
+            scores.append(np.sum(np.square(
+                estimator.predict(X[test_index]).ravel() - y[test_index]
+            )))
+        return np.array(scores)
 
 
     def predict(self):
         """
-        Predict
+        Return predictions of the best estimator according
+        to cross-validation scores.
         
         Parameters
         ----------
-        
+        X : array
+            Input data.
+
         Returns
         -------
+        y_pred : array
+            Best estimator predictions.
         """
-        pass
+        best_estimator = self.estimators_[
+            self.estimator_errors_.argmin()]
+        return best_estimator.predict(X).ravel()

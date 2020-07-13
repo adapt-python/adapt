@@ -32,6 +32,17 @@ def test_fit_index():
     assert np.abs(np.sum(model.estimator_.coef_[:X.shape[1]]) +
                   np.sum(model.estimator_.coef_[-X.shape[1]:])) < 0.01
     assert np.abs(np.sum(model.estimator_.coef_[X.shape[1]:]) - 1) < 0.01
+    
+    
+def test_fit_only_on_given_index():
+    y_corrupted = np.copy(y)
+    y_corrupted[25: 75] = np.nan
+    X_corrupted = np.copy(X)
+    X_corrupted[25: 75] = np.nan
+    model = FE(Ridge, fit_intercept=False)
+    model.fit(X_corrupted, y_corrupted,
+              range(25), range(75, 100))
+    assert isinstance(model.estimator_, Ridge)
 
 
 def test_fit_default():

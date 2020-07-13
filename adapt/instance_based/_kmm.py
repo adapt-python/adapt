@@ -2,6 +2,11 @@
 Kernel Mean Matching
 """
 
+import numpy as np
+from sklearn.metrics import pairwise
+# from cvxopt import matrix, solvers
+
+from adapt.utils import check_indexes, check_estimator
 
 
 class KMM:
@@ -92,21 +97,88 @@ class KMM:
 and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 2007.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, estimator=None, B=1000, epsilon=None,
+                 kernel="rbf", kernel_params=None, **kwargs):
+        self.get_estimator = get_estimator
+        self.B = B
+        self.epsilon = epsilon
+        self.kernel = kernel
+        self.kernel_params = kernel_params
+        self.kwargs = kwargs
 
 
-    def fit(self):
+    def fit(self, X, y, src_index, tgt_index,
+            tgt_index_labeled=None, **fit_params):
         """
-        Fit 
-        
+        Fit KMM.
+
         Parameters
         ----------
-        
+        X : numpy array
+            Input data.
+
+        y : numpy array
+            Output data.
+
+        src_index : iterable
+            indexes of source labeled data in X, y.
+
+        tgt_index : iterable
+            indexes of target unlabeled data in X, y.
+            
+        tgt_index_labeled : iterable, optional (default=None)
+            indexes of target labeled data in X, y.
+
+        fit_params : key, value arguments
+            Arguments given to the fit method of the estimator
+            (epochs, batch_size...).
+
         Returns
         -------
+        self : returns an instance of self
         """
         pass
+#         check_indexes(src_index, tgt_index, tgt_index_labeled)
+        
+#         m = len(X_src)
+#         n = len(X_tgt)
+        
+#         # Get epsilon
+#         if self.epsilon is None:
+#             self.epsilon = (np.sqrt(m) - 1)/np.sqrt(m)
+
+#         # Compute Kernel Matrix
+#         K_src = pairwise.rbf_kernel(X_src, X_src, self.sigma)
+#         K = (1/2) * (K_src + K_src.transpose())
+
+#         # Compute q
+#         K_tgt = pairwise.rbf_kernel(X_src, X_tgt, self.sigma)
+#         q = -(m/n) * np.dot(K_tgt, np.ones((n, 1)))
+
+#         # Set up QP
+#         G = np.concatenate((np.ones((1,m)),
+#                             -np.ones((1,m)),
+#                             -np.eye(m),
+#                             np.eye(m)))
+#         h = np.concatenate((np.array([[m*(self.epsilon+1)]]),
+#                             np.array([[m*(self.epsilon-1)]]),
+#                             -np.zeros((m,1)),
+#                             np.ones((m,1))*self.B))
+#         P = matrix(K, tc='d')
+#         q = matrix(q, tc='d')
+#         G = matrix(G, tc='d')
+#         h = matrix(h, tc='d')
+        
+#         # Solve QP
+#         solvers.options['show_progress'] = False
+#         weights = solvers.qp(P,q,G,h)['x']
+#         return np.array(weights).ravel()
+        
+#         self.estimator_ = check_estimator(self.get_estimator, **self.kwargs)
+#         self.estimator_.fit(X[train_index], y[train_index], 
+#                             sample_weight = self.weights_[train_index],
+#                             **fit_params)
+#         return self
 
 
     def predict(self):
