@@ -204,7 +204,6 @@ def test_check_network_wrong_call():
         check_network(_get_model_Model())
     assert "Failed to build" in str(excinfo.value)
     assert "get_model" in str(excinfo.value)
-    assert "inputs" in str(excinfo.value)
 
     with pytest.raises(ValueError) as excinfo:
         check_network(_get_model_Model,
