@@ -4,7 +4,7 @@ Kernel Mean Matching
 
 import numpy as np
 from sklearn.metrics import pairwise
-# from cvxopt import matrix, solvers
+from cvxopt import matrix, solvers
 
 from adapt.utils import check_indexes, check_estimator
 
@@ -137,59 +137,83 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         -------
         self : returns an instance of self
         """
-        pass
-#         check_indexes(src_index, tgt_index, tgt_index_labeled)
+        check_indexes(src_index, tgt_index, tgt_index_labeled)
         
-#         m = len(X_src)
-#         n = len(X_tgt)
+        if tgt_index_labeled is None:
+            Xs = X[src_index]
+            ys = y[src_index]
+        else:
+            Xs = X[np.concatenate(
+                (src_index, tgt_index_labeled)
+            )]
+            ys = y[np.concatenate(
+                (src_index, tgt_index_labeled)
+            )]
+        Xt = X[tgt_index]
         
-#         # Get epsilon
-#         if self.epsilon is None:
-#             self.epsilon = (np.sqrt(m) - 1)/np.sqrt(m)
-
-#         # Compute Kernel Matrix
-#         K_src = pairwise.rbf_kernel(X_src, X_src, self.sigma)
-#         K = (1/2) * (K_src + K_src.transpose())
-
-#         # Compute q
-#         K_tgt = pairwise.rbf_kernel(X_src, X_tgt, self.sigma)
-#         q = -(m/n) * np.dot(K_tgt, np.ones((n, 1)))
-
-#         # Set up QP
-#         G = np.concatenate((np.ones((1,m)),
-#                             -np.ones((1,m)),
-#                             -np.eye(m),
-#                             np.eye(m)))
-#         h = np.concatenate((np.array([[m*(self.epsilon+1)]]),
-#                             np.array([[m*(self.epsilon-1)]]),
-#                             -np.zeros((m,1)),
-#                             np.ones((m,1))*self.B))
-#         P = matrix(K, tc='d')
-#         q = matrix(q, tc='d')
-#         G = matrix(G, tc='d')
-#         h = matrix(h, tc='d')
+        n_s = len(Xs)
+        n_t = len(Xt)
         
-#         # Solve QP
-#         solvers.options['show_progress'] = False
-#         weights = solvers.qp(P,q,G,h)['x']
-#         return np.array(weights).ravel()
+        # Get epsilon
+        if self.epsilon is None:
+            self.epsilon = (np.sqrt(n_s) - 1)/np.sqrt(n_s)
+
+        # Compute Kernel Matrix
+        K = pairwise.pairwise_kernels(Xs, Xs, metric=self.kernel,
+                                      **self.kernel_params)
+        K = (1/2) * (K + K.transpose())
+
+        # Compute q
+        kappa = pairwise.pairwise_kernels(Xs, Xt, metric=self.kernel,
+                                          **self.kernel_params)
+        q = -(n_s/n_t) * np.dot(kappa, np.ones((n_t, 1)))
+
+        # Set up QP
+        G = np.concatenate((np.ones((1,n_s)),
+                            -np.ones((1,n_s)),
+                            -np.eye(n_s),
+                            np.eye(n_s)))
+        h = np.concatenate((np.array([[n_s*(self.epsilon+1)]]),
+                            np.array([[n_s*(self.epsilon-1)]]),
+                            -np.zeros((n_s,1)),
+                            np.ones((n_s,1))*self.B))
+        P = matrix(K, tc='d')
+        q = matrix(q, tc='d')
+        G = matrix(G, tc='d')
+        h = matrix(h, tc='d')
         
-#         self.estimator_ = check_estimator(self.get_estimator, **self.kwargs)
-#         self.estimator_.fit(X[train_index], y[train_index], 
-#                             sample_weight = self.weights_[train_index],
-#                             **fit_params)
-#         return self
+        # Solve QP
+        solvers.options['show_progress'] = False
+        weights = solvers.qp(P, q, G, h)['x']
+        self.weights_ = np.array(weights).ravel()
+        
+        self.estimator_ = check_estimator(self.get_estimator, **self.kwargs)
+        
+        if hasattr(estimator, "sample_weight"):
+            self.estimator_.fit(Xs, ys, 
+                                sample_weight=self.weights_,
+                                **fit_params)
+        else:
+            bootstrap_index = np.choice(
+            len(Xs), size=len(Xs), replace=True,
+            p=self.weights_)
+            self.estimator_.fit(Xs[bootstrap_index], ys[bootstrap_index],
+                          **fit_params)
+        return self
 
 
-    def predict(self):
+    def predict(self, X):
         """
-        Predict
+        Return estimator predictions.
         
         Parameters
         ----------
-        
+        X: array
+            input data
+            
         Returns
         -------
+        y_pred: array
+            prediction of estimator.
         """
-        pass
-
+        return self.estimator_.predict(X)

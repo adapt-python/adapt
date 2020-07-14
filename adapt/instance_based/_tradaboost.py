@@ -752,7 +752,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
     def _cross_val_score(self, X, y, src_index, tgt_index,
                          sample_weight_src, sample_weight_tgt,
                          **fit_params):
-        
+
         split = int(len(tgt_index) / cv)
         scores = []
         for i in range(cv):

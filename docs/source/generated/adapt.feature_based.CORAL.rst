@@ -17,11 +17,13 @@
 	    
 		~CORAL.__init__
 		~CORAL.fit
+		~CORAL.get_features
 		~CORAL.predict
 	
 	
 	.. automethod:: __init__
 	.. automethod:: fit
+	.. automethod:: get_features
 	.. automethod:: predict
 	
     

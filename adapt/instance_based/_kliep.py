@@ -2,6 +2,10 @@
 Kullback-Leibler Importance Estimation Procedure
 """
 
+import numpy as np
+from sklearn.metrics import pairwise
+
+from adapt.utils import check_indexes, check_estimator
 
 
 class KLIEP:
@@ -80,6 +84,10 @@ class KLIEP:
         Cross-validation split parameter.
         Used only if sigmas has more than one value.
         
+    max_points : int, optional (default=100)
+        Maximal number of target instances use to
+        compute kernels.
+        
     kwargs : key, value arguments, optional
         Additional arguments for the constructor.
 
@@ -90,6 +98,12 @@ class KLIEP:
         
     sigma_ = float
         Sigma selected for the kernel
+        
+    alphas_ = numpy array
+        Basis functions coefficients.
+        
+    centers_ = numpy array
+        Center points for kernels.
         
     self.j_scores_ = list of float
         List of J scores.
@@ -105,14 +119,155 @@ M. Sugiyama, S. Nakajima, H. Kashima, P. von Bünau and  M. Kawanabe. \
 "Direct importance estimation with model selection and its application \
 to covariateshift adaptation". In NIPS 2007
     """
-
-    def __init__(self):
-        pass
+    def __init__(self, get_estimator=None,
+                 sigmas=None, cv=5, max_points=100, **kwargs):
+        self.get_estimator = get_estimator
+        self.sigmas = sigmas
+        self.cv = cv
+        self.max_points = max_points
+        self.kwargs = kwargs
 
 
     def fit(self):
-        pass
+        """
+        Fit KLIEP.
+
+        Parameters
+        ----------
+        X : numpy array
+            Input data.
+
+        y : numpy array
+            Output data.
+
+        src_index : iterable
+            indexes of source labeled data in X, y.
+
+        tgt_index : iterable
+            indexes of target unlabeled data in X, y.
+            
+        tgt_index_labeled : iterable, optional (default=None)
+            indexes of target labeled data in X, y.
+
+        fit_params : key, value arguments
+            Arguments given to the fit method of the estimator
+            (epochs, batch_size...).
+
+        Returns
+        -------
+        self : returns an instance of self
+        """
+        check_indexes(src_index, tgt_index, tgt_index_labeled)
+        
+        if tgt_index_labeled is None:
+            Xs = X[src_index]
+            ys = y[src_index]
+        else:
+            Xs = X[np.concatenate(
+                (src_index, tgt_index_labeled)
+            )]
+            ys = y[np.concatenate(
+                (src_index, tgt_index_labeled)
+            )]
+        Xt = X[tgt_index]
+        
+        self.j_scores_ = []
+        
+        if len(self.sigmas) > 1:
+            for sigma in self.sigmas:
+                split = int(len(tgt_index) / cv)
+                j_scores = []
+                for i in range(cv):
+                    if i == cv-1:
+                        test_index = tgt_index[i * split:]
+                    else:
+                        test_index = tgt_index[i * split:
+                                               (i + 1) * split]
+                    train_index = np.array(
+                        list(set(tgt_index) - set(test_index))
+                    )
+
+                    alphas, centers = self._fit(Xs,
+                                                Xt[train_index],
+                                                sigma)
+                    
+                    j_score = (1 / len(test_index)) * np.sum(np.log(
+                        np.dot(
+                            alphas,
+                            pairwise.rbf_kernel(centers,
+                                                Xt[test_index],
+                                                sigma)
+                        )
+                    ))
+                    j_scores.append(j_score)
+                self.j_scores_.append(np.mean(j_score))
+            self.sigma_ = self.sigmas[np.argmax(self.j_scores_)]
+        else:
+            try:
+                self.sigma_ = self.sigmas[0]
+            except:
+                self.sigma_ = self.sigmas
+        
+        self.alphas_, self.centers_ = self._fit(Xs, Xt, sigma)
+        
+        self.weights_ = np.dot(
+            np.transpose(self.alphas_),
+            pairwise.rbf_kernel(self.centers_, Xs, self.sigma_)
+            )
+        
+        self.estimator_ = check_estimator(self.get_estimator, **self.kwargs)
+        
+        if hasattr(estimator, "sample_weight"):
+            self.estimator_.fit(Xs, ys, 
+                                sample_weight=self.weights_,
+                                **fit_params)
+        else:
+            bootstrap_index = np.choice(
+            len(Xs), size=len(Xs), replace=True,
+            p=self.weights_)
+            self.estimator_.fit(Xs[bootstrap_index], ys[bootstrap_index],
+                          **fit_params)
+        return self
 
 
-    def predict(self):
-        pass
+    def _fit(Xs, Xt, sigma):
+        index_centers = np.random.choice(
+                        len(Xt),
+                        min(len(Xt), self.max_points),
+                        replace=False)
+        Xt_centers = Xt[index_centers]
+        
+        epsilon = 1e-4
+        A = pairwise.rbf_kernel(Xt_centers, Xt, sigma)
+        b = (pairwise.rbf_kernel(Xt_centers, Xs, sigma).sum(axis=0)
+             / len(Xs))
+        b = b.reshape(-1, 1)
+        
+        alpha = np.ones((len(Xt_centers), 1)) / len(Xt_centers)
+        for k in range(5000):
+            alpha += epsilon * np.dot(
+                np.transpose(A), 1./np.dot(A, alpha)
+            )
+            alpha += b * ((((1-np.dot(np.transpose(b), alpha)) /
+                            np.dot(np.transpose(b), b))))
+            alpha = np.maximum(0, alpha)
+            alpha /= np.dot(np.transpose(b), alpha)
+        
+        return alpha, Xt_centers
+
+
+    def predict(self, X):
+        """
+        Return estimator predictions.
+        
+        Parameters
+        ----------
+        X: array
+            input data
+            
+        Returns
+        -------
+        y_pred: array
+            prediction of estimator.
+        """
+        return self.estimator_.predict(X)
