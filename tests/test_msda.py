@@ -4,63 +4,53 @@ Test functions for fe module.
 
 
 import numpy as np
-import pytest
-from sklearn.linear_model import Ridge, LinearRegression
+from sklearn.linear_model import LogisticRegression
+import tensorflow as tf
+from tensorflow.keras import Sequential, Model
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import Adam
 
-from adapt.feature_based import FE
+from adapt.feature_based import mSDA
+from adapt.utils import toy_classification
 
 
-X = np.ones((100, 10))
-y = np.concatenate((np.ones(75), np.zeros(25)))
+X, y, src_index, tgt_index = toy_classification()
+
+def _get_encoder(input_shape):
+    model = Sequential()
+    model.add(Dense(1, input_shape=input_shape))
+    model.compile(loss="mse", optimizer="adam")
+    return model
+
+
+def _get_decoder(input_shape, output_shape):
+    model = Sequential()
+    model.add(Dense(np.prod(output_shape),
+                    input_shape=input_shape))
+    model.compile(loss="mse", optimizer="adam")
+    return model
+
+
+def test_setup():
+    lr = LogisticRegression(penalty='none', solver='lbfgs')
+    lr.fit(X[src_index], y[src_index])
+    assert (lr.predict(X[tgt_index]) - y[tgt_index]).sum() > 20
+    assert (lr.predict(X[src_index]) - y[src_index]).sum() < 1
 
 
 def test_fit():
-    model = FE(Ridge, fit_intercept=False)
-    model.fit(X, y, range(75), range(75, 100))
-    assert isinstance(model.estimator_, Ridge)
-    assert len(model.estimator_.coef_) == 3 * X.shape[1]
-    assert np.abs(np.sum(model.estimator_.coef_[:X.shape[1]]) +
-                  np.sum(model.estimator_.coef_[-X.shape[1]:]) - 1) < 0.01
-    assert np.abs(np.sum(model.estimator_.coef_[X.shape[1]:])) < 0.01
-
-
-def test_fit_index():
-    model = FE(Ridge, fit_intercept=False)
-    model.fit(X, y, range(75, 100), range(75))
-    assert isinstance(model.estimator_, Ridge)
-    assert len(model.estimator_.coef_) == 3 * X.shape[1]
-    assert np.abs(np.sum(model.estimator_.coef_[:X.shape[1]]) +
-                  np.sum(model.estimator_.coef_[-X.shape[1]:])) < 0.01
-    assert np.abs(np.sum(model.estimator_.coef_[X.shape[1]:]) - 1) < 0.01
-
-
-def test_fit_default():
-    model = FE()
-    model.fit(X, y, range(75), range(75, 100))
-    assert isinstance(model.estimator_, LinearRegression)
-
-
-def test_fit_sample_weight():
-    model = FE(Ridge)
-    model.fit(X, y, range(75), range(75, 100),
-              sample_weight=np.array([0] * 75 + [1e4] * 25))
-    assert np.all(model.estimator_.coef_ == 0)
-
-
-def test_fit_params():
-    model = FE(Ridge, alpha=123)
-    model.fit(X, y, range(75), range(75, 100))
-    assert model.estimator_.alpha == 123
-
-
-def test_predict():
-    model = FE(Ridge)
-    model.fit(X, y, range(75), range(75, 100))
-    y_pred = model.predict(X)
-    assert np.all(y_pred < 0.01)
-    y_pred = model.predict(X, domain="target")
-    assert np.all(y_pred < 0.01)
-    y_pred = model.predict(X, domain="source")
-    assert np.all(y_pred - 1 < 0.01)
-    with pytest.raises(ValueError):
-        model.predict(X, domain="tirelipimpon")
+    tf.random.set_seed(0)
+    np.random.seed(0)
+    model = mSDA(_get_encoder, _get_decoder,
+                 LogisticRegression,
+                 est_params=dict(penalty='none',
+                                 solver='lbfgs'),
+                 optimizer=Adam(0.01))
+    model.fit(X, y, src_index, tgt_index,
+              fit_params_ae=dict(epochs=800,
+                                 batch_size=200,
+                                 verbose=0)
+             )
+    assert isinstance(model.estimator_, LogisticRegression)
+    assert np.abs(model.predict(X[tgt_index]) - y[tgt_index]).sum() < 10
+    assert np.abs(model.predict(X[src_index]) - y[src_index]).sum() < 10

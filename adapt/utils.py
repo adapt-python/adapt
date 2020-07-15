@@ -6,6 +6,7 @@ import warnings
 import inspect
 
 import numpy as np
+from sklearn.datasets import make_classification
 import tensorflow as tf
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Layer, Input, Dense, Flatten, Reshape
@@ -220,3 +221,30 @@ class GradientReversal(Layer):
         func: gradient reversal function.
         """
         return _grad_reverse(x)
+
+
+def toy_classification(n_samples=100, n_features=2, random_state=2):
+    np.random.seed(random_state)
+    Xs, ys = make_classification(n_samples=100, n_features=2, n_informative=2,
+                                 n_redundant=0, n_repeated=0,
+                                 n_clusters_per_class=1, n_classes=2,
+                                 shuffle=False)
+    Xt, yt = make_classification(n_samples=100, n_features=2, n_informative=2,
+                                 n_redundant=0, n_repeated=0,
+                                 n_clusters_per_class=1, n_classes=2,
+                                 shuffle=False)
+    yt[:50] = 1; yt[50:] = 0
+    Xt[:, 0] += 1; Xt[:, 1] += 0.5;
+
+    Xs[:, 0] = (Xs[:, 0]-np.min(Xs[:, 0]))/np.max(Xs[:, 0]-np.min(Xs[:, 0]))
+    Xs[:, 1] = (Xs[:, 1]-np.min(Xs[:, 1]))/np.max(Xs[:, 1]-np.min(Xs[:, 1]))
+
+    Xt[:, 0] = (Xt[:, 0]-np.min(Xt[:, 0]))/np.max(Xt[:, 0]-np.min(Xt[:, 0]))
+    Xt[:, 1] = (Xt[:, 1]-np.min(Xt[:, 1]))/np.max(Xt[:, 1]-np.min(Xt[:, 1]))
+
+    X = np.concatenate((Xs, Xt))
+    y = np.concatenate((ys, yt))
+    src_index = range(n_samples)
+    tgt_index = range(n_samples, 2*n_samples)
+    
+    return X, y, np.array(src_index), np.array(tgt_index)

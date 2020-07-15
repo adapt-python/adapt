@@ -2,6 +2,8 @@
 Marginalized Stacked Denoising Autoencoder
 """
 
+import copy
+
 import numpy as np
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, GaussianNoise
@@ -70,6 +72,9 @@ class mSDA:
     dec_params : dict, optional (default=None)
         Additional arguments for ``get_decoder``.
         
+    est_params : dict, optional (default=None)
+        Additional arguments for ``get_estimator``.
+    
     compil_params : key, value arguments, optional
         Additional arguments for autoencoder compiler
         (loss, optimizer...).
@@ -97,13 +102,17 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
 "Marginalized denoising autoencoders for domain adaptation". In ICML, 2012.
     """
 
-    def __init__(self, get_encoder=None, get_decoder=None, noise_lvl=0.1,
-                 enc_params={}, dec_params={}, **compil_params):
+    def __init__(self, get_encoder=None, get_decoder=None,
+                 get_estimator=None, noise_lvl=0.1,
+                 enc_params={}, dec_params={}, est_params={},
+                 **compil_params):
         self.get_encoder = get_encoder
         self.get_decoder = get_decoder
+        self.get_estimator = get_estimator
         self.noise_lvl = noise_lvl
         self.enc_params = enc_params
         self.dec_params = dec_params
+        self.est_params = est_params
         self.compil_params = compil_params
 
         if self.get_encoder is None:
@@ -115,10 +124,12 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
             self.enc_params = {}
         if self.dec_params is None:
             self.dec_params = {}
+        if self.est_params is None:
+            self.est_params = {}
 
 
     def fit(self, X, y, src_index, tgt_index, tgt_index_labeled=None,
-            fit_params_ae=None, **fit_params_tgt):
+            fit_params_ae=None, **fit_params):
         """
         Fit mSDA.
 
@@ -168,11 +179,12 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
                                 input_shape=X.shape[1:],
                                 **self.enc_params)
         self.decoder_ = check_network(self.get_decoder,
-                                input_shape=self.encoder.output_shape[1:],
+                                "get_decoder",
+                                input_shape=self.encoder_.output_shape[1:],
                                 output_shape=X.shape[1:],
                                 **self.dec_params)
         self.estimator_ = check_estimator(self.get_estimator,
-                                          **self.kwargs)
+                                          **self.est_params)
         
         inputs = Input(X.shape[1:])
         noised = GaussianNoise(self.noise_lvl)(inputs)
@@ -180,7 +192,7 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
         decoded = self.decoder_(encoded)
         self.autoencoder_ = Model(inputs, decoded, name="AutoEncoder")
         
-        compil_params = self.compil_params.deepcopy()
+        compil_params = copy.deepcopy(self.compil_params)
         if not "loss" in compil_params:
             compil_params["loss"] = "mean_squared_error"        
         if not "optimizer" in compil_params:
@@ -188,8 +200,8 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
         
         self.autoencoder_.compile(**compil_params)
         
-        self.autoencoder_.fit(X[ae_index], X[ae_index], **fit_ae_params)
-        self.estimator_.fit(self.encoder.predict(X[task_index]),
+        self.autoencoder_.fit(X[ae_index], X[ae_index], **fit_params_ae)
+        self.estimator_.fit(self.encoder_.predict(X[task_index]),
                             y[task_index], **fit_params)
         return self
 
