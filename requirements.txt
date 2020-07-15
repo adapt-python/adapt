@@ -1,2 +1,3 @@
 scikit-learn
-tensorflow
+cvxopt
+tensorflow >= 2.0
