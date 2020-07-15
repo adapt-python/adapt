@@ -3,6 +3,7 @@ Discriminative Adversarial Neural Network
 """
 
 import warnings
+import copy
 
 import numpy as np
 from tensorflow.keras import Model
@@ -206,7 +207,7 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         check_indexes(src_index, tgt_index, tgt_index_labeled)
         
         if self.lambdap is None:
-            self.lambdap = K.variable(0)
+            self.lambdap = K.variable(0.)
         
         self._create_model(X.shape[1:], y.shape[1:])
         
@@ -242,12 +243,12 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
                             **self.enc_params)
         self.task_ = check_network(self.get_task,
                             "get_task",
-                            input_shape=self.encoder.output_shape[1:],
+                            input_shape=self.encoder_.output_shape[1:],
                             output_shape=shape_y,
                             **self.task_params)
         self.discriminator_ = check_network(self.get_discriminator,
                             "get_discriminator",
-                            input_shape=self.encoder.output_shape[1:],
+                            input_shape=self.encoder_.output_shape[1:],
                             **self.disc_params)
 
         input_task = Input(shape_X)
@@ -257,13 +258,13 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         encoded_disc = self.encoder_(input_disc)
 
         tasked = self.task_(encoded_task)
-        discrimined =  GradientReversal()(encoded_disc)
+        discrimined = GradientReversal()(encoded_disc)
         discrimined = self.discriminator_(discrimined)
 
         self.model_ = Model([input_task, input_disc],
                            [tasked, discrimined], name="DANN")
         
-        compil_params = self.compil_params.deepcopy()
+        compil_params = copy.deepcopy(self.compil_params)
         if "loss" in compil_params:
             task_loss = self.compil_params["loss"]
             compil_params.pop('loss')
@@ -277,8 +278,6 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
             compil_params.pop("loss_weights")
             warnings.warn("loss_weights compil param has been overwritten "
                           "by [1., lambdap]")
-        
-        lambdap = K.variable()
         
         self.model_.compile(loss=[task_loss, "binary_crossentropy"],
                             loss_weights=[1., self.lambdap],

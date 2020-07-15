@@ -391,8 +391,8 @@ class DeepCORAL:
             prediction of task network
         """
         return self.task_.predict(self.encoder_.predict(X))
-        
-        
+
+
     def _create_model(self, shape_X, shape_y):
         
         self.encoder_ = self.get_encoder(

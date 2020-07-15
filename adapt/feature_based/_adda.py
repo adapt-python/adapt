@@ -2,6 +2,8 @@
 Adversarial Discriminative Domain Adaptation
 """
 
+import copy
+
 import numpy as np
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input
@@ -235,7 +237,7 @@ In CVPR, 2017.
     
     def _create_model(self, shape_X, shape_y):
         
-        compil_params = self.compil_params.deepcopy()
+        compil_params = copy.deepcopy(self.compil_params)
         if not "loss" in compil_params:
             compil_params["loss"] = "binary_crossentropy"        
         if not "optimizer" in compil_params:
@@ -270,8 +272,8 @@ In CVPR, 2017.
         self.src_model_ = Model(input_task, tasked, name="ModelSource")
         self.src_model_.compile(**compil_params)
                
-        input_source = Input(shape)
-        input_target = Input(shape)
+        input_source = Input(self.src_encoder_.output_shape[1:])
+        input_target = Input(shape_X)
         encoded_target = self.tgt_encoder_(input_target)
         discrimined_target = GradientReversal()(encoded_target)
         discrimined_target = self.discriminator_(discrimined_target)
@@ -290,7 +292,7 @@ In CVPR, 2017.
         return self
 
 
-    def predict(self, domain="target"):
+    def predict(self, X, domain="target"):
         """
         Return the predictions of task network on the encoded feature space.
 

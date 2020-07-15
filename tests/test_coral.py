@@ -1,5 +1,5 @@
 """
-Test functions for fe module.
+Test functions for coral module.
 """
 
 import numpy as np
