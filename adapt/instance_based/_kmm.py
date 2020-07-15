@@ -97,7 +97,7 @@ class KMM:
 and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 2007.
     """
 
-    def __init__(self, estimator=None, B=1000, epsilon=None,
+    def __init__(self, get_estimator=None, B=1000, epsilon=None,
                  kernel="rbf", kernel_params=None, **kwargs):
         self.get_estimator = get_estimator
         self.B = B
@@ -105,6 +105,9 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         self.kernel = kernel
         self.kernel_params = kernel_params
         self.kwargs = kwargs
+        
+        if self.kernel_params is None:
+            self.kernel_params = {}
 
 
     def fit(self, X, y, src_index, tgt_index,
@@ -189,12 +192,12 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         
         self.estimator_ = check_estimator(self.get_estimator, **self.kwargs)
         
-        if hasattr(estimator, "sample_weight"):
+        try:
             self.estimator_.fit(Xs, ys, 
                                 sample_weight=self.weights_,
                                 **fit_params)
-        else:
-            bootstrap_index = np.choice(
+        except:
+            bootstrap_index = np.random.choice(
             len(Xs), size=len(Xs), replace=True,
             p=self.weights_)
             self.estimator_.fit(Xs[bootstrap_index], ys[bootstrap_index],

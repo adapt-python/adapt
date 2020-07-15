@@ -128,7 +128,8 @@ to covariateshift adaptation". In NIPS 2007
         self.kwargs = kwargs
 
 
-    def fit(self):
+    def fit(self, X, y, src_index, tgt_index,
+            tgt_index_labeled=None, **fit_params):
         """
         Fit KLIEP.
 
@@ -173,12 +174,12 @@ to covariateshift adaptation". In NIPS 2007
         
         self.j_scores_ = []
         
-        if len(self.sigmas) > 1:
+        if hasattr(self.sigmas, "__len__") and len(self.sigmas) > 1:
             for sigma in self.sigmas:
-                split = int(len(tgt_index) / cv)
+                split = int(len(tgt_index) / self.cv)
                 j_scores = []
-                for i in range(cv):
-                    if i == cv-1:
+                for i in range(self.cv):
+                    if i == self.cv-1:
                         test_index = tgt_index[i * split:]
                     else:
                         test_index = tgt_index[i * split:
@@ -188,14 +189,14 @@ to covariateshift adaptation". In NIPS 2007
                     )
 
                     alphas, centers = self._fit(Xs,
-                                                Xt[train_index],
+                                                X[train_index],
                                                 sigma)
                     
                     j_score = (1 / len(test_index)) * np.sum(np.log(
                         np.dot(
-                            alphas,
+                            np.transpose(alphas),
                             pairwise.rbf_kernel(centers,
-                                                Xt[test_index],
+                                                X[test_index],
                                                 sigma)
                         )
                     ))
@@ -208,21 +209,21 @@ to covariateshift adaptation". In NIPS 2007
             except:
                 self.sigma_ = self.sigmas
         
-        self.alphas_, self.centers_ = self._fit(Xs, Xt, sigma)
+        self.alphas_, self.centers_ = self._fit(Xs, Xt, self.sigma_)
         
         self.weights_ = np.dot(
             np.transpose(self.alphas_),
             pairwise.rbf_kernel(self.centers_, Xs, self.sigma_)
-            )
+            ).ravel()
         
         self.estimator_ = check_estimator(self.get_estimator, **self.kwargs)
         
-        if hasattr(estimator, "sample_weight"):
+        try:
             self.estimator_.fit(Xs, ys, 
                                 sample_weight=self.weights_,
                                 **fit_params)
-        else:
-            bootstrap_index = np.choice(
+        except:
+            bootstrap_index = np.random.choice(
             len(Xs), size=len(Xs), replace=True,
             p=self.weights_)
             self.estimator_.fit(Xs[bootstrap_index], ys[bootstrap_index],
@@ -230,7 +231,7 @@ to covariateshift adaptation". In NIPS 2007
         return self
 
 
-    def _fit(Xs, Xt, sigma):
+    def _fit(self, Xs, Xt, sigma):
         index_centers = np.random.choice(
                         len(Xt),
                         min(len(Xt), self.max_points),
@@ -239,8 +240,7 @@ to covariateshift adaptation". In NIPS 2007
         
         epsilon = 1e-4
         A = pairwise.rbf_kernel(Xt_centers, Xt, sigma)
-        b = (pairwise.rbf_kernel(Xt_centers, Xs, sigma).sum(axis=0)
-             / len(Xs))
+        b = np.mean(pairwise.rbf_kernel(Xt_centers, Xs, sigma), axis=1)
         b = b.reshape(-1, 1)
         
         alpha = np.ones((len(Xt_centers), 1)) / len(Xt_centers)
