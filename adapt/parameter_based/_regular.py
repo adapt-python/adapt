@@ -13,7 +13,10 @@ from sklearn.linear_model import (LinearRegression,
 from scipy.optimize import minimize
 import tensorflow.keras.backend as K
 
-from adapt.utils import check_indexes, check_estimator, check_network
+from adapt.utils import (check_indexes,
+                         check_estimator,
+                         check_network,
+                         get_default_task)
 
 
 def _get_custom_regularizer_l2(source_weight_matrix_i, alpha_i):
@@ -153,6 +156,9 @@ can help a lot". In EMNLP, 2004.
         self.fit_source = fit_source
         self.kwargs = kwargs
 
+        if self.get_estimator is None:
+            self.get_estimator = LinearRegression
+
 
     def fit(self, X, y, src_index, tgt_index,
             fit_params_src=None, **fit_params_tgt):
@@ -286,7 +292,7 @@ class RegularTransferLC:
         The estimator returned by ``get_estimator`` should belong
         to one of these two ``scikit-learn`` class:
         ``LogisticRegression`` or ``RidgeClassifier``.
-        If get_estimator is ``None``, a ``LinearRegression``
+        If get_estimator is ``None``, a ``LogisticRegression``
         object will be used by default as estimator.
         
     lambdas : float, optional (default=1.0)
@@ -335,6 +341,9 @@ can help a lot". In EMNLP, 2004.
         self.intercept = intercept
         self.fit_source = fit_source
         self.kwargs = kwargs
+
+        if self.get_estimator is None:
+            self.get_estimator = LogisticRegression
 
 
     def fit(self, X, y, src_index, tgt_index,
@@ -542,6 +551,9 @@ neural networks". In CVPR, 2014.
         self.trainable = trainable
         self.fit_source = fit_source
         self.kwargs = kwargs
+
+        if self.get_network is None:
+            self.get_network = get_default_task
 
 
     def fit(self, X, y, src_index, tgt_index,

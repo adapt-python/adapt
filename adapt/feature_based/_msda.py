@@ -5,6 +5,7 @@ Marginalized Stacked Denoising Autoencoder
 import copy
 
 import numpy as np
+from sklearn.linear_model import LinearRegression
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, GaussianNoise
 
@@ -104,7 +105,7 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
 
     def __init__(self, get_encoder=None, get_decoder=None,
                  get_estimator=None, noise_lvl=0.1,
-                 enc_params={}, dec_params={}, est_params={},
+                 enc_params=None, dec_params=None, est_params=None,
                  **compil_params):
         self.get_encoder = get_encoder
         self.get_decoder = get_decoder
@@ -119,6 +120,8 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
             self.get_encoder = get_default_encoder
         if self.get_decoder is None:
             self.get_decoder = get_default_task
+        if self.get_estimator is None:
+            self.get_estimator = LinearRegression
 
         if self.enc_params is None:
             self.enc_params = {}

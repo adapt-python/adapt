@@ -13,7 +13,11 @@ from tensorflow.keras.layers import multiply
 from tensorflow.keras import losses
 import tensorflow.keras.backend as K
 
-from adapt.utils import check_indexes, check_estimator, check_network
+from adapt.utils import (check_indexes,
+                         check_estimator,
+                         check_network,
+                         get_default_encoder,
+                         get_default_task)
 
 
 class CORAL:
@@ -273,10 +277,10 @@ class DeepCORAL:
     lambdap : float, optional (default=1.0)
         Trade-Off parameter.
                
-    enc_params: dict, optional (default={})
+    enc_params: dict, optional (default=None)
         Additional arguments for ``get_encoder``
         
-    task_params: dict, optional (default={})
+    task_params: dict, optional (default=None)
         Additional arguments for ``get_task``
         
     compil_params: key, value arguments, optional
@@ -307,13 +311,23 @@ class DeepCORAL:
 "Deep CORAL: correlation alignment for deep domain adaptation." In ICCV, 2016.
     """
     def __init__(self, get_encoder=None, get_task=None, lambdap=1.0,
-                 enc_params={}, task_params={}, **compil_params):
+                 enc_params=None, task_params=None, **compil_params):
         self.get_encoder = get_encoder
         self.get_task = get_task
         self.lambdap = lambdap
         self.enc_params = enc_params
         self.task_params = task_params
         self.compil_params = compil_params
+        
+        if self.get_encoder is None:
+            self.get_encoder = get_default_encoder
+        if self.get_task is None:
+            self.get_task = get_default_task
+
+        if self.enc_params is None:
+            self.enc_params = {}
+        if self.task_params is None:
+            self.task_params = {}
 
 
     def fit(self, X, y, src_index, tgt_index, tgt_index_labeled=None,

@@ -3,6 +3,7 @@ Kernel Mean Matching
 """
 
 import numpy as np
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import pairwise
 from cvxopt import matrix, solvers
 
@@ -105,6 +106,9 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         self.kernel = kernel
         self.kernel_params = kernel_params
         self.kwargs = kwargs
+        
+        if self.get_estimator is None:
+            self.get_estimator = LinearRegression
         
         if self.kernel_params is None:
             self.kernel_params = {}

@@ -3,6 +3,7 @@ Transfer Adaboost
 """
 
 import numpy as np
+from sklearn.linear_model import LinearRegression
 
 from adapt.utils import check_indexes, check_estimator
 
@@ -132,6 +133,9 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         self.get_estimator = get_estimator
         self.n_estimators = n_estimators
         self.kwargs = kwargs
+        
+        if self.get_estimator is None:
+            self.get_estimator = LinearRegression
 
 
     def fit(self, X, y, src_index, tgt_index,
@@ -401,6 +405,9 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         self.n_estimators = n_estimators
         self.kwargs = kwargs
 
+        if self.get_estimator is None:
+            self.get_estimator = LinearRegression
+
 
     def fit(self, X, y, src_index, tgt_index,
             sample_weight=None, **fit_params):
@@ -618,6 +625,9 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         self.n_estimators_fs = n_estimators_fs
         self.cv = cv
         self.kwargs = kwargs
+
+        if self.get_estimator is None:
+            self.get_estimator = LinearRegression
 
 
     def fit(self, X, y, src_index, tgt_index, sample_weight=None,

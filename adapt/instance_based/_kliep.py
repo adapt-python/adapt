@@ -3,6 +3,7 @@ Kullback-Leibler Importance Estimation Procedure
 """
 
 import numpy as np
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import pairwise
 
 from adapt.utils import check_indexes, check_estimator
@@ -126,6 +127,9 @@ to covariateshift adaptation". In NIPS 2007
         self.cv = cv
         self.max_points = max_points
         self.kwargs = kwargs
+        
+        if self.get_estimator is None:
+            self.get_estimator = LinearRegression
 
 
     def fit(self, X, y, src_index, tgt_index,
