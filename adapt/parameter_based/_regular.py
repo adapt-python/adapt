@@ -2,6 +2,9 @@
 Regular Transfer
 """
 
+import os
+import tempfile
+
 import numpy as np
 from sklearn.linear_model import (LinearRegression,
                                   Ridge,
@@ -196,7 +199,7 @@ can help a lot". In EMNLP, 2004.
             not isinstance(self.estimator_src_, Ridge)):
             raise ValueError("'get_estimator' should return a"
                              " LinearRegression or Ridge instance.")
-        if fit_source:
+        if self.fit_source:
             self.estimator_src_.fit(X[src_index], y[src_index],
                                     **fit_params_src)
         
@@ -206,7 +209,7 @@ can help a lot". In EMNLP, 2004.
                 self.estimator_src_.coef_
             ))
             Xt = np.concatenate(
-                (np.ones((tgt_index, 1)), X[tgt_index]),
+                (np.ones((len(tgt_index), 1)), X[tgt_index]),
                 axis=1)
         else:
             beta_src = self.estimator_src_.coef_
@@ -384,26 +387,28 @@ can help a lot". In EMNLP, 2004.
             raise ValueError("'get_estimator' should return a"
                              " LogisticRegression or RidgeClassifier"
                              " instance.")
-        if fit_source:
+        if self.fit_source:
             self.estimator_src_.fit(X[src_index], y[src_index],
                                     **fit_params_src)
         
         if self.intercept:
             beta_src = np.concatenate((
-                np.array([self.estimator_src_.intercept_]),
-                self.estimator_src_.coef_
+                np.array([self.estimator_src_.intercept_[0]]),
+                self.estimator_src_.coef_[0]
             ))
             Xt = np.concatenate(
-                (np.ones((tgt_index, 1)), X[tgt_index]),
+                (np.ones((len(tgt_index), 1)), X[tgt_index]),
                 axis=1)
         else:
-            beta_src = self.estimator_src_.coef_
+            beta_src = self.estimator_src_.coef_[0]
             Xt = X[tgt_index]
-        yt = y[tgt_index].reshape(-1, 1)
+        yt = y[tgt_index]
+        
+#         assert False, "%s"%str(beta_src)
         
         def func(beta):
             return (np.sum(np.log(1 + np.exp(
-                    -yt * Xt.dot(beta.reshape(-1, 1))))) +
+                    -yt * Xt.dot(beta.reshape(-1, 1)).ravel()))) +
                     self.lambdap * np.linalg.norm(beta - beta_src) ** 2)
 
         beta_tgt = minimize(func, beta_src)['x']
@@ -529,12 +534,12 @@ transferring mid-level image representations using convolutional \
 neural networks". In CVPR, 2014.
     """
     def __init__(self,
-                 get_estimator=None,
-                 lambdap=1.0,
+                 get_network=None,
+                 lambdas=1.0,
                  trainable=True,
                  fit_source=True,
                  **kwargs):
-        self.get_estimator = get_estimator
+        self.get_network = get_network
         self.lambdas = lambdas
         self.trainable = trainable
         self.fit_source = fit_source
@@ -579,8 +584,11 @@ neural networks". In CVPR, 2014.
         check_indexes(src_index, tgt_index)
         
         self.model_src_ = check_network(self.get_network,
+                                        "get_network",
+                                        input_shape=X.shape[1:],
+                                        output_shape=y.shape[1:],
                                         **self.kwargs)
-        if fit_source:
+        if self.fit_source:
             self.model_src_.fit(X[src_index], y[src_index],
                                 **fit_params_src)
         layers = self.model_src_.layers
@@ -619,7 +627,7 @@ neural networks". In CVPR, 2014.
         else:
             trainables = (list(self.trainable)[:len(layers)] +
                           [True] * (len(layers) - len(self.lambdas)))
-        return lambdas, trainable
+        return lambdas, trainables
         
         
     def predict(self, X):

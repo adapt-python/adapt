@@ -1,5 +1,5 @@
 """
-Test functions for kliep module.
+Test functions for tradaboost module.
 """
 
 import numpy as np
@@ -53,21 +53,7 @@ def test_tradaboostr2_fit():
                          n_estimators=20,
                          fit_intercept=False)
     model.fit(X, y_reg, range(100), range(100, 110))
-    assert model.estimators_[-1].coef_[0] - 0.2 < 1
-    assert np.abs(model.sample_weights_src_[-1][:50].sum() / 
-            model.sample_weights_src_[-1][50:].sum()) > 10
-    assert model.sample_weights_tgt_[-1].sum() > 0.7
-    assert np.abs(model.predict(Xt).ravel()
-                  - y_reg[100:]).sum() < 1
-
-
-def test_tradaboostr2_fit():
-    np.random.seed(0)
-    model = TrAdaBoostR2(LinearRegression,
-                         n_estimators=20,
-                         fit_intercept=False)
-    model.fit(X, y_reg, range(100), range(100, 110))
-    assert model.estimators_[-1].coef_[0] - 0.2 < 1
+    assert np.abs(model.estimators_[-1].coef_[0] - 0.2) < 1
     assert np.abs(model.sample_weights_src_[-1][:50].sum() / 
             model.sample_weights_src_[-1][50:].sum()) > 10
     assert model.sample_weights_tgt_[-1].sum() > 0.7
@@ -81,8 +67,8 @@ def test_twostagetradaboostr2_fit():
                          n_estimators=10,
                          fit_intercept=False)
     model.fit(X, y_reg, range(100), range(100, 110))
-    assert (model.estimators_[-1].estimators_[-1].coef_[0]
-            - 0.2 < 1)
+    assert np.abs(model.estimators_[-1].estimators_[-1].coef_[0]
+           - 0.2) < 1
     assert np.abs(model.sample_weights_src_[-1][:50].sum() / 
             model.sample_weights_src_[-1][50:].sum()) > 10
     assert model.sample_weights_tgt_[-1].sum() > 0.7

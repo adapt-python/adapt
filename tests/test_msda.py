@@ -35,7 +35,7 @@ def test_setup():
     lr = LogisticRegression(penalty='none', solver='lbfgs')
     lr.fit(X[src_index], y[src_index])
     assert (lr.predict(X[tgt_index]) - y[tgt_index]).sum() > 20
-    assert (lr.predict(X[src_index]) - y[src_index]).sum() < 1
+    assert np.abs(lr.predict(X[src_index]) - y[src_index]).sum() < 5
 
 
 def test_fit():

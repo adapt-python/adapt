@@ -28,7 +28,7 @@ def test_fit():
     model = KLIEP(LinearRegression, sigmas=[10, 100],
                   fit_intercept=False)
     model.fit(X, y, range(100), range(100, 200))
-    assert model.estimator_.coef_[0] - 0.2 < 10
+    assert np.abs(model.estimator_.coef_[0] - 0.2) < 10
     assert model.weights_[:50].sum() > 90
     assert model.weights_[50:].sum() < 0.5
     assert np.abs(model.predict(Xt) - y[100:]).sum() < 20
