@@ -149,3 +149,8 @@ This module contains utility functions used in the previous modules.
    utils.check_indexes
    utils.check_estimator
    utils.check_network
+   utils.get_default_encoder
+   utils.get_default_task
+   utils.GradientReversal
+   utils.toy_classification
+   utils.toy_regression
