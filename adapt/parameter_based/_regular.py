@@ -61,9 +61,7 @@ def _add_regularization(model, lambdas, trainables):
 
     # Compile
     new_model.compile(optimizer=model.optimizer,
-                      loss=model.loss,
-                      metrics=model.metrics,
-                      loss_weights=model.loss_weights
+                      loss=model.loss
                      )
     return new_model
 
