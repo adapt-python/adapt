@@ -31,3 +31,4 @@ def test_fit():
     assert model.estimator_.coef_[0] - 0.2 < 10
     assert model.weights_[:50].sum() > 90
     assert model.weights_[50:].sum() < 0.5
+    assert np.abs(model.predict(Xt) - y[100:]).sum() < 20

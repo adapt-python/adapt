@@ -21,7 +21,7 @@ def _get_median_predict(X, predictions, weights):
     return predictions[np.arange(len(X)), median_estimators]
 
 
-def _binary_seach(func):
+def _binary_search(func):
     left=0
     right=1
     tol=1.e-3
@@ -128,14 +128,14 @@ class TrAdaBoost:
 Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
     """
 
-    def __init__(self, get_estimator, n_estimators, **kwargs):
+    def __init__(self, get_estimator=None, n_estimators=10, **kwargs):
         self.get_estimator = get_estimator
         self.n_estimators = n_estimators
         self.kwargs = kwargs
 
 
     def fit(self, X, y, src_index, tgt_index,
-            sample_weight, **fit_params):
+            sample_weight=None, **fit_params):
         """
         Fit TrAdaBoost
         
@@ -170,8 +170,8 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         n_t = len(tgt_index)
         
         if sample_weight is None:
-            sample_weight_src = np.ones(n_s + n_t) / (n_s + n_t)
-            sample_weight_tgt = np.ones(n_s + n_t) / (n_s + n_t)
+            sample_weight_src = np.ones(n_s) / (n_s + n_t)
+            sample_weight_tgt = np.ones(n_t) / (n_s + n_t)
         else:
             sum_weights = (sample_weight[src_index].sum() +
                            sample_weight[tgt_index].sum())
@@ -185,8 +185,10 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         self.estimator_errors_ = []
 
         for iboost in range(self.n_estimators):
-            self.sample_weights_src_.append(sample_weight_src)
-            self.sample_weights_tgt_.append(sample_weight_tgt)
+            self.sample_weights_src_.append(
+                np.copy(sample_weight_src))
+            self.sample_weights_tgt_.append(
+                np.copy(sample_weight_tgt))
 
             sample_weight_src, sample_weight_tgt = self._boost(
                 iboost, X, y, src_index, tgt_index,
@@ -200,7 +202,7 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
             sum_weights = (sample_weight_src.sum() +
                            sample_weight_tgt.sum())
             sample_weight_src = sample_weight_src / sum_weights
-            sample_weight_tgt = sample_weight_src / sum_weights
+            sample_weight_tgt = sample_weight_tgt / sum_weights
 
         self.estimator_errors_ = np.array(self.estimator_errors_)
         return self
@@ -208,19 +210,19 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         
     def _boost(self, iboost, X, y, src_index, tgt_index, 
                sample_weight_src, sample_weight_tgt, **fit_params):
-        
+
         index = np.concatenate((src_index, tgt_index))
         sample_weight = np.concatenate((sample_weight_src,
                                         sample_weight_tgt))
         
         estimator = check_estimator(self.get_estimator, **self.kwargs)
         
-        if hasattr(estimator, "sample_weight"):
+        try:
             estimator.fit(X[index], y[index], 
                           sample_weight=sample_weight,
                           **fit_params)
-        else:
-            bootstrap_index = np.choice(
+        except:
+            bootstrap_index = np.random.choice(
             index, size=len(index), replace=True,
             p=sample_weight)
             estimator.fit(X[bootstrap_index], y[bootstrap_index],
@@ -242,8 +244,11 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         if isinstance(self, _AdaBoostR2):
             estimator_error = (sample_weight * error_vect).sum()
         else:
-            estimator_error = (sample_weight_tgt * error_vect_tgt).sum()
+            estimator_error = ((sample_weight_tgt * error_vect_tgt).sum() /
+                               (2 * sample_weight_tgt.sum()))
 
+        assert estimator_error < 0.5, ("est: %s, %s, %s"%(str(error_vect_tgt), str(y[tgt_index]), str(estimator.predict(X[tgt_index]).ravel())))
+        
         if estimator_error >= 0.5:
             return None, None
         
@@ -290,15 +295,17 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
             Vote results.
         """
         N = len(self.estimators_)
-        weights = np.log(self.estimator_errors_ / 
-                         (1 - self.estimator_errors_))
+        weights = np.array([err / (1-err) if err!=0 else np.exp(-1)
+                   for err in self.estimator_errors_])
         weights = weights[int(N/2):]
+        weights = np.resize(weights, (len(X), len(weights))).T
         predictions = np.array([
             est.predict(X).ravel()
             for est in self.estimators_[int(N/2):]])
-        
-        return (np.dot(weights, predictions) /
-                weights.sum() > 0.5).astype(float)
+        return (np.prod(np.power(weights, -predictions), axis=0) >=
+                np.prod(np.power(weights,
+                (-1/2) * np.ones(predictions.shape)),
+                axis=0)).astype(float)
 
 
 
@@ -362,7 +369,7 @@ class TrAdaBoostR2(TrAdaBoost):
         If get_estimator is ``None``, a ``LinearRegression`` object will be
         used by default as estimator.
         
-    n_estimator : int, optional (default=10)
+    n_estimators : int, optional (default=10)
         Number of boosting iteration.
         
     kwargs : key, value arguments, optional
@@ -389,14 +396,14 @@ class TrAdaBoostR2(TrAdaBoost):
 D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
     """
 
-    def __init__(self, get_estimator, n_estimators, **kwargs):
+    def __init__(self, get_estimator=None, n_estimators=10, **kwargs):
         self.get_estimator = get_estimator
         self.n_estimators = n_estimators
         self.kwargs = kwargs
 
 
     def fit(self, X, y, src_index, tgt_index,
-            sample_weight, **fit_params):
+            sample_weight=None, **fit_params):
         """
         Fit TrAdaBoostR2
         
@@ -429,7 +436,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
                            sample_weight, **fit_params)
 
 
-    def predict(self):
+    def predict(self, X):
         """
         Return weighted median of estimators.
         
@@ -444,13 +451,13 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
             Median results.
         """
         N = len(self.estimators_)
-        weights = np.log(self.estimator_errors_ / 
-                         (1 - self.estimator_errors_))
+        weights = np.array([np.log((1-err)/err)
+                  if err!=0 else 1
+                  for err in self.estimator_errors_])
         weights = weights[int(N/2):]
         predictions = np.array([
             est.predict(X).ravel()
-            for est in self.estimators_[int(N/2):]])
-        
+            for est in self.estimators_[int(N/2):]]).T
         return _get_median_predict(X, predictions, weights)
 
 
@@ -476,18 +483,19 @@ class _AdaBoostR2(TrAdaBoost):
                            sample_weight, **fit_params)
 
 
-    def predict(self):
+    def predict(self, X):
         """
         Predict AdaBoostR2
         """
-        weights = np.log(self.estimator_errors_ / 
-                         (1 - self.estimator_errors_))
+        N = len(self.estimators_)
+        weights = np.array([np.log((1-err)/err)
+                  if err!=0 else 1
+                  for err in self.estimator_errors_])
+        weights = weights[int(N/2):]
         predictions = np.array([
             est.predict(X).ravel()
-            for est in self.estimators_])
-        
-        return (np.dot(weights, predictions) /
-                weights.sum() > 0.5).astype(float)
+            for est in self.estimators_[int(N/2):]]).T
+        return _get_median_predict(X, predictions, weights)
 
     
 class TwoStageTrAdaBoostR2:
@@ -566,10 +574,10 @@ class TwoStageTrAdaBoostR2:
         If get_estimator is ``None``, a ``LinearRegression`` object will be
         used by default as estimator.
         
-    n_estimator : int, optional (default=10)
+    n_estimators : int, optional (default=10)
         Number of boosting iteration in second stage.
         
-    n_estimator_fs : int, optional (default=10)
+    n_estimators_fs : int, optional (default=10)
         Number of boosting iteration in first stage
         (given to AdaboostR2 estimators)
         
@@ -602,7 +610,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
     def __init__(self,
                  get_estimator=None,
                  n_estimators=10,
-                 n_estimator_fs=10,
+                 n_estimators_fs=10,
                  cv=5,
                  **kwargs):
         self.get_estimator = get_estimator
@@ -612,7 +620,8 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         self.kwargs = kwargs
 
 
-    def fit(self, X, y, src_index, tgt_index, ):
+    def fit(self, X, y, src_index, tgt_index, sample_weight=None,
+            **fit_params):
         """
         Fit TwoStageTrAdaBoostR2.
         
@@ -647,8 +656,8 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         n_t = len(tgt_index)
         
         if sample_weight is None:
-            sample_weight_src = np.ones(n_s + n_t) / (n_s + n_t)
-            sample_weight_tgt = np.ones(n_s + n_t) / (n_s + n_t)
+            sample_weight_src = np.ones(n_s) / (n_s + n_t)
+            sample_weight_tgt = np.ones(n_t) / (n_s + n_t)
         else:
             sum_weights = (sample_weight[src_index].sum() +
                            sample_weight[tgt_index].sum())
@@ -662,8 +671,10 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         self.estimator_errors_ = []
 
         for iboost in range(self.n_estimators):
-            self.sample_weights_src_.append(sample_weight_src)
-            self.sample_weights_tgt_.append(sample_weight_tgt)
+            self.sample_weights_src_.append(
+                np.copy(sample_weight_src))
+            self.sample_weights_tgt_.append(
+                np.copy(sample_weight_tgt))
 
             cv_score = self._cross_val_score(
                 X, y, src_index, tgt_index,
@@ -685,7 +696,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
             sum_weights = (sample_weight_src.sum() +
                            sample_weight_tgt.sum())
             sample_weight_src = sample_weight_src / sum_weights
-            sample_weight_tgt = sample_weight_src / sum_weights
+            sample_weight_tgt = sample_weight_tgt / sum_weights
 
         self.estimator_errors_ = np.array(self.estimator_errors_)
         return self
@@ -741,7 +752,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
 
         K_t = (n_t/(n_s + n_t) + (iboost/(self.n_estimators - 1)) *
                (1 - n_t/(n_s + n_t)))
-        C_t = sample_weight_tgt * ((1 - K_t) / K_t)
+        C_t = sample_weight_tgt.sum() * ((1 - K_t) / K_t)
         
         def func(x):
             return np.dot(sample_weight_src,
@@ -753,10 +764,10 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
                          sample_weight_src, sample_weight_tgt,
                          **fit_params):
 
-        split = int(len(tgt_index) / cv)
+        split = int(len(tgt_index) / self.cv)
         scores = []
-        for i in range(cv):
-            if i == cv-1:
+        for i in range(self.cv):
+            if i == self.cv-1:
                 test_index = tgt_index[i * split:]
             else:
                 test_index = tgt_index[i * split: (i + 1) * split]
@@ -785,7 +796,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         return np.array(scores)
 
 
-    def predict(self):
+    def predict(self, X):
         """
         Return predictions of the best estimator according
         to cross-validation scores.
