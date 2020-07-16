@@ -136,6 +136,10 @@ class RegularTransferLR:
         
     intercept_ : float
         Intercept of target linear estimator
+        
+    See also
+    --------
+    RegularTransferLC, RegularTransferNN
 
     References
     ----------
@@ -322,6 +326,10 @@ class RegularTransferLC:
         
     intercept_ : float
         Intercept of target linear estimator
+
+    See also
+    --------
+    RegularTransferLR, RegularTransferNN
 
     References
     ----------
@@ -527,6 +535,10 @@ class RegularTransferNN:
         
     model_tgt_ : tensorflow Model
         Fitted target network.
+        
+    See also
+    --------
+    RegularTransferLR, RegularTransferLC
 
     References
     ----------

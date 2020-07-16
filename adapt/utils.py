@@ -223,7 +223,42 @@ class GradientReversal(Layer):
         return _grad_reverse(x)
 
 
-def toy_classification(n_samples=100, n_features=2, random_state=2):
+def toy_classification(n_samples=100, n_target_labeled=0,
+                       n_features=2, random_state=2):
+    """
+    Generate toy classification dataset for DA.
+    
+    Parameters
+    ----------
+    n_samples : int, optional (default=100)
+        Size of source and target samples.
+        
+    n_target_labeled : int, optional (default=3)
+        Size of target labeled sample.
+  
+    n_features : int, optional (default=2)
+        Number of features.
+    
+    random_state: int, optional (default=0)
+        Random state number.
+        
+    Returns
+    -------
+    X : numpy array
+        Input data
+
+    y : numpy array
+        Labels
+        
+    src_index : numpy array
+        Source indexes.
+    
+    tgt_index : numpy array
+        Target indexes.
+    
+    tgt_index_labeled : numpy array
+        Target indexes labeled. 
+    """
     np.random.seed(random_state)
     Xs, ys = make_classification(n_samples=100, n_features=2, n_informative=2,
                                  n_redundant=0, n_repeated=0,
@@ -246,5 +281,67 @@ def toy_classification(n_samples=100, n_features=2, random_state=2):
     y = np.concatenate((ys, yt))
     src_index = range(n_samples)
     tgt_index = range(n_samples, 2*n_samples)
+    tgt_index_labeled = np.random.choice(n_samples,
+                      n_target_labeled) + n_samples
     
-    return X, y, np.array(src_index), np.array(tgt_index)
+    return X, y, np.array(src_index), np.array(tgt_index), tgt_index_labeled
+
+
+def toy_regression(n_samples=100, n_target_labeled=3, random_state=0):
+    """
+    Generate toy regression dataset for DA.
+    
+    Parameters
+    ----------
+    n_samples : int, optional (default=100)
+        Size of source and target samples.
+        
+    n_target_labeled : int, optional (default=3)
+        Size of target labeled sample.
+    
+    random_state: int, optional (default=0)
+        Random state number.
+        
+    Returns
+    -------
+    X : numpy array
+        Input data
+
+    y : numpy array
+        Labels
+        
+    src_index : numpy array
+        Source indexes.
+    
+    tgt_index : numpy array
+        Target indexes.
+    
+    tgt_index_labeled : numpy array
+        Target indexes labeled. 
+    """
+    np.random.seed(random_state)
+    
+    Xs = np.random.uniform(size=n_samples) * 4 - 2
+    Xs = np.sort(Xs)
+    Xt = np.random.uniform(size=n_samples) * 2.5 + 2
+    ys = (Xs + 0.1 * Xs ** 5 +
+          np.random.randn(n_samples) * 0.2 + 1)
+    yt = (Xt + 0.1 * (Xt - 2) **4  +
+          np.random.randn(n_samples) * 0.4 + 1)
+    
+    Xt = (Xt - Xs.ravel().mean()) / Xs.ravel().std()
+    yt = (yt - ys.ravel().mean()) / (2 * ys.ravel().std())
+    Xs = (Xs - Xs.ravel().mean()) / (Xs.ravel().std())
+    ys = (ys - ys.ravel().mean()) / (2 * ys.ravel().std())
+    
+    X = np.concatenate((Xs, Xt))
+    y = np.concatenate((ys, yt))
+    
+    X = ((X - X.ravel().mean()) / X.ravel().std()) / 3
+    
+    src_index = np.array(range(n_samples))
+    tgt_index = np.array(range(n_samples, 2 * n_samples))
+    tgt_index_labeled = np.random.choice(n_samples,
+                            n_target_labeled) + n_samples
+
+    return X, y, src_index, tgt_index, tgt_index_labeled

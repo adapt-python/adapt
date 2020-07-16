@@ -14,7 +14,7 @@ from adapt.feature_based import mSDA
 from adapt.utils import toy_classification
 
 
-X, y, src_index, tgt_index = toy_classification()
+X, y, src_index, tgt_index, tgt_index_labeled = toy_classification()
 
 def _get_encoder(input_shape):
     model = Sequential()

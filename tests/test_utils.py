@@ -256,3 +256,13 @@ def test_gradientreversal():
         gradient = tape.gradient(grad_reverse(inputs),
                                  inputs)
     assert np.all(gradient == -np.ones(3))
+
+
+def test_toy_classification():
+    (X, y, src_index,
+     tgt_index, tgt_index_labeled) = toy_classification()
+
+
+def test_toy_regression():
+    (X, y, src_index,
+     tgt_index, tgt_index_labeled) = toy_regression()

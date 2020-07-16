@@ -91,6 +91,10 @@ class KMM:
     estimator_ : object
         Fitted estimator.
 
+    See also
+    --------
+    KLIEP
+
     References
     ----------
     .. [1] `[1] <https://papers.nips.cc/paper/3075-correcting-sample-selection\

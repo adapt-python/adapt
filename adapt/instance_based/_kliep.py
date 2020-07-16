@@ -112,6 +112,10 @@ class KLIEP:
     estimator_ : object
         Fitted estimator.
 
+    See also
+    --------
+    KMM
+
     References
     ----------
     .. [1] `[1] <https://papers.nips.cc/paper/3248-direct-importance-estimation\

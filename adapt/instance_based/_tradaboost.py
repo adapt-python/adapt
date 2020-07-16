@@ -122,6 +122,10 @@ class TrAdaBoost:
         
     sample_weights_tgt_ : list of numpy arrays
         List of target sample weight for each iteration.
+        
+    See also
+    --------
+    TrAdaBoostR2, TwoStageTrAdaBoostR2
 
     References
     ----------
@@ -394,6 +398,10 @@ class TrAdaBoostR2(TrAdaBoost):
     sample_weights_tgt_ : list of numpy arrays
         List of target sample weight for each iteration.
 
+    See also
+    --------
+    TrAdaBoost, TwoStageTrAdaBoostR2
+
     References
     ----------
     .. [1] `[1] <https://www.cs.utexas.edu/~dpardoe/papers/ICML10.pdf>`_ \
@@ -608,6 +616,10 @@ class TwoStageTrAdaBoostR2:
 
     sample_weights_tgt_ : list of numpy arrays
         List of target sample weight for each iteration.
+
+    See also
+    --------
+    TrAdaBoost, TrAdaBoostR2
 
     References
     ----------
