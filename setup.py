@@ -9,5 +9,6 @@ setup(
     author_email='antoine.de_mathelin@cmla.ens-cachan.fr',
     license='BSD-2',
     packages=find_packages(),
+    install_requires=["scikit-learn>=1.0", "cvxopt>=1.0", "tensorflow>=2.0"],
     zip_safe=False
 )
