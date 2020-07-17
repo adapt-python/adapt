@@ -35,20 +35,20 @@ def _add_regularization(model, lambdas, trainables):
                                           lambdas,
                                           trainables,
                                           range(len(model.layers))):
-        if hasattr(layer, 'kernel_regularizer'):
+        if 'kernel_regularizer' in layer.get_config():
             regularizers.append(_get_custom_regularizer_l2(
                 layer.get_weights()[0], lambda_))
             config['layers'][i]['config']['kernel_regularizer'] = (
             regularizers[-1])
 
-        if (hasattr(layer, 'use_bias') and layer.use_bias and
+        if ('use_bias' in layer.get_config() and layer.use_bias and
             hasattr(layer, 'bias_regularizer')):
             regularizers.append(_get_custom_regularizer_l2(
                 layer.get_weights()[1], lambda_))  
             config['layers'][i]['config']['bias_regularizer'] = (
                 regularizers[-1])
 
-        if hasattr(layer, 'trainable'):
+        if "trainable" in layer.get_config():
             config['layers'][i]['config']['trainable'] = trainable
 
     # Save the weights before reloading the model.

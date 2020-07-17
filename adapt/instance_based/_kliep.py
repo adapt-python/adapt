@@ -233,7 +233,7 @@ to covariateshift adaptation". In NIPS 2007
         except:
             bootstrap_index = np.random.choice(
             len(Xs), size=len(Xs), replace=True,
-            p=self.weights_)
+            p=self.weights_ / self.weights_.sum())
             self.estimator_.fit(Xs[bootstrap_index], ys[bootstrap_index],
                           **fit_params)
         return self
