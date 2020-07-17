@@ -383,7 +383,7 @@ class DeepCORAL:
         resized_task_ind = np.resize(task_index, max_size)
         
         self.model_.fit([X[resized_src_ind], X[resized_tgt_ind],
-                         X[resized_task_ind], y[resized_src_ind],
+                         X[resized_task_ind], y[resized_task_ind],
                          np.ones(max_size)],
                         **fit_params)
         return self
