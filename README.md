@@ -59,3 +59,9 @@ ADAPT package is divided in three sub-modules containing the following domain ad
 - RegularTransferLR
 - RegularTransferLC
 - RegularTransferNN
+
+
+## Examples
+
+Examples for regression and classification DA on synthetic datasets are available here:
+
