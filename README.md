@@ -65,3 +65,6 @@ ADAPT package is divided in three sub-modules containing the following domain ad
 
 Examples for regression and classification DA on synthetic datasets are available here:
 
+Classification | Regression         
+:-------------------------:|:-------------------------:
+<img src="docs/source/_static/images/classification_setup.png" width="350px" height="180px"> | <img src="idocs/source/_static/images/regression_setup.png" width="400px" height="200px">
