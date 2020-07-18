@@ -96,17 +96,18 @@
 	  <div class="two-cards first">
 		  <div class="card h-100">
 			<div class="card-body">
-			  <a><h4 class="card-title">Classification</h4></a>
-			  <p class="card-text">Identifying which category an object belongs to.</p>
+			  <a href="{{ pathto("classification_example") }}"><h4 class="card-title">Classification</h4></a>
+			  <p class="card-text">Here are some examples of domain adaptation methods applied on a classification task.
+			  Please look at these examples to learn how to use the algorithms provided by the ADAPT package.</p>
 			</p>
 			</div>
 			
 			<div class="image">
-			  <a>
-			  <img src="_static/images/classification.png" class="sk-index-img" style="width:400px;height:200px;" alt="Feature-Based">
+			  <a href="{{ pathto("classification_example") }}">
+			  <img src="_static/images/classification_setup.png" class="sk-index-img" alt="Feature-Based">
 			  </a>
 			</div>
-			  <a class="btn btn-below" role="button">See examples</a>
+			  <a class="btn btn-below" role="button" href="{{ pathto("classification_example") }}">See examples</a>
 		  </div>
 		</div>
 		
@@ -114,17 +115,19 @@
 		<div class="two-cards second">
 		  <div class="card h-100">
 			<div class="card-body">
-			  <a><h4 class="card-title">Regression</h4></a>
-			  <p class="card-text">Predicting a real value.</p>
+			  <a href="{{ pathto("regression_example") }}"><h4 class="card-title">Regression</h4></a>
+			  <p class="card-text">Here are some examples of domain adaptation methods applied on a regression task.
+			  Please look at these examples to learn how to use the algorithms provided by the ADAPT package.
+			  </p>
 			</p>
 			</div>
 			
 			<div class="image">
-			  <a>
-			  <img src="_static/images/regression.png" class="sk-index-img" style="width:400px;height:200px;" alt="Instance-Based">
+			  <a href="{{ pathto("regression_example") }}">
+			  <img src="_static/images/regression_setup.png" class="sk-index-img" alt="Instance-Based">
 			  </a>
 			</div>
-			  <a class="btn btn-below" role="button">See examples</a>
+			  <a class="btn btn-below" role="button" href="{{ pathto("regression_example") }}">See examples</a>
 		  </div>
 		</div>
   </div>
