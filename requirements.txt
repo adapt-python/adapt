@@ -1,3 +1,5 @@
+numpy
+scipy
 tensorflow >= 2.0
 scikit-learn
 cvxopt
