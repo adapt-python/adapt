@@ -67,4 +67,4 @@ Examples for regression and classification DA on synthetic datasets are availabl
 
 Classification | Regression         
 :-------------------------:|:-------------------------:
-<img src="docs/source/_static/images/classification_setup.png" width="600px" height="400px"> | <img src="docs/source/_static/images/regression_setup.png" width="600px" height="300px">
+<img src="docs/source/_static/images/classification_setup.png" width="600px" height="300px"> | <img src="docs/source/_static/images/regression_setup.png" width="600px" height="300px">
