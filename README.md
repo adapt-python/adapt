@@ -32,3 +32,30 @@ Finally import the module in your python scripts with:
 ```python
 import adapt
 ```
+
+## Content
+
+ADAPT package is divided in three sub-modules containing the following domain adaptation methods:
+
+### Feature-based methods
+
+- FE (*Frustratingly Easy Domain Adaptation*)
+- mSDA
+- DANN
+- ADDA
+- CORAL
+- DeepCORAL
+
+### Instance-based methods
+
+- KMM
+- KLIEP
+- TrAdaBoost
+- TrAdaBoostR2
+- TwoStageTrAdaBoostR2
+
+### Parameter-based methods
+
+- RegularTransferLR
+- RegularTransferLC
+- RegularTransferNN
