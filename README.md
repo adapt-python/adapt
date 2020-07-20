@@ -68,4 +68,4 @@ Examples for regression and classification DA on synthetic datasets are availabl
 
 Classification | Regression         
 :-------------------------:|:-------------------------:
-[<img src="docs/_build/_static/images/classification_setup.png" width="600px" height="350px">](https://antoinedemathelin.github.io/adapt/_build/html/classification_example.html) | [<img src="docs/_build/_static/images/regression_setup.png" width="600px" height="300px">](https://antoinedemathelin.github.io/adapt/_build/html/regression_example.html)
+[<img src="docs/_build/html/_static/images/classification_setup.png" width="600px" height="350px">](https://antoinedemathelin.github.io/adapt/_build/html/classification_example.html) | [<img src="docs/_build/html/_static/images/regression_setup.png" width="600px" height="300px">](https://antoinedemathelin.github.io/adapt/_build/html/regression_example.html)
