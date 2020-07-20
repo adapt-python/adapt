@@ -1,4 +1,4 @@
-# [ADAPT](https://antoinedemathelin.github.io/adapt/_build/html/index.html)
+# ADAPT
 
 [![PyPI version](https://badge.fury.io/py/adaptation.svg)](https://badge.fury.io/py/adaptation)
 [![Build Status](https://github.com/antoinedemathelin/adapt/workflows/build/badge.svg)](https://github.com/antoinedemathelin/adapt/actions)
