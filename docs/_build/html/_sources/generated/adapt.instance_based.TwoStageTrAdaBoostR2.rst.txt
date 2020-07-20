@@ -1,0 +1,28 @@
+:ref:`adapt.instance_based <adapt.instance_based>`.TwoStageTrAdaBoostR2
+=============================================================================
+
+.. currentmodule:: adapt.instance_based
+
+.. autoclass:: TwoStageTrAdaBoostR2
+	:no-members:
+	:no-inherited-members:
+	:no-special-members:
+	
+	
+	
+	
+	.. rubric:: Methods
+	
+	.. autosummary::
+	    
+		~TwoStageTrAdaBoostR2.__init__
+		~TwoStageTrAdaBoostR2.fit
+		~TwoStageTrAdaBoostR2.predict
+	
+	
+	.. automethod:: __init__
+	.. automethod:: fit
+	.. automethod:: predict
+	
+    
+	
