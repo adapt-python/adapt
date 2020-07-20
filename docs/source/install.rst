@@ -3,31 +3,38 @@
 Installation
 ============
 
-ADAPT is a python library which provides several domain adaptation methods usefull to improve machine learning models.
+Pypi Installation
+-----------------
 
-This Python library provides several solvers for optimization problems related to Optimal Transport for signal, image processing and machine learning.
+This package is available on `Pypi <https://badge.fury.io/py/adaptation>`_. It has been tested on Linux, MacOSX and Windows
+for Python versions: 3.5, 3.6 and 3.7. It can be installed with the following command line:
 
-The library has been tested on Linux, MacOSX and Windows. It requires a C++ compiler for building/installing the EMD solver and relies on the following Python modules:
+.. code-block:: python
+	
+	pip install adaptation
 
-    Numpy (>=1.16)
+The following dependencies are required and will be installed with the library:
 
-    Scipy (>=1.0)
+- numpy
+- scipy
+- tensorflow (>= 2.0)
+- scikit-learn
 
-    Cython (>=0.23)
+If for some reason, these packages failed to install, you can do it manually with:
 
-    Matplotlib (>=1.5)
+.. code-block:: python
 
-Pip installation
+	pip install numpy scipy tensorflow scikit-learn
 
-Note that due to a limitation of pip, cython and numpy need to be installed prior to installing POT. This can be done easily with
+Finally import the module in your python scripts with:
 
-pip install numpy cython
+.. code-block:: python
 
-You can install the toolbox through PyPI with:
+	import adapt
+	
+Examples
+--------
 
-pip install POT
+Please look at these examples to learn how to use the algorithms provided by the ADAPT package.
 
-or get the very latest version by running:
-
-pip install -U https://github.com/PythonOT/POT/archive/master.zip # with --user for user install (no root)
-
+:ref:`Classification Examples <classification>`, :ref:`Regression Examples <regression>`

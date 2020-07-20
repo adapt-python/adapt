@@ -5,7 +5,8 @@ Kernel Mean Matching
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import pairwise
-from cvxopt import matrix, solvers
+#from cvxopt import matrix, solvers
+from scipy.optimize import minimize, LinearConstraint
 
 from adapt.utils import check_indexes, check_estimator
 
@@ -177,25 +178,20 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         # Compute q
         kappa = pairwise.pairwise_kernels(Xs, Xt, metric=self.kernel,
                                           **self.kernel_params)
-        q = -(n_s/n_t) * np.dot(kappa, np.ones((n_t, 1)))
-
-        # Set up QP
-        G = np.concatenate((np.ones((1,n_s)),
-                            -np.ones((1,n_s)),
-                            -np.eye(n_s),
-                            np.eye(n_s)))
-        h = np.concatenate((np.array([[n_s*(self.epsilon+1)]]),
-                            np.array([[n_s*(self.epsilon-1)]]),
-                            -np.zeros((n_s,1)),
-                            np.ones((n_s,1))*self.B))
-        P = matrix(K, tc='d')
-        q = matrix(q, tc='d')
-        G = matrix(G, tc='d')
-        h = matrix(h, tc='d')
+        kappa = (n_s/n_t) * np.dot(kappa, np.ones((n_t, 1)))
         
-        # Solve QP
-        solvers.options['show_progress'] = False
-        weights = solvers.qp(P, q, G, h)['x']
+        constraints = LinearConstraint(np.ones((1, n_s)),
+                                       lb=n_s*(1-self.epsilon),
+                                       ub=n_s*(1+self.epsilon))
+
+        def func(x):
+            return (1 / 2) * x.T @ (K @ x) - kappa.T @ x 
+        
+        weights = minimize(func,
+                           x0=np.ones((n_s, 1)),
+                           bounds=[(0, self.B)]*n_s,
+                           constraints=constraints)['x']
+
         self.weights_ = np.array(weights).ravel()
         
         self.estimator_ = check_estimator(self.get_estimator, **self.kwargs)
