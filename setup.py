@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='adaptation',
-    version='0.0.1',
+    version='0.1.0',
     description='Awesome Domain Adaptation Package Toolbox',
     url='https://github.com/antoinedemathelin/adapt.git',
     author='Antoine de Mathelin',
