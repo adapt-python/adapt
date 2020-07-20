@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>adapt.parameter_based.RegularTransferNN &mdash; adapt 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/js/custom.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> adapt
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#"><span class="xref std std-ref">adapt.parameter_based</span>.RegularTransferNN</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><span class="xref std std-ref">adapt.parameter_based</span>.RegularTransferNN</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/adapt.parameter_based.RegularTransferNN.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="adapt-parameter-based-regulartransfernn">
+<h1><a class="reference internal" href="../contents.html#adapt-parameter-based"><span class="std std-ref">adapt.parameter_based</span></a>.RegularTransferNN<a class="headerlink" href="#adapt-parameter-based-regulartransfernn" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="adapt.parameter_based.RegularTransferNN">
+<em class="property">class </em><code class="sig-prename descclassname">adapt.parameter_based.</code><code class="sig-name descname">RegularTransferNN</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">get_network</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lambdas</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">trainable</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fit_source</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Regular Transfer with Neural Network</p>
+<p>RegularTransferNN is a parameter-based domain adaptation method.</p>
+<p>The method is based on the assumption that a good target estimator
+can be obtained by adapting the parameters of a pre-trained source
+estimator using a few labeled target data.</p>
+<p>The approach consist in fitting a neural network on target data
+according to an objective function regularized by the euclidean
+distance between source and target parameters:</p>
+<div class="math notranslate nohighlight">
+\[\beta_T = \underset{\beta=(\beta_1, ... , \beta_D)}{\text{argmin}}
+\, ||f(X_T, \beta) - y_T||^2 + \sum_{i=1}^{D}
+\lambda_i ||\beta_i - {\beta_S}_i||^2\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(f\)</span> is a neural network with <span class="math notranslate nohighlight">\(D\)</span> layers.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\beta_T\)</span> are the parameters of the target neural network.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\beta_S = \underset{\beta}{\text{argmin}}
+\, ||f(X_S,\beta) - y_S||^2\)</span> are the source neural network parameters.</p></li>
+<li><p><span class="math notranslate nohighlight">\((X_S, y_S), (X_T, y_T)\)</span> are respectively the source and
+the target labeled data.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\lambda_i\)</span> is the trade-off parameter of layer <span class="math notranslate nohighlight">\(i\)</span>.</p></li>
+</ul>
+<p>Different trade-off can be given to the layer of the 
+neural network through the <code class="docutils literal notranslate"><span class="pre">lambdas</span></code> parameter.
+Some layers can also be frozen during training via
+the <code class="docutils literal notranslate"><span class="pre">training</span></code> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>get_network</strong><span class="classifier">callable or object, optional (default=None)</span></dt><dd><p>Constructor for the source and target networks.
+The constructor should return a tensorflow compiled Model. 
+It should also take at least an <code class="docutils literal notranslate"><span class="pre">input_shape</span></code> argument
+giving the input shape of the network and an <code class="docutils literal notranslate"><span class="pre">output_shape</span></code>
+argument giving the shape of the last layer.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a shallow network with linear activation
+is returned.</p>
+</dd>
+<dt><strong>lambdas</strong><span class="classifier">float or list of float, optional (default=1.0)</span></dt><dd><p>Trade-off parameters.
+If a list is given, values from <code class="docutils literal notranslate"><span class="pre">lambdas</span></code> are assigned
+successively to the list of network trainable layers.
+If length of <code class="docutils literal notranslate"><span class="pre">lambdas</span></code> is smaller than length of
+trainable layers list, the last trade-off value will
+be asigned to the remaining layers.</p>
+</dd>
+<dt><strong>trainable</strong><span class="classifier">boolean or list of boolean, optional (default=True)</span></dt><dd><p>Set trainable argument of target neural network layers.
+If a list is given, values from <code class="docutils literal notranslate"><span class="pre">trainable</span></code> are assigned
+successively to the list of network trainable layers.
+If length of <code class="docutils literal notranslate"><span class="pre">trainable</span></code> is smaller than length of
+trainable layers list, the trainable argument of the
+remaining layers will be set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt><strong>fit_source</strong><span class="classifier">boolean, optional (default=True)</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">fit_source</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the network
+returned by <code class="docutils literal notranslate"><span class="pre">get_network</span></code> will be fitted on
+source data.
+If <code class="docutils literal notranslate"><span class="pre">False</span></code>, the source network will be
+considered already fitted and no preliminary
+training on source data will be done.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">key, value arguments, optional</span></dt><dd><p>Additional arguments for <code class="docutils literal notranslate"><span class="pre">get_network</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR" title="adapt.parameter_based.RegularTransferLR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularTransferLR</span></code></a>, <a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC" title="adapt.parameter_based.RegularTransferLC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularTransferLC</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="rd7f3766d2f75-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://www.microsoft.com/en-us/research/wp-content/uploads/2004/07/2004-chelba-emnlp.pdf">[1]</a> C. Chelba and A. Acero. “Adaptation of maximum entropy classifier: Little data can help a lot”. In EMNLP, 2004.</p>
+</dd>
+<dt class="label" id="rd7f3766d2f75-2"><span class="brackets">2</span></dt>
+<dd><p><a class="reference external" href="https://hal.inria.fr/hal-00911179v1/document">[2]</a> Oquab M., Bottou L., Laptev I., Sivic J. “Learning and transferring mid-level image representations using convolutional neural networks”. In CVPR, 2014.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model_src_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted source network.</p>
+</dd>
+<dt><strong>model_tgt_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted target network.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.__init__" title="adapt.parameter_based.RegularTransferNN.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([get_network, lambdas, trainable, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.fit" title="adapt.parameter_based.RegularTransferNN.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X, y, src_index, tgt_index[, fit_params_src])</p></td>
+<td><p>Fit RegularTransferNN</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.predict" title="adapt.parameter_based.RegularTransferNN.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
+<td><p>Return predictions of target network.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="adapt.parameter_based.RegularTransferNN.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">get_network</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lambdas</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">trainable</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fit_source</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.parameter_based.RegularTransferNN.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">src_index</span></em>, <em class="sig-param"><span class="n">tgt_index</span></em>, <em class="sig-param"><span class="n">fit_params_src</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params_tgt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit RegularTransferNN</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">numpy array</span></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">numpy array</span></dt><dd><p>Output data.</p>
+</dd>
+<dt><strong>src_index</strong><span class="classifier">iterable</span></dt><dd><p>indexes of source labeled data in X, y.</p>
+</dd>
+<dt><strong>tgt_index</strong><span class="classifier">iterable</span></dt><dd><p>indexes of target unlabeled data in X, y.</p>
+</dd>
+<dt><strong>fit_params_src</strong><span class="classifier">dict, optional (default=None)</span></dt><dd><p>Arguments given to the fit method of the
+source estimator (epochs, batch_size…).
+If None, <code class="docutils literal notranslate"><span class="pre">fit_params_src</span> <span class="pre">=</span> <span class="pre">fit_params_tgt</span></code></p>
+</dd>
+<dt><strong>fit_params_tgt</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of the
+target estimator (epochs, batch_size…).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">returns an instance of self</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.parameter_based.RegularTransferNN.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.predict" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Return predictions of target network.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array</strong></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>y_pred: array</dt><dd><p>predictions of target network</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Antoine de Mathelin
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

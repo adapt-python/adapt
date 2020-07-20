@@ -1,0 +1,407 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>adapt.feature_based.ADDA &mdash; adapt 0.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/js/custom.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> adapt
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#"><span class="xref std std-ref">adapt.feature_based</span>.ADDA</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><span class="xref std std-ref">adapt.feature_based</span>.ADDA</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/adapt.feature_based.ADDA.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="adapt-feature-based-adda">
+<h1><a class="reference internal" href="../contents.html#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>.ADDA<a class="headerlink" href="#adapt-feature-based-adda" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="adapt.feature_based.ADDA">
+<em class="property">class </em><code class="sig-prename descclassname">adapt.feature_based.</code><code class="sig-name descname">ADDA</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">get_src_encoder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">get_tgt_encoder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">get_task</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">get_discriminator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">src_enc_params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">tgt_enc_params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">task_params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">disc_params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">compil_params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.feature_based.ADDA" title="Permalink to this definition">¶</a></dt>
+<dd><p>ADDA: Adversarial Discriminative Domain Adaptation</p>
+<p>ADDA is a feature-based domain adaptation method.</p>
+<p>The purpose of ADDA is to build a new feature representation
+in which source and target data could not be distinguished by
+any <strong>discriminator</strong> network. This feature representation is
+built with two <strong>encoder</strong> networks:</p>
+<ul class="simple">
+<li><p>a <strong>source encoder</strong> trained to provide good features in order
+to learn the task on the source domain. The task is learned
+through a <strong>task</strong> network trained with the <strong>source encoder</strong>.</p></li>
+<li><p>a <strong>target encoder</strong> trained to fools a <strong>discriminator</strong> network
+which tries to classify source and target data in the encoded space.
+The <strong>target encoder</strong> and the <strong>discriminator</strong> are trained
+in an adversarial fashion in the same way as GAN.</p></li>
+</ul>
+<p>The parameters of the four networks are optimized in a two stage
+algorithm where <strong>source encoder</strong> and <strong>task</strong> networks are first
+fitted according to the following optimization problem:</p>
+<div class="math notranslate nohighlight">
+\[\min_{\phi_S, F} \mathcal{L}_{task}(F(\phi_S(X_S)), y_S)\]</div>
+<p>In the second stage, <strong>target encoder</strong> and <strong>discriminator</strong>
+networks are fitted according to:</p>
+<div class="math notranslate nohighlight">
+\[\max_{\phi_T} \min_{D} \mathcal{L}_{01}(D(\phi_S(X_S)), \textbf{0})
++ \mathcal{L}_{01}(D(\phi_T(X_T)), \textbf{1})\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\((X_S, y_S), (X_T)\)</span> are respectively the labeled source data
+and the unlabeled target data.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\phi_S, \phi_T, F, D\)</span> are respectively the <strong>source encoder</strong>,
+the <strong>target encoder</strong>, the <strong>task</strong> and the <strong>discriminator</strong> networks.</p></li>
+</ul>
+<p>The method has been originally introduced for <strong>unsupervised</strong>
+classification DA but it could be widen to other task in <strong>supervised</strong>
+DA straightforwardly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>get_src_encoder</strong><span class="classifier">callable, optional (default=None)</span></dt><dd><p>Constructor for source encoder networks.
+The constructor should return a tensorflow compiled Model.
+It should also take at least an <code class="docutils literal notranslate"><span class="pre">input_shape</span></code> argument
+giving the input shape of the network.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, shallow networks with 10 neurons are used
+as encoder networks.</p>
+</dd>
+<dt><strong>get_tgt_encoder</strong><span class="classifier">callable, optional (default=None)</span></dt><dd><p>Constructor for target encoder networks.
+The constructor should return a tensorflow compiled Model.
+It should also take at least an <code class="docutils literal notranslate"><span class="pre">input_shape</span></code> argument
+giving the input shape of the network.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, shallow networks with 10 neurons are used
+as encoder networks.</p>
+</dd>
+<dt><strong>get_task</strong><span class="classifier">callable, optional (default=None)</span></dt><dd><p>Constructor for task network.
+The constructor should return a tensorflow compiled Model. 
+It should also take at least an <code class="docutils literal notranslate"><span class="pre">input_shape</span></code> argument
+giving the input shape of the network and an <code class="docutils literal notranslate"><span class="pre">output_shape</span></code>
+argument giving the shape of the last layer.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a linear network is used as task network.</p>
+</dd>
+<dt><strong>get_discriminator</strong><span class="classifier">callable, optional (default=None)</span></dt><dd><p>Constructor for discriminator network.
+The constructor should return a tensorflow compiled Model. 
+It should also take at least an <code class="docutils literal notranslate"><span class="pre">input_shape</span></code> argument
+giving the input shape of the network.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a linear network is used as discriminator
+network.</p>
+</dd>
+<dt><strong>src_enc_params</strong><span class="classifier">dict, optional (default=None)</span></dt><dd><p>Additional arguments for <code class="docutils literal notranslate"><span class="pre">get_src_encoder</span></code>.</p>
+</dd>
+<dt><strong>tgt_enc_params</strong><span class="classifier">dict, optional (default=None)</span></dt><dd><p>Additional arguments for <code class="docutils literal notranslate"><span class="pre">get_tgt_encoder</span></code>.</p>
+</dd>
+<dt><strong>task_params</strong><span class="classifier">dict, optional (default=None)</span></dt><dd><p>Additional arguments for <code class="docutils literal notranslate"><span class="pre">get_task</span></code>.</p>
+</dd>
+<dt><strong>disc_params</strong><span class="classifier">dict, optional (default=None)</span></dt><dd><p>Additional arguments for <code class="docutils literal notranslate"><span class="pre">get_task</span></code>.</p>
+</dd>
+<dt><strong>compil_params</strong><span class="classifier">key, value arguments, optional</span></dt><dd><p>Additional arguments for network compiler
+(loss, optimizer…).
+If none, loss is set to <code class="docutils literal notranslate"><span class="pre">&quot;binary_crossentropy&quot;</span></code>
+and optimizer to <code class="docutils literal notranslate"><span class="pre">&quot;adam&quot;</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r4509ca061731-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://arxiv.org/pdf/1702.05464.pdf">[1]</a> E. Tzeng, J. Hoffman, K. Saenko, and T. Darrell. “Adversarial discriminative domain adaptation”. In CVPR, 2017.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>src_encoder_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted source encoder network.</p>
+</dd>
+<dt><strong>tgt_encoder_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted source encoder network.</p>
+</dd>
+<dt><strong>task_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted task network.</p>
+</dd>
+<dt><strong>discriminator_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted discriminator network.</p>
+</dd>
+<dt><strong>src_model_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted source model: the union of
+source encoder and task networks.</p>
+</dd>
+<dt><strong>tgt_model_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted target model: the union of
+target encoder, task and discriminator networks.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.ADDA.__init__" title="adapt.feature_based.ADDA.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([get_src_encoder, get_tgt_encoder, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.ADDA.fit" title="adapt.feature_based.ADDA.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X, y, src_index, tgt_index[, …])</p></td>
+<td><p>Fit ADDA.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.ADDA.predict" title="adapt.feature_based.ADDA.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X[, domain])</p></td>
+<td><p>Return the predictions of task network on the encoded feature space.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="adapt.feature_based.ADDA.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">get_src_encoder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">get_tgt_encoder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">get_task</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">get_discriminator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">src_enc_params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">tgt_enc_params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">task_params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">disc_params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">compil_params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.feature_based.ADDA.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.ADDA.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">src_index</span></em>, <em class="sig-param"><span class="n">tgt_index</span></em>, <em class="sig-param"><span class="n">tgt_index_labeled</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fit_params_src</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params_tgt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.feature_based.ADDA.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit ADDA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">numpy array</span></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">numpy array</span></dt><dd><p>Output data.</p>
+</dd>
+<dt><strong>src_index</strong><span class="classifier">iterable</span></dt><dd><p>indexes of source labeled data in X, y.</p>
+</dd>
+<dt><strong>tgt_index</strong><span class="classifier">iterable</span></dt><dd><p>indexes of target unlabeled data in X, y.</p>
+</dd>
+<dt><strong>tgt_index_labeled</strong><span class="classifier">iterable, optional (default=None)</span></dt><dd><p>indexes of target labeled data in X, y.</p>
+</dd>
+<dt><strong>fit_params_src</strong><span class="classifier">dict, optional (default=None)</span></dt><dd><p>Arguments given to the fit process of source encoder
+and task networks (epochs, batch_size…).
+If None, <code class="docutils literal notranslate"><span class="pre">fit_params_src</span> <span class="pre">=</span> <span class="pre">fit_params_tgt</span></code></p>
+</dd>
+<dt><strong>fit_params_tgt</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of the ADDA model,
+i.e. fitting of target encoder and discriminator.
+(epochs, batch_size…).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">returns an instance of self</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.ADDA.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">domain</span><span class="o">=</span><span class="default_value">'target'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.feature_based.ADDA.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the predictions of task network on the encoded feature space.</p>
+<p><code class="docutils literal notranslate"><span class="pre">domain</span></code> arguments specify how features from <code class="docutils literal notranslate"><span class="pre">X</span></code>
+will be considered: as <code class="docutils literal notranslate"><span class="pre">&quot;source&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;target&quot;</span></code> features.
+If <code class="docutils literal notranslate"><span class="pre">&quot;source&quot;</span></code>, source encoder will be used. 
+If <code class="docutils literal notranslate"><span class="pre">&quot;target&quot;</span></code>, target encoder will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>domain</strong><span class="classifier">str, optional (default=”target”)</span></dt><dd><p>Choose between <code class="docutils literal notranslate"><span class="pre">&quot;source&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;target&quot;</span></code> encoder.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>Prediction of task network.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>As ADDA is an anti-symetric feature-based method, one should
+indicates the domain of <code class="docutils literal notranslate"><span class="pre">X</span></code> in order to apply the appropriate
+feature transformation.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Antoine de Mathelin
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
