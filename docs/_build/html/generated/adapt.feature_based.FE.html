@@ -155,7 +155,7 @@
 <h1><a class="reference internal" href="../contents.html#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>.FE<a class="headerlink" href="#adapt-feature-based-fe" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="adapt.feature_based.FE">
-<em class="property">class </em><code class="sig-prename descclassname">adapt.feature_based.</code><code class="sig-name descname">FE</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">get_estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.feature_based.FE" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">adapt.feature_based.</code><code class="sig-name descname">FE</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">get_estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_fe.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.FE" title="Permalink to this definition">¶</a></dt>
 <dd><p>FE: Frustratingly Easy Domain Adaptation.</p>
 <p>FE consists in a feature augmentation method
 where each input feature vector is augmented as follow:</p>
@@ -229,13 +229,13 @@ used by default as estimator.</p>
 </table>
 <dl class="py method">
 <dt id="adapt.feature_based.FE.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">get_estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.feature_based.FE.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">get_estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_fe.__init__.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.FE.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="adapt.feature_based.FE.fit">
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">src_index</span></em>, <em class="sig-param"><span class="n">tgt_index</span></em>, <em class="sig-param"><span class="n">sample_weight</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.feature_based.FE.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">src_index</span></em>, <em class="sig-param"><span class="n">tgt_index</span></em>, <em class="sig-param"><span class="n">sample_weight</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_fe.fit.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.FE.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit estimator on the augmented feature space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -265,7 +265,7 @@ used by default as estimator.</p>
 
 <dl class="py method">
 <dt id="adapt.feature_based.FE.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">domain</span><span class="o">=</span><span class="default_value">'target'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#adapt.feature_based.FE.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">domain</span><span class="o">=</span><span class="default_value">'target'</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_fe.predict.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.FE.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the predictions of <code class="docutils literal notranslate"><span class="pre">estimator_</span></code> on the augmented feature space.</p>
 <p><code class="docutils literal notranslate"><span class="pre">domain</span></code> arguments specify how features from <code class="docutils literal notranslate"><span class="pre">X</span></code> will be considered:
 as <code class="docutils literal notranslate"><span class="pre">&quot;source&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;target&quot;</span></code> features.</p>

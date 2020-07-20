@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
+user = "antoinedemathelin"
 project = 'adapt'
 copyright = '2020, Antoine de Mathelin'
 author = 'Antoine de Mathelin'
@@ -28,6 +29,7 @@ extensions = [
 'sphinx.ext.autodoc',
  'sphinx.ext.autosummary',
  'numpydoc',
+ 'sphinx.ext.linkcode'
  ]
 
 numpydoc_show_inherited_class_members = False
@@ -77,3 +79,30 @@ html_css_files = [
 html_js_files = [
     'js/custom.js',
 ]
+
+
+def linkcode_resolve(domain, info):
+    if domain != 'py':
+        return None
+    if not info['fullname']:
+        return None
+    if not info['module']:
+        return None
+    
+    object_name = info['fullname'].lower()
+    
+    if "coral" in object_name:
+        object_name = "coral"
+    if "tradaboost" in object_name:
+        object_name = "tradaboost"
+    if "regular" in object_name:
+        object_name = "regular"
+    
+    object_name = "_" + object_name
+    
+    if "utils" in info['module']:
+        filename = info['module'].replace('.', '/')
+    else:
+        filename = os.path.join(info['module'].replace('.', '/'), object_name)
+    
+    return 'https://github.com/%s/%s/tree/master/%s.py' % (user, project, filename)

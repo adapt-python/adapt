@@ -144,3 +144,6 @@ div.highlight-python.notranslate span.ow{
     color: #008000 !important;
     font-weight: bold !important;
 }
+
+
+.py.method a.reference.external {display: none !important}
