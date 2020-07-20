@@ -40,26 +40,26 @@ ADAPT package is divided in three sub-modules containing the following domain ad
 
 ### Feature-based methods
 
-- FE (*Frustratingly Easy Domain Adaptation*)
-- mSDA
-- DANN
-- ADDA
-- CORAL
-- DeepCORAL
+- [FE](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.feature_based.FE.html) (*Frustratingly Easy Domain Adaptation*)
+- [mSDA](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.feature_based.mSDA.html) (*marginalized Stacked Denoising Autoencoder*)
+- [DANN](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.feature_based.DANN.html) (*Discriminative Adversarial Neural Network*)
+- [ADDA](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.feature_based.ADDA.html) (*Adversarial Discriminative Domain Adaptation*)
+- [CORAL](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.feature_based.CORAL.html) (*CORrelation ALignment*)
+- [DeepCORAL](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.feature_based.DeepCORAL.html) (*Deep CORrelation ALignment*)
 
 ### Instance-based methods
 
-- KMM
-- KLIEP
-- TrAdaBoost
-- TrAdaBoostR2
-- TwoStageTrAdaBoostR2
+- [KMM](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.instance_based.KMM.html) (*Kernel Mean Matching*)
+- [KLIEP](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.instance_based.KLIEP.html) (*Kullback–Leibler Importance Estimation Procedure*)
+- [TrAdaBoost](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.instance_based.TrAdaBoost.html) (*Transfer AdaBoost*)
+- [TrAdaBoostR2](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.instance_based.TrAdaBoostR2.html) (*Transfer AdaBoost for Regression*)
+- [TwoStageTrAdaBoostR2](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.instance_based.TwoStageTrAdaBoostR2.html) (*Two Stage Transfer AdaBoost for Regression*)
 
 ### Parameter-based methods
 
-- RegularTransferLR
-- RegularTransferLC
-- RegularTransferNN
+- [RegularTransferLR](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.parameter_based.RegularTransferLR.html) (*Regular Transfer with Linear Regression*)
+- [RegularTransferLC](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.parameter_based.RegularTransferLC.html) (*Regular Transfer with Linear Classification*)
+- [RegularTransferNN](https://antoinedemathelin.github.io/adapt/_build/html/generated/adapt.parameter_based.RegularTransferNN.html) (*Regular Transfer with Neural Network*)
 
 
 ## Examples
@@ -68,4 +68,4 @@ Examples for regression and classification DA on synthetic datasets are availabl
 
 Classification | Regression         
 :-------------------------:|:-------------------------:
-[<img src="docs/source/_static/images/classification_setup.png" width="600px" height="350px">](https://antoinedemathelin.github.io/adapt/_build/html/classification_example.html) | <img src="docs/source/_static/images/regression_setup.png" width="600px" height="300px">
+[<img src="docs/_build/_static/images/classification_setup.png" width="600px" height="350px">](https://antoinedemathelin.github.io/adapt/_build/html/classification_example.html) | [<img src="docs/_build/_static/images/regression_setup.png" width="600px" height="300px">](https://antoinedemathelin.github.io/adapt/_build/html/regression_example.html)
