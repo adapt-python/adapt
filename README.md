@@ -1,6 +1,6 @@
 # ADAPT
 
-[![PyPI version](https://badge.fury.io/py/adaptation.svg)](https://badge.fury.io/py/adaptation)
+[![PyPI version](https://badge.fury.io/py/adaptation.svg)](https://pypi.org/project/adaptation)
 [![Build Status](https://github.com/antoinedemathelin/adapt/workflows/build/badge.svg)](https://github.com/antoinedemathelin/adapt/actions)
 [![Codecov Status](https://codecov.io/gh/antoinedemathelin/adapt/branch/master/graph/badge.svg?token=IWQXMYGY2Q)](https://codecov.io/gh/antoinedemathelin/adapt)
 
@@ -14,7 +14,7 @@ Find the details of all implemented methods as well as illustrative examples her
 
 ## Installation
 
-This package is available on [Pypi](https://badge.fury.io/py/adaptation) and can be installed with the following command line:
+This package is available on [Pypi](https://pypi.org/project/adaptation) and can be installed with the following command line:
 
 `pip install adaptation`
 
