@@ -5,7 +5,7 @@ __pycache__
 .Python
 env/
 build/
-docsrc/
+source/
 develop-eggs/
 dist/
 downloads/
