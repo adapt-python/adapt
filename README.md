@@ -19,13 +19,14 @@ This package is available on [Pypi](https://badge.fury.io/py/adaptation) and can
 `pip install adaptation`
 
 The following dependencies are required and will be installed with the library:
+- `numpy`
+- `scipy`
 - `tensorflow` (>= 2.0)
 - `scikit-learn`
-- `cvxopt`
 
 If for some reason, these packages failed to install, you can do it manually with:
 
-`pip install tensorflow scikit-learn cvxopt`
+`pip install numpy scipy tensorflow scikit-learn`
 
 Finally import the module in your python scripts with:
 
