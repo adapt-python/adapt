@@ -1,4 +1,4 @@
-# ADAPT
+# [ADAPT](https://antoinedemathelin.github.io/adapt/_build/html/index.html)
 
 [![PyPI version](https://badge.fury.io/py/adaptation.svg)](https://badge.fury.io/py/adaptation)
 [![Build Status](https://github.com/antoinedemathelin/adapt/workflows/build/badge.svg)](https://github.com/antoinedemathelin/adapt/actions)
@@ -10,7 +10,7 @@ ADAPT is a python library which provides several domain adaptation methods usefu
 
 ## Documentation Website
 
-Find the details of all implemented methods as well as illustrative examples on: 
+Find the details of all implemented methods as well as illustrative examples here: [ADAPT Documentation Website](https://antoinedemathelin.github.io/adapt/_build/html/index.html)
 
 ## Installation
 
@@ -68,4 +68,4 @@ Examples for regression and classification DA on synthetic datasets are availabl
 
 Classification | Regression         
 :-------------------------:|:-------------------------:
-<img src="docs/source/_static/images/classification_setup.png" width="600px" height="350px"> | <img src="docs/source/_static/images/regression_setup.png" width="600px" height="300px">
+[<img src="docs/source/_static/images/classification_setup.png" width="600px" height="350px">](https://antoinedemathelin.github.io/adapt/_build/html/classification_example.html) | <img src="docs/source/_static/images/regression_setup.png" width="600px" height="300px">
