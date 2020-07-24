@@ -34,6 +34,26 @@ Finally import the module in your python scripts with:
 import adapt
 ```
 
+## Reference
+
+If you use this library in your research, please cite ADAPT using the following reference:
+
+```python
+A. de Mathelin, ADAPT Awesome Domain Adaptation Package Toolbox, 
+Website: https://antoinedemathelin.github.io/adapt/_build/html/index.html,	2020
+```
+	
+Or in BibTeX format:
+
+```python
+@misc{demathelin2020adapt,
+title={ADAPT Awesome Domain Adaptation Package Toolbox},
+author={A. de Mathelin},
+url={https://antoinedemathelin.github.io/adapt/_build/html/index.html},
+year={2020}
+}
+```
+
 ## Content
 
 ADAPT package is divided in three sub-modules containing the following domain adaptation methods:

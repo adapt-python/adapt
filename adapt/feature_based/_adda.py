@@ -29,7 +29,7 @@ class ADDA:
     - a **source encoder** trained to provide good features in order
       to learn the task on the source domain. The task is learned
       through a **task** network trained with the **source encoder**.
-    - a **target encoder** trained to fools a **discriminator** network
+    - a **target encoder** trained to fool a **discriminator** network
       which tries to classify source and target data in the encoded space.
       The **target encoder** and the **discriminator** are trained
       in an adversarial fashion in the same way as GAN.

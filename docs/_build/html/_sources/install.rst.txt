@@ -3,6 +3,27 @@
 Installation
 ============
 
+Reference
+---------
+
+If you use this library in your research, please cite ADAPT using the following reference:
+
+.. code-block::
+
+	A. de Mathelin, ADAPT Awesome Domain Adaptation Package Toolbox, 
+	Website: https://antoinedemathelin.github.io/adapt/_build/html/index.html,	2020
+	
+Or in BibTeX format:
+
+.. code-block::
+
+	@misc{demathelin2020adapt,
+	title={ADAPT Awesome Domain Adaptation Package Toolbox},
+	author={A. de Mathelin},
+	url={https://antoinedemathelin.github.io/adapt/_build/html/index.html},
+	year={2020}
+	}
+
 Pypi Installation
 -----------------
 
