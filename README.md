@@ -55,6 +55,7 @@ year={2020}
 }
 ```
 
+
 ## Content
 
 ADAPT package is divided in three sub-modules containing the following domain adaptation methods:
@@ -90,3 +91,8 @@ Examples for regression and classification DA on synthetic datasets are availabl
 Classification | Regression         
 :-------------------------:|:-------------------------:
 [<img src="docs/_build/html/_static/images/classification_setup.png" width="600px" height="350px">](https://antoinedemathelin.github.io/adapt/_build/html/classification_example.html) | [<img src="docs/_build/html/_static/images/regression_setup.png" width="600px" height="300px">](https://antoinedemathelin.github.io/adapt/_build/html/regression_example.html)
+
+
+## Acknowledgement
+
+Part of this work has been funded by the Industrial Data Analytics and Machine Learning chair from ENS Paris-Saclay, Borelli center.
