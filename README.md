@@ -39,14 +39,14 @@ import adapt
 
 If you use this library in your research, please cite ADAPT using the following reference:
 
-```python
+```
 A. de Mathelin, ADAPT Awesome Domain Adaptation Package Toolbox, 
-Website: https://antoinedemathelin.github.io/adapt/_build/html/index.html,	2020
+Website: https://antoinedemathelin.github.io/adapt/_build/html/index.html, 2020
 ```
 	
 Or in BibTeX format:
 
-```python
+```
 @misc{demathelin2020adapt,
 title={ADAPT Awesome Domain Adaptation Package Toolbox},
 author={A. de Mathelin},
@@ -54,6 +54,7 @@ url={https://antoinedemathelin.github.io/adapt/_build/html/index.html},
 year={2020}
 }
 ```
+
 
 ## Content
 
@@ -90,3 +91,8 @@ Examples for regression and classification DA on synthetic datasets are availabl
 Classification | Regression         
 :-------------------------:|:-------------------------:
 [<img src="docs/_build/html/_static/images/classification_setup.png" width="600px" height="350px">](https://antoinedemathelin.github.io/adapt/_build/html/classification_example.html) | [<img src="docs/_build/html/_static/images/regression_setup.png" width="600px" height="300px">](https://antoinedemathelin.github.io/adapt/_build/html/regression_example.html)
+
+
+## Acknowledgement
+
+Part of this work has been funded by the Industrial Data Analytics and Machine Learning chair from ENS Paris-Saclay, Borelli center.
