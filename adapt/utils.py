@@ -260,15 +260,15 @@ def toy_classification(n_samples=100, n_target_labeled=0,
         Target indexes labeled. 
     """
     np.random.seed(random_state)
-    Xs, ys = make_classification(n_samples=100, n_features=2, n_informative=2,
+    Xs, ys = make_classification(n_samples=n_samples, n_features=n_features, n_informative=n_features,
                                  n_redundant=0, n_repeated=0,
                                  n_clusters_per_class=1, n_classes=2,
                                  shuffle=False)
-    Xt, yt = make_classification(n_samples=100, n_features=2, n_informative=2,
+    Xt, yt = make_classification(n_samples=n_samples, n_features=n_features, n_informative=n_features,
                                  n_redundant=0, n_repeated=0,
                                  n_clusters_per_class=1, n_classes=2,
                                  shuffle=False)
-    yt[:50] = 1; yt[50:] = 0
+    yt[:int(n_samples/2)] = 1; yt[int(n_samples/2):] = 0
     Xt[:, 0] += 1; Xt[:, 1] += 0.5;
 
     Xs[:, 0] = (Xs[:, 0]-np.min(Xs[:, 0]))/np.max(Xs[:, 0]-np.min(Xs[:, 0]))
