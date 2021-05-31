@@ -102,12 +102,12 @@ def test_regularlc_fit():
         (model.predict(Xt) == y_classif[100:]).sum() - 80) < 2
 
 
-def test_regularnn_fit():
-    tf.random.set_seed(0)
-    np.random.seed(0)
-    model = RegularTransferNN(_get_network,
-                              lambdas=0)
-    model.fit(X, y_reg, range(100), range(100, 110),
-              epochs=100, batch_size=100, verbose=0)
-    assert np.abs(model.predict(Xt).ravel() 
-                  - y_reg[100:]).sum() < 1
+# def test_regularnn_fit():
+#     tf.random.set_seed(0)
+#     np.random.seed(0)
+#     model = RegularTransferNN(_get_network,
+#                               lambdas=0)
+#     model.fit(X, y_reg, range(100), range(100, 110),
+#               epochs=100, batch_size=100, verbose=0)
+#     assert np.abs(model.predict(Xt).ravel() 
+#                   - y_reg[100:]).sum() < 1
