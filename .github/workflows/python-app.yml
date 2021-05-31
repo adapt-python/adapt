@@ -30,9 +30,9 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov=adapt
-    - name: Upload codecov
-      run: |
-        codecov
+#     - name: Upload codecov
+#       run: |
+#         codecov
      
 #   linux:
 
