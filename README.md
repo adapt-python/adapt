@@ -24,37 +24,17 @@ The following dependencies are required and will be installed with the library:
 - `scipy`
 - `tensorflow` (>= 2.0)
 - `scikit-learn`
+- `cvxopt`
 
 If for some reason, these packages failed to install, you can do it manually with:
 
-`pip install numpy scipy tensorflow scikit-learn`
+`pip install numpy scipy tensorflow scikit-learn cvxopt`
 
 Finally import the module in your python scripts with:
 
 ```python
 import adapt
 ```
-
-## Reference
-
-If you use this library in your research, please cite ADAPT using the following reference:
-
-```
-A. de Mathelin, ADAPT Awesome Domain Adaptation Package Toolbox, 
-Website: https://antoinedemathelin.github.io/adapt/_build/html/index.html, 2020
-```
-	
-Or in BibTeX format:
-
-```
-@misc{demathelin2020adapt,
-title={ADAPT Awesome Domain Adaptation Package Toolbox},
-author={A. de Mathelin},
-url={https://antoinedemathelin.github.io/adapt/_build/html/index.html},
-year={2020}
-}
-```
-
 
 ## Content
 
