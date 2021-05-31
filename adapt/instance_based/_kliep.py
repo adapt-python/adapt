@@ -80,7 +80,7 @@ class KLIEP:
         If get_estimator is ``None``, a ``LinearRegression`` object will be
         used by default as estimator.
         
-    sigmas : float or list of float, optional (default=0.1)
+    sigmas : float or list of float, optional (default=1/nb_features)
         Kernel bandwidths.
         If ``sigmas`` is a list of multiple values, the
         kernel bandwidth is selected with the LCV procedure.
@@ -89,9 +89,19 @@ class KLIEP:
         Cross-validation split parameter.
         Used only if sigmas has more than one value.
         
-    max_points : int, optional (default=100)
+    max_centers : int, optional (default=100)
         Maximal number of target instances use to
         compute kernels.
+        
+    lr: float, optional (default=1e-4)
+        Learning rate of the gradient ascent.
+        
+    tol: float, optional (default=1e-6)
+        Optimization threshold.
+        
+    max_iter: int, optional (default=5000)
+        Maximal iteration of the gradient ascent
+        optimization.
         
     kwargs : key, value arguments, optional
         Additional arguments for the constructor.
@@ -128,11 +138,11 @@ M. Sugiyama, S. Nakajima, H. Kashima, P. von Bünau and  M. Kawanabe. \
 "Direct importance estimation with model selection and its application \
 to covariateshift adaptation". In NIPS 2007
     """
-    def __init__(self, estimator=None,
+    def __init__(self, get_estimator=None,
                  sigmas=None, max_centers=100,
                  cv=5, lr=1e-4, tol=1e-6, max_iter=5000,
                  verbose=1, **kwargs):
-        self.estimator = estimator
+        self.get_estimator = get_estimator
         self.sigmas = sigmas
         self.cv = cv
         self.max_centers = max_centers
@@ -142,8 +152,8 @@ to covariateshift adaptation". In NIPS 2007
         self.verbose = verbose
         self.kwargs = kwargs
         
-        if self.estimator is None:
-            self.estimator = LinearRegression()
+        if self.get_estimator is None:
+            self.get_estimator = LinearRegression
 
 
     def fit_weights(self, Xs, Xt=None):
@@ -187,16 +197,17 @@ to covariateshift adaptation". In NIPS 2007
     
     
     def fit_estimator(self, X, y, **fit_params):
+        self.estimator_ = self.get_estimator(**self.kwargs)
         if hasattr(self, "weights_"):        
-            if "sample_weight" in inspect.signature(self.estimator.fit).parameters:
-                self.estimator.fit(X, y, 
+            if "sample_weight" in inspect.signature(self.estimator_.fit).parameters:
+                self.estimator_.fit(X, y, 
                                    sample_weight=self.weights_,
                                    **fit_params)
             else:
                 bootstrap_index = np.random.choice(
                 len(X), size=len(X), replace=True,
                 p=self.weights_ / self.weights_.sum())
-                self.estimator.fit(X[bootstrap_index], y[bootstrap_index],
+                self.estimator_.fit(X[bootstrap_index], y[bootstrap_index],
                                    **fit_params)
         else:
             raise NotFittedError("Weights are not fitted yet, please "
@@ -204,7 +215,8 @@ to covariateshift adaptation". In NIPS 2007
         return self
     
 
-    def fit(self, Xs, ys, Xt=None, **fit_params):
+    def fit(self, X, y, src_index, tgt_index,
+            tgt_index_labeled=None, **fit_params):
         """
         Fit KLIEP.
 
@@ -233,6 +245,14 @@ to covariateshift adaptation". In NIPS 2007
         -------
         self : returns an instance of self
         """
+        if tgt_index_labeled is None:
+            Xs = X[src_index]
+            ys = y[src_index]
+        else:
+            Xs = X[np.concatenate((src_index, tgt_index_labeled))]
+            ys = y[np.concatenate((src_index, tgt_index_labeled))]
+        Xt = X[tgt_index]
+        
         if self.verbose:
             print("Fitting weights...")
         self.fit_weights(Xs, Xt)
@@ -318,7 +338,7 @@ to covariateshift adaptation". In NIPS 2007
         y_pred: array
             prediction of estimator.
         """        
-        return self.estimator.predict(X)
+        return self.estimator_.predict(X)
 
 
     def predict_weights(self, X=None):
