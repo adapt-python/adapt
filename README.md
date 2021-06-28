@@ -11,7 +11,7 @@ ADAPT is a python library which provides several domain adaptation methods usefu
 
 ## Documentation Website
 
-Find the details of all implemented methods as well as illustrative examples here: [ADAPT Documentation Website](https://https://adapt-python.github.io/adapt/_build/html/index.html)
+Find the details of all implemented methods as well as illustrative examples here: [ADAPT Documentation Website](https://adapt-python.github.io/adapt/_build/html/index.html)
 
 ## Installation
 
