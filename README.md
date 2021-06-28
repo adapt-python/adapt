@@ -70,7 +70,7 @@ Examples for regression and classification DA on synthetic datasets are availabl
 
 Classification | Regression         
 :-------------------------:|:-------------------------:
-[<img src="docs/_static/images/classification_setup.png" width="600px" height="350px">](https://adapt-python.github.io/adapt/_build/html/classification_example.html) | [<img src="docs/_static/images/regression_setup.png" width="600px" height="300px">](https://adapt-python.github.io/adapt/_build/html/regression_example.html)
+[<img src="docs/_static/images/classification_setup.png" width="600px" height="350px">](https://adapt-python.github.io/adapt/classification_example.html) | [<img src="docs/_static/images/regression_setup.png" width="600px" height="300px">](https://adapt-python.github.io/adapt/regression_example.html)
 
 
 ## Acknowledgement
