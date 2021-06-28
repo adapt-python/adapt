@@ -5,15 +5,34 @@ Marginalized Stacked Denoising Autoencoder
 import copy
 
 import numpy as np
-from sklearn.linear_model import LinearRegression
-from tensorflow.keras import Model
-from tensorflow.keras.layers import Input, GaussianNoise
+import tensorflow as tf
+from tensorflow.keras import Model, Sequential
+from tensorflow.keras.layers import Input, GaussianNoise, Flatten, Reshape, Dense
+from tensorflow.keras.optimizers import Adam
 
-from adapt.utils import (check_indexes,
+from adapt.utils import (check_arrays,
+                   check_one_array,
                          check_network,
-                         check_estimator,
-                         get_default_encoder,
-                         get_default_task)
+                         check_estimator)
+
+def _get_default_encoder():
+    model = Sequential()
+    model.add(Flatten())
+    model.add(Dense(100, activation="relu"))
+    model.add(Dense(100, activation="relu"))
+    model.add(Dense(10, activation=None))
+    return model
+
+
+def _get_default_decoder(output_shape):
+    model = Sequential()
+    model.add(Flatten())
+    model.add(Dense(100, activation="relu"))
+    model.add(Dense(100, activation="relu"))
+    model.add(Dense(np.prod(output_shape), activation=None))
+    model.add(Reshape(output_shape))
+    return model
+
 
 class mSDA:
     """
@@ -37,64 +56,81 @@ class mSDA:
     **supervised** DA settings.
 
     Parameters
-    ----------
-    get_encoder : callable, optional (default=None)
-        Constructor for encoder network.
-        The constructor should return a tensorflow compiled Model. 
-        It should also take at least an ``input_shape`` argument giving
-        the input shape of the network.
-        If ``None``, a shallow network with 10 neurons is used
-        as encoder network.
+    ----------    
+    encoder : tensorflow Model (default=None)
+        Encoder netwok. If ``None``, a neural network with two
+        hidden layers of 100 neurons with ReLU activation each
+        is used. The encoded space is made of one layer of
+        10 neurons with linear activation.
         
-    get_decoder : callable, optional (default=None)
-        Constructor for decoder network.
-        The constructor should return a tensorflow compiled Model. 
-        It should also take at least an ``input_shape`` argument giving
-        the input shape of the network and an ``output_shape``
-        argument giving the shape of the last layer.
-        If ``None``, a shallow network is used.
+    decoder : tensorflow Model (default=None)
+        Decoder netwok. If ``None``, a neural network with two
+        hidden layers of 100 neurons with ReLU activation each
+        is used. The output layer is made of ``n_dim`` neurons 
+        and a linear activation, ``n_dim`` is the input space
+        dimension.
     
-    get_estimator : callable or object, optional (default=None)
-        Constructor for the estimator.
-        If a callable function is given it should return an estimator
-        object (with ``fit`` and ``predict`` methods).
-        If a class is given, a new instance of this class will
-        be built and used as estimator.
-        If get_estimator is ``None``, a ``LinearRegression`` object will be
-        used by default as estimator.
+    estimator : sklearn estimator or tensorflow Model (default=None)
+        Estimator used to learn the task. 
+        If estimator is ``None``, a ``LinearRegression``
+        instance is used as estimator.
         
-    noise_lvl: float, optional (default=0.1)
+    noise_lvl: float (default=0.1)
         Standard deviation of gaussian noise added to the input data
         in the denoising autoencoder.
         
-    enc_params : dict, optional (default=None)
-        Additional arguments for ``get_encoder``.
+    copy : boolean (default=True)
+        Whether to make a copy of ``encoder``, ``decoder``
+        and ``estimator`` or not.
+            
+    verbose : int (default=1)
+        Verbosity level.
         
-    dec_params : dict, optional (default=None)
-        Additional arguments for ``get_decoder``.
-        
-    est_params : dict, optional (default=None)
-        Additional arguments for ``get_estimator``.
+    random_state : int (default=None)
+        Seed of random generator.
     
     compil_params : key, value arguments, optional
         Additional arguments for autoencoder compiler
         (loss, optimizer...).
         If none, loss is set to ``"mean_squared_error"``
-        and optimizer to ``"adam"``.
+        and optimizer to ``Adam(0.001)``.
 
     Attributes
     ----------
     encoder_ : tensorflow Model
-        Fitted encoder network.
+        Encoder network.
         
     decoder_ : tensorflow Model
-        Fitted decoder network.
+        Decoder network.
         
     autoencoder_ : tensorflow Model
-        Fitted autoencoder network.
+        Autoencoder network.
         
     estimator_ : object
-        Fitted estimator.
+        Estimator.
+        
+    history_ : dict
+        history of the losses and metrics across the epochs
+        of the autoencoder training.
+        
+    Examples
+    --------
+    >>> from adapt.utils import make_classification_da
+    >>> from sklearn.linear_model import LogisticRegression
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = mSDA(estimator=LogisticRegression('none'), random_state=0)
+    >>> model.fit(Xs, ys, Xt, epochs=500, verbose=0)
+    >>> (model.predict(Xt) == yt).sum() / len(yt)
+    0.68
+    >>> lr = LogisticRegression('none')
+    >>> lr.fit(Xs, ys)
+    >>> lr.score(Xt, yt)
+    0.58
+    
+    See also
+    --------
+    DANN
+    DeepCORAL
 
     References
     ----------
@@ -103,109 +139,135 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
 "Marginalized denoising autoencoders for domain adaptation". In ICML, 2012.
     """
 
-    def __init__(self, get_encoder=None, get_decoder=None,
-                 get_estimator=None, noise_lvl=0.1,
-                 enc_params=None, dec_params=None, est_params=None,
+    def __init__(self, 
+                 encoder=None, 
+                 decoder=None,
+                 estimator=None,
+                 noise_lvl=0.1,
+                 copy=True,
+                 verbose=1,
+                 random_state=None,
                  **compil_params):
-        self.get_encoder = get_encoder
-        self.get_decoder = get_decoder
-        self.get_estimator = get_estimator
+        
+        np.random.seed(random_state)
+        tf.random.set_seed(random_state)
+        
+        if encoder is None:
+            self.encoder_ = _get_default_encoder()
+        else:
+            self.encoder_ = check_network(encoder, copy=copy,
+                                          display_name="encoder",
+                                          compile_=False)
+        if decoder is None:
+            self.no_decoder_ = True
+        else:
+            self.no_decoder_ = False
+            self.decoder_ = check_network(decoder, copy=copy,
+                                          display_name="decoder",
+                                          compile_=False)
+        
+        self.estimator_ = check_estimator(estimator, copy=copy)
         self.noise_lvl = noise_lvl
-        self.enc_params = enc_params
-        self.dec_params = dec_params
-        self.est_params = est_params
+        self.copy = copy
+        self.verbose = verbose
+        self.random_state = random_state
         self.compil_params = compil_params
 
-        if self.get_encoder is None:
-            self.get_encoder = get_default_encoder
-        if self.get_decoder is None:
-            self.get_decoder = get_default_task
-        if self.get_estimator is None:
-            self.get_estimator = LinearRegression
 
-        if self.enc_params is None:
-            self.enc_params = {}
-        if self.dec_params is None:
-            self.dec_params = {}
-        if self.est_params is None:
-            self.est_params = {}
-
-
-    def fit(self, X, y, src_index, tgt_index, tgt_index_labeled=None,
-            fit_params_ae=None, **fit_params):
+    def fit(self, Xs, ys, Xt, fit_params_est=None, **fit_params):
         """
         Fit mSDA.
 
         Parameters
         ----------
-        X : numpy array
-            Input data.
+        Xs : numpy array
+            Source input data.
 
-        y : numpy array
-            Output data.
+        ys : numpy array
+            Source output data.
 
-        src_index : iterable
-            indexes of source labeled data in X, y.
-
-        tgt_index : iterable
-            indexes of target unlabeled data in X, y.
+        Xt : numpy array
+            Target input data.
             
-        tgt_index_labeled : iterable, optional (default=None)
-            indexes of target labeled data in X, y.
+        fit_params_est : key, value arguments
+            Arguments given to the fit method of
+            ``estimator``.
 
-        fit_params_ae : dict, optional (default=None)
-            Arguments given to the fit process of the autoencoder
-            (epochs, batch_size...).
-            If None, ``fit_params_ae = fit_params``
-        
         fit_params : key, value arguments
-            Arguments given to the fit method of the estimator
-            (epochs, batch_size...).
+            Arguments given to the fit method of
+            ``auto_encoder``.
 
         Returns
         -------
         self : returns an instance of self
-        """
-        check_indexes(src_index, tgt_index, tgt_index_labeled)
+        """        
+        Xs, ys, Xt, _ = check_arrays(Xs, ys, Xt, None)
         
-        if fit_params_ae is None:
-            fit_params_ae = fit_params
-
-        ae_index = np.concatenate((src_index, tgt_index))
-        if tgt_index_labeled is None:
-            task_index = src_index
-        else:
-            task_index = np.concatenate((src_index, tgt_index_labeled))
+        if fit_params_est is None:
+            fit_params_est = {}
+            
+        if self.verbose:
+            print("Fit autoencoder...")
+        self.fit_embeddings(Xs, Xt, **fit_params)
         
-        self.encoder_ = check_network(self.get_encoder,
-                                "get_encoder",
-                                input_shape=X.shape[1:],
-                                **self.enc_params)
-        self.decoder_ = check_network(self.get_decoder,
-                                "get_decoder",
-                                input_shape=self.encoder_.output_shape[1:],
-                                output_shape=X.shape[1:],
-                                **self.dec_params)
-        self.estimator_ = check_estimator(self.get_estimator,
-                                          **self.est_params)
+        Xs_emb = self.encoder_.predict(Xs)
         
-        inputs = Input(X.shape[1:])
+        if self.verbose:
+            print("Fit estimator...")
+        self.fit_estimator(Xs_emb, ys, **fit_params_est)
+        return self
+        
+    
+    def fit_embeddings(self, Xs, Xt, **fit_params):
+        np.random.seed(self.random_state)
+        tf.random.set_seed(self.random_state)
+        
+        if np.any(Xs.shape[1:] != Xt.shape[1:]):
+            raise ValueError("Xs and Xt should have same dim, got "
+                             "%s and %s"%(str(Xs.shape[1:], Xt.shape[1:])))
+        shape = Xs.shape[1:]
+        
+        if self.no_decoder_:
+            self.decoder_ = _get_default_decoder(shape)
+            self.no_decoder_ = False
+        
+        if not hasattr(self, "autoencoder_"):
+            self._build(shape)
+        
+        X = np.concatenate((Xs, Xt))
+        hist = self.autoencoder_.fit(X, X, **fit_params)
+        
+        for k, v in hist.history.items():
+            self.history_[k] = self.history_.get(k, []) + v
+        
+        return self
+    
+    
+    def fit_estimator(self, X, y, **fit_params):
+        np.random.seed(self.random_state)
+        tf.random.set_seed(self.random_state)
+        return self.estimator_.fit(X, y, **fit_params)
+        
+        
+    def _build(self, shape):
+        self.history_ = {}
+        
+        zeros_enc = self.encoder_.predict(np.zeros((1,) + shape))
+        self.decoder_.predict(zeros_enc)
+        
+        inputs = Input(shape)
         noised = GaussianNoise(self.noise_lvl)(inputs)
         encoded = self.encoder_(noised)
         decoded = self.decoder_(encoded)
-        self.autoencoder_ = Model(inputs, decoded, name="AutoEncoder")
+        self.autoencoder_ = Model(inputs, decoded)
         
         compil_params = copy.deepcopy(self.compil_params)
         if not "loss" in compil_params:
             compil_params["loss"] = "mean_squared_error"        
         if not "optimizer" in compil_params:
-            compil_params["optimizer"] = "adam"
+            compil_params["optimizer"] = Adam(0.001)
         
         self.autoencoder_.compile(**compil_params)
-        
-        self.autoencoder_.fit(X[ae_index], X[ae_index], **fit_params_ae)
-        self.estimator_.fit(self.encoder_.predict(X[task_index]),
-                            y[task_index], **fit_params)
         return self
 
 
@@ -224,4 +286,5 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
         y_pred : array
             Prediction of ``estimator_``.
         """
+        X = check_one_array(X)
         return self.estimator_.predict(self.encoder_.predict(X))

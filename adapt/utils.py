@@ -4,30 +4,32 @@ Utility functions for adapt package.
 
 import warnings
 import inspect
+from copy import deepcopy
 
 import numpy as np
 from sklearn.datasets import make_classification
+from sklearn.utils import check_array
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin, clone
 import tensorflow as tf
-from tensorflow.keras import Model
-from tensorflow.keras.layers import Layer, Input, Dense, Flatten, Reshape
+from tensorflow.keras import Sequential, Model
+from tensorflow.keras.layers import Layer, Dense, Flatten
+from tensorflow.keras.models import clone_model
 
 
 def check_indexes(src_index, tgt_index, tgt_index_labeled=None):
     """
     Check indexes.
-
     Check that all given indexes are iterable. The function
     also raises warnings if similar indexes appear in both
     source and target index lists.
-
+    
     Parameters
     ----------
     src_index : iterable
         Indexes of source instances.
-
     tgt_index : iterable
         Indexes of target instances.
-
     tgt_index_labeled : iterable, optional
         Indexes of labeled target instances.
     """
@@ -52,164 +54,295 @@ def check_indexes(src_index, tgt_index, tgt_index_labeled=None):
                           " src_index and tgt_index_labeled")
 
 
-def check_estimator(get_estimator, **kwargs):
+def check_one_array(X):
     """
-    Build and check estimator.
-
-    Check that ``get_estimator`` is a callable or is a class.
-    Then, build an estimator and check that it
-    implements ``fit`` and ``predict`` methods.
+    Check array and reshape 1D array in 2D array
+    of shape (-1, 1).
 
     Parameters
     ----------
-    get_estimator : object
-        Constructor for the estimator.
-
-    kwargs : key, value arguments, optional
-        Additional arguments for the constructor.
-    """
-    if (hasattr(get_estimator, "__call__")
-        or inspect.isclass(get_estimator)):
-        try:
-            estimator = get_estimator(**kwargs)
-        except Exception as err_info:
-            raise ValueError("Failed to build estimator with"
-                             " 'get_estimator'. "
-                             "Please provide a builder function wich "
-                             "returns a valid estimator object or "
-                             "check the given additional arguments. \n \n"
-                             "Exception message: %s"%err_info)
+    X : numpy array
+        Input data.
         
-    else:
-        raise ValueError("get_estimator is neither a callable nor a class")
-
-    if not hasattr(estimator, "fit") or not hasattr(estimator, "predict"):
-        raise ValueError("Built estimator does "
-                         "not implement fit and predict methods")
-
-    return estimator
-
-
-def check_network(get_model, constructor_name="get_model", **kwargs):
+    Returns
+    -------
+    X
     """
-    Build and check network.
+    X = check_array(X, ensure_2d=False, allow_nd=True)
+    if X.ndim == 1:
+        X = X.reshape(-1, 1)
+    return X
 
-    Check that ``get_model`` is a callable.
-    Then, build an estimator and check that it is an 
-    instance of tensorflow Model.
-    
-    If ``input_shape`` is in kwargs, the function checks that
-    the built estimator takes an ``input_shape`` arguments.
-    
-    If ``output_shape`` is in kwargs, the function checks that
-    the built estimator takes an ``output_shape`` arguments.
+            
+def check_arrays(Xs, ys, Xt, yt=None):
+    """
+    Check arrays and reshape 1D array in 2D array
+    of shape (-1, 1). Check if the length of Xs, Xt
+    match the length of ys, yt.
 
     Parameters
     ----------
-    get_model : object
-        Constructor for the estimator.
+    Xs : numpy array
+        Source input data.
 
-    constructor_name: str, optional (default="get_model")
-        Name of contructor variable.
+    ys : numpy array
+        Source output data.
 
-    kwargs : key, value arguments, optional
-        Additional arguments for the constructor.
+    Xt : numpy array
+        Target input data.
+            
+    yt : numpy array, optional (default=None)
+        Target output data. `yt` is only used
+        for validation metrics.
+        
+    Returns
+    -------
+    Xs, ys, Xt, yt
     """
-    if hasattr(get_model, "__call__"):
-        if ("input_shape" in kwargs and not
-            "input_shape" in inspect.getfullargspec(get_model)[0]):
-            raise ValueError("Constructor '%s' must take "
-                             "an 'input_shape' argument"%constructor_name)
-        if ("output_shape" in kwargs and not
-            "output_shape" in inspect.getfullargspec(get_model)[0]):
-            raise ValueError("Constructor '%s' must take "
-                             "an 'output_shape' argument"%constructor_name)
+    Xs = check_array(Xs, ensure_2d=False, allow_nd=True)
+    if Xs.ndim == 1:
+        Xs = Xs.reshape(-1, 1)
+    Xt = check_array(Xt, ensure_2d=False, allow_nd=True)
+    if Xt.ndim == 1:
+        Xt = Xt.reshape(-1, 1)
+    ys = check_array(ys, ensure_2d=False, allow_nd=True)
+    if ys.ndim == 1:
+        ys = ys.reshape(-1, 1)
+    
+    if len(Xs) != len(ys):
+        raise ValueError("Length of Xs and ys mismatch: %i != %i"%
+                         (len(Xs), len(ys)))
+    
+    if yt is not None:
+        yt = check_array(yt, ensure_2d=False, allow_nd=True)
+        if yt.ndim == 1:
+            yt = yt.reshape(-1, 1)
+        if len(Xt) != len(yt):
+            raise ValueError("Length of Xt and yt mismatch: %i != %i"%
+                             (len(Xt), len(yt)))
+    return Xs, ys, Xt, yt
+
+
+def check_estimator(estimator, copy=True,
+                    display_name="estimator",
+                    task=None,
+                    force_copy=False):
+    """
+    Check estimator.
+
+    Check that ``estimator`` is a sklearn ``BaseEstimator``
+    or a tensorflow ``Model``.
+
+    Parameters
+    ----------
+    estimator : sklearn BaseEstimator or tensorflow Model
+        Estimator.
+
+    copy : boolean (default=False)
+        Whether to return a copy of the estimator or not.
+        If cloning fail, a warning is raised.
+
+    display_name: str (default="estimator")
+        Name to display if an error or warning is raised
+        
+    task : str (default=None)
+        Task at hand. Possible value : 
+        (``None``, ``"reg"``, ``"class"``)
+        
+    force_copy: boolean (default=False)
+        If True, an error is raised if the cloning failed.
+    """
+    if estimator is None:
+        if task == "class":
+            estimator = LogisticRegression()
+        else:
+            estimator = LinearRegression()
+    
+    if isinstance(estimator, BaseEstimator):
+        if (isinstance(estimator, ClassifierMixin) and task=="reg"):
+            raise ValueError("`%s` argument is a sklearn `ClassifierMixin` instance "
+                             "whereas the considered object handles only regression task. "
+                             "Please provide a sklearn `RegressionMixin` instance or a "
+                             "tensorflow Model instance."%display_name)
+        if (isinstance(estimator, RegressorMixin) and task=="class"):
+            raise ValueError("`%s` argument is a sklearn `RegressionMixin` instance "
+                             "whereas the considered object handles only classification task. "
+                             "Please provide a sklearn `ClassifierMixin` instance or a "
+                             "tensorflow Model instance."%display_name)
+        if copy:
+            try:
+                new_estimator = deepcopy(estimator)
+            except Exception as e:
+                if force_copy:
+                    raise ValueError("`%s` argument can't be duplicated. "
+                                     "Recorded exception: %s. "%
+                                     (display_name, e))
+                else:
+                    warnings.warn("`%s` argument can't be duplicated. "
+                                  "Recorded exception: %s. "
+                                  "The current estimator will be used. "
+                                  "Use `copy=False` to hide this warning."%
+                                  (display_name, e))
+        else:
+            new_estimator = estimator
+    elif isinstance(estimator, Model):
+        new_estimator = check_network(network=estimator,
+                                  copy=copy, 
+                                  display_name=display_name,
+                                  force_copy=force_copy)
+    else:
+        raise ValueError("`%s` argument is neither a sklearn `BaseEstimator` "
+                         "instance nor a tensorflow Model instance. "
+                         "Given argument, %s"%
+                         (display_name, str(estimator)))
+    return new_estimator
+
+
+def check_network(network, copy=True,
+                  compile_=True,
+                  display_name="network",
+                  force_copy=False):
+    """
+    Check if the given network is a tensorflow Model.
+    If ``copy`` is ``True``, a copy of the network is
+    returned if possible.
+
+    Parameters
+    ----------
+    network : tensorflow Model
+        Network to check.
+        
+    copy : boolean (default=True)
+        Whether to return a copy of the network or not.
+        If cloning fail, a warning is raised.
+        
+    compile_ : boolean (default=True)
+        Whether to compile the network after cloning,
+        using copy of the network loss and optimizer.
+
+    display_name: str (default="network")
+        Name to display if an error or warning is raised
+        
+    force_copy: boolean (default=False)
+        If True, an error is raised if the cloning failed.
+    """
+    if not isinstance(network, Model):
+        raise ValueError('Expected `%s` argument '
+                         'to be a `Model` instance, got: %s'%
+                         (display_name, str(network)))
+    
+    if copy:
         try:
-            model = get_model(**kwargs)
-        except Exception as err_info:
-            raise ValueError("Failed to build model with constructor '%s'. "
-                             "Please provide a builder function wich "
-                             "returns a compiled tensorflow Model or "
-                             "check the given additional arguments. \n \n"
-                             "Exception message: %s"%(constructor_name,
-                             err_info))
-    else:
-        raise ValueError("'%s' is not a callable"%constructor_name)
+            new_network = clone_model(network)
+            if (hasattr(network, "input_shape") and
+                hasattr(new_network, "input_shape")):
+                new_network.set_weights(network.get_weights())
+        except Exception as e:
+            if force_copy:
+                raise ValueError("`%s` argument can't be duplicated. "
+                                 "Recorded exception: %s. "%
+                                 (display_name, e))
+            else:
+                warnings.warn("`%s` argument can't be duplicated. "
+                              "Recorded exception: %s. "
+                              "The current network will be used. "
+                              "Use `copy=False` to hide this warning."%
+                              (display_name, e))
+                new_network = network
+        if compile_:
+            if network.optimizer:
+                new_network.compile(optimizer=deepcopy(network.optimizer),
+                                    loss=deepcopy(network.loss),
+                                    metrics=deepcopy(network.metrics))
+            else:
+                raise ValueError("The given `%s` argument is not compiled yet. "
+                                 "Please use `model.compile(optimizer, loss)`."%
+                                 (display_name))
+    else:        
+        new_network = network
+    return new_network
 
-    if not isinstance(model, Model):
-        raise ValueError("Built model from '%s' is not "
-                         "a tensorflow Model instance"%constructor_name)
-    return model
 
-
-def get_default_encoder(input_shape):
+def get_default_encoder():
     """
-    Return a compiled tensorflow Model of a shallow network
-    with 10 neurons and a linear activation.
-
-    Parameters
-    ----------
-    input_shape: tuple
-        Network input_shape
+    Return a tensorflow Model of one layer
+    with 10 neurons and a relu activation.
 
     Returns
     -------
     tensorflow Model
     """
-    inputs = Input(shape=input_shape)
-    flattened = Flatten()(inputs)
-    outputs = Dense(10)(flattened)
-    model = Model(inputs, outputs)
-    model.compile(loss="mean_squared_error", optimizer="adam")
+    model = Sequential()
+    model.add(Flatten())
+    model.add(Dense(10, activation="relu"))
     return model
 
 
-def get_default_task(input_shape, output_shape=(1,)):
+def get_default_task():
     """
-    Return a compiled tensorflow Model of a linear network
-    with a linear activation.
-
-    Parameters
-    ----------
-    input_shape: tuple
-        Network input_shape
-
-    output_shape: tuple, optional (default=(1,))
-        Network output_shape
+    Return a tensorflow Model of two hidden layers
+    with 10 neurons each and relu activations. The
+    last layer is composed of one neuron with linear
+    activation.
 
     Returns
     -------
     tensorflow Model
     """
-    inputs = Input(shape=input_shape)
-    flattened = Flatten()(inputs)
-    outputs = Dense(np.prod(output_shape))(flattened)
-    outputs = Reshape(output_shape)(outputs)
-    model = Model(inputs, outputs)
-    model.compile(loss="mean_squared_error", optimizer="adam")
+    model = Sequential()
+    model.add(Flatten())
+    model.add(Dense(10, activation="relu"))
+    model.add(Dense(10, activation="relu"))
+    model.add(Dense(1, activation=None))
+    return model
+
+
+def get_default_discriminator():
+    """
+    Return a tensorflow Model of two hidden layers
+    with 10 neurons each and relu activations. The
+    last layer is composed of one neuron with sigmoid
+    activation.
+
+    Returns
+    -------
+    tensorflow Model
+    """
+    model = Sequential()
+    model.add(Flatten())
+    model.add(Dense(10, activation="relu"))
+    model.add(Dense(10, activation="relu"))
+    model.add(Dense(1, activation="sigmoid"))
     return model
 
 
 @tf.custom_gradient
-def _grad_reverse(x):
+def _grad_handler(x, lambda_):
     y = tf.identity(x)
     def custom_grad(dy):
-        return -dy
+        return (lambda_ * dy, 0. * lambda_)
     return y, custom_grad
 
-
-class GradientReversal(Layer):
+class GradientHandler(Layer):
     """
-    Inverse sign of gradient during backpropagation.
+    Multiply gradients with a scalar during backpropagation.
 
     Act as identity in forward step.
+    
+    Parameters
+    ----------
+    lambda_init : float (default=1.)
+        Scalar multiplier
     """
-    def __init__(self):
-        super().__init__()
+    def __init__(self, lambda_init=1., name="g_handler"):
+        super().__init__(name=name)
+        self.lambda_ = tf.Variable(lambda_init,
+                                   trainable=False,
+                                   dtype="float32")
 
     def call(self, x):
         """
-        Call gradient reversal.
+        Call gradient handler.
         
         Parameters
         ----------
@@ -218,15 +351,15 @@ class GradientReversal(Layer):
             
         Returns
         -------
-        func: gradient reversal function.
+        x, custom gradient function
         """
-        return _grad_reverse(x)
+        return _grad_handler(x, self.lambda_)
 
 
-def toy_classification(n_samples=100, n_target_labeled=0,
+def make_classification_da(n_samples=100, n_target_labeled=0,
                        n_features=2, random_state=2):
     """
-    Generate toy classification dataset for DA.
+    Generate a classification dataset for DA.
     
     Parameters
     ----------
@@ -244,104 +377,86 @@ def toy_classification(n_samples=100, n_target_labeled=0,
         
     Returns
     -------
-    X : numpy array
-        Input data
+    Xs : numpy array
+        Source input data
 
-    y : numpy array
-        Labels
+    ys : numpy array
+        Source output data
         
-    src_index : numpy array
-        Source indexes.
-    
-    tgt_index : numpy array
-        Target indexes.
-    
-    tgt_index_labeled : numpy array
-        Target indexes labeled. 
+    Xt : numpy array
+        Target input data
+
+    yt : numpy array
+        Target output data
     """
     np.random.seed(random_state)
-    Xs, ys = make_classification(n_samples=n_samples, n_features=n_features, n_informative=n_features,
+    Xs, ys = make_classification(n_samples=n_samples, n_features=n_features,
+                                 n_informative=n_features,
                                  n_redundant=0, n_repeated=0,
                                  n_clusters_per_class=1, n_classes=2,
                                  shuffle=False)
-    Xt, yt = make_classification(n_samples=n_samples, n_features=n_features, n_informative=n_features,
+    Xt, yt = make_classification(n_samples=n_samples, n_features=n_features,
+                                 n_informative=n_features,
                                  n_redundant=0, n_repeated=0,
                                  n_clusters_per_class=1, n_classes=2,
                                  shuffle=False)
     yt[:int(n_samples/2)] = 1; yt[int(n_samples/2):] = 0
     Xt[:, 0] += 1; Xt[:, 1] += 0.5;
 
-    Xs[:, 0] = (Xs[:, 0]-np.min(Xs[:, 0]))/np.max(Xs[:, 0]-np.min(Xs[:, 0]))
-    Xs[:, 1] = (Xs[:, 1]-np.min(Xs[:, 1]))/np.max(Xs[:, 1]-np.min(Xs[:, 1]))
-
-    Xt[:, 0] = (Xt[:, 0]-np.min(Xt[:, 0]))/np.max(Xt[:, 0]-np.min(Xt[:, 0]))
-    Xt[:, 1] = (Xt[:, 1]-np.min(Xt[:, 1]))/np.max(Xt[:, 1]-np.min(Xt[:, 1]))
-
-    X = np.concatenate((Xs, Xt))
-    y = np.concatenate((ys, yt))
-    src_index = range(n_samples)
-    tgt_index = range(n_samples, 2*n_samples)
-    tgt_index_labeled = np.random.choice(n_samples,
-                      n_target_labeled) + n_samples
+    for i in range(n_features):
+        Xs[:, i] = (Xs[:, i]-np.min(Xs[:, i]))/np.max(Xs[:, i]-np.min(Xs[:, i]))
+        Xt[:, i] = (Xt[:, i]-np.min(Xt[:, i]))/np.max(Xt[:, i]-np.min(Xt[:, i]))
     
-    return X, y, np.array(src_index), np.array(tgt_index), tgt_index_labeled
+    return Xs, ys, Xt, yt
 
 
-def toy_regression(n_samples=100, n_target_labeled=3, random_state=0):
+def make_regression_da(n_samples=100, n_features=1, random_state=0):
     """
-    Generate toy regression dataset for DA.
+    Generate a regression dataset for DA.
     
     Parameters
     ----------
-    n_samples : int, optional (default=100)
+    n_samples : int (default=100)
         Size of source and target samples.
         
-    n_target_labeled : int, optional (default=3)
-        Size of target labeled sample.
+    n_features : int (default=1)
+        Sample dimension.
     
-    random_state: int, optional (default=0)
+    random_state: int (default=0)
         Random state number.
         
     Returns
     -------
-    X : numpy array
-        Input data
+    Xs : numpy array
+        Source input data
 
-    y : numpy array
-        Labels
+    ys : numpy array
+        Source output data
         
-    src_index : numpy array
-        Source indexes.
-    
-    tgt_index : numpy array
-        Target indexes.
-    
-    tgt_index_labeled : numpy array
-        Target indexes labeled. 
+    Xt : numpy array
+        Target input data
+
+    yt : numpy array
+        Target output data
     """
     np.random.seed(random_state)
     
-    Xs = np.random.uniform(size=n_samples) * 4 - 2
+    Xs = np.random.uniform(size=(n_samples, n_features)) * 4 - 2
     Xs = np.sort(Xs)
-    Xt = np.random.uniform(size=n_samples) * 2.5 + 2
+    Xt = np.random.uniform(size=(n_samples, n_features)) * 2.5 + 2
     ys = (Xs + 0.1 * Xs ** 5 +
           np.random.randn(n_samples) * 0.2 + 1)
     yt = (Xt + 0.1 * (Xt - 2) **4  +
           np.random.randn(n_samples) * 0.4 + 1)
     
-    Xt = (Xt - Xs.ravel().mean()) / Xs.ravel().std()
+    Xt = (Xt - Xs.mean(0)) / Xs.std(0)
     yt = (yt - ys.ravel().mean()) / (2 * ys.ravel().std())
-    Xs = (Xs - Xs.ravel().mean()) / (Xs.ravel().std())
+    Xs = (Xs - Xs.mean(0)) / (Xs.std(0))
     ys = (ys - ys.ravel().mean()) / (2 * ys.ravel().std())
     
     X = np.concatenate((Xs, Xt))
-    y = np.concatenate((ys, yt))
     
-    X = ((X - X.ravel().mean()) / X.ravel().std()) / 3
-    
-    src_index = np.array(range(n_samples))
-    tgt_index = np.array(range(n_samples, 2 * n_samples))
-    tgt_index_labeled = np.random.choice(n_samples,
-                            n_target_labeled) + n_samples
+    Xs = ((Xs - X.mean(0)) / X.std(0)) / 3
+    Xt = ((Xt - X.mean(0)) / X.std(0)) / 3
 
-    return X, y, src_index, tgt_index, tgt_index_labeled
+    return Xs, ys, Xt, yt

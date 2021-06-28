@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>adapt.instance_based.KLIEP &mdash; adapt 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/js/custom.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> adapt
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#"><span class="xref std std-ref">adapt.instance_based</span>.KLIEP</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><span class="xref std std-ref">adapt.instance_based</span>.KLIEP</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/adapt.instance_based.KLIEP.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="adapt-instance-based-kliep">
+<h1><a class="reference internal" href="../contents.html#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>.KLIEP<a class="headerlink" href="#adapt-instance-based-kliep" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="adapt.instance_based.KLIEP">
+<em class="property">class </em><code class="sig-prename descclassname">adapt.instance_based.</code><code class="sig-name descname">KLIEP</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sigmas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_centers</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">cv</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">lr</span><span class="o">=</span><span class="default_value">0.0001</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">1e-06</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">5000</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kliep.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KLIEP" title="Permalink to this definition">¶</a></dt>
+<dd><p>KLIEP: Kullback–Leibler Importance Estimation Procedure</p>
+<p>KLIEP is an instance-based method for domain adaptation.</p>
+<p>The purpose of the algorithm is to correct the difference between
+input distributions of source and target domains. This is done by
+finding a the source instances <strong>reweighting</strong> which minimizes the 
+<strong>Kullback-Leibler divergence</strong> between source and target distributions.</p>
+<p>The source instance weights are given by the following formula:</p>
+<div class="math notranslate nohighlight">
+\[w(x) = \sum_{x_i \in X_T} \alpha_i K_{\sigma}(x, x_i)\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(x, x_i\)</span> are input instances.</p></li>
+<li><p><span class="math notranslate nohighlight">\(X_T\)</span> is the target input data.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha_i\)</span> are the basis functions coefficients.</p></li>
+<li><p><span class="math notranslate nohighlight">\(K_{\sigma}(x, x_i) = \text{exp}(-\frac{||x - x_i||^2}{2\sigma^2})\)</span>
+are kernel functions of bandwidth <span class="math notranslate nohighlight">\(\sigma\)</span>.</p></li>
+</ul>
+<p>KLIEP algorithm consists in finding the optimal <span class="math notranslate nohighlight">\(\alpha_i\)</span> according to
+the following optimization problem:</p>
+<div class="math notranslate nohighlight">
+\[\max_{\alpha_i } \sum_{x_i \in X_T} \text{log}(
+\sum_{x_j \in X_T} \alpha_i K_{\sigma}(x_j, x_i))\]</div>
+<p>Subject to:</p>
+<div class="math notranslate nohighlight">
+\[\sum_{x_k \in X_S} \sum_{x_j \in X_T} \alpha_i K_{\sigma}(x_j, x_k)) = n_S\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(X_T\)</span> is the source input data of size <span class="math notranslate nohighlight">\(n_S\)</span>.</p></li>
+</ul>
+<p>The above OP is solved through gradient descent algorithm.</p>
+<p>Furthemore a LCV procedure can be added to select the appropriate
+bandwidth <span class="math notranslate nohighlight">\(\sigma\)</span>. The parameter is then selected using
+cross-validation on the <span class="math notranslate nohighlight">\(J\)</span> score defined as follow:
+<span class="math notranslate nohighlight">\(J = \frac{1}{|\mathcal{X}|} \sum_{x \in \mathcal{X}} \text{log}(w(x))\)</span></p>
+<p>Finally, an estimator is fitted using the reweighted labeled source instances.</p>
+<p>KLIEP method has been originally introduced for <strong>unsupervised</strong>
+DA but it could be widen to <strong>supervised</strong> by simply adding labeled
+target data to the training set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>estimator</strong><span class="classifier">sklearn estimator or tensorflow Model (default=None)</span></dt><dd><p>Estimator used to learn the task. 
+If estimator is <code class="docutils literal notranslate"><span class="pre">None</span></code>, a <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code>
+instance is used as estimator.</p>
+</dd>
+<dt><strong>sigmas</strong><span class="classifier">float or list of float, optional (default=1/nb_features)</span></dt><dd><p>Kernel bandwidths.
+If <code class="docutils literal notranslate"><span class="pre">sigmas</span></code> is a list of multiple values, the
+kernel bandwidth is selected with the LCV procedure.</p>
+</dd>
+<dt><strong>cv</strong><span class="classifier">int, optional (default=5)</span></dt><dd><p>Cross-validation split parameter.
+Used only if sigmas has more than one value.</p>
+</dd>
+<dt><strong>max_centers</strong><span class="classifier">int, optional (default=100)</span></dt><dd><p>Maximal number of target instances use to
+compute kernels.</p>
+</dd>
+<dt><strong>lr: float, optional (default=1e-4)</strong></dt><dd><p>Learning rate of the gradient ascent.</p>
+</dd>
+<dt><strong>tol: float, optional (default=1e-6)</strong></dt><dd><p>Optimization threshold.</p>
+</dd>
+<dt><strong>max_iter: int, optional (default=5000)</strong></dt><dd><p>Maximal iteration of the gradient ascent
+optimization.</p>
+</dd>
+<dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">estimator</span></code> or not.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">int (default=1)</span></dt><dd><p>Verbosity level.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int (default=None)</span></dt><dd><p>Seed of random generator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="adapt.instance_based.KMM.html#adapt.instance_based.KMM" title="adapt.instance_based.KMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KMM</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r37425ff8ed62-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://papers.nips.cc/paper/3248-direct-importance-estimation-with-model-selection-and-its-application-to-covariate-shift-adaptation.pdf">[1]</a> M. Sugiyama, S. Nakajima, H. Kashima, P. von Bünau and  M. Kawanabe. “Direct importance estimation with model selection and its application to covariateshift adaptation”. In NIPS 2007</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Xs</span><span class="p">,</span> <span class="n">Xs</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span><span class="o">&lt;</span><span class="mf">0.5</span> <span class="k">else</span> <span class="mf">1.</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xs</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yt</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">Xt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kliep</span> <span class="o">=</span> <span class="n">KLIEP</span><span class="p">(</span><span class="n">sigmas</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kliep</span><span class="o">.</span><span class="n">fit_estimator</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">kliep</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="go">0.09388...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kliep</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">)</span>
+<span class="go">Fitting weights...</span>
+<span class="go">Cross Validation process...</span>
+<span class="go">Parameter sigma = 0.1000 -- J-score = 0.059 (0.001)</span>
+<span class="go">Parameter sigma = 1.0000 -- J-score = 0.427 (0.003)</span>
+<span class="go">Parameter sigma = 10.0000 -- J-score = 0.704 (0.017)</span>
+<span class="go">Fitting estimator...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">kliep</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="go">0.00302...</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>weights_</strong><span class="classifier">numpy array</span></dt><dd><p>Training instance weights.</p>
+</dd>
+<dt><strong>sigma_ = float</strong></dt><dd><p>Sigma selected for the kernel</p>
+</dd>
+<dt><strong>alphas_ = numpy array</strong></dt><dd><p>Basis functions coefficients.</p>
+</dd>
+<dt><strong>centers_ = numpy array</strong></dt><dd><p>Center points for kernels.</p>
+</dd>
+<dt><strong>self.j_scores_ = list of float</strong></dt><dd><p>List of J scores.</p>
+</dd>
+<dt><strong>estimator_</strong><span class="classifier">object</span></dt><dd><p>Fitted estimator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.KLIEP.__init__" title="adapt.instance_based.KLIEP.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([estimator, sigmas, max_centers, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.KLIEP.fit" title="adapt.instance_based.KLIEP.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(Xs, ys, Xt, **fit_params)</p></td>
+<td><p>Fit KLIEP.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.KLIEP.fit_estimator" title="adapt.instance_based.KLIEP.fit_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_estimator</span></code></a>(X, y[, sample_weight])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.KLIEP.fit_weights" title="adapt.instance_based.KLIEP.fit_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_weights</span></code></a>(Xs, Xt)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.KLIEP.predict" title="adapt.instance_based.KLIEP.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
+<td><p>Return estimator predictions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.KLIEP.predict_weights" title="adapt.instance_based.KLIEP.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>([X])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="adapt.instance_based.KLIEP.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sigmas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_centers</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">cv</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">lr</span><span class="o">=</span><span class="default_value">0.0001</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">1e-06</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">5000</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kliep.__init__.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KLIEP.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.instance_based.KLIEP.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Xs</span></em>, <em class="sig-param"><span class="n">ys</span></em>, <em class="sig-param"><span class="n">Xt</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kliep.fit.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KLIEP.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit KLIEP.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">numpy array</span></dt><dd><p>Source input data.</p>
+</dd>
+<dt><strong>ys</strong><span class="classifier">numpy array</span></dt><dd><p>Source output data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">numpy array</span></dt><dd><p>Target input data.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of
+the estimator.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">returns an instance of self</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.instance_based.KLIEP.fit_estimator">
+<code class="sig-name descname">fit_estimator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sample_weight</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kliep.fit_estimator.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KLIEP.fit_estimator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="adapt.instance_based.KLIEP.fit_weights">
+<code class="sig-name descname">fit_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Xs</span></em>, <em class="sig-param"><span class="n">Xt</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kliep.fit_weights.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KLIEP.fit_weights" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="adapt.instance_based.KLIEP.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kliep.predict.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KLIEP.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return estimator predictions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array</strong></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>y_pred: array</dt><dd><p>prediction of estimator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.instance_based.KLIEP.predict_weights">
+<code class="sig-name descname">predict_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kliep.predict_weights.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KLIEP.predict_weights" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Antoine de Mathelin, Centre Borelli, ENS Paris-Saclay
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

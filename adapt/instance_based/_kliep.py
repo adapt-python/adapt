@@ -8,10 +8,11 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import pairwise
 from sklearn.exceptions import NotFittedError
+import tensorflow as tf
 
-from adapt.utils import check_indexes, check_estimator
+from adapt.utils import check_arrays, check_one_array, check_estimator
 
-EPS = 1e-6
+EPS = np.finfo(float).eps
 
 class KLIEP:
     """
@@ -71,14 +72,10 @@ class KLIEP:
     
     Parameters
     ----------
-    get_estimator : callable or object, optional (default=None)
-        Constructor for the estimator.
-        If a callable function is given it should return an estimator
-        object (with ``fit`` and ``predict`` methods).
-        If a class is given, a new instance of this class will
-        be built and used as estimator.
-        If get_estimator is ``None``, a ``LinearRegression`` object will be
-        used by default as estimator.
+    estimator : sklearn estimator or tensorflow Model (default=None)
+        Estimator used to learn the task. 
+        If estimator is ``None``, a ``LinearRegression``
+        instance is used as estimator.
         
     sigmas : float or list of float, optional (default=1/nb_features)
         Kernel bandwidths.
@@ -103,8 +100,14 @@ class KLIEP:
         Maximal iteration of the gradient ascent
         optimization.
         
-    kwargs : key, value arguments, optional
-        Additional arguments for the constructor.
+    copy : boolean (default=True)
+        Whether to make a copy of ``estimator`` or not.
+        
+    verbose : int (default=1)
+        Verbosity level.
+        
+    random_state : int (default=None)
+        Seed of random generator.
 
     Attributes
     ----------
@@ -125,6 +128,28 @@ class KLIEP:
         
     estimator_ : object
         Fitted estimator.
+        
+    Examples
+    --------
+    >>> np.random.seed(0)
+    >>> Xs = np.random.randn(50) * 0.1
+    >>> Xs = np.concatenate((Xs, Xs + 1.))
+    >>> Xt = np.random.randn(100) * 0.1
+    >>> ys = np.array([-0.2 * x if x<0.5 else 1. for x in Xs])
+    >>> yt = -0.2 * Xt
+    >>> kliep = KLIEP(sigmas=[0.1, 1, 10], random_state=0)
+    >>> kliep.fit_estimator(Xs, ys)
+    >>> np.abs(kliep.predict(Xt).ravel() - yt).mean()
+    0.09388...
+    >>> kliep.fit(Xs, ys, Xt)
+    Fitting weights...
+    Cross Validation process...
+    Parameter sigma = 0.1000 -- J-score = 0.059 (0.001)
+    Parameter sigma = 1.0000 -- J-score = 0.427 (0.003)
+    Parameter sigma = 10.0000 -- J-score = 0.704 (0.017)
+    Fitting estimator...
+    >>> np.abs(kliep.predict(Xt).ravel() - yt).mean()
+    0.00302...
 
     See also
     --------
@@ -138,127 +163,129 @@ M. Sugiyama, S. Nakajima, H. Kashima, P. von Bünau and  M. Kawanabe. \
 "Direct importance estimation with model selection and its application \
 to covariateshift adaptation". In NIPS 2007
     """
-    def __init__(self, get_estimator=None,
-                 sigmas=None, max_centers=100,
-                 cv=5, lr=1e-4, tol=1e-6, max_iter=5000,
-                 verbose=1, **kwargs):
-        self.get_estimator = get_estimator
+    def __init__(self,
+                 estimator=None,
+                 sigmas=None,
+                 max_centers=100,
+                 cv=5,
+                 lr=1e-4,
+                 tol=1e-6,
+                 max_iter=5000,
+                 copy=True,
+                 verbose=1,
+                 random_state=None):
+        np.random.seed(random_state)
+        tf.random.set_seed(random_state)
+        
+        self.estimator_ = check_estimator(estimator, copy=copy)
         self.sigmas = sigmas
         self.cv = cv
         self.max_centers = max_centers
         self.lr = lr
         self.tol = tol
         self.max_iter = max_iter
+        self.copy = copy
         self.verbose = verbose
-        self.kwargs = kwargs
-        
-        if self.get_estimator is None:
-            self.get_estimator = LinearRegression
+        self.random_state = random_state
 
 
-    def fit_weights(self, Xs, Xt=None):
+    def fit_weights(self, Xs, Xt):
+        np.random.seed(self.random_state)
+        tf.random.set_seed(self.random_state)
         
-        if Xt is None:
-            self.weights_ = np.ones(len(Xs))
+        Xs = check_one_array(Xs)
+        Xt = check_one_array(Xt)
         
-        else:
-            self.j_scores_ = []
+        self.j_scores_ = []
 
-            if hasattr(self.sigmas, "__iter__"):
-                # Cross-validation process   
-                if len(Xt) < self.cv:
-                    raise ValueError("Length of Xt is under cv value")
-                    
+        if hasattr(self.sigmas, "__iter__"):
+            # Cross-validation process   
+            if len(Xt) < self.cv:
+                raise ValueError("Length of Xt is smaller than cv value")
+
+            if self.verbose:
+                print("Cross Validation process...")
+
+            shuffled_index = np.arange(len(Xt))
+            np.random.shuffle(shuffled_index)
+
+            for sigma in self.sigmas:
+                cv_scores = self._cross_val_jscore(Xs, Xt[shuffled_index], sigma, self.cv)
+                self.j_scores_.append(np.mean(cv_scores))
+
                 if self.verbose:
-                    print("Cross Validation process...")
-                
-                shuffled_index = np.arange(len(Xt))
-                np.random.shuffle(shuffled_index)
-                    
-                for sigma in self.sigmas:
-                    cv_scores = self._cross_val_jscore(Xs, Xt[shuffled_index], sigma, self.cv)
-                    self.j_scores_.append(np.mean(cv_scores))
-                    
-                    if self.verbose:
-                        print("Parameter sigma = %.4f -- J-score = %.3f (%.3f)"%
-                              (sigma, np.mean(cv_scores), np.std(cv_scores)))
-                    
-                self.sigma_ = self.sigmas[np.argmax(self.j_scores_)]                
-            else:
-                self.sigma_ = self.sigmas
+                    print("Parameter sigma = %.4f -- J-score = %.3f (%.3f)"%
+                          (sigma, np.mean(cv_scores), np.std(cv_scores)))
 
-            self.alphas_, self.centers_ = self._fit(Xs, Xt, self.sigma_)
-
-            self.weights_ = np.dot(
-                pairwise.rbf_kernel(Xs, self.centers_, self.sigma_),
-                self.alphas_
-                ).ravel()
-        return self
-    
-    
-    def fit_estimator(self, X, y, **fit_params):
-        self.estimator_ = self.get_estimator(**self.kwargs)
-        if hasattr(self, "weights_"):        
-            if "sample_weight" in inspect.signature(self.estimator_.fit).parameters:
-                self.estimator_.fit(X, y, 
-                                   sample_weight=self.weights_,
-                                   **fit_params)
-            else:
-                bootstrap_index = np.random.choice(
-                len(X), size=len(X), replace=True,
-                p=self.weights_ / self.weights_.sum())
-                self.estimator_.fit(X[bootstrap_index], y[bootstrap_index],
-                                   **fit_params)
+            self.sigma_ = self.sigmas[np.argmax(self.j_scores_)]                
         else:
-            raise NotFittedError("Weights are not fitted yet, please "
-                                 "call 'fit_weights' first.")
+            self.sigma_ = self.sigmas
+
+        self.alphas_, self.centers_ = self._fit(Xs, Xt, self.sigma_)
+
+        self.weights_ = np.dot(
+            pairwise.rbf_kernel(Xs, self.centers_, self.sigma_),
+            self.alphas_
+            ).ravel()
+        return self
+    
+    
+    def fit_estimator(self, X, y,
+                      sample_weight=None,
+                      **fit_params):
+        np.random.seed(self.random_state)
+        tf.random.set_seed(self.random_state)
+        
+        X = check_one_array(X)
+        y = check_one_array(y)
+             
+        if "sample_weight" in inspect.signature(self.estimator_.fit).parameters:
+            self.estimator_.fit(X, y, 
+                                sample_weight=sample_weight,
+                                **fit_params)
+        else:
+            if sample_weight is not None:
+                sample_weight /= (sample_weight.sum() + EPS)
+            bootstrap_index = np.random.choice(
+            len(X), size=len(X), replace=True,
+            p=sample_weight)
+            self.estimator_.fit(X[bootstrap_index], y[bootstrap_index],
+                                **fit_params)
         return self
     
 
-    def fit(self, X, y, src_index, tgt_index,
-            tgt_index_labeled=None, **fit_params):
+    def fit(self, Xs, ys, Xt, **fit_params):
         """
         Fit KLIEP.
 
         Parameters
         ----------
-        X : numpy array
-            Input data.
+        Xs : numpy array
+            Source input data.
 
-        y : numpy array
-            Output data.
+        ys : numpy array
+            Source output data.
 
-        src_index : iterable
-            indexes of source labeled data in X, y.
-
-        tgt_index : iterable
-            indexes of target unlabeled data in X, y.
-            
-        tgt_index_labeled : iterable, optional (default=None)
-            indexes of target labeled data in X, y.
+        Xt : numpy array
+            Target input data.
 
         fit_params : key, value arguments
-            Arguments given to the fit method of the estimator
-            (epochs, batch_size...).
+            Arguments given to the fit method of
+            the estimator.
 
         Returns
         -------
         self : returns an instance of self
         """
-        if tgt_index_labeled is None:
-            Xs = X[src_index]
-            ys = y[src_index]
-        else:
-            Xs = X[np.concatenate((src_index, tgt_index_labeled))]
-            ys = y[np.concatenate((src_index, tgt_index_labeled))]
-        Xt = X[tgt_index]
-        
+        Xs, ys, Xt, _ = check_arrays(Xs, ys, Xt, None)        
         if self.verbose:
             print("Fitting weights...")
         self.fit_weights(Xs, Xt)
         if self.verbose:
             print("Fitting estimator...")
-        self.fit_estimator(Xs, ys, **fit_params)
+        self.fit_estimator(Xs, ys,
+                           sample_weight=self.weights_,
+                           **fit_params)
         return self
 
 
@@ -338,6 +365,7 @@ to covariateshift adaptation". In NIPS 2007
         y_pred: array
             prediction of estimator.
         """        
+        X = check_one_array(X)
         return self.estimator_.predict(X)
 
 
@@ -346,6 +374,7 @@ to covariateshift adaptation". In NIPS 2007
             if X is None or not hasattr(self, "alphas_"):
                 return self.weights_
             else:
+                X = check_one_array(X)
                 weights = np.dot(
                 pairwise.rbf_kernel(X, self.centers_, self.sigma_),
                 self.alphas_
