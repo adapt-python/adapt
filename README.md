@@ -11,7 +11,7 @@ ADAPT is a python library which provides several domain adaptation methods usefu
 
 ## Documentation Website
 
-Find the details of all implemented methods as well as illustrative examples here: [ADAPT Documentation Website](https://adapt-python.github.io/adapt/_build/html/index.html)
+Find the details of all implemented methods as well as illustrative examples here: [ADAPT Documentation Website](https://adapt-python.github.io/adapt/)
 
 ## Installation
 
@@ -42,26 +42,26 @@ ADAPT package is divided in three sub-modules containing the following domain ad
 
 ### Feature-based methods
 
-- [FE](https://adapt-python.github.io/adapt/_build/html/generated/adapt.feature_based.FE.html) (*Frustratingly Easy Domain Adaptation*)
-- [mSDA](https://adapt-python.github.io/adapt/_build/html/generated/adapt.feature_based.mSDA.html) (*marginalized Stacked Denoising Autoencoder*)
-- [DANN](https://adapt-python.github.io/adapt/_build/html/generated/adapt.feature_based.DANN.html) (*Discriminative Adversarial Neural Network*)
-- [ADDA](https://adapt-python.github.io/adapt/_build/html/generated/adapt.feature_based.ADDA.html) (*Adversarial Discriminative Domain Adaptation*)
-- [CORAL](https://adapt-python.github.io/adapt/_build/html/generated/adapt.feature_based.CORAL.html) (*CORrelation ALignment*)
-- [DeepCORAL](https://adapt-python.github.io/adapt/_build/html/generated/adapt.feature_based.DeepCORAL.html) (*Deep CORrelation ALignment*)
+- [FE](https://adapt-python.github.io/adapt/generated/adapt.feature_based.FE.html) (*Frustratingly Easy Domain Adaptation*)
+- [mSDA](https://adapt-python.github.io/adapt/generated/adapt.feature_based.mSDA.html) (*marginalized Stacked Denoising Autoencoder*)
+- [DANN](https://adapt-python.github.io/adapt/generated/adapt.feature_based.DANN.html) (*Discriminative Adversarial Neural Network*)
+- [ADDA](https://adapt-python.github.io/adapt/generated/adapt.feature_based.ADDA.html) (*Adversarial Discriminative Domain Adaptation*)
+- [CORAL](https://adapt-python.github.io/adapt/generated/adapt.feature_based.CORAL.html) (*CORrelation ALignment*)
+- [DeepCORAL](https://adapt-python.github.io/adapt/generated/adapt.feature_based.DeepCORAL.html) (*Deep CORrelation ALignment*)
 
 ### Instance-based methods
 
-- [KMM](https://adapt-python.github.io/adapt/_build/html/generated/adapt.instance_based.KMM.html) (*Kernel Mean Matching*)
-- [KLIEP](https://adapt-python.github.io/adapt/_build/html/generated/adapt.instance_based.KLIEP.html) (*Kullback–Leibler Importance Estimation Procedure*)
-- [TrAdaBoost](https://adapt-python.github.io/adapt/_build/html/generated/adapt.instance_based.TrAdaBoost.html) (*Transfer AdaBoost*)
-- [TrAdaBoostR2](https://adapt-python.github.io/adapt/_build/html/generated/adapt.instance_based.TrAdaBoostR2.html) (*Transfer AdaBoost for Regression*)
-- [TwoStageTrAdaBoostR2](https://adapt-python.github.io/adapt/_build/html/generated/adapt.instance_based.TwoStageTrAdaBoostR2.html) (*Two Stage Transfer AdaBoost for Regression*)
+- [KMM](https://adapt-python.github.io/adapt/generated/adapt.instance_based.KMM.html) (*Kernel Mean Matching*)
+- [KLIEP](https://adapt-python.github.io/adapt/generated/adapt.instance_based.KLIEP.html) (*Kullback–Leibler Importance Estimation Procedure*)
+- [TrAdaBoost](https://adapt-python.github.io/adapt/generated/adapt.instance_based.TrAdaBoost.html) (*Transfer AdaBoost*)
+- [TrAdaBoostR2](https://adapt-python.github.io/adapt/generated/adapt.instance_based.TrAdaBoostR2.html) (*Transfer AdaBoost for Regression*)
+- [TwoStageTrAdaBoostR2](https://adapt-python.github.io/adapt/generated/adapt.instance_based.TwoStageTrAdaBoostR2.html) (*Two Stage Transfer AdaBoost for Regression*)
 
 ### Parameter-based methods
 
-- [RegularTransferLR](https://adapt-python.github.io/adapt/_build/html/generated/adapt.parameter_based.RegularTransferLR.html) (*Regular Transfer with Linear Regression*)
-- [RegularTransferLC](https://adapt-python.github.io/adapt/_build/html/generated/adapt.parameter_based.RegularTransferLC.html) (*Regular Transfer with Linear Classification*)
-- [RegularTransferNN](https://adapt-python.github.io/adapt/_build/html/generated/adapt.parameter_based.RegularTransferNN.html) (*Regular Transfer with Neural Network*)
+- [RegularTransferLR](https://adapt-python.github.io/adapt/generated/adapt.parameter_based.RegularTransferLR.html) (*Regular Transfer with Linear Regression*)
+- [RegularTransferLC](https://adapt-python.github.io/adapt/generated/adapt.parameter_based.RegularTransferLC.html) (*Regular Transfer with Linear Classification*)
+- [RegularTransferNN](https://adapt-python.github.io/adapt/generated/adapt.parameter_based.RegularTransferNN.html) (*Regular Transfer with Neural Network*)
 
 
 ## Examples
@@ -70,7 +70,7 @@ Examples for regression and classification DA on synthetic datasets are availabl
 
 Classification | Regression         
 :-------------------------:|:-------------------------:
-[<img src="docs/_build/html/_static/images/classification_setup.png" width="600px" height="350px">](https://adapt-python.github.io/adapt/_build/html/classification_example.html) | [<img src="docs/_build/html/_static/images/regression_setup.png" width="600px" height="300px">](https://adapt-python.github.io/adapt/_build/html/regression_example.html)
+[<img src="docs/_static/images/classification_setup.png" width="600px" height="350px">](https://adapt-python.github.io/adapt/_build/html/classification_example.html) | [<img src="docs/_static/images/regression_setup.png" width="600px" height="300px">](https://adapt-python.github.io/adapt/_build/html/regression_example.html)
 
 
 ## Acknowledgement
