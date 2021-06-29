@@ -11,47 +11,11 @@ from sklearn.datasets import make_classification
 from sklearn.utils import check_array
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin, clone
+from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Layer, Dense, Flatten
 from tensorflow.keras.models import clone_model
-
-
-def check_indexes(src_index, tgt_index, tgt_index_labeled=None):
-    """
-    Check indexes.
-    Check that all given indexes are iterable. The function
-    also raises warnings if similar indexes appear in both
-    source and target index lists.
-    
-    Parameters
-    ----------
-    src_index : iterable
-        Indexes of source instances.
-    tgt_index : iterable
-        Indexes of target instances.
-    tgt_index_labeled : iterable, optional
-        Indexes of labeled target instances.
-    """
-    list_index = [src_index, tgt_index]
-    names = ["src_index", "tgt_index"]
-
-    if tgt_index_labeled is not None:
-        list_index.append(tgt_index_labeled)
-        names.append("tgt_index_labeled")
-
-    for index, name in zip(list_index, names):
-        if not hasattr(index, "__iter__"):
-            raise ValueError("%s is not an iterable."%name)
-
-    if len(set(src_index) & set(tgt_index)) > 0:
-        warnings.warn("Similar indexes appear in both"
-                      " src_index and tgt_index")
-
-    if tgt_index_labeled is not None:
-        if len(set(src_index) & set(tgt_index_labeled)) > 0:
-            warnings.warn("Similar indexes appear in both"
-                          " src_index and tgt_index_labeled")
 
 
 def check_one_array(X):
@@ -123,7 +87,7 @@ def check_arrays(Xs, ys, Xt, yt=None):
     return Xs, ys, Xt, yt
 
 
-def check_estimator(estimator, copy=True,
+def check_estimator(estimator=None, copy=True,
                     display_name="estimator",
                     task=None,
                     force_copy=False):
@@ -136,7 +100,9 @@ def check_estimator(estimator, copy=True,
     Parameters
     ----------
     estimator : sklearn BaseEstimator or tensorflow Model
-        Estimator.
+        Estimator. If ``None`` a LinearRegression instance
+        or a LogisticRegression instance is returned
+        depending on the ``task`` argument.
 
     copy : boolean (default=False)
         Whether to return a copy of the estimator or not.
@@ -149,7 +115,7 @@ def check_estimator(estimator, copy=True,
         Task at hand. Possible value : 
         (``None``, ``"reg"``, ``"class"``)
         
-    force_copy: boolean (default=False)
+    force_copy : boolean (default=False)
         If True, an error is raised if the cloning failed.
     """
     if estimator is None:
@@ -158,7 +124,7 @@ def check_estimator(estimator, copy=True,
         else:
             estimator = LinearRegression()
     
-    if isinstance(estimator, BaseEstimator):
+    if isinstance(estimator, (BaseEstimator, KerasClassifier, KerasRegressor)):
         if (isinstance(estimator, ClassifierMixin) and task=="reg"):
             raise ValueError("`%s` argument is a sklearn `ClassifierMixin` instance "
                              "whereas the considered object handles only regression task. "
@@ -183,6 +149,7 @@ def check_estimator(estimator, copy=True,
                                   "The current estimator will be used. "
                                   "Use `copy=False` to hide this warning."%
                                   (display_name, e))
+                    new_estimator = estimator
         else:
             new_estimator = estimator
     elif isinstance(estimator, Model):
@@ -356,8 +323,9 @@ class GradientHandler(Layer):
         return _grad_handler(x, self.lambda_)
 
 
-def make_classification_da(n_samples=100, n_target_labeled=0,
-                       n_features=2, random_state=2):
+def make_classification_da(n_samples=100, 
+                           n_features=2,
+                           random_state=2):
     """
     Generate a classification dataset for DA.
     
@@ -365,9 +333,6 @@ def make_classification_da(n_samples=100, n_target_labeled=0,
     ----------
     n_samples : int, optional (default=100)
         Size of source and target samples.
-        
-    n_target_labeled : int, optional (default=3)
-        Size of target labeled sample.
   
     n_features : int, optional (default=2)
         Number of features.
@@ -410,7 +375,9 @@ def make_classification_da(n_samples=100, n_target_labeled=0,
     return Xs, ys, Xt, yt
 
 
-def make_regression_da(n_samples=100, n_features=1, random_state=0):
+def make_regression_da(n_samples=100,
+                       n_features=1,
+                       random_state=0):
     """
     Generate a regression dataset for DA.
     
@@ -444,9 +411,9 @@ def make_regression_da(n_samples=100, n_features=1, random_state=0):
     Xs = np.random.uniform(size=(n_samples, n_features)) * 4 - 2
     Xs = np.sort(Xs)
     Xt = np.random.uniform(size=(n_samples, n_features)) * 2.5 + 2
-    ys = (Xs + 0.1 * Xs ** 5 +
+    ys = (Xs[:, 0] + 0.1 * Xs[:, 0] ** 5 +
           np.random.randn(n_samples) * 0.2 + 1)
-    yt = (Xt + 0.1 * (Xt - 2) **4  +
+    yt = (Xt[:, 0] + 0.1 * (Xt[:, 0] - 2) **4  +
           np.random.randn(n_samples) * 0.4 + 1)
     
     Xt = (Xt - Xs.mean(0)) / Xs.std(0)

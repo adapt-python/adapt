@@ -7,262 +7,425 @@ import numpy as np
 import pytest
 import tensorflow as tf
 import tensorflow.keras.backend as K
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import LinearRegression, LogisticRegression, Ridge
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostRegressor
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.compose import TransformedTargetRegressor
+from sklearn.base import BaseEstimator, RegressorMixin, ClassifierMixin
+from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from tensorflow.keras import Model, Sequential
 from tensorflow.keras.layers import Input, Dense, Flatten, Reshape
 from tensorflow.python.keras.engine.input_layer import InputLayer
 from tensorflow.keras.optimizers import Adam
 
-
-
 from adapt.utils import *
 
 
-def _get_estimator(**kwargs):
-    return Ridge(**kwargs)
+def is_equal_estimator(v1, v2):
+    is_equal = True
+    if type(v2) != type(v1):
+        is_equal = False
+    else:
+        if isinstance(v1, np.ndarray):
+            if not np.array_equal(v1, v2):
+                is_equal = False
+        elif isinstance(v1, BaseEstimator):
+            if not is_equal_estimator(v1.__dict__, v2.__dict__):
+                is_equal = False
+        elif isinstance(v1, Model):
+            if not is_equal_estimator(v1.get_config(),
+                                      v2.get_config()):
+                is_equal = False
+        elif isinstance(v1, dict):
+            for k1_i, v1_i in v1.items():
+                if k1_i not in v2:
+                    is_equal = False
+                else:
+                    v2_i = v2[k1_i]
+                    if not is_equal_estimator(v1_i, v2_i):
+                        is_equal = False
+        elif isinstance(v1, (list, tuple)):
+            if len(v1) != len(v2):
+                is_equal = False
+            else:
+                for v1_i, v2_i in zip(v1, v2):
+                    if not is_equal_estimator(v1_i, v2_i):
+                        is_equal = False
+        else:
+            if not v1 == v2:
+                is_equal = False
+    return is_equal
 
+    
 
-def _get_no_estimator():
-    return None
-
-
-class _DummyClassWhithoutFit:
-    def __init__(self):
-        pass
-
-    def predict(self):
-        pass
-
-
-class _DummyClassWhithoutPredict:
+class CustomEstimator(BaseEstimator):
+    
     def __init__(self):
         pass
     
-    def fit(self):
+    def fit(self, X, y):
+        pass
+
+    
+class DummyModel(Model):
+    
+    def __init__(self):
         pass
 
 
-def _get_model_Model(compiled=True):
+def _get_model_Model(compiled=True, custom_loss=False):
     inputs = Input((10,))
     output = Dense(1)(inputs)
     model = Model(inputs, output)
+    if custom_loss:
+        loss = K.mean(output)
+        model.add_loss(loss)
     if compiled:
         model.compile(loss="mse", optimizer="adam")
     return model
 
 
-def _get_model_Sequential():
+def _get_model_Sequential(input_shape=None, compiled=True):
     model = Sequential()
-    model.add(Dense(1, input_shape=(10,)))
-    model.compile(loss="mse", optimizer="adam")
-    return model
-
-
-def _get_model_with_kwargs(input_shape, output_shape,
-                           name="test"):
-    inputs = Input(input_shape)
-    flat = Flatten()(inputs)
-    output = Reshape(output_shape)(flat)
-    model = Model(inputs, output, name=name)
-    model.compile(loss="mse", optimizer="adam")
-    return model
-
-
-iterables = [np.array([1, 2, 3]),
-             range(3),
-             [1, 2, 3],
-             (1, 2, 3),
-             {"a": 1, "b": 2, "c": 3}]
-
-@pytest.mark.parametrize("index", iterables)
-def test_check_indexes_iterable(index):
-    check_indexes(index, [4, 5])
-    check_indexes([4, 5], index)
-    check_indexes([4, 5], [6, 7], index)
-
-
-non_iterables = [True, 10, 1.3]
-
-@pytest.mark.parametrize("index", non_iterables)
-def test_check_indexes_non_iterable(index):
-    with pytest.raises(ValueError) as excinfo:
-        check_indexes(index, [4, 5])
-    assert "src_index" in str(excinfo.value)
-    with pytest.raises(ValueError) as excinfo:
-        check_indexes([4, 5], index)
-    assert "tgt_index" in str(excinfo.value)
-    with pytest.raises(ValueError) as excinfo:
-        check_indexes([4, 5], [6, 7], index)
-    assert "tgt_index_labeled" in str(excinfo.value)
-
-
-def test_check_indexes_warnings():
-    with pytest.warns(None) as record:
-        check_indexes([1, 2, 3], [4, 5, 6], [4, 5, 6])
-    assert len(record) == 0
-    with pytest.warns(UserWarning):
-        check_indexes([1, 2, 3], [3, 5, 6])
-    with pytest.warns(UserWarning):
-        check_indexes([1, 2, 3], [4, 5, 6], [3, 7, 8])
-
-
-def test_check_estimator_callable():
-    est = check_estimator(_get_estimator)
-    assert isinstance(est, Ridge)
-
-
-def test_check_estimator_class():
-    est = check_estimator(Ridge)
-    assert isinstance(est, Ridge)
-
-
-def test_check_estimator_error():
-    with pytest.raises(ValueError) as excinfo:
-        check_estimator(Ridge())
-    assert "callable" in str(excinfo.value)
-    with pytest.raises(ValueError) as excinfo:
-        check_estimator([1, 2, 3])
-    assert "callable" in str(excinfo.value)
-
-
-def test_check_estimator_no_fit_predict():
-    with pytest.raises(ValueError) as excinfo:
-        check_estimator(_get_no_estimator)
-    assert "methods" in str(excinfo.value)
-    with pytest.raises(ValueError) as excinfo:
-        check_estimator(_DummyClassWhithoutFit)
-    assert "methods" in str(excinfo.value)
-    with pytest.raises(ValueError) as excinfo:
-        check_estimator(_DummyClassWhithoutPredict)
-    assert "methods" in str(excinfo.value)
-
-
-def test_check_estimator_kwargs():
-    est = check_estimator(_get_estimator, alpha=123)
-    assert isinstance(est, Ridge)
-    assert est.alpha == 123
-    est = check_estimator(Ridge, alpha=123)
-    assert isinstance(est, Ridge)
-    assert est.alpha == 123
-
-
-@pytest.mark.parametrize("constructor",
-                         [_get_model_Model, _get_model_Sequential])
-def test_check_network_call(constructor):
-    model = check_network(constructor)
-    assert model.input_shape == (None, 10)
-    assert model.output_shape == (None, 1)
-    assert model.loss == "mse"
-    assert isinstance(model.optimizer, Adam)
-    if len(model.layers) == 2:
-        assert isinstance(model.layers[0], InputLayer)
-        assert isinstance(model.layers[1], Dense)
+    if input_shape is not None:
+        model.add(Dense(1, input_shape=input_shape))
     else:
-        assert isinstance(model.layers[0], Dense)
+        model.add(Dense(1))
+    if compiled:
+        model.compile(loss="mse", optimizer="adam")
+    return model
 
 
-def test_check_network_call_error():
+arrays_nd = [np.ones((10, 1)), np.zeros((10, 10)),
+            np.zeros((10, 5, 1)), np.full((10, 20), -5.5),
+            np.ones((1, 1)), np.random.randn(1, 5, 5, 1)]
+
+@pytest.mark.parametrize("z", arrays_nd)
+def test_check_arrays_nd(z):
+    Xs, ys, Xt, yt = check_arrays(z, z, z, z)
+    assert np.array_equal(Xs, z)
+    assert np.array_equal(ys, z)
+    assert np.array_equal(Xt, z)
+    assert np.array_equal(yt, z)
+    
+    
+def test_check_arrays_diff_input():
+    Xs, ys, Xt, yt = arrays_nd[:4]
+    assert np.array_equal(Xs, arrays_nd[0])
+    assert np.array_equal(ys, arrays_nd[1])
+    assert np.array_equal(Xt, arrays_nd[2])
+    assert np.array_equal(yt, arrays_nd[3])
+    
+    
+arrays_1d = [np.ones((10,)), np.ones((1,))]
+arrays_2d = [np.ones((10, 1)), np.ones((1, 1))]
+
+@pytest.mark.parametrize("z, zz", zip(arrays_1d, arrays_2d))
+def test_check_arrays_1d(z, zz):
+    Xs, ys, Xt, yt = check_arrays(z, z, z, z)
+    assert np.array_equal(Xs, zz)
+    assert np.array_equal(ys, zz)
+    assert np.array_equal(Xt, zz)
+    assert np.array_equal(yt, zz)
+
+
+def test_check_arrays_no_yt():
+    z = arrays_nd[0]
+    Xs, ys, Xt, yt = check_arrays(z, z, z)
+    assert yt is None
+    assert np.array_equal(Xs, z)
+    assert np.array_equal(ys, z)
+    assert np.array_equal(Xt, z)
+
+
+def test_check_arrays_length_error():
+    z = arrays_nd[0]
     with pytest.raises(ValueError) as excinfo:
-        check_network(123)
-    assert "callable" in str(excinfo.value)
-    assert "get_model" in str(excinfo.value)
+         Xs, ys, Xt, yt = check_arrays(z, z[:5], z)
+    assert "Length of Xs and ys mismatch: 10 != 5" in str(excinfo.value)
     with pytest.raises(ValueError) as excinfo:
-        check_network("123",
-                      constructor_name="get_123")
-    assert "callable" in str(excinfo.value)
-    assert "get_123" in str(excinfo.value)
+         Xs, ys, Xt, yt = check_arrays(z, z, z, z[:5])
+    assert "Length of Xt and yt mismatch: 10 != 5" in str(excinfo.value)
+    
+    
+def test_check_arrays_no_array():
+    z = np.array([1,2,3])
+    with pytest.raises(TypeError) as excinfo:
+         Xs, ys, Xt, yt = check_arrays("123", z, z)
+            
 
+@pytest.mark.parametrize("X", arrays_nd)
+def test_check_one_array_nd(X):
+    Xt = check_one_array(X)
+    assert np.array_equal(Xt, X)
+    
+    
+@pytest.mark.parametrize("X, Xtt", zip(arrays_1d, arrays_2d))
+def test_check_one_array_1d(X, Xtt):
+    Xt = check_one_array(X)
+    assert np.array_equal(Xt, Xtt)
 
-def test_check_network_kwargs():
-    model = check_network(_get_model_with_kwargs,
-                          input_shape=(10, 2, 3),
-                          output_shape=(3, 4, 5),
-                          name="model")
-    assert model.input_shape == (None, 10, 2, 3)
-    assert model.output_shape == (None, 3, 4, 5)
-    assert model.name == "model"
+    
+networks = [
+    _get_model_Model(compiled=True, custom_loss=False),
+    _get_model_Sequential(compiled=True, input_shape=(10,)),
+    _get_model_Sequential(compiled=True, input_shape=None),
+    _get_model_Model(compiled=False, custom_loss=False),
+    _get_model_Model(compiled=False, custom_loss=True),
+    _get_model_Sequential(compiled=False, input_shape=(10,)),
+    _get_model_Sequential(compiled=False, input_shape=None)
+]
+    
 
+@pytest.mark.parametrize("net", networks)
+def test_check_network_network(net):
+    new_net = check_network(net, compile_=False)
+    assert is_equal_estimator(new_net, net)
+    if hasattr(net, "input_shape"):
+        for i in range(len(net.get_weights())):
+            assert np.array_equal(net.get_weights()[i],
+                              new_net.get_weights()[i])
+        
 
-def test_check_network_kwargs_error_shape():
+@pytest.mark.parametrize("net", networks)
+def test_check_network_copy(net):
+    new_net = check_network(net, copy=True, compile_=False)
+    hex(id(new_net)) != hex(id(net))
+    new_net = check_network(net, copy=False, compile_=False)
+    hex(id(new_net)) == hex(id(net))
+    
+
+no_networks = ["lala", Ridge(), 123, np.ones((10, 10))]
+
+@pytest.mark.parametrize("no_net", no_networks)
+def test_check_network_no_model(no_net):
     with pytest.raises(ValueError) as excinfo:
-        check_network(_get_model_Model,
-                      input_shape=(10,))
-    assert "input_shape" in str(excinfo.value)
-    assert "get_model" in str(excinfo.value)
-    assert not "Failed to build" in str(excinfo.value)
-
+        new_net = check_network(no_net)
+    assert ("Expected `network` argument "
+            "to be a `Model` instance,"
+            " got: %s"%str(no_net) in str(excinfo.value))
     with pytest.raises(ValueError) as excinfo:
-        check_network(_get_model_Model,
-                      output_shape=(10,))
-    assert "output_shape" in str(excinfo.value)
-    assert "get_model" in str(excinfo.value)
-    assert not "Failed to build" in str(excinfo.value)
+        new_net = check_network(no_net, display_name="tireli")
+    assert ("Expected `tireli` argument "
+            "to be a `Model` instance,"
+            " got: %s"%str(no_net) in str(excinfo.value))
+    
 
-
-def test_check_network_wrong_call():
+def test_check_network_force_copy():
+    model = DummyModel()
     with pytest.raises(ValueError) as excinfo:
-        check_network(_get_model_Model())
-    assert "Failed to build" in str(excinfo.value)
-    assert "get_model" in str(excinfo.value)
-
+        new_net = check_network(model, copy=True, force_copy=True)
+    assert ("`network` argument can't be duplicated. "
+            "Recorded exception: " in str(excinfo.value))
     with pytest.raises(ValueError) as excinfo:
-        check_network(_get_model_Model,
-                      wrong_arg="wrong_arg")
-    assert "Failed to build" in str(excinfo.value)
-    assert "get_model" in str(excinfo.value)
-    assert "wrong_arg" in str(excinfo.value)
+        new_net = check_network(model, copy=True, force_copy=True,
+                                display_name="tireli")
+    assert ("`tireli` argument can't be duplicated. "
+            "Recorded exception: " in str(excinfo.value))
+    
+    with pytest.warns(UserWarning) as record:
+        new_net = check_network(model, copy=True, force_copy=False,
+                                compile_=False)
+    assert ("`network` argument can't be duplicated. "
+            "Recorded exception: " in str(record[0].message))
+    with pytest.warns(UserWarning) as record:
+        new_net = check_network(model, copy=True, force_copy=False,
+                                compile_=False,
+                                display_name="tireli")
+    assert ("`tireli` argument can't be duplicated. "
+            "Recorded exception: " in str(record[0].message))
+    
+    new_net = check_network(model, copy=False, force_copy=True)
 
+    
+estimators = [
+    Ridge(),
+    Ridge(alpha=10, fit_intercept=False, tol=0.1),
+    DecisionTreeClassifier(max_depth=10),
+    AdaBoostRegressor(Ridge(alpha=0.01)),
+    TransformedTargetRegressor(Ridge(alpha=25), StandardScaler()),
+    MultiOutputRegressor(Ridge(alpha=0.3)),
+    make_pipeline(StandardScaler(), Ridge(alpha=0.2)),
+    KerasClassifier(_get_model_Sequential(input_shape=(1,))),
+    CustomEstimator()
+]
 
-def test_check_network_Model():
+@pytest.mark.parametrize("est", estimators)
+def test_check_estimator_estimators(est):
+    new_est = check_estimator(est)
+    assert is_equal_estimator(est, new_est)
+    est.fit(np.linspace(0, 1, 10).reshape(-1, 1),
+            (np.linspace(0, 1, 10)<0.5).astype(float))
+    assert is_equal_estimator(est, new_est)
+    
+    
+@pytest.mark.parametrize("est", networks[:3])
+def test_check_estimator_networks(est):
+    new_est = check_estimator(est)
+    assert is_equal_estimator(est, new_est)
+    
+    
+no_estimators = ["lala", 123, np.ones((10, 10))]
+
+@pytest.mark.parametrize("no_est", no_estimators)
+def test_check_estimator_estimators(no_est):
     with pytest.raises(ValueError) as excinfo:
-        check_network(_get_estimator)
-    assert "get_model" in str(excinfo.value)
-    assert "Model" in str(excinfo.value)
+        new_est = check_estimator(no_est)
+    assert ("`estimator` argument is neither a sklearn `BaseEstimator` "
+            "instance nor a tensorflow Model instance. "
+            "Given argument, %s"%str(no_est) in str(excinfo.value))
+    with pytest.raises(ValueError) as excinfo:
+        new_est = check_estimator(no_est, display_name="tireli")
+    assert ("`tireli` argument is neither a sklearn `BaseEstimator` "
+            "instance nor a tensorflow Model instance. "
+            "Given argument, %s"%str(no_est) in str(excinfo.value))
+    
+
+@pytest.mark.parametrize("est", estimators)
+def test_check_estimator_copy(est):
+    new_est = check_estimator(est, copy=True)
+    hex(id(new_est)) != hex(id(est))
+    new_est = check_estimator(est, copy=False)
+    hex(id(new_est)) == hex(id(est))
+    
+    
+def test_check_estimator_force_copy():
+    est = Ridge()
+    model = _get_model_Model()
+    est.model = model
+    with pytest.raises(ValueError) as excinfo:
+        new_est = check_estimator(est, copy=True, force_copy=True)
+    assert ("`estimator` argument can't be duplicated. "
+            "Recorded exception: " in str(excinfo.value))
+    with pytest.raises(ValueError) as excinfo:
+        new_est = check_estimator(est, copy=True, force_copy=True,
+                                display_name="tireli")
+    assert ("`tireli` argument can't be duplicated. "
+            "Recorded exception: " in str(excinfo.value))
+    
+    with pytest.warns(UserWarning) as record:
+        new_est = check_estimator(est, copy=True, force_copy=False)
+    assert ("`estimator` argument can't be duplicated. "
+            "Recorded exception: " in str(record[0].message))
+    with pytest.warns(UserWarning) as record:
+        new_est = check_estimator(est, copy=True, force_copy=False,
+                                display_name="tireli")
+    assert ("`tireli` argument can't be duplicated. "
+            "Recorded exception: " in str(record[0].message))
+    
+    new_est = check_estimator(est, copy=False, force_copy=True)
+    
+    
+def test_check_estimator_task():
+    new_est = check_estimator()
+    assert isinstance(new_est, LinearRegression)
+    new_est = check_estimator(task="class")
+    assert isinstance(new_est, LogisticRegression)
+    new_est = check_estimator(DecisionTreeClassifier(),
+                              task="class")
+    assert isinstance(new_est, DecisionTreeClassifier)
+    new_est = check_estimator(Ridge(),
+                              task="reg")
+    assert isinstance(new_est, Ridge)
+    
+    with pytest.raises(ValueError) as excinfo:
+        new_est = check_estimator(DecisionTreeClassifier(), task="reg")
+    assert ("`estimator` argument is a sklearn `ClassifierMixin` instance "
+            "whereas the considered object handles only regression task. "
+            "Please provide a sklearn `RegressionMixin` instance or a "
+            "tensorflow Model instance." in str(excinfo.value))
+    with pytest.raises(ValueError) as excinfo:
+        new_est = check_estimator(DecisionTreeClassifier(), task="reg",
+                                  display_name="tireli")
+    assert ("`tireli` argument is a sklearn"
+            " `ClassifierMixin` instance " in str(excinfo.value))
+    
+    with pytest.raises(ValueError) as excinfo:
+        new_est = check_estimator(Ridge(), task="class")
+    assert ("`estimator` argument is a sklearn `RegressionMixin` instance "
+            "whereas the considered object handles only classification task. "
+            "Please provide a sklearn `ClassifierMixin` instance or a "
+            "tensorflow Model instance." in str(excinfo.value))
+    with pytest.raises(ValueError) as excinfo:
+        new_est = check_estimator(Ridge(), task="class",
+                                  display_name="tireli")
+    assert ("`tireli` argument is a sklearn"
+            " `RegressionMixin` instance " in str(excinfo.value))
 
 
 def test_get_default_encoder():
-    model = get_default_encoder((15, 8))
-    assert model.input_shape == (None, 15, 8)
-    assert model.output_shape == (None, 10)
-    assert model.loss == "mean_squared_error"
-    assert isinstance(model.optimizer, Adam)
-    assert len(model.layers) == 3
-    assert isinstance(model.layers[0], InputLayer)
-    assert isinstance(model.layers[1], Flatten)
-    assert isinstance(model.layers[2], Dense)
-
-
-def test_get_default_task():
-    model = get_default_task((15, 8), (24, 12, 1))
-    assert model.input_shape == (None, 15, 8)
-    assert model.output_shape == (None, 24, 12, 1)
-    assert model.loss == "mean_squared_error"
-    assert isinstance(model.optimizer, Adam)
-    assert len(model.layers) == 4
-    assert isinstance(model.layers[0], InputLayer)
-    assert isinstance(model.layers[1], Flatten)
-    assert isinstance(model.layers[2], Dense)
-    assert isinstance(model.layers[3], Reshape)
+    model = get_default_encoder()
+    assert isinstance(model.layers[0], Flatten)
+    assert isinstance(model.layers[1], Dense)
+    assert model.layers[1].get_config()["units"] == 10
+    assert model.layers[1].get_config()["activation"] == "relu"
     
-    model = get_default_task((15, 8))
-    assert model.output_shape == (None, 1)
+    
+def test_get_default_task():
+    model = get_default_task()
+    assert isinstance(model.layers[0], Flatten)
+    assert isinstance(model.layers[1], Dense)
+    assert isinstance(model.layers[2], Dense)
+    assert isinstance(model.layers[3], Dense)
+    assert model.layers[1].get_config()["units"] == 10
+    assert model.layers[1].get_config()["activation"] == "relu"
+    assert model.layers[2].get_config()["units"] == 10
+    assert model.layers[2].get_config()["activation"] == "relu"
+    assert model.layers[3].get_config()["units"] == 1
+    assert model.layers[3].get_config()["activation"] == "linear"
+    
+    
+def test_get_default_discriminator():
+    model = get_default_discriminator()
+    assert isinstance(model.layers[0], Flatten)
+    assert isinstance(model.layers[1], Dense)
+    assert isinstance(model.layers[2], Dense)
+    assert isinstance(model.layers[3], Dense)
+    assert model.layers[1].get_config()["units"] == 10
+    assert model.layers[1].get_config()["activation"] == "relu"
+    assert model.layers[2].get_config()["units"] == 10
+    assert model.layers[2].get_config()["activation"] == "relu"
+    assert model.layers[3].get_config()["units"] == 1
+    assert model.layers[3].get_config()["activation"] == "sigmoid"
 
 
-def test_gradientreversal():
-    grad_reverse = GradientReversal()
+scales = [-1, 0, 1., 0.1]
+
+@pytest.mark.parametrize("lambda_", scales)
+def test_gradienthandler(lambda_):
+    grad_handler = GradientHandler(lambda_)
     inputs = K.variable([1, 2, 3])
-    assert np.all(grad_reverse(inputs) == inputs)
+    assert np.all(grad_handler(inputs) == inputs)
     with tf.GradientTape() as tape:
-        gradient = tape.gradient(grad_reverse(inputs),
+        gradient = tape.gradient(grad_handler(inputs),
                                  inputs)
-    assert np.all(gradient == -np.ones(3))
+    assert np.all(gradient == lambda_ * np.ones(3))
 
 
-def test_toy_classification():
-    (X, y, src_index,
-     tgt_index, tgt_index_labeled) = toy_classification()
+def test_make_classification_da():
+    Xs, ys, Xt, yt = make_classification_da()
+    assert Xs.shape == (100, 2)
+    assert len(ys) == 100
+    assert Xt.shape == (100, 2)
+    assert len(yt) == 100
+    Xs, ys, Xt, yt = make_classification_da(1000, 10)
+    assert Xs.shape == (1000, 10)
+    assert len(ys) == 1000
+    assert Xt.shape == (1000, 10)
+    assert len(yt) == 1000
 
 
-def test_toy_regression():
-    (X, y, src_index,
-     tgt_index, tgt_index_labeled) = toy_regression()
+def test_make_regression_da():
+    Xs, ys, Xt, yt = make_regression_da()
+    assert Xs.shape == (100, 1)
+    assert len(ys) == 100
+    assert Xt.shape == (100, 1)
+    assert len(yt) == 100
+    Xs, ys, Xt, yt = make_regression_da(1000, 10)
+    assert Xs.shape == (1000, 10)
+    assert len(ys) == 1000
+    assert Xt.shape == (1000, 10)
+    assert len(yt) == 1000
