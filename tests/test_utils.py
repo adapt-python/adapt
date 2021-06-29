@@ -19,7 +19,6 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from tensorflow.keras import Model, Sequential
 from tensorflow.keras.layers import Input, Dense, Flatten, Reshape
 from tensorflow.python.keras.engine.input_layer import InputLayer
-from tensorflow.keras.optimizers import Adam
 
 from adapt.utils import *
 

@@ -15,12 +15,12 @@ from tensorflow.keras.models import clone_model
 import tensorflow.keras.backend as K
 
 from adapt.utils import (GradientHandler,
-                    check_arrays,
-                   check_one_array,
-                    check_network,
-                    get_default_encoder,
-                    get_default_task,
-                    get_default_discriminator)
+                         check_arrays,
+                         check_one_array,
+                         check_network,
+                         get_default_encoder,
+                         get_default_task,
+                         get_default_discriminator)
 
 
 def accuracy(y_true, y_pred):
@@ -40,6 +40,7 @@ def accuracy(y_true, y_pred):
     -------
     Boolean Tensor
     """
+    # TODO: accuracy can't handle 1D ys.
     multi_columns_t = K.cast(K.greater(K.shape(y_true)[1], 1),
                            "float32")
     binary_t = K.reshape(K.sum(K.cast(K.greater(y_true, 0.5),
@@ -94,84 +95,6 @@ class UpdateLambda(Callback):
         
     def set_params(self, params):
         self.total_steps = (params["epochs"] * params["steps"])
-
-
-# class UpdateLambda(Callback):
-#     """
-#     Callback updating the lambda trade-off
-#     of a LambdaFactor layer according to the
-#     following formula:
-    
-#     lambda = 2 / (1 + exp(-gamma * p)) - 1
-    
-#     With p incresing from 0 to 1 during the
-#     training process
-    
-#     Parameters
-#     ----------
-#     gamma : float (default=10.)
-#         gamma factor
-
-#     lambda_name : string (default="lambda_layer")
-#         Name of the LambdaLayer instance to
-#         update.
-#     """
-#     def __init__(self, gamma=10., lambda_name="lambda_layer"):
-#         self.gamma = gamma
-#         self.lambda_name = lambda_name
-#         self.steps = 0.
-       
-#     def on_train_batch_begin(self, batch, logs=None):
-#         progress = self.steps / self.total_steps
-#         self.model.get_layer(self.lambda_name).lambda_.assign(
-#             K.cast(2. / (1. + K.exp(-self.gamma * progress)) - 1., "float32")
-#         )
-#         self.steps += 1.
-        
-#     def set_params(self, params):
-#         self.total_steps = (params["epochs"] * params["steps"])
-
-        
-class LambdaFactor(Layer):
-    """
-    Scalar multiplication layer.
-    
-    Multiply the inputs with a factor lambda.
-    
-    Parameters
-    ----------
-    lambda_init : float (default=1.)
-        Scalar multiplier initializer
-
-    name : string (default="lambda_layer")
-        Layer name.
-        
-    Attributes
-    ----------
-    lambda_ : float
-        Scalar multiplier
-    """
-    def __init__(self, lambda_init=1., name="lambda_layer"):
-        super().__init__(name=name)
-        if lambda_init is None:
-            lambda_init = 0.
-        self.lambda_ = tf.Variable(lambda_init, trainable=False, dtype="float32")
-    
-    def call(self, x):
-        """
-        Call LamdbaFactor.
-        
-        Parameters
-        ----------
-        x: object
-            Inputs
-            
-        Returns
-        -------
-        lambda_ * x
-        """
-        return self.lambda_ * x
-
 
 
 class BaseDeepFeature:
@@ -273,14 +196,14 @@ class BaseDeepFeature:
             inputs = [inputs_Xs, inputs_ys,
                       inputs_Xt, inputs_yt]
         
-        outputs = self._create_model(inputs_Xs=inputs_Xs,
-                                     inputs_Xt=inputs_Xt)
+        outputs = self.create_model(inputs_Xs=inputs_Xs,
+                                    inputs_Xt=inputs_Xt)
         
-        self.model_ = Model(inputs, outputs) #outputs
+        self.model_ = Model(inputs, outputs)
         
-        loss = self._get_loss(inputs_ys=inputs_ys,
+        loss = self.get_loss(inputs_ys=inputs_ys,
                               **outputs)
-        metrics = self._get_metrics(inputs_ys=inputs_ys,
+        metrics = self.get_metrics(inputs_ys=inputs_ys,
                                     inputs_yt=inputs_yt,
                                     **outputs)
         
@@ -372,22 +295,75 @@ class BaseDeepFeature:
                 short_name = name[:3]
             names_disc.append("disc_" + short_name)
         return names_task, names_disc
-        
-    
-    def _convert_in_onehot(self, x):
-        if ((len(K.shape(x)) <= 1) or
-        (len(K.shape(x)) == 2 and K.shape(x)[1]==1)):
-            return K.cast(K.greater(r, 0.5), "float32")
-        else:
-            return tf.one_hot(K.argmax(x, axis=1),
-                              depth=K.shape(x)[1])
 
-    def _get_loss(self, ouputs):
+
+    def create_model(self, inputs_Xs, inputs_Xt):
+        """
+        Create model. 
+        
+        Give the model architecture from the Xs, Xt
+        inputs to the outputs.
+        
+        Parameters
+        ----------
+        inputs_Xs : InputLayer
+            Input layer for Xs entries.
+            
+        inputs_Xt : InputLayer
+            Input layer for Xt entries.
+        
+        Returns
+        -------
+        outputs : dict of tf Tensors
+            Outputs tensors of the model
+            (used to compute the loss).
+        """
+        pass
+
+    
+    def get_loss(self, inputs_ys, **ouputs):
+        """
+        Get loss.
+        
+        Parameters
+        ----------
+        inputs_ys : InputLayer
+            Input layer for ys entries.
+        
+        outputs : dict of tf Tensors
+            Model outputs tensors.
+        
+        Returns
+        -------
+        loss : tf Tensor
+            Model loss
+        """
         pass
    
 
-    def _get_metrics(self, outputs):
-        pass
+    def get_metrics(self, inputs_ys, inputs_yt, **outputs):
+        """
+        Get Metrics.
+        
+        Parameters
+        ----------
+        inputs_ys : InputLayer
+            Input layer for ys entries.
+            
+        inputs_yt : InputLayer
+            Input layer for yt entries.
+        
+        outputs : dict of tf Tensors
+            Model outputs tensors.
+        
+        Returns
+        -------
+        metrics : dict of tf Tensors
+            Model metrics. dict keys give the
+            name of the metric and dict values
+            give the corresponding Tensor.
+        """
+        return {}
 
 
     def fit(self, Xs, ys, Xt, yt=None, **fit_params):
@@ -656,7 +632,7 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         return self
     
     
-    def _create_model(self, inputs_Xs, inputs_Xt):
+    def create_model(self, inputs_Xs, inputs_Xt):
 
         encoded_src = self.encoder_(inputs_Xs)
         encoded_tgt = self.encoder_(inputs_Xt)
@@ -677,20 +653,19 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         return outputs
 
 
-    def _get_loss(self, inputs_ys,
+    def get_loss(self, inputs_ys,
                   task_src, task_tgt,
                   disc_src, disc_tgt):
         
         loss_task = self.loss_(inputs_ys, task_src)
         loss_disc = (-K.log(1-disc_src + K.epsilon())
                      -K.log(disc_tgt + K.epsilon()))
-#         loss_disc_lambda = LambdaFactor(self.lambda_)(loss_disc)
         
         loss = K.mean(loss_task) + K.mean(loss_disc)
         return loss
     
     
-    def _get_metrics(self, inputs_ys, inputs_yt,
+    def get_metrics(self, inputs_ys, inputs_yt,
                      task_src, task_tgt,
                      disc_src, disc_tgt):
         metrics = {}
@@ -977,7 +952,7 @@ In CVPR, 2017.
         return self
     
     
-    def _create_model(self, inputs_Xs, inputs_Xt):
+    def create_model(self, inputs_Xs, inputs_Xt):
 
         encoded_tgt = self.encoder_(inputs_Xt)
         encoded_tgt_nograd = GradientHandler(0.)(encoded_tgt)
@@ -995,7 +970,7 @@ In CVPR, 2017.
         return outputs
 
 
-    def _get_loss(self, inputs_ys, disc_src, disc_tgt,
+    def get_loss(self, inputs_ys, disc_src, disc_tgt,
                   disc_tgt_nograd, task_tgt):
         
         loss_disc = (-K.log(disc_src + K.epsilon())
@@ -1010,7 +985,7 @@ In CVPR, 2017.
         return loss
     
     
-    def _get_metrics(self, inputs_ys, inputs_yt,
+    def get_metrics(self, inputs_ys, inputs_yt,
                      disc_src, disc_tgt,
                      disc_tgt_nograd, task_tgt):
         metrics = {}
@@ -1089,7 +1064,7 @@ In CVPR, 2017.
             predictions of task network
         """
         X = check_one_array(X)
-        return self.task_.predict(self.predict_features(X))
+        return self.task_.predict(self.predict_features(X, domain))
     
     
     def predict_disc(self, X, domain="tgt"):
@@ -1113,7 +1088,7 @@ In CVPR, 2017.
             predictions of discriminator network
         """
         X = check_one_array(X)
-        return self.discriminator_.predict(self.predict_features(X))
+        return self.discriminator_.predict(self.predict_features(X, domain))
 
     
     
@@ -1256,7 +1231,7 @@ class DeepCORAL(BaseDeepFeature):
         return self
     
     
-    def _create_model(self, inputs_Xs, inputs_Xt):
+    def create_model(self, inputs_Xs, inputs_Xt):
                
         encoded_src = self.encoder_(inputs_Xs)
         encoded_tgt = self.encoder_(inputs_Xt)
@@ -1300,19 +1275,19 @@ class DeepCORAL(BaseDeepFeature):
         return outputs
 
 
-    def _get_loss(self, inputs_ys,
+    def get_loss(self, inputs_ys,
                   task_src, task_tgt,
                   cov_src, cov_tgt):
         
         loss_task = self.loss_(inputs_ys, task_src)
         loss_disc = 0.25 * K.mean(K.square(subtract([cov_src, cov_tgt])))
-        loss_disc_lambda = LambdaFactor(self.lambda_)(loss_disc)
+        loss_disc_lambda = self.lambda_ * loss_disc
         
         loss = K.mean(loss_task) + loss_disc_lambda
         return loss
     
     
-    def _get_metrics(self, inputs_ys, inputs_yt,
+    def get_metrics(self, inputs_ys, inputs_yt,
                      task_src, task_tgt,
                      cov_src, cov_tgt):
         metrics = {}

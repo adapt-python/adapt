@@ -18,11 +18,11 @@ Xt = np.concatenate((
     np.linspace(0, 1, 100).reshape(-1, 1),
     np.ones((100, 1))
     ), axis=1)
-X = np.concatenate((Xs, Xt))
-y = 0.2 * X[:, 0].ravel()
+ys = 0.2 * Xs[:, 0].ravel()
+yt = 0.2 * Xt[:, 0].ravel()
 
 
-def _get_encoder(input_shape):
+def _get_encoder(input_shape=Xs.shape[1:]):
     model = Sequential()
     model.add(Dense(1, input_shape=input_shape,
                     kernel_initializer="ones",
@@ -31,16 +31,18 @@ def _get_encoder(input_shape):
     return model
 
 
-def _get_discriminator(input_shape):
+def _get_discriminator(input_shape=(1,)):
     model = Sequential()
-    model.add(Dense(1,
+    model.add(Dense(10,
                     input_shape=input_shape,
+                    activation="relu"))
+    model.add(Dense(1,
                     activation="sigmoid"))
     model.compile(loss="mse", optimizer="adam")
     return model
 
 
-def _get_task(input_shape, output_shape):
+def _get_task(input_shape=(1,), output_shape=(1,)):
     model = Sequential()
     model.add(Dense(np.prod(output_shape),
                     use_bias=False,
@@ -52,25 +54,25 @@ def _get_task(input_shape, output_shape):
 def test_fit_lambda_zero():
     tf.random.set_seed(0)
     np.random.seed(0)
-    model = DANN(_get_encoder, _get_task, _get_discriminator,
-                 lambdap=0, loss="mse", optimizer=Adam(0.01))
-    model.fit(X, y, range(100), range(100, 200),
+    model = DANN(_get_encoder(), _get_task(), _get_discriminator(),
+                 lambda_=0, loss="mse", optimizer=Adam(0.01))
+    model.fit(Xs, ys, Xt, yt,
               epochs=500, batch_size=100, verbose=0)
     assert isinstance(model.model_, Model)
     assert model.encoder_.get_weights()[0][1][0] == 1.0
-    assert np.sum(np.abs(model.predict(Xs).ravel() - y[:100])) < 0.01
-    assert np.sum(np.abs(model.predict(Xt).ravel() - y[100:])) > 10
+    assert np.sum(np.abs(model.predict(Xs).ravel() - ys)) < 0.01
+    assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) > 10
 
 
 def test_fit_lambda_one():
     tf.random.set_seed(0)
     np.random.seed(0)
-    model = DANN(_get_encoder, _get_task, _get_discriminator,
-                 lambdap=1, loss="mse", optimizer=Adam(0.01))
-    model.fit(X, y, range(100), range(100, 200),
+    model = DANN(_get_encoder(), _get_task(), _get_discriminator(),
+                 lambda_=1, loss="mse", optimizer=Adam(0.01))
+    model.fit(Xs, ys, Xt, yt,
               epochs=800, batch_size=100, verbose=0)
     assert isinstance(model.model_, Model)
     assert np.abs(model.encoder_.get_weights()[0][1][0] / 
             model.encoder_.get_weights()[0][0][0]) < 0.05
-    assert np.sum(np.abs(model.predict(Xs).ravel() - y[:100])) < 1
-    assert np.sum(np.abs(model.predict(Xt).ravel() - y[100:])) < 1
+    assert np.sum(np.abs(model.predict(Xs).ravel() - ys)) < 1
+    assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) < 1
