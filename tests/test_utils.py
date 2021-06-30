@@ -247,8 +247,23 @@ def test_check_network_force_copy():
             "Recorded exception: " in str(record[0].message))
     
     new_net = check_network(model, copy=False, force_copy=True)
-
     
+    
+def test_check_network_compile():
+    net = _get_model_Sequential(compiled=False)
+    with pytest.raises(ValueError) as excinfo:
+        new_net = check_network(net, copy=True, compile_=True)
+    assert ("The given `network` argument is not compiled yet. "
+            "Please use `model.compile(optimizer, loss)`." 
+            in str(excinfo.value))
+    with pytest.raises(ValueError) as excinfo:
+        new_net = check_network(net, copy=True, compile_=True,
+                                display_name="tireli")
+    assert ("The given `tireli` argument is not compiled yet. "
+            "Please use `model.compile(optimizer, loss)`." 
+            in str(excinfo.value))
+    
+
 estimators = [
     Ridge(),
     Ridge(alpha=10, fit_intercept=False, tol=0.1),

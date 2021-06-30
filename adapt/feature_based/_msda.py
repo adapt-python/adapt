@@ -224,7 +224,7 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
         
         if np.any(Xs.shape[1:] != Xt.shape[1:]):
             raise ValueError("Xs and Xt should have same dim, got "
-                             "%s and %s"%(str(Xs.shape[1:], Xt.shape[1:])))
+                             "%s and %s"%(str(Xs.shape[1:]), str(Xt.shape[1:])))
         shape = Xs.shape[1:]
         
         if self.no_decoder_:

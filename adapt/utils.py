@@ -156,7 +156,8 @@ def check_estimator(estimator=None, copy=True,
         new_estimator = check_network(network=estimator,
                                   copy=copy, 
                                   display_name=display_name,
-                                  force_copy=force_copy)
+                                  force_copy=force_copy,
+                                  compile_=True)
     else:
         raise ValueError("`%s` argument is neither a sklearn `BaseEstimator` "
                          "instance nor a tensorflow Model instance. "
@@ -166,7 +167,7 @@ def check_estimator(estimator=None, copy=True,
 
 
 def check_network(network, copy=True,
-                  compile_=True,
+                  compile_=False,
                   display_name="network",
                   force_copy=False):
     """
@@ -183,14 +184,14 @@ def check_network(network, copy=True,
         Whether to return a copy of the network or not.
         If cloning fail, a warning is raised.
         
-    compile_ : boolean (default=True)
+    compile_ : boolean (default=False)
         Whether to compile the network after cloning,
         using copy of the network loss and optimizer.
 
-    display_name: str (default="network")
+    display_name : str (default="network")
         Name to display if an error or warning is raised
         
-    force_copy: boolean (default=False)
+    force_copy : boolean (default=False)
         If True, an error is raised if the cloning failed.
     """
     if not isinstance(network, Model):

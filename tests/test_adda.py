@@ -57,7 +57,7 @@ def test_fit():
     np.random.seed(0)
     model = ADDA(_get_encoder(),
                  _get_task(), _get_discriminator(),
-                 loss="mse", optimizer=Adam(0.01))
+                 loss="mse", optimizer=Adam(0.01), metrics=["mse"])
     model.fit(Xs, ys, Xt, yt,
               epochs=500, batch_size=100, verbose=0)
     assert isinstance(model.model_, Model)

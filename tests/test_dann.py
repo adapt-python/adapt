@@ -55,7 +55,7 @@ def test_fit_lambda_zero():
     tf.random.set_seed(0)
     np.random.seed(0)
     model = DANN(_get_encoder(), _get_task(), _get_discriminator(),
-                 lambda_=0, loss="mse", optimizer=Adam(0.01))
+                 lambda_=0, loss="mse", optimizer=Adam(0.01), metrics=["mse"])
     model.fit(Xs, ys, Xt, yt,
               epochs=500, batch_size=100, verbose=0)
     assert isinstance(model.model_, Model)

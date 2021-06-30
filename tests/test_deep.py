@@ -13,6 +13,7 @@ from tensorflow.keras.layers import Input, Dense, Flatten, Reshape
 from tensorflow.python.keras.engine.input_layer import InputLayer
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import mean_squared_error
+from tensorflow.keras.metrics import Accuracy, binary_accuracy, mae, MeanSquaredError
 
 from adapt.feature_based._deep import accuracy, UpdateLambda, BaseDeepFeature
 from adapt.utils import (GradientHandler,
@@ -107,5 +108,31 @@ def test_basedeep():
     Xs, ys, Xt, yt = make_regression_da()
     model._fit(Xs, ys, Xt, yt, epochs=1, verbose=0,
                batch_size=100)
+    yp = model.predict(Xt)
+    yp = model.predict_features(Xt)
+    yp = model.predict_disc(Xt)
+    
+    
+    
+def test_basedeep_metrics():
+    model = CustomDeep(metrics={"task": [mae, MeanSquaredError(),
+                                         "mse", "acc"],
+                                "disc": [Accuracy(),
+                                         binary_accuracy,
+                                         "acc", "accuracy"]})
+    assert isinstance(model.optimizer, Adam)
+    assert model.loss_  == mean_squared_error
+    assert model.metrics_task_ != []
+    assert model.metrics_disc_ != []
+    assert model.copy
+    
+    Xs, ys, Xt, yt = make_regression_da()
+    names_task, names_disc = model._get_metric_names()
+    
+    
+def test_basedeep_silent_methods():
+    model = BaseDeepFeature()
+    model.get_loss(0)
+    model.create_model(0, 0)
     
     

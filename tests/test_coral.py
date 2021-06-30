@@ -67,7 +67,7 @@ def test_fit_coral():
 def test_fit_deepcoral():
     tf.random.set_seed(0)
     np.random.seed(0)
-    model = DeepCORAL(_get_encoder(), _get_task())
+    model = DeepCORAL(_get_encoder(), _get_task(), metrics=["mse"])
     model.fit(Xs, ys, Xt,
               epochs=100, batch_size=64, verbose=0)
     assert isinstance(model.encoder_, Model)
