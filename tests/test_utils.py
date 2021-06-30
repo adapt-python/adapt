@@ -73,6 +73,15 @@ class DummyModel(Model):
     
     def __init__(self):
         pass
+    
+
+class CantBeDeepCopied(BaseEstimator):
+    
+    def __init__(self):
+        pass
+    
+    def __deepcopy__(self):
+        raise ValueError("Can not be deep copied!")
 
 
 def _get_model_Model(compiled=True, custom_loss=False):
@@ -292,16 +301,14 @@ def test_check_estimator_copy(est):
     
     
 def test_check_estimator_force_copy():
-    est = Ridge()
-    model = _get_model_Model()
-    est.model = model
+    est = CantBeDeepCopied()
     with pytest.raises(ValueError) as excinfo:
         new_est = check_estimator(est, copy=True, force_copy=True)
     assert ("`estimator` argument can't be duplicated. "
             "Recorded exception: " in str(excinfo.value))
     with pytest.raises(ValueError) as excinfo:
         new_est = check_estimator(est, copy=True, force_copy=True,
-                                display_name="tireli")
+                                  display_name="tireli")
     assert ("`tireli` argument can't be duplicated. "
             "Recorded exception: " in str(excinfo.value))
     
@@ -311,7 +318,7 @@ def test_check_estimator_force_copy():
             "Recorded exception: " in str(record[0].message))
     with pytest.warns(UserWarning) as record:
         new_est = check_estimator(est, copy=True, force_copy=False,
-                                display_name="tireli")
+                                  display_name="tireli")
     assert ("`tireli` argument can't be duplicated. "
             "Recorded exception: " in str(record[0].message))
     
