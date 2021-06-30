@@ -1,9 +1,9 @@
 # ADAPT
 
 [![PyPI version](https://badge.fury.io/py/adaptation.svg)](https://pypi.org/project/adaptation)
-[![Build Status](https://github.com/antoinedemathelin/adapt/workflows/build/badge.svg)](https://github.com/antoinedemathelin/adapt/actions)
+[![Build Status](https://github.com/adapt-python/adapt/workflows/build/badge.svg)](https://github.com/adapt-python/adapt/actions)
 [![Python Version](https://img.shields.io/badge/python-3.5%20|%203.6%20|%203.7-blue)](https://img.shields.io/badge/python-3.5%20|%203.6%20|%203.7-blue)
-[![Codecov Status](https://codecov.io/gh/antoinedemathelin/adapt/branch/master/graph/badge.svg?token=IWQXMYGY2Q)](https://codecov.io/gh/antoinedemathelin/adapt)
+[![Codecov Status](https://codecov.io/gh/adapt-python/adapt/branch/master/graph/badge.svg?token=IWQXMYGY2Q)](https://codecov.io/gh/adapt-python/adapt)
 
 **A**wesome **D**omain **A**daptation **P**ackage **T**oolbox
 
