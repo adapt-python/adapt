@@ -2,7 +2,7 @@
 # Validation check: $ curl --data-binary @codecov.yml https://codecov.io/validate
 
 ignore:
-  - "adapt/loaders.py"
+  - "loaders.py"
 
 codecov:
   token: ad499a8d-3f1a-44b1-9672-27164a1281ce
