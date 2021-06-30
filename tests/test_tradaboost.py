@@ -43,7 +43,7 @@ def test_tradaboost_fit():
 def test_tradaboostr2_fit():
     np.random.seed(0)
     model = TrAdaBoostR2(LinearRegression(fit_intercept=False),
-                         n_estimators=50)
+                         n_estimators=100)
     model.fit(Xs, ys_reg, Xt[:10], yt_reg[:10])
     assert np.abs(model.estimators_[-1].coef_[0] - 1.) < 1
     assert np.abs(model.sample_weights_src_[-1][:50].sum() / 
