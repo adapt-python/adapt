@@ -20,10 +20,11 @@ def test_fit():
     model = FE(Ridge(fit_intercept=False))
     model.fit(Xs, ys, Xt, yt)
     assert isinstance(model.estimator_, Ridge)
-    assert len(model.estimator_.coef_[0]) == 3 * Xs.shape[1]
-    assert np.abs(np.sum(model.estimator_.coef_[0][:Xs.shape[1]]) +
-                  np.sum(model.estimator_.coef_[0][-Xs.shape[1]:]) - 1) < 1.4
-    assert np.abs(np.sum(model.estimator_.coef_[0][Xs.shape[1]:])) < 0.01
+    assert len(model.estimator_.coef_[0]) == 30
+    assert np.abs(model.estimator_.coef_[0][20:].sum() +
+                  model.estimator_.coef_[0][:10].sum() - 1) < 0.01
+    assert np.abs(model.estimator_.coef_[0][20:].sum() +
+                  model.estimator_.coef_[0][10:20].sum()) < 0.01
     
     
 def test_fit_default():

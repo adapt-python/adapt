@@ -191,11 +191,11 @@ can help a lot". In EMNLP, 2004.
         beta_tgt = minimize(func, beta_src)['x']
 
         if self.estimator_.fit_intercept:
-            self.estimator_.intercept_ = beta_tgt[0]
-            self.estimator_.coef_ = beta_tgt[1:]
+            self.estimator_.intercept_ = beta_tgt[[0]]
+            self.estimator_.coef_ = np.array([beta_tgt[1:]])
         else:
-            self.estimator_.intercept_ = 0.
-            self.estimator_.coef_ = beta_tgt
+            self.estimator_.intercept_ = np.array([0.])
+            self.estimator_.coef_ = np.array([beta_tgt])
         return self
 
 

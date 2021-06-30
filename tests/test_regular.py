@@ -19,14 +19,19 @@ Xs = np.concatenate((
     np.random.randn(50)*0.1 + 1.,
 )).reshape(-1, 1)
 Xt = (np.random.randn(100) * 0.1).reshape(-1, 1)
-X = np.concatenate((Xs, Xt))
-y_reg = np.array([0.2 * x if x<0.5 else 10 for x in X.ravel()])
-y_classif = np.sign(np.array(
-    [x<0 if x<0.5 else x<1 for x in X.ravel()]
+ys_reg = np.array([0.2 * x if x<0.5 else
+                   10 for x in Xs.ravel()]).reshape(-1, 1)
+yt_reg = np.array([0.2 * x if x<0.5 else
+                   10 for x in Xt.ravel()]).reshape(-1, 1)
+ys_classif = np.sign(np.array(
+    [x<0 if x<0.5 else x<1 for x in Xs.ravel()]
+).astype(float) - 0.5)
+yt_classif = np.sign(np.array(
+    [x<0 if x<0.5 else x<1 for x in Xt.ravel()]
 ).astype(float) - 0.5)
 
 
-def _get_network(input_shape, output_shape):
+def _get_network(input_shape=(1,), output_shape=(1,)):
     model = Sequential()
     model.add(Dense(np.prod(output_shape),
                     input_shape=input_shape,
@@ -37,77 +42,58 @@ def _get_network(input_shape, output_shape):
 
 def test_setup():
     lr = LinearRegression(fit_intercept=False)
-    lr.fit(Xs, y_reg[:100])
-    assert np.abs(lr.coef_[0] - 10) < 1
+    lr.fit(Xs, ys_reg)
+    assert np.abs(lr.coef_[0][0] - 10) < 1
     
     lr = LogisticRegression(penalty='none', solver='lbfgs')
-    lr.fit(Xs, y_classif[:100])
-    assert (lr.predict(Xt) == y_classif[100:]).sum() < 70
+    lr.fit(Xs, ys_classif)
+    assert (lr.predict(Xt) == yt_classif).sum() < 70
 
 
 def test_regularlr_fit():
     np.random.seed(0)
-    model = RegularTransferLR(LinearRegression,
-                              intercept=False,
-                              lambdap=0,
-                              fit_intercept=False)
-    model.fit(X, y_reg, range(100), range(100, 110))
-    assert np.abs(model.coef_[0] - 0.2) < 1
-    assert np.abs(model.predict(Xt).ravel() 
-                  - y_reg[100:]).sum() < 2
+    lr = LinearRegression(fit_intercept=False)
+    lr.fit(Xs, ys_reg)
+    model = RegularTransferLR(lr, lambda_=0.)
+    model.fit(Xt, yt_reg)
+    assert np.abs(model.estimator_.coef_[0][0] - 0.2) < 1
+    assert np.abs(model.predict(Xt) - yt_reg).sum() < 2
     
-    model = RegularTransferLR(LinearRegression,
-                              intercept=False,
-                              lambdap=1000000,
-                              fit_intercept=False)
-    model.fit(X, y_reg, range(100), range(100, 110))
-    assert np.abs(model.coef_[0] - 10) < 1
-    assert np.abs(model.coef_[0] -
-                  model.estimator_src_.coef_[0]) < 0.001
+    model = RegularTransferLR(lr, lambda_=1000000)
+    model.fit(Xt, yt_reg)
+    assert np.abs(model.estimator_.coef_[0][0] - 10) < 1
+    assert np.abs(model.estimator_.coef_[0][0] - lr.coef_[0][0]) < 0.001
     
-    model = RegularTransferLR(LinearRegression,
-                              intercept=False,
-                              lambdap=1,
-                              fit_intercept=False)
-    model.fit(X, y_reg, range(100), range(100, 110))
-    assert np.abs(model.coef_[0] - 4) < 1
+    model = RegularTransferLR(lr, lambda_=1.)
+    model.fit(Xt, yt_reg)
+    assert np.abs(model.estimator_.coef_[0][0] - 4) < 1
 
 
 def test_regularlc_fit():
     np.random.seed(0)
-    model = RegularTransferLC(LogisticRegression,
-                              lambdap=0,
-                              penalty='none',
-                              solver='lbfgs')
-    model.fit(X, y_classif, range(100), range(100, 110))
-    assert (model.predict(Xt) == y_classif[100:]).sum() > 90
+    lr = LogisticRegression(penalty='none', solver='lbfgs')
+    lr.fit(Xs, ys_classif)
+    model = RegularTransferLC(lr, lambda_=0)
+    model.fit(Xt, yt_classif)
+    assert (model.predict(Xt).ravel() == yt_classif).sum() > 90
     
-    model = RegularTransferLC(LogisticRegression,
-                              lambdap=100000000,
-                              penalty='none',
-                              solver='lbfgs')
-    model.fit(X, y_classif, range(100), range(100, 110))
-    assert (model.predict(Xt) == y_classif[100:]).sum() < 70
-    assert np.abs(model.coef_[0] -
-                  model.estimator_src_.coef_[0][0]) < 0.001
-    assert np.abs(model.intercept_ -
-                  model.estimator_src_.intercept_[0]) < 0.001
+    model = RegularTransferLC(lr, lambda_=100000000)
+    model.fit(Xt, yt_classif)
+    assert (model.predict(Xt) == yt_classif).sum() < 70
+    assert np.abs(model.estimator_.coef_[0][0] - lr.coef_[0][0]) < 0.001
+    assert np.abs(model.estimator_.intercept_ - lr.intercept_[0]) < 0.001
     
-    model = RegularTransferLC(LogisticRegression,
-                              lambdap=1.2,
-                              penalty='none',
-                              solver='lbfgs')
-    model.fit(X, y_classif, range(100), range(100, 110))
+    model = RegularTransferLC(lr, lambda_=1.2)
+    model.fit(Xt, yt_classif)
     assert np.abs(
-        (model.predict(Xt) == y_classif[100:]).sum() - 80) < 2
+        (model.predict(Xt) == yt_classif).sum() - 55) < 2
 
 
-# def test_regularnn_fit():
-#     tf.random.set_seed(0)
-#     np.random.seed(0)
-#     model = RegularTransferNN(_get_network,
-#                               lambdas=0)
-#     model.fit(X, y_reg, range(100), range(100, 110),
-#               epochs=100, batch_size=100, verbose=0)
-#     assert np.abs(model.predict(Xt).ravel() 
-#                   - y_reg[100:]).sum() < 1
+def test_regularnn_fit():
+    tf.random.set_seed(0)
+    np.random.seed(0)
+    network = _get_network()
+    network.fit(Xs, ys_reg, epochs=100, batch_size=100, verbose=0)
+    model = RegularTransferNN(network, lambdas=0.)
+    model.fit(Xt, yt_reg, epochs=100, batch_size=100, verbose=0)
+    assert np.abs(model.predict(Xt) - yt_reg).sum() < 1
