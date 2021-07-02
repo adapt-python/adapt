@@ -202,8 +202,7 @@ def check_network(network, copy=True,
     if copy:
         try:
             new_network = clone_model(network)
-            if (hasattr(network, "input_shape") and
-                hasattr(new_network, "input_shape")):
+            if hasattr(network, "input_shape"):
                 new_network.build(input_shape=network.input_shape)
                 new_network.set_weights(network.get_weights())
         except Exception as e:
