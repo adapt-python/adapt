@@ -14,7 +14,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin, clone
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
-from tensorflow.keras.layers import Layer, Dense, Flatten
+from tensorflow.keras.layers import Layer, Dense, Flatten, Input
 from tensorflow.keras.models import clone_model
 
 
@@ -201,10 +201,12 @@ def check_network(network, copy=True,
     
     if copy:
         try:
-            new_network = clone_model(network)
             if hasattr(network, "input_shape"):
-                new_network.build(input_shape=network.input_shape)
+                inputs = Input(network.input_shape[1:])
+                new_network = clone_model(network, input_tensors=inputs)
                 new_network.set_weights(network.get_weights())
+            else:
+                new_network = clone_model(network)
         except Exception as e:
             if force_copy:
                 raise ValueError("`%s` argument can't be duplicated. "
