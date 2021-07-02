@@ -1296,7 +1296,7 @@ class DeepCORAL(BaseDeepFeature):
         disc = 0.25 * K.mean(K.square(subtract([cov_src, cov_tgt])))
         
         metrics["task_s"] = K.mean(task_s)
-        metrics["disc"] = K.mean(disc)
+        metrics["disc"] = self.lambda_ * K.mean(disc)
         if inputs_yt is not None:
             task_t = self.loss_(inputs_yt, task_tgt)
             metrics["task_t"] = K.mean(task_t)
