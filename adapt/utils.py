@@ -202,7 +202,8 @@ def check_network(network, copy=True,
     if copy:
         try:
             if hasattr(network, "input_shape"):
-                new_network = clone_model(network, input_tensors=network.input)
+                shape = network.input_shape[1:]
+                new_network = clone_model(network, input_tensors=Input(shape))
                 new_network.set_weights(network.get_weights())
             else:
                 new_network = clone_model(network)

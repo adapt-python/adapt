@@ -287,4 +287,22 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
             Prediction of ``estimator_``.
         """
         X = check_one_array(X)
-        return self.estimator_.predict(self.encoder_.predict(X))
+        return self.estimator_.predict(self.predict_features(X))
+    
+    
+    def predict_features(self, X):
+        """
+        Return the encoded features of X.
+        
+        Parameters
+        ----------
+        X: array
+            input data
+            
+        Returns
+        -------
+        X_enc: array
+            predictions of encoder network
+        """
+        X = check_one_array(X)
+        return self.encoder_.predict(X)
