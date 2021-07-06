@@ -15,7 +15,8 @@ from sklearn.ensemble import AdaBoostRegressor
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.compose import TransformedTargetRegressor
 from sklearn.base import BaseEstimator, RegressorMixin, ClassifierMixin
-from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.tree._tree import Tree
+from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 from tensorflow.keras import Model, Sequential
 from tensorflow.keras.layers import Input, Dense, Flatten, Reshape
 from tensorflow.python.keras.engine.input_layer import InputLayer
@@ -31,7 +32,7 @@ def is_equal_estimator(v1, v2):
         if isinstance(v1, np.ndarray):
             if not np.array_equal(v1, v2):
                 is_equal = False
-        elif isinstance(v1, BaseEstimator):
+        elif isinstance(v1, (BaseEstimator, KerasClassifier, KerasRegressor)):
             if not is_equal_estimator(v1.__dict__, v2.__dict__):
                 is_equal = False
         elif isinstance(v1, Model):
@@ -39,10 +40,11 @@ def is_equal_estimator(v1, v2):
                                       v2.get_config()):
                 is_equal = False
         elif isinstance(v1, dict):
+            if set(v1.keys()) != set(v2.keys()):
+                is_equal = False
             for k1_i, v1_i in v1.items():
-                if k1_i not in v2:
-                    is_equal = False
-                else:
+                # Avoid exception due to new input layer name
+                if k1_i != "name":
                     v2_i = v2[k1_i]
                     if not is_equal_estimator(v1_i, v2_i):
                         is_equal = False
@@ -53,6 +55,8 @@ def is_equal_estimator(v1, v2):
                 for v1_i, v2_i in zip(v1, v2):
                     if not is_equal_estimator(v1_i, v2_i):
                         is_equal = False
+        elif isinstance(v1, Tree):
+            pass # TODO create a function to check if two tree are equal
         else:
             if not v1 == v2:
                 is_equal = False
@@ -201,9 +205,9 @@ def test_check_network_network(net):
 @pytest.mark.parametrize("net", networks)
 def test_check_network_copy(net):
     new_net = check_network(net, copy=True, compile_=False)
-    hex(id(new_net)) != hex(id(net))
+    assert hex(id(new_net)) != hex(id(net))
     new_net = check_network(net, copy=False, compile_=False)
-    hex(id(new_net)) == hex(id(net))
+    assert hex(id(new_net)) == hex(id(net))
     
 
 no_networks = ["lala", Ridge(), 123, np.ones((10, 10))]
@@ -272,16 +276,24 @@ estimators = [
     TransformedTargetRegressor(Ridge(alpha=25), StandardScaler()),
     MultiOutputRegressor(Ridge(alpha=0.3)),
     make_pipeline(StandardScaler(), Ridge(alpha=0.2)),
-    KerasClassifier(_get_model_Sequential(input_shape=(1,))),
+    KerasClassifier(_get_model_Sequential, input_shape=(1,)),
     CustomEstimator()
 ]
 
 @pytest.mark.parametrize("est", estimators)
 def test_check_estimator_estimators(est):
-    new_est = check_estimator(est)
+    new_est = check_estimator(est, copy=True, force_copy=True)
     assert is_equal_estimator(est, new_est)
-    est.fit(np.linspace(0, 1, 10).reshape(-1, 1),
-            (np.linspace(0, 1, 10)<0.5).astype(float))
+    if isinstance(est, MultiOutputRegressor):
+        est.fit(np.linspace(0, 1, 10).reshape(-1, 1),
+        np.stack([np.linspace(0, 1, 10)<0.5]*2, -1).astype(float))
+    else:
+        est.fit(np.linspace(0, 1, 10).reshape(-1, 1),
+                (np.linspace(0, 1, 10)<0.5).astype(float))
+    if isinstance(est, KerasClassifier):
+        new_est = check_estimator(est, copy=False)
+    else:
+        new_est = check_estimator(est, copy=True, force_copy=True)
     assert is_equal_estimator(est, new_est)
     
     
@@ -294,7 +306,7 @@ def test_check_estimator_networks(est):
 no_estimators = ["lala", 123, np.ones((10, 10))]
 
 @pytest.mark.parametrize("no_est", no_estimators)
-def test_check_estimator_estimators(no_est):
+def test_check_estimator_no_estimators(no_est):
     with pytest.raises(ValueError) as excinfo:
         new_est = check_estimator(no_est)
     assert ("`estimator` argument is neither a sklearn `BaseEstimator` "
@@ -310,9 +322,9 @@ def test_check_estimator_estimators(no_est):
 @pytest.mark.parametrize("est", estimators)
 def test_check_estimator_copy(est):
     new_est = check_estimator(est, copy=True)
-    hex(id(new_est)) != hex(id(est))
+    assert hex(id(new_est)) != hex(id(est))
     new_est = check_estimator(est, copy=False)
-    hex(id(new_est)) == hex(id(est))
+    assert hex(id(new_est)) == hex(id(est))
     
     
 def test_check_estimator_force_copy():

@@ -124,6 +124,7 @@ def check_estimator(estimator=None, copy=True,
         else:
             estimator = LinearRegression()
     
+    # TODO, add KerasWrappers in doc and error message
     if isinstance(estimator, (BaseEstimator, KerasClassifier, KerasRegressor)):
         if (isinstance(estimator, ClassifierMixin) and task=="reg"):
             raise ValueError("`%s` argument is a sklearn `ClassifierMixin` instance "
@@ -137,7 +138,11 @@ def check_estimator(estimator=None, copy=True,
                              "tensorflow Model instance."%display_name)
         if copy:
             try:
-                new_estimator = deepcopy(estimator)
+                if isinstance(estimator, (KerasClassifier, KerasRegressor)):
+                    # TODO, copy fitted parameters and Model
+                    new_estimator = clone(estimator)
+                else:
+                    new_estimator = deepcopy(estimator)
             except Exception as e:
                 if force_copy:
                     raise ValueError("`%s` argument can't be duplicated. "
@@ -151,7 +156,7 @@ def check_estimator(estimator=None, copy=True,
                                   (display_name, e))
                     new_estimator = estimator
         else:
-            new_estimator = estimator
+            new_estimator = estimator    
     elif isinstance(estimator, Model):
         new_estimator = check_network(network=estimator,
                                   copy=copy, 
