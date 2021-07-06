@@ -226,9 +226,22 @@ def check_network(network, copy=True,
                 new_network = network
         if compile_:
             if network.optimizer:
-                new_network.compile(optimizer=deepcopy(network.optimizer),
-                                    loss=deepcopy(network.loss),
-                                    metrics=deepcopy(network.metrics))
+                # TODO, find a way of giving metrics (for now this 
+                # induces weird behaviour with fitted model having
+                # their loss in metrics)
+                try:
+                    # TODO, can we be sure that deepcopy will always work?
+                    try:
+                        optimizer=deepcopy(network.optimizer)
+                        loss=deepcopy(network.loss)
+                        new_network.compile(optimizer=optimizer,
+                                            loss=loss)
+                    except:
+                        new_network.compile(optimizer=network.optimizer,
+                                            loss=network.loss)
+                except:
+                    raise ValueError("Unable to compile the given `%s` argument."%
+                                     (display_name))
             else:
                 raise ValueError("The given `%s` argument is not compiled yet. "
                                  "Please use `model.compile(optimizer, loss)`."%

@@ -14,6 +14,8 @@ from scipy.optimize import minimize
 import tensorflow.keras.backend as K
 import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Flatten, Dense
 
 from adapt.utils import (check_arrays,
                    check_one_array,
