@@ -33,6 +33,9 @@ jobs:
     - name: Upload codecov
       run: |
         codecov
+    - name: Lint with pylint
+      run: |
+        pylint adapt tests || exit 0
      
 #   linux:
 
