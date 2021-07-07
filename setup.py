@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='adapt',
+    name='adaptation',
     version='0.2.0',
     description='Awesome Domain Adaptation Package Toolbox for Tensorflow and Scikit-learn',
     url='https://github.com/adapt-python/adapt.git',
