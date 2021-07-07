@@ -10,47 +10,15 @@ on:
     branches: [ master ]
 
 jobs:
-  linux-quick:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.7
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pylint pytest pytest-cov codecov
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Install adapt
-      run: |
-        pip install -e .
-    - name: Test with pytest
-      run: |
-        pytest --cov=adapt
-    - name: Upload codecov
-      run: |
-        codecov
-    - name: Lint with pylint
-      run: |
-        pylint adapt tests || exit 0
-     
-#   linux:
-
+#   linux-quick:
 #     runs-on: ubuntu-latest
-#     strategy:
-#       max-parallel: 4
-#       matrix:
-#         python-version: [3.5, 3.6, 3.7]
-
+    
 #     steps:
 #     - uses: actions/checkout@v2
-#     - name: Set up Python ${{ matrix.python-version }}
+#     - name: Set up Python 3.7
 #       uses: actions/setup-python@v2
 #       with:
-#         python-version: ${{ matrix.python-version }}
+#         python-version: 3.7
 #     - name: Install dependencies
 #       run: |
 #         python -m pip install --upgrade pip
@@ -59,68 +27,100 @@ jobs:
 #     - name: Install adapt
 #       run: |
 #         pip install -e .
-#     - name: Lint with pylint
-#       run: |
-#         pylint adapt tests || exit 0
 #     - name: Test with pytest
 #       run: |
 #         pytest --cov=adapt
 #     - name: Upload codecov
 #       run: |
 #         codecov
+#     - name: Lint with pylint
+#       run: |
+#         pylint adapt tests || exit 0
+     
+  linux:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint pytest pytest-cov codecov
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Install adapt
+      run: |
+        pip install -e .
+    - name: Lint with pylint
+      run: |
+        pylint adapt tests || exit 0
+    - name: Test with pytest
+      run: |
+        pytest --cov=adapt
+    - name: Upload codecov
+      run: |
+        codecov
         
         
-#   windows:
+  windows:
 
-#     runs-on: windows-2019
-#     strategy:
-#       max-parallel: 4
-#       matrix:
-#         python-version: [3.5, 3.6, 3.7]
+    runs-on: windows-2019
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
 
-#     steps:
-#     - uses: actions/checkout@v2
-#     - name: Set up Python ${{ matrix.python-version }}
-#       uses: actions/setup-python@v2
-#       with:
-#         python-version: ${{ matrix.python-version }}
-#     - name: Install dependencies
-#       run: |
-#         python -m pip install --upgrade pip
-#         pip install pytest
-#         pip install -r requirements.txt
-#     - name: Install adapt
-#       run: |
-#         pip install -e .
-#     - name: Test with pytest
-#       run: |
-#         pytest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+        pip install -r requirements.txt
+    - name: Install adapt
+      run: |
+        pip install -e .
+    - name: Test with pytest
+      run: |
+        pytest
         
-#   macos:
+  macos:
 
-#     runs-on: macOS-latest
-#     strategy:
-#       max-parallel: 4
-#       matrix:
-#         python-version: [3.5, 3.6, 3.7]
+    runs-on: macOS-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
 
-#     steps:
-#     - uses: actions/checkout@v2
-#     - name: Set up Python ${{ matrix.python-version }}
-#       uses: actions/setup-python@v2
-#       with:
-#         python-version: ${{ matrix.python-version }}
-#     - name: Install dependencies
-#       run: |
-#         python -m pip install --upgrade pip
-#         pip install pytest
-#         pip install -r requirements.txt
-#     - name: Install adapt
-#       run: |
-#         pip install -e .
-#     - name: Test with pytest
-#       run: |
-#         pytest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+        pip install -r requirements.txt
+    - name: Install adapt
+      run: |
+        pip install -e .
+    - name: Test with pytest
+      run: |
+        pytest
 
 
 
