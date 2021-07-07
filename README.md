@@ -64,15 +64,6 @@ ADAPT package is divided in three sub-modules containing the following domain ad
 - [RegularTransferNN](https://adapt-python.github.io/adapt/generated/adapt.parameter_based.RegularTransferNN.html) (*Regular Transfer with Neural Network*)
 
 
-## Examples
-
-Examples for regression and classification DA on synthetic datasets are available here:
-
-Classification | Regression         
-:-------------------------:|:-------------------------:
-[<img src="docs/_static/images/classification_setup.png" width="600px" height="350px">](https://adapt-python.github.io/adapt/classification_example.html) | [<img src="docs/_static/images/regression_setup.png" width="600px" height="300px">](https://adapt-python.github.io/adapt/regression_example.html)
-
-
 ## Acknowledgement
 
 Part of this work has been funded by the Industrial Data Analytics and Machine Learning chair from ENS Paris-Saclay, Borelli center.
