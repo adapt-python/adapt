@@ -22,6 +22,7 @@ from adapt.utils import (GradientHandler,
                          get_default_task,
                          get_default_discriminator)
 
+EPS = K.epsilon()
 
 def accuracy(y_true, y_pred):
     """
@@ -30,10 +31,10 @@ def accuracy(y_true, y_pred):
     
     Parameters
     ----------
-    y_true: Tensor
+    y_true : Tensor
         True tensor.
         
-    y_pred: Tensor
+    y_pred : Tensor
         Predicted tensor.
         
     Returns
@@ -100,6 +101,74 @@ class UpdateLambda(Callback):
 class BaseDeepFeature:
     """
     Base for Deep features-based methods.
+    
+    This object is used as basis for deep DA methods.
+    The object takes three networks : ``encoder``, ``task`` and
+    ``discriminator``. A deep DA object can be created as
+    a ``BaseDeepFeature`` child by implementing the
+    ``create_model`` and ``get_loss`` methods.
+    
+    Parameters
+    ----------
+    encoder : tensorflow Model (default=None)
+        Encoder netwok. If ``None``, a shallow network with 10
+        neurons and ReLU activation is used as encoder network.
+        
+    task : tensorflow Model (default=None)
+        Task netwok. If ``None``, a two layers network with 10
+        neurons per layer and ReLU activation is used as task network.
+        
+    discriminator : tensorflow Model (default=None)
+        Discriminator netwok. If ``None``, a two layers network with 10
+        neurons per layer and ReLU activation is used as discriminator
+        network. Note that the output shape of the discriminator should
+        be ``(None, 1)`` and a ``sigmoid`` activation should be used.
+
+    loss : string or tensorflow loss (default="mse")
+        Loss function used for the task.
+        
+    metrics : dict or list of string or tensorflow metrics (default=None)
+        Metrics given to the model. If a list is provided,
+        metrics are used on both ``task`` and ``discriminator``
+        outputs. To give seperated metrics, please provide a
+        dict of metrics list with ``"task"`` and ``"disc"`` as keys.
+        
+    optimizer : string or tensorflow optimizer (default=None)
+        Optimizer of the model. If ``None``, the
+        optimizer is set to tf.keras.optimizers.Adam(0.001)
+        
+    copy : boolean (default=True)
+        Whether to make a copy of ``encoder``, ``task`` and
+        ``discriminator`` or not.
+        
+    random_state : int (default=None)
+        Seed of random generator.
+    
+    Attributes
+    ----------
+    encoder_ : tensorflow Model
+        encoder network.
+        
+    task_ : tensorflow Model
+        task network.
+        
+    discriminator_ : tensorflow Model
+        discriminator network.
+    
+    model_ : tensorflow Model
+        Fitted model: the union of ``encoder_``,
+        ``task_`` and ``discriminator_`` networks.
+        
+    history_ : dict
+        history of the losses and metrics across the epochs.
+        If ``yt`` is given in ``fit`` method, target metrics
+        and losses are recorded too.
+        
+    See also
+    --------
+    DANN
+    ADDA
+    DeepCORAL
     """
     def __init__(self, 
                  encoder=None,
@@ -382,7 +451,7 @@ class BaseDeepFeature:
         Xt : numpy array
             Target input data.
             
-        yt : numpy array, optional (default=None)
+        yt : numpy array (default=None)
             Target output data. `yt` is only used
             for validation metrics.
 
@@ -403,12 +472,12 @@ class BaseDeepFeature:
         
         Parameters
         ----------
-        X: array
+        X : array
             input data
             
         Returns
         -------
-        y_pred: array
+        y_pred : array
             predictions of task network
         """
         X = check_one_array(X)
@@ -421,12 +490,12 @@ class BaseDeepFeature:
         
         Parameters
         ----------
-        X: array
+        X : array
             input data
             
         Returns
         -------
-        X_enc: array
+        X_enc : array
             predictions of encoder network
         """
         X = check_one_array(X)
@@ -439,12 +508,12 @@ class BaseDeepFeature:
         
         Parameters
         ----------
-        X: array
+        X : array
             input data
             
         Returns
         -------
-        y_disc: array
+        y_disc : array
             predictions of discriminator network
         """
         X = check_one_array(X)
@@ -467,15 +536,14 @@ class DANN(BaseDeepFeature):
     **discriminator** networks.
     
     The three network paremeters are optimized according to the
-    following objective function:
+    following objectives:
     
     .. math::
     
-        \mathcal{L} = \mathcal{L}_{task}(F(\phi(X_S)), y_S) - 
+        \min_{\phi, F} & \; \mathcal{L}_{task}(F(\phi(X_S)), y_S) -
         \lambda \\left(
-        \mathcal{L}_{01}(D(\mathcal{R}(\phi(X_S))), \\textbf{0}) +
-        \mathcal{L}_{01}(D(\mathcal{R}(\phi(X_T))), \\textbf{1})
-        \\right)
+        \log(1 - D(\phi(X_S))) + \log(D(\phi(X_T))) \\right) \\\\
+        \max_{D} & \; \log(1 - D(\phi(X_S))) + \log(D(\phi(X_T)))
         
     Where:
     
@@ -483,8 +551,6 @@ class DANN(BaseDeepFeature):
       and the unlabeled target data.
     - :math:`\phi, F, D` are respectively the **encoder**, the **task**
       and the **discriminator** networks
-    - :math:`\\mathcal{R}` is the **reversal gradient layer** which inverses
-      the gradient sign in back-propagation.
     - :math:`\lambda` is the trade-off parameter.
     
     The adversarial training is done through a **reversal gradient layer**
@@ -495,6 +561,8 @@ class DANN(BaseDeepFeature):
     The method has been originally introduced for **unsupervised**
     classification DA but it could be widen to other task in
     **supervised** DA straightforwardly.
+    
+    .. image:: ../_static/images/dann.png
     
     Parameters
     ----------
@@ -566,6 +634,8 @@ class DANN(BaseDeepFeature):
         
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.feature_based import DANN
     >>> np.random.seed(0)
     >>> Xs = np.concatenate((np.random.random((100, 1)),
     ...                      np.zeros((100, 1))), 1)
@@ -658,8 +728,8 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
                   disc_src, disc_tgt):
         
         loss_task = self.loss_(inputs_ys, task_src)
-        loss_disc = (-K.log(1-disc_src + K.epsilon())
-                     -K.log(disc_tgt + K.epsilon()))
+        loss_disc = (-K.log(1-disc_src + EPS)
+                     -K.log(disc_tgt + EPS))
         
         loss = K.mean(loss_task) + K.mean(loss_disc)
         return loss
@@ -671,8 +741,8 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         metrics = {}
         
         task_s = self.loss_(inputs_ys, task_src)
-        disc = (-K.log(1-disc_src + K.epsilon())
-                -K.log(disc_tgt + K.epsilon()))
+        disc = (-K.log(1-disc_src + EPS)
+                -K.log(disc_tgt + EPS))
         
         metrics["task_s"] = K.mean(task_s)
         metrics["disc"] = K.mean(disc)
@@ -727,8 +797,8 @@ class ADDA(BaseDeepFeature):
     
     .. math::
     
-        \max_{\phi_T} \min_{D} \mathcal{L}_{01}(D(\phi_S(X_S)), \\textbf{0})
-        + \mathcal{L}_{01}(D(\phi_T(X_T)), \\textbf{1})
+        \min_{\phi_T} & \; - \log(D(\phi_T(X_T)))) \\\\
+        \min_{D} & \; - \log(D(\phi_S(X_S))) - \log(1 - D(\phi_T(X_T)))
     
     Where:
     
@@ -740,6 +810,8 @@ class ADDA(BaseDeepFeature):
     The method has been originally introduced for **unsupervised**
     classification DA but it could be widen to other task in **supervised**
     DA straightforwardly.
+    
+    .. image:: ../_static/images/adda.png
     
     Parameters
     ----------
@@ -760,8 +832,8 @@ class ADDA(BaseDeepFeature):
     encoder_src : tensorflow Model (default=None)
         Source encoder netwok. A source encoder network can be
         given in the case of heterogenous features between
-        source and target domains. If ``None``, the ``encoder``
-        network is used as source encoder.
+        source and target domains. If ``None``, a copy of the
+        ``encoder`` network is used as source encoder.
         
     is_pretrained : boolean (default=False)
         Specify if the encoder is already pretrained on source or not
@@ -815,7 +887,7 @@ class ADDA(BaseDeepFeature):
         and losses are recorded too.
         
     history_src_ : dict
-        Source mode history of the losses and metrics
+        Source model history of the losses and metrics
         across the epochs. If ``yt`` is given in ``fit``
         method, target metrics and losses are recorded too.
         
@@ -826,6 +898,8 @@ class ADDA(BaseDeepFeature):
         
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.feature_based import ADDA
     >>> np.random.seed(0)
     >>> Xs = np.concatenate((np.random.random((100, 1)),
     ...                      np.zeros((100, 1))), 1)
@@ -890,6 +964,38 @@ In CVPR, 2017.
 
         
     def fit_source(self, Xs, ys, Xt=None, yt=None, **fit_params):
+        """
+        Build and fit source encoder and task networks
+        on source data.
+        
+        This method performs the first stage of ADDA.
+
+        Parameters
+        ----------
+        Xs : numpy array
+            Source input data.
+
+        ys : numpy array
+            Source output data.
+
+        Xt : numpy array (default=None)
+            Target input data. Target data are only
+            used in the fit method of ``model_src_`` as
+            validation data.
+            
+        yt : numpy array (default=None)
+            Target output data. Target data are only
+            used in the fit method of ``model_src_`` as
+            validation data.
+
+        fit_params : key, value arguments
+            Arguments given to the fit method of the model
+            (epochs, batch_size, callbacks...).
+
+        Returns
+        -------
+        model_src_ : returns the fitted source model.
+        """
         np.random.seed(self.random_state)
         tf.random.set_seed(self.random_state)
                 
@@ -923,15 +1029,83 @@ In CVPR, 2017.
             if not hasattr(self, "history_src_"):
                 self.history_src_ = {}
             self.history_src_[k] = self.history_src_.get(k, []) + v
-        return self
+        return self.model_src_
 
 
     def fit_target(self, Xs_enc, ys, Xt, yt=None, **fit_params):
+        """
+        Build and fit target encoder and discriminator
+        networks on source data.
+        
+        This method performs the second stage of ADDA.
+
+        Parameters
+        ----------
+        Xs_enc : numpy array
+            Source encoded data.
+
+        ys : numpy array
+            Source output data.
+
+        Xt : numpy array
+            Target input data.
+            
+        yt : numpy array (default=None)
+            Target output data. `yt` is only used
+            for validation metrics.
+
+        fit_params : key, value arguments
+            Arguments given to the fit method of the model
+            (epochs, batch_size, callbacks...).
+
+        Returns
+        -------
+        model_ : return the fitted target model.
+        """
         self._fit(Xs_enc, ys, Xt, yt, **fit_params)
-        return self
+        return self.model_
         
     
-    def fit(self, Xs, ys, Xt, yt=None, fit_params_src=None, **fit_params):  
+    def fit(self, Xs, ys, Xt, yt=None, fit_params_src=None, **fit_params):
+        """
+        Perform the two stages of ADDA.
+        
+        First ``encoder_src_`` and ``task_`` are fitted using
+        ``Xs`` and ``ys``. Then ``encoder_`` and ``discriminator_``
+        are fitted using ``Xs``, ``Xt`` and ``ys``.
+        
+        Note that if fit is called again, only the training of
+        ``encoder_`` and ``discriminator_`` is extended,
+        ``encoder_src_`` and ``task_`` remaining as they are.
+        
+        Parameters
+        ----------
+        Xs : numpy array
+            Source input data.
+
+        ys : numpy array
+            Source output data.
+
+        Xt : numpy array
+            Target input data.
+            
+        yt : numpy array (default=None)
+            Target output data. `yt` is only used
+            for validation metrics.
+
+        fit_params_src : dict (default=None)
+            Arguments given to the fit method of the
+            source model (epochs, batch_size, callbacks...).
+            If ``None``, fit_params_src is set to fit_params.
+
+        fit_params : key, value arguments
+            Arguments given to the fit method of the
+            target model (epochs, batch_size, callbacks...).
+
+        Returns
+        -------
+        self : returns an instance of self
+        """
         if fit_params_src is None:
             fit_params_src = fit_params
         
@@ -973,13 +1147,13 @@ In CVPR, 2017.
     def get_loss(self, inputs_ys, disc_src, disc_tgt,
                   disc_tgt_nograd, task_tgt):
         
-        loss_disc = (-K.log(disc_src + K.epsilon())
-                     -K.log(1-disc_tgt_nograd + K.epsilon()))
+        loss_disc = (-K.log(disc_src + EPS)
+                     -K.log(1-disc_tgt_nograd + EPS))
         
         # The second term is here to cancel the gradient update on
         # the discriminator
-        loss_enc = (-K.log(disc_tgt + K.epsilon())
-                    +K.log(disc_tgt_nograd + K.epsilon()))
+        loss_enc = (-K.log(disc_tgt + EPS)
+                    +K.log(disc_tgt_nograd + EPS))
         
         loss = K.mean(loss_disc) + K.mean(loss_enc)
         return loss
@@ -990,8 +1164,8 @@ In CVPR, 2017.
                      disc_tgt_nograd, task_tgt):
         metrics = {}
         
-        disc = (-K.log(disc_src + K.epsilon())
-                -K.log(1-disc_tgt_nograd + K.epsilon()))
+        disc = (-K.log(disc_src + EPS)
+                -K.log(1-disc_tgt_nograd + EPS))
         
         metrics["disc"] = K.mean(disc)
         if inputs_yt is not None:
@@ -1018,7 +1192,7 @@ In CVPR, 2017.
         
         Parameters
         ----------
-        X: array
+        X : array
             Input data
 
         domain: str (default="tgt")
@@ -1029,7 +1203,7 @@ In CVPR, 2017.
             
         Returns
         -------
-        X_enc: array
+        X_enc : array
             predictions of encoder network
         """
         X = check_one_array(X)
@@ -1049,18 +1223,18 @@ In CVPR, 2017.
         
         Parameters
         ----------
-        X: array
+        X : array
             Input data
             
-        domain: str (default="tgt")
+        domain : str (default="tgt")
             If domain is ``"tgt"`` or ``"target"``,
-            outputs of ``encoder_`` are returned.
+            outputs of ``encoder_`` are used.
             If domain is ``"src"`` or ``"source"``,
-            outputs of ``encoder_src_`` are returned.
+            outputs of ``encoder_src_`` are used.
             
         Returns
         -------
-        y_pred: array
+        y_pred : array
             predictions of task network
         """
         X = check_one_array(X)
@@ -1073,18 +1247,18 @@ In CVPR, 2017.
         
         Parameters
         ----------
-        X: array
+        X : array
             Input data
             
-        domain: str (default="tgt")
+        domain : str (default="tgt")
             If domain is ``"tgt"`` or ``"target"``,
-            outputs of ``encoder_`` are returned.
+            outputs of ``encoder_`` are used.
             If domain is ``"src"`` or ``"source"``,
-            outputs of ``encoder_src_`` are returned.
+            outputs of ``encoder_src_`` are used.
             
         Returns
         -------
-        y_disc: array
+        y_disc : array
             predictions of discriminator network
         """
         X = check_one_array(X)
@@ -1101,7 +1275,7 @@ class DeepCORAL(BaseDeepFeature):
     transformation which aligns correlations of layer activations in
     deep neural networks.
     
-    The method consist in training both an **encoder** and a **task**
+    The method consists in training both an **encoder** and a **task**
     network. The **encoder** network maps input features into new
     encoded ones on which the **task** network is trained.
     
@@ -1115,7 +1289,7 @@ class DeepCORAL(BaseDeepFeature):
     Where:
     
     - :math:`\mathcal{L}_{task}` is the task loss computed with
-      source and labeled target data.
+      source labeled data.
     - :math:`C_S` is the correlation matrix of source data in the
       encoded feature space.
     - :math:`C_T` is the correlation matrix of target data in the
@@ -1123,15 +1297,15 @@ class DeepCORAL(BaseDeepFeature):
     - :math:`||.||_F` is the Frobenius norm.
     - :math:`\\lambda` is a trade-off parameter.
     
-    Thus the **encoder** network learn a new feature representation
+    Thus the **encoder** network learns a new feature representation
     on wich the correlation matrixes of source and target data are
     "close" and where a **task** network is able to learn the task
     with source labeled data.
     
     Notice that DeepCORAL only uses labeled source and unlabeled target
     data. It belongs then to "unsupervised" domain adaptation methods.
-    However, labeled target data can be added to the training process
-    straightforwardly.
+    
+    .. image:: ../_static/images/deepcoral.png
     
     Parameters
     ----------
@@ -1183,6 +1357,8 @@ class DeepCORAL(BaseDeepFeature):
         
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.feature_based import DeepCORAL
     >>> np.random.seed(0)
     >>> Xs = np.random.multivariate_normal(
     ...      np.array([0, 0]), np.array([[0.001, 0], [0, 1]]), 100)
@@ -1247,7 +1423,7 @@ class DeepCORAL(BaseDeepFeature):
         task_src = self.task_(encoded_src)
         task_tgt = self.task_(encoded_tgt)
         
-        factor_1 = 1 / (batch_size - 1 + K.epsilon())
+        factor_1 = 1 / (batch_size - 1 + EPS)
         factor_2 = 1 / batch_size
         
         sum_src = K.sum(encoded_src, axis=0)

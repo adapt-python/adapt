@@ -18,7 +18,7 @@ from tensorflow.keras.layers import Layer, Dense, Flatten, Input
 from tensorflow.keras.models import clone_model
 
 
-def check_one_array(X):
+def check_one_array(X, multisource=False):
     """
     Check array and reshape 1D array in 2D array
     of shape (-1, 1).
@@ -28,17 +28,41 @@ def check_one_array(X):
     X : numpy array
         Input data.
         
+    multisource : boolean (default=False)
+        Weither to accept list of arrays or not.
+        
     Returns
     -------
     X
     """
-    X = check_array(X, ensure_2d=False, allow_nd=True)
-    if X.ndim == 1:
-        X = X.reshape(-1, 1)
+    if multisource and isinstance(X, (tuple, list)):
+        if len(X) == 0:
+            raise ValueError("Length of given list or tuple is empty.")
+        for i in range(len(Xs)):
+            X[i] = check_array(X[i],
+                               ensure_2d=False,
+                               allow_nd=True)
+            if X[i].ndim == 1:
+                X[i] = X[i].reshape(-1, 1)
+            if i == 0:
+                dim = X[i].shape[1]
+            else:
+                dim_i = X[i].shape[1]
+                if dim_i != dim:
+                    raise ValueError(
+                        "All the given arrays are not of same "
+                        "dimension on axis 1, got: dim %i for index 0 "
+                        "and dim %i for index %i"%(dim, dim_i, i))
+    else:
+        X = check_array(X,
+                        ensure_2d=False,
+                        allow_nd=True)
+        if X.ndim == 1:
+            X = X.reshape(-1, 1)
     return X
 
-            
-def check_arrays(Xs, ys, Xt, yt=None):
+      
+def check_arrays(Xs, ys, Xt, yt=None, multisource=False):
     """
     Check arrays and reshape 1D array in 2D array
     of shape (-1, 1). Check if the length of Xs, Xt
@@ -59,28 +83,38 @@ def check_arrays(Xs, ys, Xt, yt=None):
         Target output data. `yt` is only used
         for validation metrics.
         
+    multisource : boolean (default=False)
+        Weither to accept list of arrays or not.
+        
     Returns
     -------
     Xs, ys, Xt, yt
     """
-    Xs = check_array(Xs, ensure_2d=False, allow_nd=True)
-    if Xs.ndim == 1:
-        Xs = Xs.reshape(-1, 1)
-    Xt = check_array(Xt, ensure_2d=False, allow_nd=True)
-    if Xt.ndim == 1:
-        Xt = Xt.reshape(-1, 1)
-    ys = check_array(ys, ensure_2d=False, allow_nd=True)
-    if ys.ndim == 1:
-        ys = ys.reshape(-1, 1)
+    if multisource and isinstance(Xs, (tuple, list)):
+        if isinstance(ys, (tuple, list)):
+            if not len(Xs) == len(ys):
+                raise ValueError(
+                    "`Xs` argument is of type list or tuple "
+                    "which is the multi-source setting. `ys` "
+                    "argument was expected to have the same length "
+                    "as Xs but got, len(Xs) = %i vs len(ys) = %i"%
+                    (len(Xs), len(ys)))
+        else:
+            raise ValueError("`Xs` argument is of type list or tuple "
+                             "which is the multi-source setting. `ys` "
+                             "argument was expected to be of same type but "
+                             "got, type(ys) = %s"%str(type(ys)))
+    
+    Xs = check_one_array(Xs, multisource=multisource)
+    Xt = check_one_array(Xt, multisource=multisource)
+    ys = check_one_array(ys, multisource=multisource)
     
     if len(Xs) != len(ys):
         raise ValueError("Length of Xs and ys mismatch: %i != %i"%
                          (len(Xs), len(ys)))
     
     if yt is not None:
-        yt = check_array(yt, ensure_2d=False, allow_nd=True)
-        if yt.ndim == 1:
-            yt = yt.reshape(-1, 1)
+        yt = check_one_array(yt)
         if len(Xt) != len(yt):
             raise ValueError("Length of Xt and yt mismatch: %i != %i"%
                              (len(Xt), len(yt)))
@@ -110,11 +144,11 @@ def check_estimator(estimator=None, copy=True,
 
     display_name: str (default="estimator")
         Name to display if an error or warning is raised
-        
+
     task : str (default=None)
         Task at hand. Possible value : 
         (``None``, ``"reg"``, ``"class"``)
-        
+
     force_copy : boolean (default=False)
         If True, an error is raised if the cloning failed.
     """
@@ -184,18 +218,18 @@ def check_network(network, copy=True,
     ----------
     network : tensorflow Model
         Network to check.
-        
+
     copy : boolean (default=True)
         Whether to return a copy of the network or not.
         If cloning fail, a warning is raised.
-        
+
     compile_ : boolean (default=False)
         Whether to compile the network after cloning,
         using copy of the network loss and optimizer.
 
     display_name : str (default="network")
         Name to display if an error or warning is raised
-        
+
     force_copy : boolean (default=False)
         If True, an error is raised if the cloning failed.
     """
@@ -206,8 +240,14 @@ def check_network(network, copy=True,
     
     if copy:
         try:
+            # TODO, be carefull of network with weights
+            # but no input_shape
             if hasattr(network, "input_shape"):
                 shape = network.input_shape[1:]
+                new_network = clone_model(network, input_tensors=Input(shape))
+                new_network.set_weights(network.get_weights())
+            elif network.built:
+                shape = network._build_input_shape[1:]
                 new_network = clone_model(network, input_tensors=Input(shape))
                 new_network.set_weights(network.get_weights())
             else:

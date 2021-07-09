@@ -15,6 +15,7 @@ from tensorflow.keras.utils import to_categorical
 
 from adapt.utils import check_arrays, check_one_array, check_estimator
 
+EPS = np.finfo(float).eps
 
 def _get_median_predict(X, predictions, weights):
     sorted_idx = np.argsort(predictions, axis=-1)
@@ -140,6 +141,8 @@ class TrAdaBoost:
         
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.instance_based import TrAdaBoost
     >>> from sklearn.tree import DecisionTreeClassifier
     >>> np.random.seed(0)
     >>> Xs = np.random.random((100, 2))
@@ -211,7 +214,7 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         sample_weight_src : numpy array, (default=None)
             Initial sample weight of source data
             
-        sample_weight_src : numpy array, (default=None)
+        sample_weight_tgt : numpy array, (default=None)
             Initial sample weight of target data
 
         fit_params : key, value arguments
@@ -272,7 +275,7 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
 
         self.estimator_errors_ = np.array(self.estimator_errors_)
         self.estimator_weights_ = np.array([
-            -np.log(err / (1-err) + np.finfo(float).eps) + 2*np.finfo(float).eps
+            -np.log(err / (1-err) + EPS) + 2*EPS
             for err in self.estimator_errors_])
         return self
         
@@ -313,7 +316,7 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
             error_vect_tgt = np.abs(yt_pred - yt).mean(tuple(range(1, yt.ndim)))
             error_vect = np.concatenate((error_vect_src, error_vect_tgt))
             
-            error_max = error_vect.max() + np.finfo(float).eps
+            error_max = error_vect.max() + EPS
             if error_max != 0:
                 error_vect /= error_max
                 error_vect_src /= error_max
@@ -405,6 +408,21 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
 
 
     def predict_weights(self, domain="src"):
+        """
+        Return sample weights.
+        
+        Return the final source importance weighting.
+        
+        Parameters
+        ----------
+        domain : str (default="tgt")
+            Choose between ``"source", "src"`` and
+            ``"target", "tgt"``.
+
+        Returns
+        -------
+        weights : source sample weights
+        """
         if hasattr(self, "sample_weights_src_"):
             if domain in ["src", "source"]:
                 return self.sample_weights_src_[-1]
@@ -505,6 +523,8 @@ class TrAdaBoostR2(TrAdaBoost):
         
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.instance_based import TrAdaBoostR2
     >>> np.random.seed(0)
     >>> Xs = np.random.random((100, 2))
     >>> Xt = np.random.random((100, 2))
@@ -643,7 +663,7 @@ class TwoStageTrAdaBoostR2(TrAdaBoostR2):
     n_estimators : int (default=10)
         Number of boosting iteration.
         
-    n_estimators_fs : int, optional (default=10)
+    n_estimators_fs : int (default=10)
         Number of boosting iteration in first stage
         (given to AdaboostR2 estimators)
         
@@ -674,6 +694,8 @@ class TwoStageTrAdaBoostR2(TrAdaBoostR2):
         
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.instance_based import TwoStageTrAdaBoostR2
     >>> np.random.seed(0)
     >>> Xs = np.random.random((100, 2))
     >>> Xt = np.random.random((100, 2))
@@ -810,7 +832,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         error_vect_tgt = np.abs(yt_pred - yt).mean(tuple(range(1, yt.ndim)))
         error_vect = np.concatenate((error_vect_src, error_vect_tgt))
         
-        error_max = error_vect.max() + np.finfo(float).eps
+        error_max = error_vect.max() + EPS
         if error_max != 0:
             error_vect /= error_max
             error_vect_src /= error_max
@@ -918,3 +940,35 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         best_estimator = self.estimators_[
             self.estimator_errors_.argmin()]
         return best_estimator.predict(X)
+
+
+    def predict_weights(self, domain="src"):
+        """
+        Return sample weights.
+        
+        Return the source importance weighting
+        of the best estimator.
+        
+        Parameters
+        ----------
+        domain : str (default="tgt")
+            Choose between ``"source", "src"`` and
+            ``"target", "tgt"``.
+
+        Returns
+        -------
+        weights : source sample weights
+        """
+        if hasattr(self, "sample_weights_src_"):
+            arg = self.estimator_errors_.argmin()
+            if domain in ["src", "source"]:
+                return self.sample_weights_src_[arg]
+            elif domain in ["tgt", "target"]:
+                return self.sample_weights_tgt_[arg]
+            else:
+                raise ValueError("`domain `argument "
+                                 "should be `tgt` or `src`, "
+                                 "got, %s"%domain)
+        else:
+            raise NotFittedError("Weights are not fitted yet, please "
+                                 "call 'fit' first.")

@@ -3,6 +3,7 @@ Kernel Mean Matching
 """
 
 import inspect
+import warnings
 
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -40,8 +41,8 @@ class KMM:
         
     Where:
     
-    - :math:`K_{ij} = k(x_i, x_j)` with :math:`x_i, x_j \\in X_S`
-      and :math:k` a kernel.
+    - :math:`K_{ij} = k(x_i, x_j)` with :math:`x_i, x_j \in X_S`
+      and :math:`k` a kernel.
     - :math:`\\kappa_{i} = \\frac{n_S}{n_T} \sum_{x_j \in X_T} k(x_i, x_j)` 
       with :math:`x_i \\in X_S`.
     - :math:`w_i` are the source instance weights.
@@ -80,10 +81,6 @@ class KMM:
     kernel_params : dict, optional (default=None)
         Kernel additional parameters
         
-    max_centers : int, optional (default=100)
-        Maximal number of target instances use to
-        compute kernels.
-        
     tol: float, optional (default=None)
         Optimization threshold. If ``None``
         default parameters from cvxopt are used.
@@ -110,6 +107,8 @@ class KMM:
         
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.instance_based import KMM
     >>> np.random.seed(0)
     >>> Xs = np.random.randn(50) * 0.1
     >>> Xs = np.concatenate((Xs, Xs + 1.))
@@ -148,7 +147,6 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
                  epsilon=None,
                  kernel="rbf",
                  kernel_params=None,
-                 max_centers=100,
                  tol=None,
                  max_iter=100,
                  copy=True,
@@ -163,7 +161,6 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         self.epsilon = epsilon
         self.kernel = kernel
         self.kernel_params = kernel_params
-        self.max_centers = max_centers
         self.tol = tol
         self.max_iter = max_iter
         self.copy = copy
@@ -210,20 +207,29 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
 
 
     def fit_weights(self, Xs, Xt):
+        """
+        Fit importance weighting.
+        
+        Parameters
+        ----------
+        Xs : array
+            Input source data.
+            
+        Xt : array
+            Input target data.
+            
+        Returns
+        -------
+        weights_ : sample weights
+        """
         np.random.seed(self.random_state)
         tf.random.set_seed(self.random_state)
         
         Xs = check_one_array(Xs)
         Xt = check_one_array(Xt)
-        
-        index_centers = np.random.choice(
-                        len(Xt),
-                        min(len(Xt), self.max_centers),
-                        replace=False)
-        self.centers_ = Xt[index_centers]
-        
+                
         n_s = len(Xs)
-        n_t = len(self.centers_)
+        n_t = len(Xt)
         
         # Get epsilon
         if self.epsilon is None:
@@ -237,7 +243,7 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         K = (1/2) * (K + K.transpose())
 
         # Compute q
-        kappa = pairwise.pairwise_kernels(Xs, self.centers_,
+        kappa = pairwise.pairwise_kernels(Xs, Xt,
                                           metric=self.kernel,
                                           **self.kernel_params)
         kappa = (n_s/n_t) * np.dot(kappa, np.ones((n_t, 1)))
@@ -272,12 +278,34 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         weights = solvers.qp(P, q, G, h)['x']
 
         self.weights_ = np.array(weights).ravel()
-        return self
+        return self.weights_
 
         
     def fit_estimator(self, X, y,
                       sample_weight=None,
                       **fit_params):
+        """
+        Fit estimator.
+        
+        Parameters
+        ----------
+        X : array
+            Input data.
+            
+        y : array
+            Output data.
+            
+        sample_weight : array
+            Importance weighting.
+            
+        fit_params : key, value arguments
+            Arguments given to the fit method of
+            the estimator.
+            
+        Returns
+        -------
+        estimator_ : fitted estimator
+        """
         np.random.seed(self.random_state)
         tf.random.set_seed(self.random_state)
         
@@ -285,18 +313,22 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         y = check_one_array(y)
              
         if "sample_weight" in inspect.signature(self.estimator_.fit).parameters:
-            self.estimator_.fit(X, y, 
-                                sample_weight=sample_weight,
-                                **fit_params)
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                self.estimator_.fit(X, y, 
+                                    sample_weight=sample_weight,
+                                    **fit_params)
         else:
             if sample_weight is not None:
                 sample_weight /= (sample_weight.sum() + EPS)
             bootstrap_index = np.random.choice(
             len(X), size=len(X), replace=True,
             p=sample_weight)
-            self.estimator_.fit(X[bootstrap_index], y[bootstrap_index],
-                                **fit_params)
-        return self
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                self.estimator_.fit(X[bootstrap_index], y[bootstrap_index],
+                                    **fit_params)
+        return self.estimator_
 
 
     def predict(self, X):
@@ -318,6 +350,13 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
 
     
     def predict_weights(self):
+        """
+        Return fitted source weights
+        
+        Returns
+        -------
+        weights_ : sample weights
+        """
         if hasattr(self, "weights_"):
             return self.weights_
         else:

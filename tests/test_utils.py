@@ -25,42 +25,33 @@ from adapt.utils import *
 
 
 def is_equal_estimator(v1, v2):
-    is_equal = True
-    if type(v2) != type(v1):
-        is_equal = False
+    assert type(v2) == type(v1)
+    if isinstance(v1, np.ndarray):
+        assert np.array_equal(v1, v2)
+    elif isinstance(v1, (BaseEstimator, KerasClassifier, KerasRegressor)):
+        assert is_equal_estimator(v1.__dict__, v2.__dict__)
+    elif isinstance(v1, Model):
+        assert is_equal_estimator(v1.get_config(),
+                                  v2.get_config())
+    elif isinstance(v1, dict):
+        diff_keys = ((set(v1.keys())-set(v2.keys())) |
+                    (set(v2.keys())-set(v1.keys())))
+        for k in diff_keys:
+            assert "input_shape" in k
+        for k1_i, v1_i in v1.items():
+            # Avoid exception due to new input layer name
+            if k1_i != "name" and not "input_shape" in str(k1_i):
+                v2_i = v2[k1_i]
+                assert is_equal_estimator(v1_i, v2_i)
+    elif isinstance(v1, (list, tuple)):
+        assert len(v1) == len(v2)
+        for v1_i, v2_i in zip(v1, v2):
+            assert is_equal_estimator(v1_i, v2_i)
+    elif isinstance(v1, Tree):
+        pass # TODO create a function to check if two tree are equal
     else:
-        if isinstance(v1, np.ndarray):
-            if not np.array_equal(v1, v2):
-                is_equal = False
-        elif isinstance(v1, (BaseEstimator, KerasClassifier, KerasRegressor)):
-            if not is_equal_estimator(v1.__dict__, v2.__dict__):
-                is_equal = False
-        elif isinstance(v1, Model):
-            if not is_equal_estimator(v1.get_config(),
-                                      v2.get_config()):
-                is_equal = False
-        elif isinstance(v1, dict):
-            if set(v1.keys()) != set(v2.keys()):
-                is_equal = False
-            for k1_i, v1_i in v1.items():
-                # Avoid exception due to new input layer name
-                if k1_i != "name":
-                    v2_i = v2[k1_i]
-                    if not is_equal_estimator(v1_i, v2_i):
-                        is_equal = False
-        elif isinstance(v1, (list, tuple)):
-            if len(v1) != len(v2):
-                is_equal = False
-            else:
-                for v1_i, v2_i in zip(v1, v2):
-                    if not is_equal_estimator(v1_i, v2_i):
-                        is_equal = False
-        elif isinstance(v1, Tree):
-            pass # TODO create a function to check if two tree are equal
-        else:
-            if not v1 == v2:
-                is_equal = False
-    return is_equal
+        assert v1 == v2
+    return True
 
     
 
@@ -196,11 +187,17 @@ networks = [
 def test_check_network_network(net):
     new_net = check_network(net, compile_=False)
     assert is_equal_estimator(new_net, net)
-    if hasattr(net, "input_shape"):
+    if net.built:
         for i in range(len(net.get_weights())):
             assert np.array_equal(net.get_weights()[i],
                               new_net.get_weights()[i])
-        
+    net.predict(np.ones((10, 10)))
+    new_net = check_network(net, compile_=False)
+    assert is_equal_estimator(new_net, net)
+    for i in range(len(net.get_weights())):
+        assert np.array_equal(net.get_weights()[i],
+                              new_net.get_weights()[i])
+
 
 @pytest.mark.parametrize("net", networks)
 def test_check_network_copy(net):

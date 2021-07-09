@@ -3,6 +3,7 @@ Marginalized Stacked Denoising Autoencoder
 """
 
 import copy
+import warnings
 
 import numpy as np
 import tensorflow as tf
@@ -66,16 +67,15 @@ class mSDA:
     decoder : tensorflow Model (default=None)
         Decoder netwok. If ``None``, a neural network with two
         hidden layers of 100 neurons with ReLU activation each
-        is used. The output layer is made of ``n_dim`` neurons 
-        and a linear activation, ``n_dim`` is the input space
-        dimension.
+        is used. The output layer is made of ``Xs.shape[1]`` neurons 
+        and a linear activation.
     
     estimator : sklearn estimator or tensorflow Model (default=None)
         Estimator used to learn the task. 
         If estimator is ``None``, a ``LinearRegression``
         instance is used as estimator.
         
-    noise_lvl: float (default=0.1)
+    noise_lvl : float (default=0.1)
         Standard deviation of gaussian noise added to the input data
         in the denoising autoencoder.
         
@@ -115,6 +115,8 @@ class mSDA:
         
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.feature_based import mSDA
     >>> from adapt.utils import make_classification_da
     >>> from sklearn.linear_model import LogisticRegression
     >>> Xs, ys, Xt, yt = make_classification_da()
@@ -219,6 +221,25 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
         
     
     def fit_embeddings(self, Xs, Xt, **fit_params):
+        """
+        Fit embeddings.
+        
+        Parameters
+        ----------
+        Xs : array
+            Input source data.
+            
+        Xt : array
+            Input target data.
+            
+        fit_params : key, value arguments
+            Arguments given to the fit method of
+            ``auto_encoder``.
+            
+        Returns
+        -------
+        Xs_emb, Xt_emb : embedded source and target data
+        """
         np.random.seed(self.random_state)
         tf.random.set_seed(self.random_state)
         
@@ -244,9 +265,32 @@ M. Chen, Z. E. Xu, K. Q. Weinberger, and F. Sha. \
     
     
     def fit_estimator(self, X, y, **fit_params):
+        """
+        Fit estimator.
+        
+        Parameters
+        ----------
+        X : array
+            Input data.
+            
+        y : array
+            Output data.
+            
+        fit_params : key, value arguments
+            Arguments given to the fit method of
+            the estimator.
+            
+        Returns
+        -------
+        estimator_ : fitted estimator
+        """
+        X = check_one_array(X)
         np.random.seed(self.random_state)
         tf.random.set_seed(self.random_state)
-        return self.estimator_.fit(X, y, **fit_params)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self.estimator_.fit(X, y, **fit_params)
+        return self.estimator_
         
         
     def _build(self, shape):

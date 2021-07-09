@@ -3,6 +3,7 @@ Regular Transfer
 """
 
 import copy
+import warnings
 
 import numpy as np
 from sklearn.linear_model import (LinearRegression,
@@ -18,7 +19,7 @@ from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Flatten, Dense
 
 from adapt.utils import (check_arrays,
-                   check_one_array,
+                         check_one_array,
                          check_estimator,
                          check_network)
 
@@ -102,6 +103,8 @@ class RegularTransferLR:
         
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.parameter_based import RegularTransferLR
     >>> from sklearn.linear_model import LinearRegression
     >>> np.random.seed(0)
     >>> Xs = np.random.randn(50) * 0.1
@@ -275,6 +278,8 @@ class RegularTransferLC:
             
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.parameter_based import RegularTransferLC
     >>> from sklearn.linear_model import LogisticRegression
     >>> np.random.seed(0)
     >>> Xs = np.random.randn(50) * 0.1
@@ -528,7 +533,7 @@ neural networks". In CVPR, 2014.
             self.trainables = [self.trainables]
 
 
-    def build(self, shape_X):
+    def _build(self, shape_X):
         self.history_ = {}
         self.network_.predict(np.zeros((1,) + shape_X))
         self._add_regularization()
@@ -566,7 +571,7 @@ neural networks". In CVPR, 2014.
         yt = check_one_array(yt)
         
         if not self.is_built_:
-            self.build(Xt.shape[1:])
+            self._build(Xt.shape[1:])
             self.is_built_ = True
         
         hist = self.network_.fit(Xt, yt, **fit_params)
@@ -613,7 +618,7 @@ neural networks". In CVPR, 2014.
         
     def predict(self, X):
         """
-         Return predictions of target network.
+        Return predictions of target network.
         
         Parameters
         ----------

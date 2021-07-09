@@ -3,6 +3,7 @@ Kullback-Leibler Importance Estimation Procedure
 """
 
 import inspect
+import warnings
 
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -22,7 +23,7 @@ class KLIEP:
     
     The purpose of the algorithm is to correct the difference between
     input distributions of source and target domains. This is done by
-    finding a the source instances **reweighting** which minimizes the 
+    finding a source instances **reweighting** which minimizes the 
     **Kullback-Leibler divergence** between source and target distributions.
     
     The source instance weights are given by the following formula:
@@ -44,7 +45,7 @@ class KLIEP:
     
     .. math::
     
-        \max_{\\alpha_i } \sum_{x_i \in X_T} \\text{log}(
+        \max_{\\alpha_i } \sum_{x_i \in X_T} \log(
         \sum_{x_j \in X_T} \\alpha_i K_{\sigma}(x_j, x_i))
         
     Subject to:
@@ -57,7 +58,7 @@ class KLIEP:
     
     - :math:`X_T` is the source input data of size :math:`n_S`.
     
-    The above OP is solved through gradient descent algorithm.
+    The above OP is solved through gradient ascent algorithm.
     
     Furthemore a LCV procedure can be added to select the appropriate
     bandwidth :math:`\sigma`. The parameter is then selected using
@@ -77,26 +78,26 @@ class KLIEP:
         If estimator is ``None``, a ``LinearRegression``
         instance is used as estimator.
         
-    sigmas : float or list of float, optional (default=1/nb_features)
+    sigmas : float or list of float (default=1/nb_features)
         Kernel bandwidths.
         If ``sigmas`` is a list of multiple values, the
         kernel bandwidth is selected with the LCV procedure.
         
-    cv : int, optional (default=5)
+    cv : int (default=5)
         Cross-validation split parameter.
         Used only if sigmas has more than one value.
         
-    max_centers : int, optional (default=100)
+    max_centers : int (default=100)
         Maximal number of target instances use to
         compute kernels.
         
-    lr: float, optional (default=1e-4)
+    lr : float (default=1e-4)
         Learning rate of the gradient ascent.
         
-    tol: float, optional (default=1e-6)
+    tol : float (default=1e-6)
         Optimization threshold.
         
-    max_iter: int, optional (default=5000)
+    max_iter : int (default=5000)
         Maximal iteration of the gradient ascent
         optimization.
         
@@ -114,16 +115,16 @@ class KLIEP:
     weights_ : numpy array
         Training instance weights.
         
-    sigma_ = float
+    sigma_ : float
         Sigma selected for the kernel
         
-    alphas_ = numpy array
+    alphas_ : numpy array
         Basis functions coefficients.
         
-    centers_ = numpy array
+    centers_ : numpy array
         Center points for kernels.
         
-    self.j_scores_ = list of float
+    self.j_scores_ : list of float
         List of J scores.
         
     estimator_ : object
@@ -131,6 +132,8 @@ class KLIEP:
         
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.instance_based import KLIEP
     >>> np.random.seed(0)
     >>> Xs = np.random.randn(50) * 0.1
     >>> Xs = np.concatenate((Xs, Xs + 1.))
@@ -190,6 +193,21 @@ to covariateshift adaptation". In NIPS 2007
 
 
     def fit_weights(self, Xs, Xt):
+        """
+        Fit importance weighting.
+        
+        Parameters
+        ----------
+        Xs : array
+            Input source data.
+            
+        Xt : array
+            Input target data.
+            
+        Returns
+        -------
+        weights_ : sample weights
+        """
         np.random.seed(self.random_state)
         tf.random.set_seed(self.random_state)
         
@@ -227,12 +245,34 @@ to covariateshift adaptation". In NIPS 2007
             pairwise.rbf_kernel(Xs, self.centers_, self.sigma_),
             self.alphas_
             ).ravel()
-        return self
+        return self.weights_
     
     
     def fit_estimator(self, X, y,
                       sample_weight=None,
                       **fit_params):
+        """
+        Fit estimator.
+        
+        Parameters
+        ----------
+        X : array
+            Input data.
+            
+        y : array
+            Output data.
+            
+        sample_weight : array
+            Importance weighting.
+            
+        fit_params : key, value arguments
+            Arguments given to the fit method of
+            the estimator.
+            
+        Returns
+        -------
+        estimator_ : fitted estimator
+        """
         np.random.seed(self.random_state)
         tf.random.set_seed(self.random_state)
         
@@ -240,18 +280,22 @@ to covariateshift adaptation". In NIPS 2007
         y = check_one_array(y)
              
         if "sample_weight" in inspect.signature(self.estimator_.fit).parameters:
-            self.estimator_.fit(X, y, 
-                                sample_weight=sample_weight,
-                                **fit_params)
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                self.estimator_.fit(X, y, 
+                                    sample_weight=sample_weight,
+                                    **fit_params)
         else:
             if sample_weight is not None:
                 sample_weight /= (sample_weight.sum() + EPS)
             bootstrap_index = np.random.choice(
             len(X), size=len(X), replace=True,
             p=sample_weight)
-            self.estimator_.fit(X[bootstrap_index], y[bootstrap_index],
-                                **fit_params)
-        return self
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                self.estimator_.fit(X[bootstrap_index], y[bootstrap_index],
+                                    **fit_params)
+        return self.estimator_
     
 
     def fit(self, Xs, ys, Xt, **fit_params):
@@ -370,6 +414,22 @@ to covariateshift adaptation". In NIPS 2007
 
 
     def predict_weights(self, X=None):
+        """
+        Return fitted source weights
+        
+        If ``None``, the fitted source weights are returned.
+        Else, sample weights are computing using the fitted
+        ``alphas_`` and the chosen ``centers_`.
+        
+        Parameters
+        ----------
+        X : array (default=None)
+            Input data.
+        
+        Returns
+        -------
+        weights_ : sample weights
+        """
         if hasattr(self, "weights_"):
             if X is None or not hasattr(self, "alphas_"):
                 return self.weights_

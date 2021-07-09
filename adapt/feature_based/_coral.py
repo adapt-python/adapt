@@ -3,6 +3,7 @@ Correlation Alignement Module.
 """
 
 import copy
+import warnings
 
 import numpy as np
 from scipy import linalg
@@ -32,6 +33,8 @@ class CORAL:
         
     Where:
     
+    - :math:`A` is the feature transformation matrix such that
+    :math:`X_S^{enc} = X_S A`
     - :math:`C_S` is the correlation matrix of input source data
     - :math:`C_T` is the correlation matrix of input target data
     
@@ -39,17 +42,15 @@ class CORAL:
     and the features transformation can be computed through this
     four steps algorithm:
     
-    - :math:`C_S = Cov(X_S) + \\lambda I_p`
-    - :math:`C_S = Cov(X_T) + \\lambda I_p`
+    - :math:`C_S = \\lambda Cov(X_S) + I_p`
+    - :math:`C_T = \\lambda Cov(X_T) + I_p`
     - :math:`X_S = X_S C_S^{-\\frac{1}{2}}`
-    - :math:`X_S = X_S C_T^{\\frac{1}{2}}`
+    - :math:`X_S^{enc} = X_S C_T^{\\frac{1}{2}}`
     
     Where :math:`\\lambda` is a regularization parameter.
     
     Notice that CORAL only uses labeled source and unlabeled target data.
     It belongs then to "unsupervised" domain adaptation methods.
-    However, labeled target data can be added to the training process
-    straightforwardly.
     
     Parameters
     ----------
@@ -84,6 +85,8 @@ class CORAL:
         
     Examples
     --------
+    >>> import numpy as np
+    >>> from adapt.feature_based import CORAL
     >>> Xs = np.random.multivariate_normal(
     ...      np.array([0, 0]), np.array([[0.001, 0], [0, 1]]), 100)
     >>> Xt = np.random.multivariate_normal(
@@ -110,6 +113,8 @@ class CORAL:
     See also
     --------
     DeepCORAL
+    FE
+    mSDA
 
     References
     ----------
@@ -131,9 +136,9 @@ class CORAL:
     def fit(self, Xs, ys, Xt, **fit_params):
         """
         Perfrom correlation alignement on input source data to match 
-        input target data (given by ``tgt_index``).
+        input target data.
         Then fit estimator on the aligned source data and the labeled
-        target ones (given by ``tgt_index_labeled``).
+        target ones.
 
         Parameters
         ----------
@@ -157,7 +162,7 @@ class CORAL:
         Xs, ys, Xt, _ = check_arrays(Xs, ys, Xt, None)
         if self.verbose:
             print("Covariance Matrix alignement...")
-        Xs_emb = self.fit_embeddings(Xs, Xt)
+        Xs_emb, Xt = self.fit_embeddings(Xs, Xt)
         if self.verbose:
             print("Fit estimator...")
         self.fit_estimator(Xs_emb, ys, **fit_params)
@@ -165,6 +170,21 @@ class CORAL:
         
     
     def fit_embeddings(self, Xs, Xt):
+        """
+        Fit embeddings.
+        
+        Parameters
+        ----------
+        Xs : array
+            Input source data.
+            
+        Xt : array
+            Input target data.
+            
+        Returns
+        -------
+        Xs_emb, Xt_emb : embedded source and target data
+        """
         cov_Xs = np.cov(Xs, rowvar=False)
         cov_Xt = np.cov(Xt, rowvar=False)
         
@@ -181,16 +201,39 @@ class CORAL:
             new_cov_Xs = np.cov(Xs_emb, rowvar=False)
             print("New covariance difference: %f"%
                   (np.mean(np.abs(new_cov_Xs-cov_Xt))))
-        return Xs_emb
+        return Xs_emb, Xt
     
     
     def fit_estimator(self, X, y, **fit_params):
+        """
+        Fit estimator.
+        
+        Parameters
+        ----------
+        X : array
+            Input data.
+            
+        y : array
+            Output data.
+            
+        fit_params : key, value arguments
+            Arguments given to the fit method of
+            the estimator.
+            
+        Returns
+        -------
+        estimator_ : fitted estimator
+        """
+        X = check_one_array(X)
         np.random.seed(self.random_state)
         tf.random.set_seed(self.random_state)
-        return self.estimator_.fit(X, y, **fit_params)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self.estimator_.fit(X, y, **fit_params)
+        return self.estimator_
 
 
-    def predict(self, X):
+    def predict(self, X, domain="tgt"):
         """
         Return the predictions of the estimator.
 
@@ -198,6 +241,10 @@ class CORAL:
         ----------
         X : array
             Input data.
+            
+        domain : str (default="tgt")
+            Choose between ``"source", "src"`` and
+            ``"target", "tgt"`` feature embedding.
 
         Returns
         -------
@@ -205,24 +252,36 @@ class CORAL:
             Prediction of ``estimator_``.
         """
         X = check_one_array(X)
-        return self.estimator_.predict(X)
+        return self.estimator_.predict(
+            self.predict_features(X, domain))
 
 
-    def predict_features(self, X):
+    def predict_features(self, X, domain="tgt"):
         """
         Return aligned features for X.
-        
+
         Parameters
         ----------
         X : array
             Input data.
 
+        domain : str (default="tgt")
+            Choose between ``"source", "src"`` and
+            ``"target", "tgt"`` feature embedding.
+
         Returns
         -------
-        Xp : array
+        X_emb : array
             Embeddings of X.
         """
         X = check_one_array(X)
-        Xp = np.matmul(X, linalg.inv(linalg.sqrtm(self.Cs_)))
-        Xp = np.matmul(Xp, linalg.sqrtm(self.Ct_))
-        return Xp
+        if domain in ["tgt", "target"]:
+            X_emb = X
+        elif domain in ["src", "source"]:
+            X_emb = np.matmul(X, linalg.inv(linalg.sqrtm(self.Cs_)))
+            X_emb = np.matmul(X_emb, linalg.sqrtm(self.Ct_))
+        else:
+            raise ValueError("`domain `argument "
+                             "should be `tgt` or `src`, "
+                             "got, %s"%domain)
+        return X_emb
