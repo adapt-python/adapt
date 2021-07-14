@@ -2,8 +2,11 @@
 
 
 var docs = document.getElementsByClassName("field-list simple");
-var tables = document.getElementsByClassName("longtable docutils align-default");
-var className = document.getElementsByClassName("py class");
+var code = document.getElementsByClassName("highlight");
+
+const ponctList = [",", ".", ";", ":"]
+//var tables = document.getElementsByClassName("longtable docutils align-default");
+//var className = document.getElementsByClassName("py class");
 
 function attributes() {
 	
@@ -38,6 +41,41 @@ function addLinks() {
 	};
 };
 
-attributes();	
+function changeColor() {
+  
+  if (code.length == 0) {
+        code = document.getElementsByClassName("highlight");
+		setTimeout(changeColor, 50);
+        return;
+    } 
+  else {
+	  for (var k = 0; k < code.length; k++) {
+		  var elements = code[k].children[0].children;
+		  var isPoint = false
+		  for (var i = 0; i < elements.length; i++) {
+			  var elem = elements[i]
+			  
+			  if (isPoint == true) {
+				elem.style.color = "#0e84b5";
+			  }
+			  
+			  isPoint = false
+			  
+			  if (elem.className == "o" && ponctList.includes(elem.innerHTML)) {
+				elem.style.color = "#212529";
+				elem.style.fontWeight = "normal";
+				
+				if (elem.innerHTML == ".") {
+					isPoint = true;
+				}
+				
+				}
+			  }
+		  }
+  }
+}
+
+changeColor();
+attributes();
 //addLinks();
 

@@ -431,6 +431,12 @@ class RegularTransferNN:
     neural network through the ``lambdas`` parameter.
     Some layers can also be frozen during training via
     the ``training`` parameter.
+    
+    .. figure:: ../_static/images/regulartransfer.png
+        :align: center
+        
+        Transferring parameters of a CNN pretrained on Imagenet
+        (source: [2])
 
     Parameters
     ----------
@@ -481,6 +487,32 @@ class RegularTransferNN:
     history_ : dict
         history of the losses and metrics across the epochs
         of the network training.
+        
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import tensorflow as tf
+    >>> from adapt.parameter_based import RegularTransferNN
+    >>> np.random.seed(0)
+    >>> tf.random.set_seed(0)
+    >>> Xs = np.random.randn(50) * 0.1
+    >>> Xs = np.concatenate((Xs, Xs + 1.))
+    >>> Xt = np.random.randn(100) * 0.1
+    >>> ys = (np.array([-0.2 * x if x<0.5 else 1. for x in Xs])
+    ...       + 0.1 * np.random.randn(100))
+    >>> yt = 0.75 * Xt + 0.1 * np.random.randn(100)
+    >>> model = tf.keras.Sequential()
+    >>> model.add(tf.keras.layers.Dense(1))
+    >>> model.compile(optimizer="adam", loss="mse")
+    >>> model.predict(Xt.reshape(-1,1))
+    >>> model.fit(Xs.reshape(-1, 1), ys, epochs=300, verbose=0)
+    >>> np.abs(model.predict(Xt).ravel() - yt).mean()
+    0.48265...
+    >>> rt = RegularTransferNN(model, lambdas=0.01, random_state=0)
+    >>> rt.fit(Xt[:10], yt[:10], epochs=300, verbose=0)
+    >>> rt.predict(Xt.reshape(-1, 1))
+    >>> np.abs(rt.predict(Xt).ravel() - yt).mean()
+    0.23114...
         
     See also
     --------

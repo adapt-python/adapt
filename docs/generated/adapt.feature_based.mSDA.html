@@ -32,7 +32,9 @@
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
         <script src="../_static/js/custom.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -151,7 +153,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="adapt-feature-based-msda">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="adapt-feature-based-msda">
 <h1><a class="reference internal" href="../contents.html#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>.mSDA<a class="headerlink" href="#adapt-feature-based-msda" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="adapt.feature_based.mSDA">
@@ -179,15 +205,14 @@ is used. The encoded space is made of one layer of
 </dd>
 <dt><strong>decoder</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Decoder netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a neural network with two
 hidden layers of 100 neurons with ReLU activation each
-is used. The output layer is made of <code class="docutils literal notranslate"><span class="pre">n_dim</span></code> neurons 
-and a linear activation, <code class="docutils literal notranslate"><span class="pre">n_dim</span></code> is the input space
-dimension.</p>
+is used. The output layer is made of <code class="docutils literal notranslate"><span class="pre">Xs.shape[1]</span></code> neurons 
+and a linear activation.</p>
 </dd>
 <dt><strong>estimator</strong><span class="classifier">sklearn estimator or tensorflow Model (default=None)</span></dt><dd><p>Estimator used to learn the task. 
 If estimator is <code class="docutils literal notranslate"><span class="pre">None</span></code>, a <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code>
 instance is used as estimator.</p>
 </dd>
-<dt><strong>noise_lvl: float (default=0.1)</strong></dt><dd><p>Standard deviation of gaussian noise added to the input data
+<dt><strong>noise_lvl</strong><span class="classifier">float (default=0.1)</span></dt><dd><p>Standard deviation of gaussian noise added to the input data
 in the denoising autoencoder.</p>
 </dd>
 <dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">encoder</span></code>, <code class="docutils literal notranslate"><span class="pre">decoder</span></code>
@@ -219,7 +244,9 @@ and optimizer to <code class="docutils literal notranslate"><span class="pre">Ad
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.utils</span> <span class="kn">import</span> <span class="n">make_classification_da</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.feature_based</span> <span class="kn">import</span> <span class="n">mSDA</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.utils</span> <span class="kn">import</span> <span class="n">make_classification_da</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span> <span class="o">=</span> <span class="n">make_classification_da</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">mSDA</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="s1">&#39;none&#39;</span><span class="p">),</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -263,13 +290,16 @@ of the autoencoder training.</p>
 <td><p>Fit mSDA.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.mSDA.fit_embeddings" title="adapt.feature_based.mSDA.fit_embeddings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_embeddings</span></code></a>(Xs, Xt, **fit_params)</p></td>
-<td><p></p></td>
+<td><p>Fit embeddings.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.mSDA.fit_estimator" title="adapt.feature_based.mSDA.fit_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_estimator</span></code></a>(X, y, **fit_params)</p></td>
-<td><p></p></td>
+<td><p>Fit estimator.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.mSDA.predict" title="adapt.feature_based.mSDA.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
 <td><p>Return the predictions of the estimator on the encoded feature space.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.mSDA.predict_features" title="adapt.feature_based.mSDA.predict_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_features</span></code></a>(X)</p></td>
+<td><p>Return the encoded features of X.</p></td>
 </tr>
 </tbody>
 </table>
@@ -311,12 +341,50 @@ of the autoencoder training.</p>
 <dl class="py method">
 <dt id="adapt.feature_based.mSDA.fit_embeddings">
 <code class="sig-name descname">fit_embeddings</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Xs</span></em>, <em class="sig-param"><span class="n">Xt</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_msda.fit_embeddings.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.mSDA.fit_embeddings" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fit embeddings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">array</span></dt><dd><p>Input source data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">array</span></dt><dd><p>Input target data.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of
+<code class="docutils literal notranslate"><span class="pre">auto_encoder</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Xs_emb, Xt_emb</strong><span class="classifier">embedded source and target data</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="adapt.feature_based.mSDA.fit_estimator">
 <code class="sig-name descname">fit_estimator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_msda.fit_estimator.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.mSDA.fit_estimator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fit estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>Output data.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of
+the estimator.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>estimator_</strong><span class="classifier">fitted estimator</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="adapt.feature_based.mSDA.predict">
@@ -333,6 +401,26 @@ feature space.</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>Prediction of <code class="docutils literal notranslate"><span class="pre">estimator_</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.mSDA.predict_features">
+<code class="sig-name descname">predict_features</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_msda.predict_features.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.mSDA.predict_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the encoded features of X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: array</strong></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>X_enc: array</dt><dd><p>predictions of encoder network</p>
 </dd>
 </dl>
 </dd>

@@ -32,7 +32,9 @@
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
         <script src="../_static/js/custom.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -151,7 +153,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="adapt-feature-based-dann">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="adapt-feature-based-dann">
 <h1><a class="reference internal" href="../contents.html#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>.DANN<a class="headerlink" href="#adapt-feature-based-dann" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="adapt.feature_based.DANN">
@@ -165,21 +191,18 @@ in which source and target data could not be distinguished by any
 learned on the encoded space in parallel to the <strong>encoder</strong> and 
 <strong>discriminator</strong> networks.</p>
 <p>The three network paremeters are optimized according to the
-following objective function:</p>
+following objectives:</p>
 <div class="math notranslate nohighlight">
-\[\mathcal{L} = \mathcal{L}_{task}(F(\phi(X_S)), y_S) - 
+\[\begin{split}\min_{\phi, F} &amp; \; \mathcal{L}_{task}(F(\phi(X_S)), y_S) -
 \lambda \left(
-\mathcal{L}_{01}(D(\mathcal{R}(\phi(X_S))), \textbf{0}) +
-\mathcal{L}_{01}(D(\mathcal{R}(\phi(X_T))), \textbf{1})
-\right)\]</div>
+\log(1 - D(\phi(X_S))) + \log(D(\phi(X_T))) \right) \\
+\max_{D} &amp; \; \log(1 - D(\phi(X_S))) + \log(D(\phi(X_T)))\end{split}\]</div>
 <p>Where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\((X_S, y_S), (X_T)\)</span> are respectively the labeled source data
 and the unlabeled target data.</p></li>
 <li><p><span class="math notranslate nohighlight">\(\phi, F, D\)</span> are respectively the <strong>encoder</strong>, the <strong>task</strong>
 and the <strong>discriminator</strong> networks</p></li>
-<li><p><span class="math notranslate nohighlight">\(\mathcal{R}\)</span> is the <strong>reversal gradient layer</strong> which inverses
-the gradient sign in back-propagation.</p></li>
 <li><p><span class="math notranslate nohighlight">\(\lambda\)</span> is the trade-off parameter.</p></li>
 </ul>
 <p>The adversarial training is done through a <strong>reversal gradient layer</strong>
@@ -189,6 +212,10 @@ two networks are optimized according to two opposite objective functions.</p>
 <p>The method has been originally introduced for <strong>unsupervised</strong>
 classification DA but it could be widen to other task in
 <strong>supervised</strong> DA straightforwardly.</p>
+<div class="figure align-center" id="id3">
+<img alt="../_images/dann.png" src="../_images/dann.png" />
+<p class="caption"><span class="caption-text">DANN architecture (source: [1])</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -245,7 +272,9 @@ optimizer is set to tf.keras.optimizers.Adam(0.001)</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.feature_based</span> <span class="kn">import</span> <span class="n">DANN</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
 <span class="gp">... </span>                     <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">))),</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
@@ -291,16 +320,25 @@ and losses are recorded too.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.__init__" title="adapt.feature_based.DANN.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([encoder, task, discriminator, …])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.fit" title="adapt.feature_based.DANN.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(Xs, ys, Xt[, yt])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.create_model" title="adapt.feature_based.DANN.create_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_model</span></code></a>(inputs_Xs, inputs_Xt)</p></td>
+<td><p>Create model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.fit" title="adapt.feature_based.DANN.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(Xs, ys, Xt[, yt])</p></td>
 <td><p>Fit Model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.predict" title="adapt.feature_based.DANN.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.get_loss" title="adapt.feature_based.DANN.get_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_loss</span></code></a>(inputs_ys, task_src, task_tgt, …)</p></td>
+<td><p>Get loss.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.get_metrics" title="adapt.feature_based.DANN.get_metrics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metrics</span></code></a>(inputs_ys, inputs_yt, task_src, …)</p></td>
+<td><p>Get Metrics.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.predict" title="adapt.feature_based.DANN.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
 <td><p>Return predictions of the task network on the encoded features.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.predict_disc" title="adapt.feature_based.DANN.predict_disc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_disc</span></code></a>(X)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.predict_disc" title="adapt.feature_based.DANN.predict_disc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_disc</span></code></a>(X)</p></td>
 <td><p>Return predictions of the discriminator on the encoded features.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.predict_features" title="adapt.feature_based.DANN.predict_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_features</span></code></a>(X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.DANN.predict_features" title="adapt.feature_based.DANN.predict_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_features</span></code></a>(X)</p></td>
 <td><p>Return the encoded features of X.</p></td>
 </tr>
 </tbody>
@@ -309,6 +347,31 @@ and losses are recorded too.</p>
 <dt id="adapt.feature_based.DANN.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">encoder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">task</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">discriminator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lambda_</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">gamma</span><span class="o">=</span><span class="default_value">10.0</span></em>, <em class="sig-param"><span class="n">loss</span><span class="o">=</span><span class="default_value">'mse'</span></em>, <em class="sig-param"><span class="n">metrics</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">optimizer</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_dann.__init__.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.DANN.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.DANN.create_model">
+<code class="sig-name descname">create_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs_Xs</span></em>, <em class="sig-param"><span class="n">inputs_Xt</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_dann.create_model.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.DANN.create_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create model.</p>
+<p>Give the model architecture from the Xs, Xt
+inputs to the outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>inputs_Xs</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for Xs entries.</p>
+</dd>
+<dt><strong>inputs_Xt</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for Xt entries.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Outputs tensors of the model
+(used to compute the loss).</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -325,7 +388,7 @@ the model but extend the training.</p>
 </dd>
 <dt><strong>Xt</strong><span class="classifier">numpy array</span></dt><dd><p>Target input data.</p>
 </dd>
-<dt><strong>yt</strong><span class="classifier">numpy array, optional (default=None)</span></dt><dd><p>Target output data. <cite>yt</cite> is only used
+<dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data. <cite>yt</cite> is only used
 for validation metrics.</p>
 </dd>
 <dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of the model
@@ -342,19 +405,67 @@ for validation metrics.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="adapt.feature_based.DANN.get_loss">
+<code class="sig-name descname">get_loss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs_ys</span></em>, <em class="sig-param"><span class="n">task_src</span></em>, <em class="sig-param"><span class="n">task_tgt</span></em>, <em class="sig-param"><span class="n">disc_src</span></em>, <em class="sig-param"><span class="n">disc_tgt</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_dann.get_loss.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.DANN.get_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>inputs_ys</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for ys entries.</p>
+</dd>
+<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model outputs tensors.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>loss</strong><span class="classifier">tf Tensor</span></dt><dd><p>Model loss</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.DANN.get_metrics">
+<code class="sig-name descname">get_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs_ys</span></em>, <em class="sig-param"><span class="n">inputs_yt</span></em>, <em class="sig-param"><span class="n">task_src</span></em>, <em class="sig-param"><span class="n">task_tgt</span></em>, <em class="sig-param"><span class="n">disc_src</span></em>, <em class="sig-param"><span class="n">disc_tgt</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_dann.get_metrics.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.DANN.get_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>inputs_ys</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for ys entries.</p>
+</dd>
+<dt><strong>inputs_yt</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for yt entries.</p>
+</dd>
+<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model outputs tensors.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>metrics</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model metrics. dict keys give the
+name of the metric and dict values
+give the corresponding Tensor.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="adapt.feature_based.DANN.predict">
 <code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_dann.predict.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.DANN.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return predictions of the task network on the encoded features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X: array</strong></dt><dd><p>input data</p>
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>y_pred: array</dt><dd><p>predictions of task network</p>
+<dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>predictions of task network</p>
 </dd>
 </dl>
 </dd>
@@ -368,13 +479,13 @@ for validation metrics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X: array</strong></dt><dd><p>input data</p>
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>y_disc: array</dt><dd><p>predictions of discriminator network</p>
+<dt><strong>y_disc</strong><span class="classifier">array</span></dt><dd><p>predictions of discriminator network</p>
 </dd>
 </dl>
 </dd>
@@ -388,13 +499,13 @@ for validation metrics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X: array</strong></dt><dd><p>input data</p>
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>X_enc: array</dt><dd><p>predictions of encoder network</p>
+<dt><strong>X_enc</strong><span class="classifier">array</span></dt><dd><p>predictions of encoder network</p>
 </dd>
 </dl>
 </dd>

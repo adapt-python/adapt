@@ -32,7 +32,9 @@
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
         <script src="../_static/js/custom.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -151,7 +153,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="adapt-instance-based-kliep">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="adapt-instance-based-kliep">
 <h1><a class="reference internal" href="../contents.html#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>.KLIEP<a class="headerlink" href="#adapt-instance-based-kliep" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="adapt.instance_based.KLIEP">
@@ -160,7 +186,7 @@
 <p>KLIEP is an instance-based method for domain adaptation.</p>
 <p>The purpose of the algorithm is to correct the difference between
 input distributions of source and target domains. This is done by
-finding a the source instances <strong>reweighting</strong> which minimizes the 
+finding a source instances <strong>reweighting</strong> which minimizes the 
 <strong>Kullback-Leibler divergence</strong> between source and target distributions.</p>
 <p>The source instance weights are given by the following formula:</p>
 <div class="math notranslate nohighlight">
@@ -176,7 +202,7 @@ are kernel functions of bandwidth <span class="math notranslate nohighlight">\(\
 <p>KLIEP algorithm consists in finding the optimal <span class="math notranslate nohighlight">\(\alpha_i\)</span> according to
 the following optimization problem:</p>
 <div class="math notranslate nohighlight">
-\[\max_{\alpha_i } \sum_{x_i \in X_T} \text{log}(
+\[\max_{\alpha_i } \sum_{x_i \in X_T} \log(
 \sum_{x_j \in X_T} \alpha_i K_{\sigma}(x_j, x_i))\]</div>
 <p>Subject to:</p>
 <div class="math notranslate nohighlight">
@@ -185,7 +211,7 @@ the following optimization problem:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(X_T\)</span> is the source input data of size <span class="math notranslate nohighlight">\(n_S\)</span>.</p></li>
 </ul>
-<p>The above OP is solved through gradient descent algorithm.</p>
+<p>The above OP is solved through gradient ascent algorithm.</p>
 <p>Furthemore a LCV procedure can be added to select the appropriate
 bandwidth <span class="math notranslate nohighlight">\(\sigma\)</span>. The parameter is then selected using
 cross-validation on the <span class="math notranslate nohighlight">\(J\)</span> score defined as follow:
@@ -201,21 +227,21 @@ target data to the training set.</p>
 If estimator is <code class="docutils literal notranslate"><span class="pre">None</span></code>, a <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code>
 instance is used as estimator.</p>
 </dd>
-<dt><strong>sigmas</strong><span class="classifier">float or list of float, optional (default=1/nb_features)</span></dt><dd><p>Kernel bandwidths.
+<dt><strong>sigmas</strong><span class="classifier">float or list of float (default=1/nb_features)</span></dt><dd><p>Kernel bandwidths.
 If <code class="docutils literal notranslate"><span class="pre">sigmas</span></code> is a list of multiple values, the
 kernel bandwidth is selected with the LCV procedure.</p>
 </dd>
-<dt><strong>cv</strong><span class="classifier">int, optional (default=5)</span></dt><dd><p>Cross-validation split parameter.
+<dt><strong>cv</strong><span class="classifier">int (default=5)</span></dt><dd><p>Cross-validation split parameter.
 Used only if sigmas has more than one value.</p>
 </dd>
-<dt><strong>max_centers</strong><span class="classifier">int, optional (default=100)</span></dt><dd><p>Maximal number of target instances use to
+<dt><strong>max_centers</strong><span class="classifier">int (default=100)</span></dt><dd><p>Maximal number of target instances use to
 compute kernels.</p>
 </dd>
-<dt><strong>lr: float, optional (default=1e-4)</strong></dt><dd><p>Learning rate of the gradient ascent.</p>
+<dt><strong>lr</strong><span class="classifier">float (default=1e-4)</span></dt><dd><p>Learning rate of the gradient ascent.</p>
 </dd>
-<dt><strong>tol: float, optional (default=1e-6)</strong></dt><dd><p>Optimization threshold.</p>
+<dt><strong>tol</strong><span class="classifier">float (default=1e-6)</span></dt><dd><p>Optimization threshold.</p>
 </dd>
-<dt><strong>max_iter: int, optional (default=5000)</strong></dt><dd><p>Maximal iteration of the gradient ascent
+<dt><strong>max_iter</strong><span class="classifier">int (default=5000)</span></dt><dd><p>Maximal iteration of the gradient ascent
 optimization.</p>
 </dd>
 <dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">estimator</span></code> or not.</p>
@@ -240,7 +266,9 @@ optimization.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.instance_based</span> <span class="kn">import</span> <span class="n">KLIEP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Xs</span><span class="p">,</span> <span class="n">Xs</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
@@ -266,13 +294,13 @@ optimization.</p>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>weights_</strong><span class="classifier">numpy array</span></dt><dd><p>Training instance weights.</p>
 </dd>
-<dt><strong>sigma_ = float</strong></dt><dd><p>Sigma selected for the kernel</p>
+<dt><strong>sigma_</strong><span class="classifier">float</span></dt><dd><p>Sigma selected for the kernel</p>
 </dd>
-<dt><strong>alphas_ = numpy array</strong></dt><dd><p>Basis functions coefficients.</p>
+<dt><strong>alphas_</strong><span class="classifier">numpy array</span></dt><dd><p>Basis functions coefficients.</p>
 </dd>
-<dt><strong>centers_ = numpy array</strong></dt><dd><p>Center points for kernels.</p>
+<dt><strong>centers_</strong><span class="classifier">numpy array</span></dt><dd><p>Center points for kernels.</p>
 </dd>
-<dt><strong>self.j_scores_ = list of float</strong></dt><dd><p>List of J scores.</p>
+<dt><strong>self.j_scores_</strong><span class="classifier">list of float</span></dt><dd><p>List of J scores.</p>
 </dd>
 <dt><strong>estimator_</strong><span class="classifier">object</span></dt><dd><p>Fitted estimator.</p>
 </dd>
@@ -293,16 +321,16 @@ optimization.</p>
 <td><p>Fit KLIEP.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.KLIEP.fit_estimator" title="adapt.instance_based.KLIEP.fit_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_estimator</span></code></a>(X, y[, sample_weight])</p></td>
-<td><p></p></td>
+<td><p>Fit estimator.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.KLIEP.fit_weights" title="adapt.instance_based.KLIEP.fit_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_weights</span></code></a>(Xs, Xt)</p></td>
-<td><p></p></td>
+<td><p>Fit importance weighting.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.KLIEP.predict" title="adapt.instance_based.KLIEP.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
 <td><p>Return estimator predictions.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.KLIEP.predict_weights" title="adapt.instance_based.KLIEP.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>([X])</p></td>
-<td><p></p></td>
+<td><p>Return fitted source weights</p></td>
 </tr>
 </tbody>
 </table>
@@ -341,12 +369,49 @@ the estimator.</p>
 <dl class="py method">
 <dt id="adapt.instance_based.KLIEP.fit_estimator">
 <code class="sig-name descname">fit_estimator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sample_weight</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kliep.fit_estimator.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KLIEP.fit_estimator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fit estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>Output data.</p>
+</dd>
+<dt><strong>sample_weight</strong><span class="classifier">array</span></dt><dd><p>Importance weighting.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of
+the estimator.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>estimator_</strong><span class="classifier">fitted estimator</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="adapt.instance_based.KLIEP.fit_weights">
 <code class="sig-name descname">fit_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Xs</span></em>, <em class="sig-param"><span class="n">Xt</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kliep.fit_weights.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KLIEP.fit_weights" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fit importance weighting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">array</span></dt><dd><p>Input source data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">array</span></dt><dd><p>Input target data.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>weights_</strong><span class="classifier">sample weights</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="adapt.instance_based.KLIEP.predict">
@@ -371,7 +436,24 @@ the estimator.</p>
 <dl class="py method">
 <dt id="adapt.instance_based.KLIEP.predict_weights">
 <code class="sig-name descname">predict_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kliep.predict_weights.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KLIEP.predict_weights" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return fitted source weights</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the fitted source weights are returned.
+Else, sample weights are computing using the fitted
+<code class="docutils literal notranslate"><span class="pre">alphas_</span></code> and the chosen <a href="#id3"><span class="problematic" id="id4">``</span></a>centers_`.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array (default=None)</span></dt><dd><p>Input data.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>weights_</strong><span class="classifier">sample weights</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

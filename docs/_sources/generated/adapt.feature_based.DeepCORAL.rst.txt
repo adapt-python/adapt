@@ -16,14 +16,20 @@
 	.. autosummary::
 	    
 		~DeepCORAL.__init__
+		~DeepCORAL.create_model
 		~DeepCORAL.fit
+		~DeepCORAL.get_loss
+		~DeepCORAL.get_metrics
 		~DeepCORAL.predict
 		~DeepCORAL.predict_disc
 		~DeepCORAL.predict_features
 	
 	
 	.. automethod:: __init__
+	.. automethod:: create_model
 	.. automethod:: fit
+	.. automethod:: get_loss
+	.. automethod:: get_metrics
 	.. automethod:: predict
 	.. automethod:: predict_disc
 	.. automethod:: predict_features

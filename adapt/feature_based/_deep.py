@@ -562,7 +562,10 @@ class DANN(BaseDeepFeature):
     classification DA but it could be widen to other task in
     **supervised** DA straightforwardly.
     
-    .. image:: ../_static/images/dann.png
+    .. figure:: ../_static/images/dann.png
+        :align: center
+        
+        DANN architecture (source: [1])
     
     Parameters
     ----------
@@ -811,7 +814,10 @@ class ADDA(BaseDeepFeature):
     classification DA but it could be widen to other task in **supervised**
     DA straightforwardly.
     
-    .. image:: ../_static/images/adda.png
+    .. figure:: ../_static/images/adda.png
+        :align: center
+        
+        Overview of the ADDA approach (source: [1])
     
     Parameters
     ----------
@@ -1305,7 +1311,10 @@ class DeepCORAL(BaseDeepFeature):
     Notice that DeepCORAL only uses labeled source and unlabeled target
     data. It belongs then to "unsupervised" domain adaptation methods.
     
-    .. image:: ../_static/images/deepcoral.png
+    .. figure:: ../_static/images/deepcoral.png
+        :align: center
+        
+        DeepCORAL architecture (source: [1])
     
     Parameters
     ----------

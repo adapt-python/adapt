@@ -32,7 +32,9 @@
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
         <script src="_static/js/custom.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -152,7 +154,6 @@
 <div class="genindex-jumpbox">
  <a href="#_"><strong>_</strong></a>
  | <a href="#A"><strong>A</strong></a>
- | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#F"><strong>F</strong></a>
@@ -208,14 +209,6 @@
   </ul></td>
 </tr></table>
 
-<h2 id="B">B</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.build">build() (adapt.parameter_based.RegularTransferNN method)</a>
-</li>
-  </ul></td>
-</tr></table>
-
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -223,14 +216,22 @@
 </li>
       <li><a href="generated/adapt.utils.check_estimator.html#adapt.utils.check_estimator">check_estimator() (in module adapt.utils)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/adapt.utils.check_network.html#adapt.utils.check_network">check_network() (in module adapt.utils)</a>
 </li>
       <li><a href="generated/adapt.utils.check_one_array.html#adapt.utils.check_one_array">check_one_array() (in module adapt.utils)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL">CORAL (class in adapt.feature_based)</a>
 </li>
+      <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.create_model">create_model() (adapt.feature_based.ADDA method)</a>
+
+      <ul>
+        <li><a href="generated/adapt.feature_based.DANN.html#adapt.feature_based.DANN.create_model">(adapt.feature_based.DANN method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL.create_model">(adapt.feature_based.DeepCORAL method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -323,10 +324,26 @@
 </li>
       <li><a href="generated/adapt.utils.get_default_encoder.html#adapt.utils.get_default_encoder">get_default_encoder() (in module adapt.utils)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/adapt.utils.get_default_task.html#adapt.utils.get_default_task">get_default_task() (in module adapt.utils)</a>
 </li>
+      <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.get_loss">get_loss() (adapt.feature_based.ADDA method)</a>
+
+      <ul>
+        <li><a href="generated/adapt.feature_based.DANN.html#adapt.feature_based.DANN.get_loss">(adapt.feature_based.DANN method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL.get_loss">(adapt.feature_based.DeepCORAL method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.get_metrics">get_metrics() (adapt.feature_based.ADDA method)</a>
+
+      <ul>
+        <li><a href="generated/adapt.feature_based.DANN.html#adapt.feature_based.DANN.get_metrics">(adapt.feature_based.DANN method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL.get_metrics">(adapt.feature_based.DeepCORAL method)</a>
+</li>
+      </ul></li>
       <li><a href="generated/adapt.utils.GradientHandler.html#adapt.utils.GradientHandler">GradientHandler() (in module adapt.utils)</a>
 </li>
   </ul></td>
@@ -411,6 +428,8 @@
         <li><a href="generated/adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL.predict_features">(adapt.feature_based.DeepCORAL method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.predict_features">(adapt.feature_based.FE method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.mSDA.html#adapt.feature_based.mSDA.predict_features">(adapt.feature_based.mSDA method)</a>
 </li>
       </ul></li>
       <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.predict_weights">predict_weights() (adapt.instance_based.KLIEP method)</a>

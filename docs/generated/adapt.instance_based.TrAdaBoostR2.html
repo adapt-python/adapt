@@ -32,7 +32,9 @@
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
         <script src="../_static/js/custom.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -151,7 +153,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="adapt-instance-based-tradaboostr2">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="adapt-instance-based-tradaboostr2">
 <h1><a class="reference internal" href="../contents.html#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>.TrAdaBoostR2<a class="headerlink" href="#adapt-instance-based-tradaboostr2" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="adapt.instance_based.TrAdaBoostR2">
@@ -231,7 +257,9 @@ instance is used as base estimator.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.instance_based</span> <span class="kn">import</span> <span class="n">TrAdaBoostR2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="n">Xs</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
@@ -284,7 +312,7 @@ labeled target data.</p>
 <td><p>Return weighted median of estimators.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TrAdaBoostR2.predict_weights" title="adapt.instance_based.TrAdaBoostR2.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>([domain])</p></td>
-<td><p></p></td>
+<td><p>Return sample weights.</p></td>
 </tr>
 </tbody>
 </table>
@@ -311,7 +339,7 @@ labeled target data.</p>
 </dd>
 <dt><strong>sample_weight_src</strong><span class="classifier">numpy array, (default=None)</span></dt><dd><p>Initial sample weight of source data</p>
 </dd>
-<dt><strong>sample_weight_src</strong><span class="classifier">numpy array, (default=None)</span></dt><dd><p>Initial sample weight of target data</p>
+<dt><strong>sample_weight_tgt</strong><span class="classifier">numpy array, (default=None)</span></dt><dd><p>Initial sample weight of target data</p>
 </dd>
 <dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of the
 estimator.</p>
@@ -349,7 +377,23 @@ estimator.</p>
 <dl class="py method">
 <dt id="adapt.instance_based.TrAdaBoostR2.predict_weights">
 <code class="sig-name descname">predict_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">domain</span><span class="o">=</span><span class="default_value">'src'</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_tradaboost.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.TrAdaBoostR2.predict_weights" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return sample weights.</p>
+<p>Return the final source importance weighting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>domain</strong><span class="classifier">str (default=”tgt”)</span></dt><dd><p>Choose between <code class="docutils literal notranslate"><span class="pre">&quot;source&quot;,</span> <span class="pre">&quot;src&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&quot;target&quot;,</span> <span class="pre">&quot;tgt&quot;</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>weights</strong><span class="classifier">source sample weights</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

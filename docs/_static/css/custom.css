@@ -10,6 +10,7 @@ p {
 dl.field-list {
   display: flex;
   flex-wrap: wrap;
+  margin-top: 24px;
 }
 
 dl.field-list > dt {
@@ -134,16 +135,48 @@ dd {
  display:block
 }
 
-div.highlight-python.notranslate span.mi{color:#2d962d !important;}
 
-div.highlight-python.notranslate span.mf{color:#2d962d !important;}
 
-div.highlight-python.notranslate span.o{color: #AA22FF !important;
-		font-weight: bold !important;}
-div.highlight-python.notranslate span.ow{
-    color: #008000 !important;
-    font-weight: bold !important;
+.highlight pre {
+	font-size: 87.5% !important;
+    line-height: 1.2rem !important;
+	color: #212529;
+	font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace !important;
 }
 
+.highlight .mi{color:#2d962d;}
+
+.highlight .mf{color:#2d962d;}
+
+.highlight .o{color: #AA22FF;
+		font-weight: bold;}
+.highlight .ow{
+    color: #008000;
+    font-weight: bold;
+}
+
+.highlight .kn {
+    color: #007020;
+    font-weight: bold;
+}
+
+.highlight .nn {
+    color: #0e84b5;
+    font-weight: bold;
+}
+
+.highlight .gp {
+    color: #c65d09;
+    font-weight: bold;
+}
+
+.highlight .vm {
+    color: #0e84b5;
+}
+
+.highlight .si {
+    color: #BA2121;
+	font-weight: normal;
+}
 
 .py.method a.reference.external {display: none !important}

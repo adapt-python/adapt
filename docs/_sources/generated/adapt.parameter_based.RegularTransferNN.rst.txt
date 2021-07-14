@@ -16,13 +16,11 @@
 	.. autosummary::
 	    
 		~RegularTransferNN.__init__
-		~RegularTransferNN.build
 		~RegularTransferNN.fit
 		~RegularTransferNN.predict
 	
 	
 	.. automethod:: __init__
-	.. automethod:: build
 	.. automethod:: fit
 	.. automethod:: predict
 	

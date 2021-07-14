@@ -32,7 +32,9 @@
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
         <script src="../_static/js/custom.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -151,11 +153,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="adapt-instance-based-kmm">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="adapt-instance-based-kmm">
 <h1><a class="reference internal" href="../contents.html#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>.KMM<a class="headerlink" href="#adapt-instance-based-kmm" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="adapt.instance_based.KMM">
-<em class="property">class </em><code class="sig-prename descclassname">adapt.instance_based.</code><code class="sig-name descname">KMM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">B</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">kernel</span><span class="o">=</span><span class="default_value">'rbf'</span></em>, <em class="sig-param"><span class="n">kernel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_centers</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kmm.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KMM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">adapt.instance_based.</code><code class="sig-name descname">KMM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">B</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">kernel</span><span class="o">=</span><span class="default_value">'rbf'</span></em>, <em class="sig-param"><span class="n">kernel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kmm.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KMM" title="Permalink to this definition">¶</a></dt>
 <dd><p>KMM: Kernel Mean Matching</p>
 <p>KMM is a sample bias correction method for domain adaptation based on the
 minimization of the <strong>Maximum Mean Discreapancy</strong> (MMD) between source
@@ -172,7 +198,7 @@ instances in a <strong>reproducing kernel Hilbert space</strong> (RKHS) are “c
 <p>Where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(K_{ij} = k(x_i, x_j)\)</span> with <span class="math notranslate nohighlight">\(x_i, x_j \in X_S\)</span>
-and :math:k` a kernel.</p></li>
+and <span class="math notranslate nohighlight">\(k\)</span> a kernel.</p></li>
 <li><p><span class="math notranslate nohighlight">\(\kappa_{i} = \frac{n_S}{n_T} \sum_{x_j \in X_T} k(x_i, x_j)\)</span> 
 with <span class="math notranslate nohighlight">\(x_i \in X_S\)</span>.</p></li>
 <li><p><span class="math notranslate nohighlight">\(w_i\)</span> are the source instance weights.</p></li>
@@ -205,9 +231,6 @@ Possible values: [‘additive_chi2’, ‘chi2’,
 </dd>
 <dt><strong>kernel_params</strong><span class="classifier">dict, optional (default=None)</span></dt><dd><p>Kernel additional parameters</p>
 </dd>
-<dt><strong>max_centers</strong><span class="classifier">int, optional (default=100)</span></dt><dd><p>Maximal number of target instances use to
-compute kernels.</p>
-</dd>
 <dt><strong>tol: float, optional (default=None)</strong></dt><dd><p>Optimization threshold. If <code class="docutils literal notranslate"><span class="pre">None</span></code>
 default parameters from cvxopt are used.</p>
 </dd>
@@ -235,7 +258,9 @@ default parameters from cvxopt are used.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.instance_based</span> <span class="kn">import</span> <span class="n">KMM</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Xs</span><span class="p">,</span> <span class="n">Xs</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
@@ -281,22 +306,22 @@ default parameters from cvxopt are used.</p>
 <td><p>Fit KMM.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.KMM.fit_estimator" title="adapt.instance_based.KMM.fit_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_estimator</span></code></a>(X, y[, sample_weight])</p></td>
-<td><p></p></td>
+<td><p>Fit estimator.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.KMM.fit_weights" title="adapt.instance_based.KMM.fit_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_weights</span></code></a>(Xs, Xt)</p></td>
-<td><p></p></td>
+<td><p>Fit importance weighting.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.KMM.predict" title="adapt.instance_based.KMM.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
 <td><p>Return estimator predictions.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.KMM.predict_weights" title="adapt.instance_based.KMM.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Return fitted source weights</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt id="adapt.instance_based.KMM.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">B</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">kernel</span><span class="o">=</span><span class="default_value">'rbf'</span></em>, <em class="sig-param"><span class="n">kernel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_centers</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kmm.__init__.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KMM.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">B</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">kernel</span><span class="o">=</span><span class="default_value">'rbf'</span></em>, <em class="sig-param"><span class="n">kernel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kmm.__init__.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KMM.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -329,12 +354,49 @@ the estimator.</p>
 <dl class="py method">
 <dt id="adapt.instance_based.KMM.fit_estimator">
 <code class="sig-name descname">fit_estimator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">sample_weight</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kmm.fit_estimator.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KMM.fit_estimator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fit estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>Output data.</p>
+</dd>
+<dt><strong>sample_weight</strong><span class="classifier">array</span></dt><dd><p>Importance weighting.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of
+the estimator.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>estimator_</strong><span class="classifier">fitted estimator</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="adapt.instance_based.KMM.fit_weights">
 <code class="sig-name descname">fit_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Xs</span></em>, <em class="sig-param"><span class="n">Xt</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kmm.fit_weights.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KMM.fit_weights" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fit importance weighting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">array</span></dt><dd><p>Input source data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">array</span></dt><dd><p>Input target data.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>weights_</strong><span class="classifier">sample weights</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="adapt.instance_based.KMM.predict">
@@ -359,7 +421,15 @@ the estimator.</p>
 <dl class="py method">
 <dt id="adapt.instance_based.KMM.predict_weights">
 <code class="sig-name descname">predict_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kmm.predict_weights.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KMM.predict_weights" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return fitted source weights</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>weights_</strong><span class="classifier">sample weights</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

@@ -90,8 +90,8 @@ class FE:
     .. [1] `[1] <https://arxiv.org/pdf/0907.1815\
 .pdf>`_ Daume III, H. "Frustratingly easy domain adaptation". In ACL, 2007.
 
-    Note
-    ----
+    Notes
+    -----
     FE can be used for multi-source DA by giving list of source data
     for arguments Xs, ys of fit method : Xs = [Xs1, Xs2, ...],
     ys = [ys1, ys2, ...]

@@ -55,6 +55,7 @@ and **target** distributions. The **task** is then learned in this **encoded fea
    :toctree: generated/
    :template: class.rst
 
+   feature_based.BaseDeepFeature
    feature_based.FE
    feature_based.CORAL
    feature_based.DeepCORAL
@@ -156,3 +157,5 @@ This module contains utility functions used in the previous modules.
    utils.GradientHandler
    utils.make_classification_da
    utils.make_regression_da
+
+:ref:`Two_moons.ipynb`

@@ -32,7 +32,9 @@
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
         <script src="../_static/js/custom.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -151,11 +153,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="adapt-utils-check-network">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="adapt-utils-check-network">
 <h1><a class="reference internal" href="../contents.html#adapt-utils"><span class="std std-ref">adapt.utils</span></a>.check_network<a class="headerlink" href="#adapt-utils-check-network" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="adapt.utils.check_network">
-<code class="sig-prename descclassname">adapt.utils.</code><code class="sig-name descname">check_network</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">network</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">compile_</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">display_name</span><span class="o">=</span><span class="default_value">'network'</span></em>, <em class="sig-param"><span class="n">force_copy</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/utils.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.utils.check_network" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">adapt.utils.</code><code class="sig-name descname">check_network</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">network</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">compile_</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">display_name</span><span class="o">=</span><span class="default_value">'network'</span></em>, <em class="sig-param"><span class="n">force_copy</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/utils.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.utils.check_network" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the given network is a tensorflow Model.
 If <code class="docutils literal notranslate"><span class="pre">copy</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, a copy of the network is
 returned if possible.</p>
@@ -167,12 +193,12 @@ returned if possible.</p>
 <dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to return a copy of the network or not.
 If cloning fail, a warning is raised.</p>
 </dd>
-<dt><strong>compile_</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to compile the network after cloning,
+<dt><strong>compile_</strong><span class="classifier">boolean (default=False)</span></dt><dd><p>Whether to compile the network after cloning,
 using copy of the network loss and optimizer.</p>
 </dd>
-<dt><strong>display_name: str (default=”network”)</strong></dt><dd><p>Name to display if an error or warning is raised</p>
+<dt><strong>display_name</strong><span class="classifier">str (default=”network”)</span></dt><dd><p>Name to display if an error or warning is raised</p>
 </dd>
-<dt><strong>force_copy: boolean (default=False)</strong></dt><dd><p>If True, an error is raised if the cloning failed.</p>
+<dt><strong>force_copy</strong><span class="classifier">boolean (default=False)</span></dt><dd><p>If True, an error is raised if the cloning failed.</p>
 </dd>
 </dl>
 </dd>

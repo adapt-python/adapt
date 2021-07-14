@@ -16,14 +16,20 @@
 	.. autosummary::
 	    
 		~DANN.__init__
+		~DANN.create_model
 		~DANN.fit
+		~DANN.get_loss
+		~DANN.get_metrics
 		~DANN.predict
 		~DANN.predict_disc
 		~DANN.predict_features
 	
 	
 	.. automethod:: __init__
+	.. automethod:: create_model
 	.. automethod:: fit
+	.. automethod:: get_loss
+	.. automethod:: get_metrics
 	.. automethod:: predict
 	.. automethod:: predict_disc
 	.. automethod:: predict_features

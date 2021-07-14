@@ -32,7 +32,9 @@
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
         <script src="../_static/js/custom.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -151,7 +153,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="adapt-feature-based-coral">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="adapt-feature-based-coral">
 <h1><a class="reference internal" href="../contents.html#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>.CORAL<a class="headerlink" href="#adapt-feature-based-coral" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="adapt.feature_based.CORAL">
@@ -169,23 +195,23 @@ optimization problem:</p>
 \[\min_{A}{||A^T C_S A - C_T||_F^2}\]</div>
 <p>Where:</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(C_S\)</span> is the correlation matrix of input source data</p></li>
-<li><p><span class="math notranslate nohighlight">\(C_T\)</span> is the correlation matrix of input target data</p></li>
+<li><p><span class="math notranslate nohighlight">\(A\)</span> is the feature transformation matrix such that</p></li>
 </ul>
+<p><span class="math notranslate nohighlight">\(X_S^{enc} = X_S A\)</span>
+- <span class="math notranslate nohighlight">\(C_S\)</span> is the correlation matrix of input source data
+- <span class="math notranslate nohighlight">\(C_T\)</span> is the correlation matrix of input target data</p>
 <p>The solution of this OP can be written with an explicit formula
 and the features transformation can be computed through this
 four steps algorithm:</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(C_S = Cov(X_S) + \lambda I_p\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(C_S = Cov(X_T) + \lambda I_p\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(C_S = \lambda Cov(X_S) + I_p\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(C_T = \lambda Cov(X_T) + I_p\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(X_S = X_S C_S^{-\frac{1}{2}}\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(X_S = X_S C_T^{\frac{1}{2}}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(X_S^{enc} = X_S C_T^{\frac{1}{2}}\)</span></p></li>
 </ul>
 <p>Where <span class="math notranslate nohighlight">\(\lambda\)</span> is a regularization parameter.</p>
 <p>Notice that CORAL only uses labeled source and unlabeled target data.
-It belongs then to “unsupervised” domain adaptation methods.
-However, labeled target data can be added to the training process
-straightforwardly.</p>
+It belongs then to “unsupervised” domain adaptation methods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -209,6 +235,8 @@ then no feature transformation is performed.</p>
 <p class="admonition-title">See also</p>
 <dl class="simple">
 <dt><a class="reference internal" href="adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL" title="adapt.feature_based.DeepCORAL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeepCORAL</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="adapt.feature_based.FE.html#adapt.feature_based.FE" title="adapt.feature_based.FE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FE</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="adapt.feature_based.mSDA.html#adapt.feature_based.mSDA" title="adapt.feature_based.mSDA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mSDA</span></code></a></dt><dd></dd>
 </dl>
 </div>
 <p class="rubric">References</p>
@@ -218,7 +246,9 @@ then no feature transformation is performed.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.feature_based</span> <span class="kn">import</span> <span class="n">CORAL</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span>
 <span class="gp">... </span>     <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]),</span> <span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span>
 <span class="gp">... </span>     <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]]),</span> <span class="mi">100</span><span class="p">)</span>
@@ -265,18 +295,18 @@ then no feature transformation is performed.</p>
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.CORAL.fit" title="adapt.feature_based.CORAL.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(Xs, ys, Xt, **fit_params)</p></td>
-<td><p>Perfrom correlation alignement on input source data to match  input target data (given by <code class="docutils literal notranslate"><span class="pre">tgt_index</span></code>).</p></td>
+<td><p>Perfrom correlation alignement on input source data to match  input target data.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.CORAL.fit_embeddings" title="adapt.feature_based.CORAL.fit_embeddings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_embeddings</span></code></a>(Xs, Xt)</p></td>
-<td><p></p></td>
+<td><p>Fit embeddings.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.CORAL.fit_estimator" title="adapt.feature_based.CORAL.fit_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_estimator</span></code></a>(X, y, **fit_params)</p></td>
-<td><p></p></td>
+<td><p>Fit estimator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.CORAL.predict" title="adapt.feature_based.CORAL.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.CORAL.predict" title="adapt.feature_based.CORAL.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X[, domain])</p></td>
 <td><p>Return the predictions of the estimator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.CORAL.predict_features" title="adapt.feature_based.CORAL.predict_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_features</span></code></a>(X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.CORAL.predict_features" title="adapt.feature_based.CORAL.predict_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_features</span></code></a>(X[, domain])</p></td>
 <td><p>Return aligned features for X.</p></td>
 </tr>
 </tbody>
@@ -291,9 +321,9 @@ then no feature transformation is performed.</p>
 <dt id="adapt.feature_based.CORAL.fit">
 <code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Xs</span></em>, <em class="sig-param"><span class="n">ys</span></em>, <em class="sig-param"><span class="n">Xt</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_coral.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.CORAL.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perfrom correlation alignement on input source data to match 
-input target data (given by <code class="docutils literal notranslate"><span class="pre">tgt_index</span></code>).
+input target data.
 Then fit estimator on the aligned source data and the labeled
-target ones (given by <code class="docutils literal notranslate"><span class="pre">tgt_index_labeled</span></code>).</p>
+target ones.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -319,21 +349,59 @@ the estimator.</p>
 <dl class="py method">
 <dt id="adapt.feature_based.CORAL.fit_embeddings">
 <code class="sig-name descname">fit_embeddings</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Xs</span></em>, <em class="sig-param"><span class="n">Xt</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_coral.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.CORAL.fit_embeddings" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fit embeddings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">array</span></dt><dd><p>Input source data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">array</span></dt><dd><p>Input target data.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Xs_emb, Xt_emb</strong><span class="classifier">embedded source and target data</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="adapt.feature_based.CORAL.fit_estimator">
 <code class="sig-name descname">fit_estimator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_coral.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.CORAL.fit_estimator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fit estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>Output data.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of
+the estimator.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>estimator_</strong><span class="classifier">fitted estimator</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="adapt.feature_based.CORAL.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_coral.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.CORAL.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">domain</span><span class="o">=</span><span class="default_value">'tgt'</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_coral.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.CORAL.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the predictions of the estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>domain</strong><span class="classifier">str (default=”tgt”)</span></dt><dd><p>Choose between <code class="docutils literal notranslate"><span class="pre">&quot;source&quot;,</span> <span class="pre">&quot;src&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&quot;target&quot;,</span> <span class="pre">&quot;tgt&quot;</span></code> feature embedding.</p>
 </dd>
 </dl>
 </dd>
@@ -348,18 +416,21 @@ the estimator.</p>
 
 <dl class="py method">
 <dt id="adapt.feature_based.CORAL.predict_features">
-<code class="sig-name descname">predict_features</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_coral.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.CORAL.predict_features" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict_features</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">domain</span><span class="o">=</span><span class="default_value">'tgt'</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_coral.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.CORAL.predict_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return aligned features for X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>Input data.</p>
 </dd>
+<dt><strong>domain</strong><span class="classifier">str (default=”tgt”)</span></dt><dd><p>Choose between <code class="docutils literal notranslate"><span class="pre">&quot;source&quot;,</span> <span class="pre">&quot;src&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&quot;target&quot;,</span> <span class="pre">&quot;tgt&quot;</span></code> feature embedding.</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>Xp</strong><span class="classifier">array</span></dt><dd><p>Embeddings of X.</p>
+<dt><strong>X_emb</strong><span class="classifier">array</span></dt><dd><p>Embeddings of X.</p>
 </dd>
 </dl>
 </dd>
