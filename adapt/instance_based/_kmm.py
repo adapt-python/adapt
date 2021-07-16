@@ -63,7 +63,7 @@ class KMM:
         If estimator is ``None``, a ``LinearRegression``
         instance is used as estimator.
         
-    B: float, optional (default=1000)
+    B: float (default=1000)
         Bounding weights parameter.
         
     epsilon: float, optional (default=None)
@@ -72,20 +72,26 @@ class KMM:
         ``(np.sqrt(len(Xs)) - 1)/np.sqrt(len(Xs))``
         with ``Xs`` the source input dataset.
         
-    kernel : str, optional (default="rbf")
+    kernel : str (default="rbf")
         Kernel metric.
         Possible values: [‘additive_chi2’, ‘chi2’,
         ‘linear’, ‘poly’, ‘polynomial’, ‘rbf’,
         ‘laplacian’, ‘sigmoid’, ‘cosine’]
         
-    kernel_params : dict, optional (default=None)
+    kernel_params : dict (default=None)
         Kernel additional parameters
         
-    tol: float, optional (default=None)
+    batch_size : int (default=1000)
+        Batch computation to speed up the fitting.
+        If len(Xs) > ``batch_size``, KMM is applied
+        successively on seperated batch
+        of size lower than ``batch_size``.
+        
+    tol: float (default=None)
         Optimization threshold. If ``None``
         default parameters from cvxopt are used.
         
-    max_iter: int, optional (default=100)
+    max_iter: int (default=100)
         Maximal iteration of the optimization.
         
     copy : boolean (default=True)
@@ -147,6 +153,7 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
                  epsilon=None,
                  kernel="rbf",
                  kernel_params=None,
+                 batch_size=1000,
                  tol=None,
                  max_iter=100,
                  copy=True,
@@ -161,6 +168,7 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         self.epsilon = epsilon
         self.kernel = kernel
         self.kernel_params = kernel_params
+        self.batch_size = batch_size
         self.tol = tol
         self.max_iter = max_iter
         self.copy = copy
@@ -227,7 +235,27 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         
         Xs = check_one_array(Xs)
         Xt = check_one_array(Xt)
-                
+        
+        if len(Xs) > self.batch_size:
+            size = len(Xs)
+            power = 0
+            while size > self.batch_size:
+                size = size / 2
+                power += 1
+            split = int(len(Xs) / 2**power)
+            shuffled_index = np.random.choice(len(Xs), len(Xs), replace=False)
+            weights = np.zeros(len(Xs))
+            for i in range(2**power):
+                index = shuffled_index[split*i:split*(i+1)]
+                weights[index] = self._fit_weights(Xs[index], Xt)
+        else:
+            weights = self._fit_weights(Xs, Xt)
+        
+        self.weights_ = weights
+        return self.weights_
+            
+            
+    def _fit_weights(self, Xs, Xt):
         n_s = len(Xs)
         n_t = len(Xt)
         
@@ -275,10 +303,9 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
             solvers.options['abstol'] = 1e-7
             solvers.options['reltol'] = 1e-6
             solvers.options['feastol'] = 1e-7
+        
         weights = solvers.qp(P, q, G, h)['x']
-
-        self.weights_ = np.array(weights).ravel()
-        return self.weights_
+        return np.array(weights).ravel()
 
         
     def fit_estimator(self, X, y,
