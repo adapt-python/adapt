@@ -1,7 +1,11 @@
 from setuptools import setup, find_packages
+from pathlib import Path
+
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 
 setup(
-    name='adaptation',
+    name='adapt',
     version='0.2.0',
     description='Awesome Domain Adaptation Package Toolbox for Tensorflow and Scikit-learn',
     url='https://github.com/adapt-python/adapt.git',
