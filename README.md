@@ -1,6 +1,6 @@
 # ADAPT
 
-[![PyPI version](https://badge.fury.io/py/adaptation.svg)](https://pypi.org/project/adaptation)
+[![PyPI version](https://badge.fury.io/py/adapt.svg)](https://pypi.org/project/adapt)
 [![Build Status](https://github.com/adapt-python/adapt/workflows/build/badge.svg)](https://github.com/adapt-python/adapt/actions)
 [![Python Version](https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8-blue)](https://img.shields.io/badge/python-3.5%20|%203.6%20|%203.7-blue)
 [![Codecov Status](https://codecov.io/gh/adapt-python/adapt/branch/master/graph/badge.svg?token=IWQXMYGY2Q)](https://codecov.io/gh/adapt-python/adapt)
@@ -15,9 +15,11 @@ Find the details of all implemented methods as well as illustrative examples her
 
 ## Installation
 
-This package is available on [Pypi](https://pypi.org/project/adaptation) and can be installed with the following command line:
+This package is available on [Pypi](https://pypi.org/project/adapt) and can be installed with the following command line:
 
-`pip install adaptation`
+```
+pip install adapt
+```
 
 The following dependencies are required and will be installed with the library:
 - `numpy`
@@ -28,7 +30,9 @@ The following dependencies are required and will be installed with the library:
 
 If for some reason, these packages failed to install, you can do it manually with:
 
-`pip install numpy scipy tensorflow scikit-learn cvxopt`
+```
+pip install numpy scipy tensorflow scikit-learn cvxopt
+```
 
 Finally import the module in your python scripts with:
 
