@@ -89,7 +89,7 @@ print(model.history_["task_t"][-1])
 | <img src="docs/_static/images/two_moons_setup.png">  | <img src="docs/_static/images/classification_setup.png"> | <img src="docs/_static/images/regression_setup.png">  |
 
 | Sample Bias   | Multi-Fidelity | Rotation |
-| ------------- | ------------- | ------------- | ------------- |
+| ------------- | ------------- | ------------- |
 | <img src="docs/_static/images/sample_bias_2d_setup.png"> | <img src="docs/_static/images/multifidelity_setup.png">  | <img src="docs/_static/images/rotation_setup.png"> |
 
 
