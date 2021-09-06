@@ -84,50 +84,13 @@ print(model.history_["task_t"][-1])
 
 ## Examples
 
-### Feature-Based Methods
+| First Header  | Second Header | First Header  | Second Header |
+| ------------- | ------------- | ------------- | ------------- |
+| <img src="docs/_static/images/two_moons_setup.png">  | <img src="docs/_static/images/classification_setup.png"> | <img src="docs/_static/images/regression_setup.png">  | <img src="docs/_static/images/sample_bias_setup.png" width=800px> |
 
-Let's consider the *Two moons* domain adaptation problem:
-
-<img src="docs/_static/images/two_moons_setup.png">
-
-If we use a basic network, trained on source data without adaptation, the following happen:
-
-<img src="docs/_static/images/two_moons_srconly.gif">
-
-If we use the DANN method, the following happen:
-
-<img src="docs/_static/images/two_moons_dann.gif">
-
-
-### Instance-Based Methods
-
-Let's consider the *Sample Bias* domain adaptation problem:
-
-<img src="docs/_static/images/sample_bias_setup.png">
-
-Then we compare the src only and KLIEP:
-
-<img src="docs/_static/images/sample_bias_kliep.gif">
-
-
-### Parameter-Based Methods
-
-Let's consider the *Multi-Fidelity* problem:
-
-<img src="docs/_static/images/multifidelity_setup.png">
-
-First we consider low fidelity only:
-
-<img src="docs/_static/images/multifidelity_low.gif">
-
-Then we consider high fidelity only:
-
-<img src="docs/_static/images/multifidelity_low.gif">
-
-Finally we use Regular Transfer:
-
-<img src="docs/_static/images/multifidelity_reg.gif">
-
+| First Header  | Second Header | First Header  | Second Header |
+| ------------- | ------------- | ------------- | ------------- |
+| <img src="docs/_static/images/two_moons_setup.png">  | <img src="docs/_static/images/classification_setup.png"> | <img src="docs/_static/images/regression_setup.png">  | <img src="docs/_static/images/sample_bias_setup.png"> |
 
 
 ## Content
