@@ -179,4 +179,8 @@ dd {
 	font-weight: normal;
 }
 
+.highlight .bp {
+    color: #0e84b5;
+}
+
 .py.method a.reference.external {display: none !important}

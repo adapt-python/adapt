@@ -93,6 +93,8 @@ class CORAL:
     ...      np.array([0, 0]), np.array([[0.1, 0.2], [0.2, 0.5]]), 100)
     >>> ys = np.zeros(100)
     >>> yt = np.zeros(100)
+    >>> ys[Xs[:, 1]>0] = 1
+    >>> yt[(Xt[:, 1]-0.5*Xt[:, 0])>0] = 1
     >>> model = CORAL(lambda_=0.)
     >>> model.fit(Xs, ys, Xt);
     Covariance Matrix alignement...

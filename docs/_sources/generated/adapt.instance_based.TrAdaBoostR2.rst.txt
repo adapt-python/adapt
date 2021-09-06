@@ -28,3 +28,6 @@
 	
     
 	
+	
+.. include:: ../gallery/TrAdaBoostR2.rst
+	

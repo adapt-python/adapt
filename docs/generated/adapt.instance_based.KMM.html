@@ -13,6 +13,7 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
 
   
@@ -181,7 +182,7 @@
 <h1><a class="reference internal" href="../contents.html#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>.KMM<a class="headerlink" href="#adapt-instance-based-kmm" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="adapt.instance_based.KMM">
-<em class="property">class </em><code class="sig-prename descclassname">adapt.instance_based.</code><code class="sig-name descname">KMM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">B</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">kernel</span><span class="o">=</span><span class="default_value">'rbf'</span></em>, <em class="sig-param"><span class="n">kernel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kmm.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KMM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">adapt.instance_based.</code><code class="sig-name descname">KMM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">B</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">kernel</span><span class="o">=</span><span class="default_value">'rbf'</span></em>, <em class="sig-param"><span class="n">kernel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kmm.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KMM" title="Permalink to this definition">¶</a></dt>
 <dd><p>KMM: Kernel Mean Matching</p>
 <p>KMM is a sample bias correction method for domain adaptation based on the
 minimization of the <strong>Maximum Mean Discreapancy</strong> (MMD) between source
@@ -217,24 +218,29 @@ target data to the training set.</p>
 If estimator is <code class="docutils literal notranslate"><span class="pre">None</span></code>, a <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code>
 instance is used as estimator.</p>
 </dd>
-<dt><strong>B: float, optional (default=1000)</strong></dt><dd><p>Bounding weights parameter.</p>
+<dt><strong>B: float (default=1000)</strong></dt><dd><p>Bounding weights parameter.</p>
 </dd>
 <dt><strong>epsilon: float, optional (default=None)</strong></dt><dd><p>Constraint parameter.
 If <code class="docutils literal notranslate"><span class="pre">None</span></code> epsilon is set to
 <code class="docutils literal notranslate"><span class="pre">(np.sqrt(len(Xs))</span> <span class="pre">-</span> <span class="pre">1)/np.sqrt(len(Xs))</span></code>
 with <code class="docutils literal notranslate"><span class="pre">Xs</span></code> the source input dataset.</p>
 </dd>
-<dt><strong>kernel</strong><span class="classifier">str, optional (default=”rbf”)</span></dt><dd><p>Kernel metric.
+<dt><strong>kernel</strong><span class="classifier">str (default=”rbf”)</span></dt><dd><p>Kernel metric.
 Possible values: [‘additive_chi2’, ‘chi2’,
 ‘linear’, ‘poly’, ‘polynomial’, ‘rbf’,
 ‘laplacian’, ‘sigmoid’, ‘cosine’]</p>
 </dd>
-<dt><strong>kernel_params</strong><span class="classifier">dict, optional (default=None)</span></dt><dd><p>Kernel additional parameters</p>
+<dt><strong>kernel_params</strong><span class="classifier">dict (default=None)</span></dt><dd><p>Kernel additional parameters</p>
 </dd>
-<dt><strong>tol: float, optional (default=None)</strong></dt><dd><p>Optimization threshold. If <code class="docutils literal notranslate"><span class="pre">None</span></code>
+<dt><strong>batch_size</strong><span class="classifier">int (default=1000)</span></dt><dd><p>Batch computation to speed up the fitting.
+If len(Xs) &gt; <code class="docutils literal notranslate"><span class="pre">batch_size</span></code>, KMM is applied
+successively on seperated batch
+of size lower than <code class="docutils literal notranslate"><span class="pre">batch_size</span></code>.</p>
+</dd>
+<dt><strong>tol: float (default=None)</strong></dt><dd><p>Optimization threshold. If <code class="docutils literal notranslate"><span class="pre">None</span></code>
 default parameters from cvxopt are used.</p>
 </dd>
-<dt><strong>max_iter: int, optional (default=100)</strong></dt><dd><p>Maximal iteration of the optimization.</p>
+<dt><strong>max_iter: int (default=100)</strong></dt><dd><p>Maximal iteration of the optimization.</p>
 </dd>
 <dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">estimator</span></code> or not.</p>
 </dd>
@@ -321,7 +327,7 @@ default parameters from cvxopt are used.</p>
 </table>
 <dl class="py method">
 <dt id="adapt.instance_based.KMM.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">B</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">kernel</span><span class="o">=</span><span class="default_value">'rbf'</span></em>, <em class="sig-param"><span class="n">kernel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kmm.__init__.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KMM.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">B</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">kernel</span><span class="o">=</span><span class="default_value">'rbf'</span></em>, <em class="sig-param"><span class="n">kernel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">batch_size</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">tol</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_kmm.__init__.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.KMM.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -433,7 +439,34 @@ the estimator.</p>
 
 </dd></dl>
 
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Examples</span></p>
 </div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="../_images\examples_sample_bias_5_0.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="../examples/sample_bias.html">
+          <span class="std std-ref">Sample Bias 1D</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="../_images\examples_sample_bias_2d_13_0.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="../examples/sample_bias_2d.html">
+          <span class="std std-ref">Sample Bias 2D</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-clear"></div></div>
 
 
            </div>

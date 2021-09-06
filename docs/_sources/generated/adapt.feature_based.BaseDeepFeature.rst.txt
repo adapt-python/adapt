@@ -1,0 +1,41 @@
+:ref:`adapt.feature_based <adapt.feature_based>`.BaseDeepFeature
+=======================================================================
+
+.. currentmodule:: adapt.feature_based
+
+.. autoclass:: BaseDeepFeature
+	:no-members:
+	:no-inherited-members:
+	:no-special-members:
+	
+	
+	
+	
+	.. rubric:: Methods
+	
+	.. autosummary::
+	    
+		~BaseDeepFeature.__init__
+		~BaseDeepFeature.create_model
+		~BaseDeepFeature.fit
+		~BaseDeepFeature.get_loss
+		~BaseDeepFeature.get_metrics
+		~BaseDeepFeature.predict
+		~BaseDeepFeature.predict_disc
+		~BaseDeepFeature.predict_features
+	
+	
+	.. automethod:: __init__
+	.. automethod:: create_model
+	.. automethod:: fit
+	.. automethod:: get_loss
+	.. automethod:: get_metrics
+	.. automethod:: predict
+	.. automethod:: predict_disc
+	.. automethod:: predict_features
+	
+    
+	
+	
+.. include:: ../gallery/BaseDeepFeature.rst
+	

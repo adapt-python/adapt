@@ -13,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
 
   
@@ -222,23 +223,32 @@ and <strong>target</strong> distributions. The <strong>task</strong> is then lea
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE" title="adapt.feature_based.FE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.FE</span></code></a>([estimator, copy, verbose, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.BaseDeepFeature.html#adapt.feature_based.BaseDeepFeature" title="adapt.feature_based.BaseDeepFeature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.BaseDeepFeature</span></code></a>([encoder, …])</p></td>
+<td><p>Base for Deep features-based methods.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE" title="adapt.feature_based.FE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.FE</span></code></a>([estimator, copy, verbose, …])</p></td>
 <td><p>FE: Frustratingly Easy Domain Adaptation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL" title="adapt.feature_based.CORAL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.CORAL</span></code></a>([estimator, lambda_, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL" title="adapt.feature_based.CORAL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.CORAL</span></code></a>([estimator, lambda_, …])</p></td>
 <td><p>CORAL: CORrelation ALignment</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL" title="adapt.feature_based.DeepCORAL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.DeepCORAL</span></code></a>([encoder, task, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL" title="adapt.feature_based.DeepCORAL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.DeepCORAL</span></code></a>([encoder, task, …])</p></td>
 <td><p>DeepCORAL: Deep CORrelation ALignment</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.DANN.html#adapt.feature_based.DANN" title="adapt.feature_based.DANN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.DANN</span></code></a>([encoder, task, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.DANN.html#adapt.feature_based.DANN" title="adapt.feature_based.DANN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.DANN</span></code></a>([encoder, task, …])</p></td>
 <td><p>DANN: Discriminative Adversarial Neural Network</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA" title="adapt.feature_based.ADDA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.ADDA</span></code></a>([encoder, task, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA" title="adapt.feature_based.ADDA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.ADDA</span></code></a>([encoder, task, …])</p></td>
 <td><p>ADDA: Adversarial Discriminative Domain Adaptation</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.mSDA.html#adapt.feature_based.mSDA" title="adapt.feature_based.mSDA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.mSDA</span></code></a>([encoder, decoder, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.mSDA.html#adapt.feature_based.mSDA" title="adapt.feature_based.mSDA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.mSDA</span></code></a>([encoder, decoder, …])</p></td>
 <td><p>mSDA: marginalized Stacked Denoising Autoencoder.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD" title="adapt.feature_based.MCD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.MCD</span></code></a>([encoder, task, …])</p></td>
+<td><p>MCD: Maximum Classifier Discrepancy is a feature-based domain adaptation method originally introduced for unsupervised classification DA.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD" title="adapt.feature_based.MDD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.MDD</span></code></a>([encoder, task, …])</p></td>
+<td><p>MDD: Margin Disparity Discrepancy is a feature-based domain adaptation method originally introduced for unsupervised classification DA.</p></td>
 </tr>
 </tbody>
 </table>
@@ -344,7 +354,6 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 </tr>
 </tbody>
 </table>
-<p><span class="xref std std-ref">Two_moons.ipynb</span></p>
 </div>
 </div>
 

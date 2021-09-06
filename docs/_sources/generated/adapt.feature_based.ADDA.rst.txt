@@ -40,3 +40,6 @@
 	
     
 	
+	
+.. include:: ../gallery/ADDA.rst
+	

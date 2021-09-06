@@ -20,12 +20,12 @@ If you use this library in your research, please cite ADAPT using the following 
 Pypi Installation
 -----------------
 
-This package is available on `Pypi <https://badge.fury.io/py/adaptation>`_. It has been tested on Linux, MacOSX and Windows
+This package is available on `Pypi <https://badge.fury.io/py/adapt>`_. It has been tested on Linux, MacOSX and Windows
 for Python versions: 3.6, 3.7 and 3.8. It can be installed with the following command line:
 
 .. code-block:: python
 	
-	pip install adaptation
+	pip install adapt
 
 The following dependencies are required and will be installed with the library:
 

@@ -36,3 +36,6 @@
 	
     
 	
+	
+.. include:: ../gallery/DANN.rst
+	

@@ -1,0 +1,504 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>adapt.feature_based.BaseDeepFeature &mdash; adapt 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/js/custom.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> adapt
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#"><span class="xref std std-ref">adapt.feature_based</span>.BaseDeepFeature</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><span class="xref std std-ref">adapt.feature_based</span>.BaseDeepFeature</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/adapt.feature_based.BaseDeepFeature.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="adapt-feature-based-basedeepfeature">
+<h1><a class="reference internal" href="../contents.html#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>.BaseDeepFeature<a class="headerlink" href="#adapt-feature-based-basedeepfeature" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="adapt.feature_based.BaseDeepFeature">
+<em class="property">class </em><code class="sig-prename descclassname">adapt.feature_based.</code><code class="sig-name descname">BaseDeepFeature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">encoder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">task</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">discriminator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">loss</span><span class="o">=</span><span class="default_value">'mse'</span></em>, <em class="sig-param"><span class="n">metrics</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">optimizer</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_deep.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.BaseDeepFeature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base for Deep features-based methods.</p>
+<p>This object is used as basis for deep DA methods.
+The object takes three networks : <code class="docutils literal notranslate"><span class="pre">encoder</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code> and
+<code class="docutils literal notranslate"><span class="pre">discriminator</span></code>. A deep DA object can be created as
+a <code class="docutils literal notranslate"><span class="pre">BaseDeepFeature</span></code> child by implementing the
+<code class="docutils literal notranslate"><span class="pre">create_model</span></code> and <code class="docutils literal notranslate"><span class="pre">get_loss</span></code> methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>encoder</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Encoder netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a shallow network with 10
+neurons and ReLU activation is used as encoder network.</p>
+</dd>
+<dt><strong>task</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Task netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a two layers network with 10
+neurons per layer and ReLU activation is used as task network.</p>
+</dd>
+<dt><strong>discriminator</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Discriminator netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a two layers network with 10
+neurons per layer and ReLU activation is used as discriminator
+network. Note that the output shape of the discriminator should
+be <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">1)</span></code> and a <code class="docutils literal notranslate"><span class="pre">sigmoid</span></code> activation should be used.</p>
+</dd>
+<dt><strong>loss</strong><span class="classifier">string or tensorflow loss (default=”mse”)</span></dt><dd><p>Loss function used for the task.</p>
+</dd>
+<dt><strong>metrics</strong><span class="classifier">dict or list of string or tensorflow metrics (default=None)</span></dt><dd><p>Metrics given to the model. If a list is provided,
+metrics are used on both <code class="docutils literal notranslate"><span class="pre">task</span></code> and <code class="docutils literal notranslate"><span class="pre">discriminator</span></code>
+outputs. To give seperated metrics, please provide a
+dict of metrics list with <code class="docutils literal notranslate"><span class="pre">&quot;task&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;disc&quot;</span></code> as keys.</p>
+</dd>
+<dt><strong>optimizer</strong><span class="classifier">string or tensorflow optimizer (default=None)</span></dt><dd><p>Optimizer of the model. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the
+optimizer is set to tf.keras.optimizers.Adam(0.001)</p>
+</dd>
+<dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">encoder</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code> and
+<code class="docutils literal notranslate"><span class="pre">discriminator</span></code> or not.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int (default=None)</span></dt><dd><p>Seed of random generator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="adapt.feature_based.DANN.html#adapt.feature_based.DANN" title="adapt.feature_based.DANN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DANN</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="adapt.feature_based.ADDA.html#adapt.feature_based.ADDA" title="adapt.feature_based.ADDA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ADDA</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL" title="adapt.feature_based.DeepCORAL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeepCORAL</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>encoder_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>encoder network.</p>
+</dd>
+<dt><strong>task_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>task network.</p>
+</dd>
+<dt><strong>discriminator_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>discriminator network.</p>
+</dd>
+<dt><strong>model_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted model: the union of <code class="docutils literal notranslate"><span class="pre">encoder_</span></code>,
+<code class="docutils literal notranslate"><span class="pre">task_</span></code> and <code class="docutils literal notranslate"><span class="pre">discriminator_</span></code> networks.</p>
+</dd>
+<dt><strong>history_</strong><span class="classifier">dict</span></dt><dd><p>history of the losses and metrics across the epochs.
+If <code class="docutils literal notranslate"><span class="pre">yt</span></code> is given in <code class="docutils literal notranslate"><span class="pre">fit</span></code> method, target metrics
+and losses are recorded too.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.BaseDeepFeature.__init__" title="adapt.feature_based.BaseDeepFeature.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([encoder, task, discriminator, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.BaseDeepFeature.create_model" title="adapt.feature_based.BaseDeepFeature.create_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_model</span></code></a>(inputs_Xs, inputs_Xt)</p></td>
+<td><p>Create model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.BaseDeepFeature.fit" title="adapt.feature_based.BaseDeepFeature.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(Xs, ys, Xt[, yt])</p></td>
+<td><p>Fit Model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.BaseDeepFeature.get_loss" title="adapt.feature_based.BaseDeepFeature.get_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_loss</span></code></a>(inputs_ys, **ouputs)</p></td>
+<td><p>Get loss.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.BaseDeepFeature.get_metrics" title="adapt.feature_based.BaseDeepFeature.get_metrics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metrics</span></code></a>(inputs_ys, inputs_yt, **outputs)</p></td>
+<td><p>Get Metrics.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.BaseDeepFeature.predict" title="adapt.feature_based.BaseDeepFeature.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
+<td><p>Return predictions of the task network on the encoded features.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.BaseDeepFeature.predict_disc" title="adapt.feature_based.BaseDeepFeature.predict_disc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_disc</span></code></a>(X)</p></td>
+<td><p>Return predictions of the discriminator on the encoded features.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.BaseDeepFeature.predict_features" title="adapt.feature_based.BaseDeepFeature.predict_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_features</span></code></a>(X)</p></td>
+<td><p>Return the encoded features of X.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="adapt.feature_based.BaseDeepFeature.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">encoder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">task</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">discriminator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">loss</span><span class="o">=</span><span class="default_value">'mse'</span></em>, <em class="sig-param"><span class="n">metrics</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">optimizer</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_basedeepfeature.__init__.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.BaseDeepFeature.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.BaseDeepFeature.create_model">
+<code class="sig-name descname">create_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs_Xs</span></em>, <em class="sig-param"><span class="n">inputs_Xt</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_basedeepfeature.create_model.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.BaseDeepFeature.create_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create model.</p>
+<p>Give the model architecture from the Xs, Xt
+inputs to the outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>inputs_Xs</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for Xs entries.</p>
+</dd>
+<dt><strong>inputs_Xt</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for Xt entries.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Outputs tensors of the model
+(used to compute the loss).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.BaseDeepFeature.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Xs</span></em>, <em class="sig-param"><span class="n">ys</span></em>, <em class="sig-param"><span class="n">Xt</span></em>, <em class="sig-param"><span class="n">yt</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_basedeepfeature.fit.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.BaseDeepFeature.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit Model. Note that <code class="docutils literal notranslate"><span class="pre">fit</span></code> does not reset
+the model but extend the training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">numpy array</span></dt><dd><p>Source input data.</p>
+</dd>
+<dt><strong>ys</strong><span class="classifier">numpy array</span></dt><dd><p>Source output data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">numpy array</span></dt><dd><p>Target input data.</p>
+</dd>
+<dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data. <cite>yt</cite> is only used
+for validation metrics.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of the model
+(epochs, batch_size, callbacks…).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">returns an instance of self</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.BaseDeepFeature.get_loss">
+<code class="sig-name descname">get_loss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs_ys</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">ouputs</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_basedeepfeature.get_loss.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.BaseDeepFeature.get_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>inputs_ys</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for ys entries.</p>
+</dd>
+<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model outputs tensors.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>loss</strong><span class="classifier">tf Tensor</span></dt><dd><p>Model loss</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.BaseDeepFeature.get_metrics">
+<code class="sig-name descname">get_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs_ys</span></em>, <em class="sig-param"><span class="n">inputs_yt</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">outputs</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_basedeepfeature.get_metrics.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.BaseDeepFeature.get_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>inputs_ys</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for ys entries.</p>
+</dd>
+<dt><strong>inputs_yt</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for yt entries.</p>
+</dd>
+<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model outputs tensors.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>metrics</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model metrics. dict keys give the
+name of the metric and dict values
+give the corresponding Tensor.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.BaseDeepFeature.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_basedeepfeature.predict.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.BaseDeepFeature.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return predictions of the task network on the encoded features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>predictions of task network</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.BaseDeepFeature.predict_disc">
+<code class="sig-name descname">predict_disc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_basedeepfeature.predict_disc.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.BaseDeepFeature.predict_disc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return predictions of the discriminator on the encoded features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_disc</strong><span class="classifier">array</span></dt><dd><p>predictions of discriminator network</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.feature_based.BaseDeepFeature.predict_features">
+<code class="sig-name descname">predict_features</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based\_basedeepfeature.predict_features.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.feature_based.BaseDeepFeature.predict_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the encoded features of X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>X_enc</strong><span class="classifier">array</span></dt><dd><p>predictions of encoder network</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Antoine de Mathelin, Centre Borelli, ENS Paris-Saclay
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

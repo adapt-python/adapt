@@ -32,3 +32,6 @@
 	
     
 	
+	
+.. include:: ../gallery/FE.rst
+	

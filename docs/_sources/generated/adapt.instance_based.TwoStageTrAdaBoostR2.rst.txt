@@ -28,3 +28,6 @@
 	
     
 	
+	
+.. include:: ../gallery/TwoStageTrAdaBoostR2.rst
+	
