@@ -84,13 +84,13 @@ print(model.history_["task_t"][-1])
 
 ## Examples
 
-| First Header  | Second Header | First Header  | Second Header |
-| ------------- | ------------- | ------------- | ------------- |
-| <img src="docs/_static/images/two_moons_setup.png">  | <img src="docs/_static/images/classification_setup.png"> | <img src="docs/_static/images/regression_setup.png">  | <img src="docs/_static/images/sample_bias_setup.png" width=800px> |
+| Two Moons  | Classification | Regression  |
+| ------------- | ------------- | ------------- |
+| <img src="docs/_static/images/two_moons_setup.png">  | <img src="docs/_static/images/classification_setup.png"> | <img src="docs/_static/images/regression_setup.png">  |
 
-| First Header  | Second Header | First Header  | Second Header |
+| Sample Bias   | Multi-Fidelity | Rotation |
 | ------------- | ------------- | ------------- | ------------- |
-| <img src="docs/_static/images/two_moons_setup.png">  | <img src="docs/_static/images/classification_setup.png"> | <img src="docs/_static/images/regression_setup.png">  | <img src="docs/_static/images/sample_bias_setup.png"> |
+| <img src="docs/_static/images/sample_bias_2d_setup.png"> | <img src="docs/_static/images/multifidelity_setup.png">  | <img src="docs/_static/images/rotation_setup.png"> |
 
 
 ## Content
