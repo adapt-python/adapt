@@ -86,11 +86,11 @@ print(model.history_["task_t"][-1])
 
 | Two Moons  | Classification | Regression  |
 | ------------- | ------------- | ------------- |
-| <img src="docs/_static/images/two_moons_setup.png">  | <img src="docs/_static/images/classification_setup.png"> | <img src="docs/_static/images/regression_setup.png">  |
+| [<img src="docs/_static/images/two_moons_setup.png">](https://adapt-python.github.io/adapt/examples/Two_moons.html)  | [<img src="docs/_static/images/classification_setup.png">](https://adapt-python.github.io/adapt/examples/Classification.html) | [<img src="docs/_static/images/regression_setup.png">](https://adapt-python.github.io/adapt/examples/Regression.html)  |
 
 | Sample Bias   | Multi-Fidelity | Rotation |
 | ------------- | ------------- | ------------- |
-| <img src="docs/_static/images/sample_bias_2d_setup.png"> | <img src="docs/_static/images/multifidelity_setup.png">  | <img src="docs/_static/images/rotation_setup.png"> |
+| [<img src="docs/_static/images/sample_bias_2d_setup.png">](https://adapt-python.github.io/adapt/examples/sample_bias_2d.html) | [<img src="docs/_static/images/multifidelity_setup.png">](https://adapt-python.github.io/adapt/examples/Multi_fidelity.html)  | [<img src="docs/_static/images/rotation_setup.png">](https://adapt-python.github.io/adapt/examples/Rotation.html) |
 
 
 ## Content
