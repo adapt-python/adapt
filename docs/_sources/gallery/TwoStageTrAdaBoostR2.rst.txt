@@ -1,5 +1,0 @@
-.. nbgallery::
-   :caption: Examples
-
-   ../examples/Two_moons
-   ../examples/Two_moons

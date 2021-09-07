@@ -1,0 +1,14 @@
+.. _gallery:
+
+Examples Gallery
+----------------
+
+.. nbgallery::
+
+   examples/Classification
+   examples/Two_moons
+   examples/Rotation
+   examples/Regression
+   examples/samples_bias_1d
+   examples/samples_bias_2d
+   examples/Multi_fidelity

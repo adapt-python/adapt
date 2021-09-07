@@ -2,3 +2,4 @@
    :caption: Examples
 
    ../examples/Two_moons
+   ../examples/Rotation

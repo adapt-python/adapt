@@ -160,3 +160,6 @@ This module contains utility functions used in the previous modules.
    utils.GradientHandler
    utils.make_classification_da
    utils.make_regression_da
+   
+   
+.. include:: examples_gallery.rst
