@@ -130,4 +130,6 @@ ADAPT package is divided in three sub-modules containing the following domain ad
 
 ## Acknowledgement
 
-Part of this work has been funded by the Industrial Data Analytics and Machine Learning chair from ENS Paris-Saclay, Borelli center.
+Part of this work has been funded by Michelin and the Industrial Data Analytics and Machine Learning chair from ENS Paris-Saclay, Borelli center.
+
+<img src="https://www.michelin.com/wp-content/themes/michelin/public/img/michelin-logo.svg" width=200px>
