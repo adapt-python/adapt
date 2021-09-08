@@ -9,7 +9,9 @@ on:
   pull_request:
     branches: [ master ]
 
-# jobs:
+jobs:
+
+
 #   linux-quick:
 #     runs-on: ubuntu-latest
     
