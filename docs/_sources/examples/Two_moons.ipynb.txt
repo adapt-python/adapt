@@ -11,6 +11,18 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "<div class=\"btn btn-notebook\" role=\"button\">\n",
+    "    <img src=\"../_static/images/colab_logo_32px.png\"> [Run in Google Colab](https://colab.research.google.com/drive/1Tz-TIkHI8ashHP90Im6D3tMjZ3lkR7s6?usp=sharing)\n",
+    "</div>\n",
+    "<div class=\"btn btn-notebook\" role=\"button\">\n",
+    "    <img src=\"../_static/images/github_logo_32px.png\"> [View on GitHub](https://github.com/adapt-python/adapt/blob/master/docs/examples/Two_moons.ipynb)\n",
+    "</div>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "The following example is a binary classification domain adaptation issue. The goal is to learn the classification task on the target data (black points) knowing only the labels on the source data (red and blue points).\n",
     "\n",
     "The following methods are being tested:\n",

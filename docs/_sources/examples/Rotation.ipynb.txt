@@ -8,6 +8,18 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<div class=\"btn btn-notebook\" role=\"button\">\n",
+    "    <img src=\"../_static/images/colab_logo_32px.png\"> [Run in Google Colab](https://colab.research.google.com/drive/1XePW12UF80PKzvLu9cyRJKWQoZIxk_J2?usp=sharing)\n",
+    "</div>\n",
+    "<div class=\"btn btn-notebook\" role=\"button\">\n",
+    "    <img src=\"../_static/images/github_logo_32px.png\"> [View on GitHub](https://github.com/adapt-python/adapt/blob/master/docs/examples/Rotation.ipynb)\n",
+    "</div>"
+   ]
+  },
+  {
    "cell_type": "code",
    "execution_count": 32,
    "metadata": {},
@@ -125,7 +137,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## [CORAL](../generated/adapt.instance_based.CORAL.html)"
+    "## [CORAL](../generated/adapt.feature_based.CORAL.html)"
    ]
   },
   {

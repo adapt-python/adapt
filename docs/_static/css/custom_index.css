@@ -237,3 +237,16 @@ div[role=search] {
 	margin-left: 15px;
 }
 
+.acknowledgement {
+	text-align: center;
+}
+
+.logos {
+	margin-top: 20px;
+}
+
+.logos img {
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
