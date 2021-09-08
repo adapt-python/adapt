@@ -10,6 +10,8 @@ on:
     branches: [ master ]
 
 jobs:
+
+
   linux-quick:
     runs-on: ubuntu-latest
     
@@ -64,10 +66,7 @@ jobs:
 #         pylint adapt tests || exit 0
 #     - name: Test with pytest
 #       run: |
-#         pytest --cov=adapt
-#     - name: Upload codecov
-#       run: |
-#         codecov
+#         pytest
         
         
 #   windows:
