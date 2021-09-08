@@ -99,8 +99,6 @@ ADAPT package is divided in three sub-modules containing the following domain ad
 
 ### Feature-based methods
 
-![](https://github.com/adapt-python/adapt/blob/master/docs/_static/images/feature_based.png)
-
 <img src="https://github.com/adapt-python/adapt/blob/master/docs/_static/images/feature_based.png">
 
 - [FE](https://adapt-python.github.io/adapt/generated/adapt.feature_based.FE.html) (*Frustratingly Easy Domain Adaptation*)
