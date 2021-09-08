@@ -33,5 +33,9 @@
     
 	
 	
+.. raw:: html
+
+   <h2> Examples </h2>
+	
 .. include:: ../gallery/mSDA.rst
 	

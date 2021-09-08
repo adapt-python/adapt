@@ -182,7 +182,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## [DANN](../generated/adapt.instance_based.DANN.html)"
+    "## [DANN](../generated/adapt.feature_based.DANN.html)"
    ]
   },
   {
@@ -273,7 +273,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## [ADDA](../generated/adapt.instance_based.ADDA.html)"
+    "## [ADDA](../generated/adapt.feature_based.ADDA.html)"
    ]
   },
   {
@@ -347,7 +347,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## [mSDA](../generated/adapt.instance_based.mSDA.html)"
+    "## [mSDA](../generated/adapt.feature_based.mSDA.html)"
    ]
   },
   {

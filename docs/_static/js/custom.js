@@ -1,8 +1,8 @@
-
-
-
 var docs = document.getElementsByClassName("field-list simple");
 var code = document.getElementsByClassName("highlight");
+var links = document.getElementsByClassName("wy-menu wy-menu-vertical");
+
+
 
 const ponctList = [",", ".", ";", ":"]
 //var tables = document.getElementsByClassName("longtable docutils align-default");
@@ -17,6 +17,18 @@ function attributes() {
     } else {
 		docs[0].appendChild(docs[1].children[0]);
 		docs[0].appendChild(docs[1].children[0]);
+	};
+};
+
+
+function changeLinks() {
+	
+	if (links.length == 0) {
+        links = document.getElementsByClassName("wy-menu wy-menu-vertical");
+		setTimeout(changeLinks, 50);
+        return;
+    } else {
+		links[0].innerHTML = links[0].innerHTML.replace(/##/g, "#")
 	};
 };
 
@@ -77,5 +89,6 @@ function changeColor() {
 
 changeColor();
 attributes();
+changeLinks();
 //addLinks();
 

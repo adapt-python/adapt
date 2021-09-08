@@ -1,7 +1,6 @@
 ADAPT
 =====
 
-
 :ref:`ADAPT <index>` is a **Python** package providing some well known **domain adaptation** methods.
 
 The purpose of **domain adaptation (DA)** methods is to handle the common issue encounter in
@@ -45,8 +44,8 @@ and **target** distributions. The **task** is then learned in this **encoded fea
 
 
 .. automodule: adapt.feature_based
-	:no-members:
-	:no-inherited-members:
+   :no-members:
+   :no-inherited-members:
 
 .. currentmodule:: adapt
 

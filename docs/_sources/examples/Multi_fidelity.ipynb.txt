@@ -228,7 +228,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## [RegularTransferNN](../generated.adapt.parameter_based.RegularTransferNN)"
+    "## [RegularTransferNN](../generated/adapt.parameter_based.RegularTransferNN.html)"
    ]
   },
   {

@@ -24,9 +24,9 @@ dl.field-list > dd {
   margin-bottom: 0;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 768px) {  
   dl.field-list > dt {
-    flex-basis: 110px;
+	flex-basis: 110px;
 	margin: 0;
   }
   dl.field-list > dd {
@@ -34,7 +34,6 @@ dl.field-list > dd {
     max-width: 100%;
 	margin: 0;
   }
-
 }
 
 .simple > dt {
@@ -98,6 +97,7 @@ h1 {
 	background-color: #e7f2fa;
 	text-align: center;
 	padding: 10px;
+	word-break: break-word;
 }
 
 h2 {
@@ -124,17 +124,6 @@ dd {
 .classifier {
 	font-style: italic;	
 }
-
-.toctree-expand{
-	display:none !important;
-}
-
-.wy-menu-vertical li ul {
- margin-left:0.5rem;
- margin-bottom:0;
- display:block
-}
-
 
 
 .highlight pre {
