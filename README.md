@@ -85,12 +85,12 @@ print(model.history_["task_t"][-1])
 ## Examples
 
 | Two Moons  | Classification | Regression  |
-| ------------- | ------------- | ------------- |
-| [<img src="docs/_static/images/two_moons_setup.png">](https://adapt-python.github.io/adapt/examples/Two_moons.html)  | [<img src="docs/_static/images/classification_setup.png">](https://adapt-python.github.io/adapt/examples/Classification.html) | [<img src="docs/_static/images/regression_setup.png">](https://adapt-python.github.io/adapt/examples/Regression.html)  |
+| :-------------: | :-------------: | :-------------: |
+| [<img src="docs/_static/images/two_moons_setup.png">](https://adapt-python.github.io/adapt/examples/Two_moons.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Tz-TIkHI8ashHP90Im6D3tMjZ3lkR7s6?usp=sharing) | [<img src="docs/_static/images/classification_setup.png">](https://adapt-python.github.io/adapt/examples/Classification.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1ANQUix9Y6V4RXu-vAaCFGmU979d5m4bO?usp=sharing)  | [<img src="docs/_static/images/regression_setup.png">](https://adapt-python.github.io/adapt/examples/Regression.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1adhqoV6b0uEavLDmMfkiwtRjam0DrXux?usp=sharing) |
 
 | Sample Bias   | Multi-Fidelity | Rotation |
-| ------------- | ------------- | ------------- |
-| [<img src="docs/_static/images/sample_bias_2d_setup.png">](https://adapt-python.github.io/adapt/examples/sample_bias_2d.html) | [<img src="docs/_static/images/multifidelity_setup.png">](https://adapt-python.github.io/adapt/examples/Multi_fidelity.html)  | [<img src="docs/_static/images/rotation_setup.png">](https://adapt-python.github.io/adapt/examples/Rotation.html) |
+| :-------------: | :-------------: | :-------------: |
+| [<img src="docs/_static/images/sample_bias_2d_setup.png">](https://adapt-python.github.io/adapt/examples/sample_bias_2d.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Hbg2kDXKjKzeQKJSwxzaV7pwbmORhyA3?usp=sharing) | [<img src="docs/_static/images/multifidelity_setup.png">](https://adapt-python.github.io/adapt/examples/Multi_fidelity.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Cc9TVY_Tl_boVzZDNisQnqe6Qx78svqe?usp=sharing)  | [<img src="docs/_static/images/rotation_setup.png">](https://adapt-python.github.io/adapt/examples/Rotation.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1XePW12UF80PKzvLu9cyRJKWQoZIxk_J2?usp=sharing) |
 
 
 ## Content
