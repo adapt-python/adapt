@@ -132,4 +132,4 @@ ADAPT package is divided in three sub-modules containing the following domain ad
 
 Part of this work has been funded by Michelin and the Industrial Data Analytics and Machine Learning chair from ENS Paris-Saclay, Borelli center.
 
-<img src="https://www.michelin.com/wp-content/themes/michelin/public/img/michelin-logo.svg" width=200px>
+[<img src="https://www.michelin.com/wp-content/themes/michelin/public/img/michelin-logo.svg" width=200px alt="Michelin">](https://www.michelin.com/) [<img src="https://www.centreborelli.fr/wp-content/uploads/2021/01/Logotype_IDAML.png" width=200px alt="IDAML">](https://www.centreborelli.fr/partenariats/chaires/chaires-industrielles-2/) [<img src="https://www.centreborelli.fr/wp-content/uploads/2020/07/logotype_centre_borelli_site_web.png" alt="Centre Borelli" width=150px>](https://www.centreborelli.fr)
