@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 setup(
     name='adapt',
     version='0.2.6',
-    description='Awesome Domain Adaptation Package Toolbox for Tensorflow and Scikit-learn',
+    description='Awesome Domain Adaptation Python Toolbox for Tensorflow and Scikit-learn',
     url='https://github.com/adapt-python/adapt.git',
     author='Antoine de Mathelin',
     author_email='antoine.demat@gmail.com',
