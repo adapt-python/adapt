@@ -5,7 +5,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8-blue)](https://img.shields.io/badge/python-3.5%20|%203.6%20|%203.7-blue)
 [![Codecov Status](https://codecov.io/gh/adapt-python/adapt/branch/master/graph/badge.svg?token=IWQXMYGY2Q)](https://codecov.io/gh/adapt-python/adapt)
 
-**A**wesome **D**omain **A**daptation **P**ackage **T**oolbox
+**A**wesome **D**omain **A**daptation **P**ython **T**oolbox
 
 ADAPT is a python library which provides several domain adaptation methods implemented with [Tensorflow](https://www.tensorflow.org/) and [Scikit-learn](https://scikit-learn.org/stable/).
 
