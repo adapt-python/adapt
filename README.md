@@ -15,7 +15,7 @@ Find the details of all implemented methods as well as illustrative examples her
 
 ## Installation
 
-This package is available on [Pypi](https://pypi.org/project/adapt) and can be installed with the following command line:
+This package is available on [Pypi](https://pypi.org/project/adapt) and can be installed with the following command line: 
 
 ```
 pip install adapt
