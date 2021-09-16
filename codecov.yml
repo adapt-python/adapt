@@ -1,7 +1,8 @@
 # Docs ref: https://docs.codecov.io/docs/codecovyml-reference
 # Validation check: $ curl --data-binary @codecov.yml https://codecov.io/validate
 
-comment: true
+comment:
+  require_changes: false
 
 ignore:
   - "adapt/loaders.py"
