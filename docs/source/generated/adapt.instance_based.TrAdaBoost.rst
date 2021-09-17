@@ -1,0 +1,37 @@
+:ref:`adapt.instance_based <adapt.instance_based>`.TrAdaBoost
+===================================================================
+
+.. currentmodule:: adapt.instance_based
+
+.. autoclass:: TrAdaBoost
+	:no-members:
+	:no-inherited-members:
+	:no-special-members:
+	
+	
+	
+	
+	.. rubric:: Methods
+	
+	.. autosummary::
+	    
+		~TrAdaBoost.__init__
+		~TrAdaBoost.fit
+		~TrAdaBoost.predict
+		~TrAdaBoost.predict_weights
+	
+	
+	.. automethod:: __init__
+	.. automethod:: fit
+	.. automethod:: predict
+	.. automethod:: predict_weights
+	
+    
+	
+	
+.. raw:: html
+
+   <h2> Examples </h2>
+	
+.. include:: ../gallery/TrAdaBoost.rst
+	

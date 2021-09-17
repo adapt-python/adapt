@@ -1,0 +1,104 @@
+{% extends "!layout.html" %}
+
+
+  {% block menu %}
+<p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("install") }}">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("contents") }}#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.BaseDeepFeature") }}">BaseDeepFeature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.FE") }}">FE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.CORAL") }}">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.DeepCORAL") }}">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.DANN") }}">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.ADDA") }}">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.mSDA") }}">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.MCD") }}">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.MDD") }}">MDD</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("contents") }}#adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.KLIEP") }}">KLIEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.KMM") }}">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.TrAdaBoost") }}">TrAdaBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.TrAdaBoostR2") }}">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.TwoStageTrAdaBoostR2") }}">TwoStageTrAdaBoostR2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("contents") }}#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.parameter_based.RegularTransferLR") }}">RegularTransferLR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.parameter_based.RegularTransferLC") }}">RegularTransferLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.parameter_based.RegularTransferNN") }}">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Examples Gallery</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Classification") }}">Classification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}#mSDA">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}#Instance-Based">Instance Based</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}#See-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}">Two Moons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}#mSDA">mSDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Rotation") }}">Rotation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Rotation") }}#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Rotation") }}#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Rotation") }}#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Rotation") }}#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Rotation") }}#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Rotation") }}#mSDA">mSDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Regression") }}">Toy Regression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Regression") }}#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Regression") }}#TGT-Only">TGT Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Regression") }}#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Regression") }}#All">All</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Regression") }}#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Regression") }}#TrAdaBoostR2">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Regression") }}#RegularTransferNN">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Regression") }}#See-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/sample_bias") }}">Sample Bias 1D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/sample_bias") }}#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/sample_bias") }}#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/sample_bias") }}#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/sample_bias") }}#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/sample_bias_2d") }}">Sample Bias 2D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/sample_bias_2d") }}#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/sample_bias_2d") }}#Estimator">Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/sample_bias_2d") }}#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/sample_bias_2d") }}#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/sample_bias_2d") }}#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Multi_fidelity") }}">Multi-Fidelity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Multi_fidelity") }}#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Multi_fidelity") }}#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Multi_fidelity") }}#Low-fidelity-only">Low fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Multi_fidelity") }}#High-fidelity-only">High fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Multi_fidelity") }}#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+  {% endblock %}

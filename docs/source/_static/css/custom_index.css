@@ -1,0 +1,252 @@
+html {
+    height: auto;
+}
+
+.wy-nav-side {
+    position: static;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    padding-bottom: 0;
+    width: auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    min-height: 0;
+    color: #9b9b9b;
+    background: linear-gradient(217deg, #ebf8e1, #3f87a6);
+    z-index: auto;
+	height: auto;
+}
+
+.wy-grid-for-nav {
+    position: static;
+    width: auto;
+    height: auto;
+}
+
+
+.wy-side-scroll {
+    width: auto;
+    position: static;
+    overflow-x: visible;
+    overflow-y: visible;
+    height: auto;
+}
+
+
+
+.wy-nav-content-wrap {
+	margin: auto;
+    background: #fcfcfc;
+    min-height: 0;
+}
+
+
+
+.wy-nav-content {
+	margin: auto;
+    max-width: 1400px;
+
+	width: 100%;
+}
+
+
+.wy-menu-vertical {
+    width: auto;
+}
+
+.wy-side-nav-search {
+	max-width: 1400px;
+    width: 100%;
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: left;
+	background-color: transparent;
+}
+
+.wy-side-nav-search-row {
+	display: flex;
+    width: 100%;
+	max-width: 1400px;
+    padding: .809em;
+    margin-bottom: .809em;
+    z-index: 200;
+    background-color: transparent;
+    text-align: left;
+    color: #fcfcfc;
+	flex-wrap: wrap;
+	margin-right: -15px;
+	margin-left: -15px;
+}
+
+
+#rtd-search-form {
+	
+	text-align: right;
+}
+
+.icon.icon-home {
+	display: none;
+}
+
+div[role=navigation] {
+	display: none;
+}
+
+.wy-nav-top {
+	display: none;
+}
+
+
+
+.h-100 {
+    height: 100% !important;
+}
+
+body {
+	min-height: 0;
+	
+}
+
+.three-cards {
+	padding-left: 1.3rem !important;
+	padding-right: 1.3rem !important;
+	margin-bottom: 1rem !important;
+	flex: 1 0 33.333333%;
+	position: relative;
+	min-width: 300px;
+}
+
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+
+.two-cards.first {
+	padding-left: 0rem !important;
+	padding-right: 3.3rem !important;
+	margin-bottom: 1rem !important;
+	flex: 0 0 49.333333%;
+	max-width: 33.333333%;
+	position: relative;
+	width: 100%;
+	float: left;
+	display: flex;
+	flex-direction: column;
+	margin-left: auto;
+	margin-left: auto;
+}
+
+.two-cards.second {
+	padding-left: 3.3rem !important;
+	padding-right: 0rem !important;
+	margin-bottom: 1rem !important;
+	flex: 0 0 49.333333%;
+	max-width: 33.333333%;
+	position: relative;
+	width: 100%;
+	float: right;
+	display: flex;
+	flex-direction: column;
+	margin-right: auto;
+}
+
+
+.image {
+	text-align: center;
+	margin-top: auto;
+}
+
+.card-body {
+	flex: 1 1 auto;
+	padding-left: 1.3rem !important;
+	padding-right: 1.3rem !important;	
+}
+
+footer {
+	text-align: center;
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.btn-below {
+	margin-top: 1.3rem;
+}
+
+h2 {
+	text-align: center
+}
+
+.left-title {
+	position: relative;
+	font-size: 2.5rem;
+	color: blue;
+	margin-right: 15px;
+	margin-left: 15px;
+}
+
+.btn-top {
+	height: 30px;
+	width: 150px;
+	margin-top: auto;
+	margin-left: 20px;
+	display:inline-block;
+	font-size: 1.2rem;
+	text-align: center;
+	padding: 4px 16px 0px;
+	background-color: #FFA500;
+	margin-bottom: .25rem;
+;
+}
+
+.some-buttons {
+	margin-top: auto;
+	display: flex;
+	flex-wrap:wrap
+}
+
+.main-title {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	color: white;
+	text-shadow: 1px 1px 2px black;
+}
+
+.italic {
+	font-style: italic;
+}
+
+div[role=search] {
+	width: 100%;
+	max-width: 24rem;
+	margin-top: 1rem;
+	margin-left: 15px;
+}
+
+.acknowledgement {
+	text-align: center;
+}
+
+.logos {
+	margin-top: 20px;
+}
+
+.logos img {
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
