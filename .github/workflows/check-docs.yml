@@ -30,9 +30,9 @@ jobs:
     - name: Build documentation
       run: |
         make html
-        rm -rf docs/doctrees
-        mv docs/html/*(DN) docs/
-        rm docs/html
+        sudo rm -r -f docs/doctrees
+        mv -v docs/html/* docs/
+        sudo rm -r -f docs/html
     - name: Push changes to remote
       run: |
         git config --global user.name "github-actions[bot]"
