@@ -27,12 +27,9 @@ jobs:
     - name: Install adapt
       run: |
         pip install -e .
-    - name: Run notebooks
-      run: |
-        jupyter nbconvert --inplace --to notebook --ExecutePreprocessor.kernel_name=python --execute $(find ./docs -name '*.ipynb')
     - name: Build documentation
       run: |
-        mkdocs build
+        make html
     - uses: actions/upload-artifact@v1
       with:
         name: DocumentationHTML
