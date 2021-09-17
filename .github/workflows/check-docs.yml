@@ -30,6 +30,12 @@ jobs:
     - name: Build documentation
       run: |
         make html
+    - name: Push changes to remote
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add docs git commit -m "Update docs"
+        git push
     - uses: actions/upload-artifact@v1
       with:
         name: DocumentationHTML
