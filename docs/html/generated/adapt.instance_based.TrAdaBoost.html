@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adapt.instance_based.TrAdaBoost &mdash; adapt 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script src="../_static/js/custom.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> adapt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+<p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.BaseDeepFeature.html">BaseDeepFeature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.FE.html">FE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CORAL.html">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DANN.html">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.ADDA.html">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.mSDA.html">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MCD.html">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MDD.html">MDD</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KLIEP.html">KLIEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">TrAdaBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Examples Gallery</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#mSDA">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Instance-Based">Instance Based</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#See-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Two_moons.html">Two Moons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#mSDA">mSDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Rotation.html">Rotation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#mSDA">mSDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Regression.html">Toy Regression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#TGT-Only">TGT Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#All">All</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#RegularTransferNN">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#See-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/sample_bias.html">Sample Bias 1D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/sample_bias_2d.html">Sample Bias 2D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Estimator">Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Multi_fidelity.html">Multi-Fidelity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Low-fidelity-only">Low fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#High-fidelity-only">High fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+  
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><span class="xref std std-ref">adapt.instance_based</span>.TrAdaBoost</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/adapt.instance_based.TrAdaBoost.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="adapt-instance-based-tradaboost">
+<h1><a class="reference internal" href="../contents.html#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>.TrAdaBoost<a class="headerlink" href="#adapt-instance-based-tradaboost" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="adapt.instance_based.TrAdaBoost">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adapt.instance_based.</span></span><span class="sig-name descname"><span class="pre">TrAdaBoost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_tradaboost.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.TrAdaBoost" title="Permalink to this definition"></a></dt>
+<dd><p>Transfer AdaBoost for Classification</p>
+<p>TrAdaBoost algorithm is a <strong>supervised</strong> instances-based domain
+adaptation method suited for <strong>classification</strong> tasks.</p>
+<p>The method is based on a “<strong>reverse boosting</strong>” principle where the
+weights of source instances poorly predicted decrease at each
+boosting iteration whereas the ones of target instances increase.</p>
+<p>The algorithm performs the following steps:</p>
+<ul>
+<li><p><strong>1.</strong> Normalize weights: <span class="math notranslate nohighlight">\(\sum w_S + \sum w_T = 1\)</span>.</p></li>
+<li><p><strong>2.</strong> Fit an estimator <span class="math notranslate nohighlight">\(f\)</span> on source and target labeled data
+<span class="math notranslate nohighlight">\((X_S, y_S), (X_T, y_T)\)</span> with the respective importances
+weights: <span class="math notranslate nohighlight">\(w_S, w_T\)</span>.</p></li>
+<li><p><strong>3.</strong> Compute error vectors of training instances:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\epsilon_S = L_{01}(f(X_S), y_S)\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon_T = L_{01}(f(X_T), y_T)\)</span>.</p></li>
+</ul>
+</li>
+<li><p><strong>4.</strong> Compute total weighted error of target instances:
+<span class="math notranslate nohighlight">\(E_T = \frac{1}{n_T} w_T^T \epsilon_T\)</span>.</p></li>
+<li><p><strong>5.</strong> Update source and target weights:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(w_S = w_S \beta^{\epsilon_S}\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(w_T = w_T \beta_T^{-\epsilon_T}\)</span>.</p></li>
+</ul>
+</div></blockquote>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\beta = 1 \setminus (1 + \sqrt{2 \text{ln} n_S \setminus N})\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\beta_T = E_T \setminus (1 - E_T)\)</span>.</p></li>
+</ul>
+</li>
+<li><p><strong>6.</strong> Return to step <strong>1</strong> and loop until the number <span class="math notranslate nohighlight">\(N\)</span>
+of boosting iteration is reached.</p></li>
+</ul>
+<p>The prediction are then given by the vote of the <span class="math notranslate nohighlight">\(N \setminus 2\)</span>
+last computed estimators weighted by their respective parameter
+<span class="math notranslate nohighlight">\(\beta_T\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>estimator</strong><span class="classifier">sklearn estimator or tensorflow Model (default=None)</span></dt><dd><p>Base estimator used to learn the task. 
+If estimator is <code class="docutils literal notranslate"><span class="pre">None</span></code>, a <code class="docutils literal notranslate"><span class="pre">LogisticRegression</span></code>
+instance is used as base estimator.</p>
+</dd>
+<dt><strong>n_estimators</strong><span class="classifier">int (default=10)</span></dt><dd><p>Number of boosting iteration.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">int (default=1)</span></dt><dd><p>Verbosity level.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int (default=None)</span></dt><dd><p>Seed of random generator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="adapt.instance_based.TrAdaBoostR2.html#adapt.instance_based.TrAdaBoostR2" title="adapt.instance_based.TrAdaBoostR2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrAdaBoostR2</span></code></a>, <a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2" title="adapt.instance_based.TwoStageTrAdaBoostR2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoStageTrAdaBoostR2</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r70ec62e3f07c-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="http://www.cs.ust.hk/~qyang/Docs/2007/tradaboost.pdf">[1]</a> Dai W., Yang Q., Xue G., and Yu Y. “Boosting for transfer learning”. In ICML, 2007.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.instance_based</span> <span class="kn">import</span> <span class="n">TrAdaBoost</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="p">(</span><span class="n">Xs</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yt</span> <span class="o">=</span> <span class="p">(</span><span class="n">Xt</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dtc</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dtc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Xs</span><span class="p">,</span> <span class="n">Xt</span><span class="p">[:</span><span class="mi">10</span><span class="p">])),</span>
+<span class="gp">... </span>        <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">ys</span><span class="p">,</span> <span class="n">yt</span><span class="p">[:</span><span class="mi">10</span><span class="p">])))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dtc</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">)</span>
+<span class="go">0.55</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tr</span> <span class="o">=</span> <span class="n">TrAdaBoost</span><span class="p">(</span><span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+<span class="gp">... </span>                <span class="n">n_estimators</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">yt</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+<span class="go">Iteration 0 - Error: 0.1000</span>
+<span class="gp">...</span>
+<span class="go">Iteration 19 - Error: 0.0000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span> <span class="o">==</span> <span class="n">yt</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="go">0.59</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>estimators_</strong><span class="classifier">list of object</span></dt><dd><p>List of fitted estimators</p>
+</dd>
+<dt><strong>estimator_errors_</strong><span class="classifier">1D array of float</span></dt><dd><p>Array of weighted estimator errors computed on
+labeled target data.</p>
+</dd>
+<dt><strong>estimator_weights_</strong><span class="classifier">1D array of float</span></dt><dd><p>Array of estimator importance weights.</p>
+</dd>
+<dt><strong>sample_weights_src_</strong><span class="classifier">list of numpy arrays</span></dt><dd><p>List of source sample weight for each iteration.</p>
+</dd>
+<dt><strong>sample_weights_tgt_</strong><span class="classifier">list of numpy arrays</span></dt><dd><p>List of target sample weight for each iteration.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TrAdaBoost.__init__" title="adapt.instance_based.TrAdaBoost.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([estimator, n_estimators, verbose, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TrAdaBoost.fit" title="adapt.instance_based.TrAdaBoost.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(Xs, ys, Xt, yt[, sample_weight_src, ...])</p></td>
+<td><p>Fit TrAdaBoost</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TrAdaBoost.predict" title="adapt.instance_based.TrAdaBoost.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
+<td><p>Return weighted vote of estimators.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TrAdaBoost.predict_weights" title="adapt.instance_based.TrAdaBoost.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>([domain])</p></td>
+<td><p>Return sample weights.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.TrAdaBoost.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_estimators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_tradaboost.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.TrAdaBoost.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.TrAdaBoost.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight_src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight_tgt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_tradaboost.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.TrAdaBoost.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit TrAdaBoost</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">numpy array</span></dt><dd><p>Source input data.</p>
+</dd>
+<dt><strong>ys</strong><span class="classifier">numpy array</span></dt><dd><p>Source output data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">numpy array</span></dt><dd><p>Target input data.</p>
+</dd>
+<dt><strong>yt</strong><span class="classifier">numpy array</span></dt><dd><p>Target output data.</p>
+</dd>
+<dt><strong>sample_weight_src</strong><span class="classifier">numpy array, (default=None)</span></dt><dd><p>Initial sample weight of source data</p>
+</dd>
+<dt><strong>sample_weight_tgt</strong><span class="classifier">numpy array, (default=None)</span></dt><dd><p>Initial sample weight of target data</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of the
+estimator.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">returns an instance of self</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.TrAdaBoost.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_tradaboost.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.TrAdaBoost.predict" title="Permalink to this definition"></a></dt>
+<dd><p>Return weighted vote of estimators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>Input data.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>Vote results.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.TrAdaBoost.predict_weights">
+<span class="sig-name descname"><span class="pre">predict_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'src'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_tradaboost.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.TrAdaBoost.predict_weights" title="Permalink to this definition"></a></dt>
+<dd><p>Return sample weights.</p>
+<p>Return the final source importance weighting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>domain</strong><span class="classifier">str (default=”tgt”)</span></dt><dd><p>Choose between <code class="docutils literal notranslate"><span class="pre">&quot;source&quot;,</span> <span class="pre">&quot;src&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&quot;target&quot;,</span> <span class="pre">&quot;tgt&quot;</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>weights</strong><span class="classifier">source sample weights</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<h2> Examples </h2></section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Antoine de Mathelin, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

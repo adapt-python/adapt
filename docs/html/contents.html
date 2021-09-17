@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADAPT &mdash; adapt 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script src="_static/js/custom.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> adapt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+<p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="##adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.BaseDeepFeature.html">BaseDeepFeature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.FE.html">FE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.CORAL.html">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.DANN.html">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.ADDA.html">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.mSDA.html">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.MCD.html">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.MDD.html">MDD</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="##adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.KLIEP.html">KLIEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="##adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Examples Gallery</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/Classification.html">Classification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#mSDA">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#Instance-Based">Instance Based</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#See-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Two_moons.html">Two Moons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Two_moons.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Two_moons.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Two_moons.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Two_moons.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Two_moons.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Two_moons.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Two_moons.html#mSDA">mSDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Rotation.html">Rotation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Rotation.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Rotation.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Rotation.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Rotation.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Rotation.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Rotation.html#mSDA">mSDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Regression.html">Toy Regression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#TGT-Only">TGT Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#All">All</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#RegularTransferNN">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#See-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/sample_bias.html">Sample Bias 1D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/sample_bias.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/sample_bias.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/sample_bias.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/sample_bias.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/sample_bias_2d.html">Sample Bias 2D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/sample_bias_2d.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/sample_bias_2d.html#Estimator">Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/sample_bias_2d.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/sample_bias_2d.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/sample_bias_2d.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Multi_fidelity.html">Multi-Fidelity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Multi_fidelity.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Multi_fidelity.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Multi_fidelity.html#Low-fidelity-only">Low fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Multi_fidelity.html#High-fidelity-only">High fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+  
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">adapt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>ADAPT</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contents.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="adapt">
+<h1>ADAPT<a class="headerlink" href="#adapt" title="Permalink to this headline"></a></h1>
+<p><a class="reference internal" href="index.html#index"><span class="std std-ref">ADAPT</span></a> is a <strong>Python</strong> package providing some well known <strong>domain adaptation</strong> methods.</p>
+<p>The purpose of <strong>domain adaptation (DA)</strong> methods is to handle the common issue encounter in
+<strong>machine learning</strong> where training and testing data are drawn according to different distributions.</p>
+<p>In <strong>domain adaptation</strong> setting, one is aiming to learn a <strong>task</strong> with an estimator <span class="math notranslate nohighlight">\(f\)</span> mapping
+input data <span class="math notranslate nohighlight">\(X\)</span> into output data <span class="math notranslate nohighlight">\(y\)</span> called also <strong>labels</strong>. <span class="math notranslate nohighlight">\(y\)</span> is either a finite set of integer value
+(for <strong>classification</strong> tasks) or an interval of real values (for <strong>regression</strong> tasks).</p>
+<p>Besides, in this setting, one consider, on one hand, a <strong>source</strong> domain from which a large sample of <strong>labeled data</strong>
+<span class="math notranslate nohighlight">\((X_S, y_S)\)</span> are available. And in the other hand, a <strong>target</strong> domain from which <strong>no (or only a few) labeled data</strong> <span class="math notranslate nohighlight">\((X_T, y_T)\)</span> are available.
+If no labeled target data are available, one refers to <strong>unsupervised domain adaptation</strong>. If a few labeled target data are available
+one refers to <strong>supervised domain adaptation</strong> also called <strong>few-shot learning</strong>.</p>
+<p>The goal of <strong>domain adaptation</strong> is to build a good estimator <span class="math notranslate nohighlight">\(f_T\)</span> on the <strong>target</strong> domain by leaveraging information from the <strong>source</strong> domain.
+<strong>DA</strong> methods follow one of these three strategies:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="#adapt-feature-based"><span class="std std-ref">Feature-Based</span></a></p></li>
+<li><p><a class="reference internal" href="#adapt-instance-based"><span class="std std-ref">Instance-Based</span></a></p></li>
+<li><p><a class="reference internal" href="#adapt-parameter-based"><span class="std std-ref">Parameter-Based</span></a></p></li>
+</ul>
+</div></blockquote>
+<p>The following part explains each strategy and gives lists of the implemented methods in the <a class="reference internal" href="index.html#index"><span class="std std-ref">ADAPT</span></a> package.</p>
+<section id="adapt-feature-based-feature-based-methods">
+<span id="adapt-feature-based"></span><h2><a class="reference internal" href="#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>: Feature-Based Methods<a class="headerlink" href="#adapt-feature-based-feature-based-methods" title="Permalink to this headline"></a></h2>
+<p>Feature-based methods are based on the research of common features which have similar
+behaviour with respect to the <strong>task</strong> on <strong>source</strong> and <strong>target</strong> domain.</p>
+<p>A new feature representation (often called <strong>encoded feature space</strong>) is built with a
+projecting application <span class="math notranslate nohighlight">\(\phi\)</span> which aims to correct the difference between <strong>source</strong>
+and <strong>target</strong> distributions. The <strong>task</strong> is then learned in this <strong>encoded feature space</strong>.</p>
+<figure class="align-center">
+<img alt="alternate text" src="_static/images/feature_based.PNG" />
+</figure>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.BaseDeepFeature.html#adapt.feature_based.BaseDeepFeature" title="adapt.feature_based.BaseDeepFeature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.BaseDeepFeature</span></code></a>([encoder, ...])</p></td>
+<td><p>Base for Deep features-based methods.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE" title="adapt.feature_based.FE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.FE</span></code></a>([estimator, copy, verbose, ...])</p></td>
+<td><p>FE: Frustratingly Easy Domain Adaptation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL" title="adapt.feature_based.CORAL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.CORAL</span></code></a>([estimator, lambda_, ...])</p></td>
+<td><p>CORAL: CORrelation ALignment</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL" title="adapt.feature_based.DeepCORAL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.DeepCORAL</span></code></a>([encoder, task, ...])</p></td>
+<td><p>DeepCORAL: Deep CORrelation ALignment</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.DANN.html#adapt.feature_based.DANN" title="adapt.feature_based.DANN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.DANN</span></code></a>([encoder, task, ...])</p></td>
+<td><p>DANN: Discriminative Adversarial Neural Network</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA" title="adapt.feature_based.ADDA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.ADDA</span></code></a>([encoder, task, ...])</p></td>
+<td><p>ADDA: Adversarial Discriminative Domain Adaptation</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.mSDA.html#adapt.feature_based.mSDA" title="adapt.feature_based.mSDA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.mSDA</span></code></a>([encoder, decoder, ...])</p></td>
+<td><p>mSDA: marginalized Stacked Denoising Autoencoder.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD" title="adapt.feature_based.MCD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.MCD</span></code></a>([encoder, task, ...])</p></td>
+<td><p>MCD: Maximum Classifier Discrepancy is a feature-based domain adaptation method originally introduced for unsupervised classification DA.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD" title="adapt.feature_based.MDD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.MDD</span></code></a>([encoder, task, ...])</p></td>
+<td><p>MDD: Margin Disparity Discrepancy is a feature-based domain adaptation method originally introduced for unsupervised classification DA.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="adapt-instance-based-instance-based-methods">
+<span id="adapt-instance-based"></span><h2><a class="reference internal" href="#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>: Instance-Based Methods<a class="headerlink" href="#adapt-instance-based-instance-based-methods" title="Permalink to this headline"></a></h2>
+<p>The general principle of these methods is to <strong>reweight</strong> labeled training data
+in order to correct the difference between <strong>source</strong> and <strong>target</strong> distributions.
+This <strong>reweighting</strong> consists in multiplying, during the training process, the individual loss of each training instance by a positive <strong>weight</strong>.</p>
+<p>The <strong>reweighted</strong> training instances are then directly used to learn the task.</p>
+<figure class="align-center">
+<img alt="alternate text" src="_static/images/instance_based.PNG" />
+</figure>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP" title="adapt.instance_based.KLIEP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.KLIEP</span></code></a>([estimator, sigmas, ...])</p></td>
+<td><p>KLIEP: Kullback–Leibler Importance Estimation Procedure</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM" title="adapt.instance_based.KMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.KMM</span></code></a>([estimator, B, epsilon, ...])</p></td>
+<td><p>KMM: Kernel Mean Matching</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost" title="adapt.instance_based.TrAdaBoost"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.TrAdaBoost</span></code></a>([estimator, ...])</p></td>
+<td><p>Transfer AdaBoost for Classification</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoostR2.html#adapt.instance_based.TrAdaBoostR2" title="adapt.instance_based.TrAdaBoostR2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.TrAdaBoostR2</span></code></a>([estimator, ...])</p></td>
+<td><p>Transfer AdaBoost for Regression</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2" title="adapt.instance_based.TwoStageTrAdaBoostR2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.TwoStageTrAdaBoostR2</span></code></a>([...])</p></td>
+<td><p>Two Stage Transfer AdaBoost for Regression</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="adapt-parameter-based-parameter-based-methods">
+<span id="adapt-parameter-based"></span><h2><a class="reference internal" href="#adapt-parameter-based"><span class="std std-ref">adapt.parameter_based</span></a>: Parameter-Based Methods<a class="headerlink" href="#adapt-parameter-based-parameter-based-methods" title="Permalink to this headline"></a></h2>
+<p>In parameter-based methods, the <strong>parameters</strong> of one or few pre-trained models built with
+the <strong>source</strong> data are adapted to build a suited model for the <strong>task</strong> on the <strong>target</strong> domain.</p>
+<figure class="align-center">
+<img alt="alternate text" src="_static/images/parameter_based.PNG" />
+</figure>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR" title="adapt.parameter_based.RegularTransferLR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.RegularTransferLR</span></code></a>(estimator)</p></td>
+<td><p>Regular Transfer with Linear Regression</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC" title="adapt.parameter_based.RegularTransferLC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.RegularTransferLC</span></code></a>(estimator)</p></td>
+<td><p>Regular Transfer for Binary Linear Classification</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN" title="adapt.parameter_based.RegularTransferNN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.RegularTransferNN</span></code></a>([network, ...])</p></td>
+<td><p>Regular Transfer with Neural Network</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="adapt-utils-utility-functions">
+<span id="adapt-utils"></span><h2><a class="reference internal" href="#adapt-utils"><span class="std std-ref">adapt.utils</span></a>: Utility Functions<a class="headerlink" href="#adapt-utils-utility-functions" title="Permalink to this headline"></a></h2>
+<p>This module contains utility functions used in the previous modules.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.check_arrays.html#adapt.utils.check_arrays" title="adapt.utils.check_arrays"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_arrays</span></code></a>(Xs, ys, Xt[, yt, multisource])</p></td>
+<td><p>Check arrays and reshape 1D array in 2D array of shape (-1, 1).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.check_one_array.html#adapt.utils.check_one_array" title="adapt.utils.check_one_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_one_array</span></code></a>(X[, multisource])</p></td>
+<td><p>Check array and reshape 1D array in 2D array of shape (-1, 1).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.check_estimator.html#adapt.utils.check_estimator" title="adapt.utils.check_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_estimator</span></code></a>([estimator, copy, ...])</p></td>
+<td><p>Check estimator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.check_network.html#adapt.utils.check_network" title="adapt.utils.check_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_network</span></code></a>(network[, copy, ...])</p></td>
+<td><p>Check if the given network is a tensorflow Model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_encoder.html#adapt.utils.get_default_encoder" title="adapt.utils.get_default_encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_encoder</span></code></a>()</p></td>
+<td><p>Return a tensorflow Model of one layer with 10 neurons and a relu activation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_task.html#adapt.utils.get_default_task" title="adapt.utils.get_default_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_task</span></code></a>()</p></td>
+<td><p>Return a tensorflow Model of two hidden layers with 10 neurons each and relu activations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_discriminator.html#adapt.utils.get_default_discriminator" title="adapt.utils.get_default_discriminator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_discriminator</span></code></a>()</p></td>
+<td><p>Return a tensorflow Model of two hidden layers with 10 neurons each and relu activations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.GradientHandler.html#adapt.utils.GradientHandler" title="adapt.utils.GradientHandler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.GradientHandler</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Multiply gradients with a scalar during backpropagation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.make_classification_da.html#adapt.utils.make_classification_da" title="adapt.utils.make_classification_da"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.make_classification_da</span></code></a>([n_samples, ...])</p></td>
+<td><p>Generate a classification dataset for DA.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.make_regression_da.html#adapt.utils.make_regression_da" title="adapt.utils.make_regression_da"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.make_regression_da</span></code></a>([n_samples, ...])</p></td>
+<td><p>Generate a regression dataset for DA.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="examples-gallery">
+<span id="gallery"></span><h1>Examples Gallery<a class="headerlink" href="#examples-gallery" title="Permalink to this headline"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_static/no_image.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/Classification.html">
+          <span class="std std-ref">Classification</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_images/examples_Two_moons_6_0.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/Two_moons.html">
+          <span class="std std-ref">Two Moons</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_images/examples_Rotation_4_0.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/Rotation.html">
+          <span class="std std-ref">Rotation</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_images/examples_Regression_9_0.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/Regression.html">
+          <span class="std std-ref">Toy Regression</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_images/examples_sample_bias_6_0.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/sample_bias.html">
+          <span class="std std-ref">Sample Bias 1D</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_images/examples_sample_bias_2d_14_0.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/sample_bias_2d.html">
+          <span class="std std-ref">Sample Bias 2D</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_images/examples_Multi_fidelity_6_0.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/Multi_fidelity.html">
+          <span class="std std-ref">Multi-Fidelity</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-clear"></div></section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Antoine de Mathelin, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parameter-based &mdash; adapt 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="../_static/js/custom.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> adapt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+<p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.BaseDeepFeature.html">BaseDeepFeature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.FE.html">FE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CORAL.html">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DANN.html">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.ADDA.html">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.mSDA.html">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MCD.html">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MDD.html">MDD</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KLIEP.html">KLIEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Examples Gallery</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#mSDA">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Instance-Based">Instance Based</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#See-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Two_moons.html">Two Moons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#mSDA">mSDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Rotation.html">Rotation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#mSDA">mSDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Regression.html">Toy Regression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#TGT-Only">TGT Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#All">All</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#RegularTransferNN">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#See-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/sample_bias.html">Sample Bias 1D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/sample_bias_2d.html">Sample Bias 2D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Estimator">Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Multi_fidelity.html">Multi-Fidelity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Low-fidelity-only">Low fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#High-fidelity-only">High fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+  
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Parameter-based</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/parameter_based.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="parameter-based">
+<h1>Parameter-based<a class="headerlink" href="#parameter-based" title="Permalink to this headline"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLR.html"><span class="xref std std-ref">adapt.parameter_based</span>.RegularTransferLR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html"><span class="xref std std-ref">adapt.parameter_based</span>.RegularTransferLC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html"><span class="xref std std-ref">adapt.parameter_based</span>.RegularTransferNN</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html">Multi-Fidelity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html">Toy Regression</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Antoine de Mathelin, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

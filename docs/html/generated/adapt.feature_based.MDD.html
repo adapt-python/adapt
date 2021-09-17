@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adapt.feature_based.MDD &mdash; adapt 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="../_static/js/custom.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> adapt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+<p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.BaseDeepFeature.html">BaseDeepFeature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.FE.html">FE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CORAL.html">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DANN.html">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.ADDA.html">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.mSDA.html">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MCD.html">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">MDD</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KLIEP.html">KLIEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Examples Gallery</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#mSDA">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Instance-Based">Instance Based</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#See-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Two_moons.html">Two Moons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#mSDA">mSDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Rotation.html">Rotation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#mSDA">mSDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Regression.html">Toy Regression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#TGT-Only">TGT Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#All">All</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#RegularTransferNN">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#See-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/sample_bias.html">Sample Bias 1D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/sample_bias_2d.html">Sample Bias 2D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Estimator">Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Multi_fidelity.html">Multi-Fidelity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Low-fidelity-only">Low fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#High-fidelity-only">High fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+  
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><span class="xref std std-ref">adapt.feature_based</span>.MDD</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/adapt.feature_based.MDD.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="adapt-feature-based-mdd">
+<h1><a class="reference internal" href="../contents.html#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>.MDD<a class="headerlink" href="#adapt-feature-based-mdd" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="adapt.feature_based.MDD">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adapt.feature_based.</span></span><span class="sig-name descname"><span class="pre">MDD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_pretrained</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mse'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_mdd.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.MDD" title="Permalink to this definition"></a></dt>
+<dd><p>MDD: Margin Disparity Discrepancy is a feature-based domain adaptation
+method originally introduced for unsupervised classification DA.</p>
+<p>The goal of MDD is to find a new representation of the input features which
+minimizes the disparity discrepancy between the source and target domains</p>
+<p>The discrepancy is estimated through adversarial training of three networks:
+An encoder a task network and a discriminator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>encoder</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Encoder netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a shallow network with 10
+neurons and ReLU activation is used as encoder network.</p>
+</dd>
+<dt><strong>get_task</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Task netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a two layers network with 10
+neurons per layer and ReLU activation is used as task network.</p>
+</dd>
+<dt><strong>gamma</strong><span class="classifier">float (default=4.)</span></dt><dd><p>Margin parameter.</p>
+</dd>
+<dt><strong>loss</strong><span class="classifier">string or tensorflow loss (default=”mse”)</span></dt><dd><p>Loss function used for the task.</p>
+</dd>
+<dt><strong>metrics</strong><span class="classifier">dict or list of string or tensorflow metrics (default=None)</span></dt><dd><p>Metrics given to the model. If a list is provided,
+metrics are used on both <code class="docutils literal notranslate"><span class="pre">task</span></code> and <code class="docutils literal notranslate"><span class="pre">discriminator</span></code>
+outputs. To give seperated metrics, please provide a
+dict of metrics list with <code class="docutils literal notranslate"><span class="pre">&quot;task&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;disc&quot;</span></code> as keys.</p>
+</dd>
+<dt><strong>optimizer</strong><span class="classifier">string or tensorflow optimizer (default=None)</span></dt><dd><p>Optimizer of the model. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the
+optimizer is set to tf.keras.optimizers.Adam(0.001)</p>
+</dd>
+<dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">encoder</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code> and
+<code class="docutils literal notranslate"><span class="pre">discriminator</span></code> or not.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int (default=None)</span></dt><dd><p>Seed of random generator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="rdf313e3034d4-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://arxiv.org/pdf/1702.05464.pdf">[1]</a> Y. Zhang, T. Liu, M. Long, and M. Jordan. “Bridging theory and algorithm for domain adaptation”. ICML, 2019.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+<span class="gp">... </span>                     <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">))),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+<span class="gp">... </span>                     <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">))),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">Xs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yt</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">Xt</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MDD</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">history_</span><span class="p">[</span><span class="s2">&quot;task_t&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">0.0009...</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>encoder_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>encoder network.</p>
+</dd>
+<dt><strong>task_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Principal task network.</p>
+</dd>
+<dt><strong>task_adv_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Adversarial task network.</p>
+</dd>
+<dt><strong>model_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted model: the union of <code class="docutils literal notranslate"><span class="pre">encoder_</span></code>, <code class="docutils literal notranslate"><span class="pre">task_</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">discriminator_</span></code> networks.</p>
+</dd>
+<dt><strong>history_</strong><span class="classifier">dict</span></dt><dd><p>history of the losses and metrics across the epochs.
+If <code class="docutils literal notranslate"><span class="pre">yt</span></code> is given in <code class="docutils literal notranslate"><span class="pre">fit</span></code> method, target metrics
+and losses are recorded too.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.MDD.__init__" title="adapt.feature_based.MDD.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([encoder, task, is_pretrained, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.MDD.create_model" title="adapt.feature_based.MDD.create_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_model</span></code></a>(inputs_Xs, inputs_Xt)</p></td>
+<td><p>Create model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.MDD.fit" title="adapt.feature_based.MDD.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(Xs, ys, Xt[, yt])</p></td>
+<td><p>Fit Model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.MDD.get_loss" title="adapt.feature_based.MDD.get_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_loss</span></code></a>(inputs_ys, task_src, ...)</p></td>
+<td><p>Get loss.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.MDD.get_metrics" title="adapt.feature_based.MDD.get_metrics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metrics</span></code></a>(inputs_ys, inputs_yt, task_src, ...)</p></td>
+<td><p>Get Metrics.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.MDD.predict" title="adapt.feature_based.MDD.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
+<td><p>Return predictions of the task network on the encoded features.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.MDD.predict_disc" title="adapt.feature_based.MDD.predict_disc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_disc</span></code></a>(X)</p></td>
+<td><p>Return predictions of the discriminator on the encoded features.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.MDD.predict_features" title="adapt.feature_based.MDD.predict_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_features</span></code></a>(X)</p></td>
+<td><p>Return the encoded features of X.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.MDD.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_pretrained</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mse'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_mdd.__init__.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.MDD.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.MDD.create_model">
+<span class="sig-name descname"><span class="pre">create_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs_Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs_Xt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_mdd.create_model.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.MDD.create_model" title="Permalink to this definition"></a></dt>
+<dd><p>Create model.</p>
+<p>Give the model architecture from the Xs, Xt
+inputs to the outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>inputs_Xs</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for Xs entries.</p>
+</dd>
+<dt><strong>inputs_Xt</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for Xt entries.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Outputs tensors of the model
+(used to compute the loss).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.MDD.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_mdd.fit.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.MDD.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit Model. Note that <code class="docutils literal notranslate"><span class="pre">fit</span></code> does not reset
+the model but extend the training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">numpy array</span></dt><dd><p>Source input data.</p>
+</dd>
+<dt><strong>ys</strong><span class="classifier">numpy array</span></dt><dd><p>Source output data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">numpy array</span></dt><dd><p>Target input data.</p>
+</dd>
+<dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data. <cite>yt</cite> is only used
+for validation metrics.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of the model
+(epochs, batch_size, callbacks…).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">returns an instance of self</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.MDD.get_loss">
+<span class="sig-name descname"><span class="pre">get_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs_ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_src_nograd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_tgt_nograd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_tgt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disc_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disc_tgt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_mdd.get_loss.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.MDD.get_loss" title="Permalink to this definition"></a></dt>
+<dd><p>Get loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>inputs_ys</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for ys entries.</p>
+</dd>
+<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model outputs tensors.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>loss</strong><span class="classifier">tf Tensor</span></dt><dd><p>Model loss</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.MDD.get_metrics">
+<span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs_ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs_yt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_tgt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_src_nograd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_tgt_nograd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disc_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disc_tgt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_mdd.get_metrics.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.MDD.get_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Get Metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>inputs_ys</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for ys entries.</p>
+</dd>
+<dt><strong>inputs_yt</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for yt entries.</p>
+</dd>
+<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model outputs tensors.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>metrics</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model metrics. dict keys give the
+name of the metric and dict values
+give the corresponding Tensor.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.MDD.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_mdd.predict.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.MDD.predict" title="Permalink to this definition"></a></dt>
+<dd><p>Return predictions of the task network on the encoded features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>predictions of task network</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.MDD.predict_disc">
+<span class="sig-name descname"><span class="pre">predict_disc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_mdd.predict_disc.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.MDD.predict_disc" title="Permalink to this definition"></a></dt>
+<dd><p>Return predictions of the discriminator on the encoded features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_disc</strong><span class="classifier">array</span></dt><dd><p>predictions of discriminator network</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.MDD.predict_features">
+<span class="sig-name descname"><span class="pre">predict_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_mdd.predict_features.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.MDD.predict_features" title="Permalink to this definition"></a></dt>
+<dd><p>Return the encoded features of X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>X_enc</strong><span class="classifier">array</span></dt><dd><p>predictions of encoder network</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<h2> Examples </h2></section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Antoine de Mathelin, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
