@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>adapt.instance_based.TrAdaBoostR2 &mdash; adapt 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/js/custom.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> adapt
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#"><span class="xref std std-ref">adapt.instance_based</span>.TrAdaBoostR2</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><span class="xref std std-ref">adapt.instance_based</span>.TrAdaBoostR2</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/adapt.instance_based.TrAdaBoostR2.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="adapt-instance-based-tradaboostr2">
+<h1><a class="reference internal" href="../contents.html#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>.TrAdaBoostR2<a class="headerlink" href="#adapt-instance-based-tradaboostr2" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="adapt.instance_based.TrAdaBoostR2">
+<em class="property">class </em><code class="sig-prename descclassname">adapt.instance_based.</code><code class="sig-name descname">TrAdaBoostR2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_estimators</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_tradaboost.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.TrAdaBoostR2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfer AdaBoost for Regression</p>
+<p>TrAdaBoostR2 algorithm is a <strong>supervised</strong> instances-based domain
+adaptation method suited for <strong>regression</strong> tasks.</p>
+<p>The method is based on a “<strong>reverse boosting</strong>” principle where the
+weights of source instances poorly predicted decrease at each
+boosting iteration whereas the ones of target instances increase.</p>
+<p>The algorithm performs the following steps:</p>
+<ul>
+<li><p><strong>1.</strong> Normalize weights: <span class="math notranslate nohighlight">\(\sum w_S + \sum w_T = 1\)</span>.</p></li>
+<li><p><strong>2.</strong> Fit an estimator <span class="math notranslate nohighlight">\(f\)</span> on source and target labeled data
+<span class="math notranslate nohighlight">\((X_S, y_S), (X_T, y_T)\)</span> with the respective importances
+weights: <span class="math notranslate nohighlight">\(w_S, w_T\)</span>.</p></li>
+<li><p><strong>3.</strong> Compute error vectors of training instances:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\epsilon_S = L(f(X_S), y_S)\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon_T = L(f(X_T), y_T)\)</span>.</p></li>
+</ul>
+</li>
+<li><p><strong>4</strong> Normalize error vectors:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\epsilon_S = \epsilon_S \setminus
+max_{\epsilon \in \epsilon_S \cup \epsilon_T} \epsilon\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon_T = \epsilon_T \setminus
+max_{\epsilon \in \epsilon_S \cup \epsilon_T} \epsilon\)</span>.</p></li>
+</ul>
+</li>
+<li><p><strong>5.</strong> Compute total weighted error of target instances:
+<span class="math notranslate nohighlight">\(E_T = \frac{1}{n_T} w_T^T \epsilon_T\)</span>.</p></li>
+<li><p><strong>6.</strong> Update source and target weights:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(w_S = w_S \beta^{\epsilon_S}\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(w_T = w_T \beta_T^{-\epsilon_T}\)</span>.</p></li>
+</ul>
+</div></blockquote>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\beta = 1 \setminus (1 + \sqrt{2 \text{ln} n_S \setminus N})\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\beta_T = E_T \setminus (1 - E_T)\)</span>.</p></li>
+</ul>
+</li>
+<li><p><strong>7.</strong> Return to step <strong>1</strong> and loop until the number <span class="math notranslate nohighlight">\(N\)</span>
+of boosting iteration is reached.</p></li>
+</ul>
+<p>The prediction are then given by the weighted median of the
+<span class="math notranslate nohighlight">\(N \setminus 2\)</span> last estimators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>estimator</strong><span class="classifier">sklearn estimator or tensorflow Model (default=None)</span></dt><dd><p>Base estimator used to learn the task. 
+If estimator is <code class="docutils literal notranslate"><span class="pre">None</span></code>, a <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code>
+instance is used as base estimator.</p>
+</dd>
+<dt><strong>n_estimators</strong><span class="classifier">int (default=10)</span></dt><dd><p>Number of boosting iteration.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">int (default=1)</span></dt><dd><p>Verbosity level.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int (default=None)</span></dt><dd><p>Seed of random generator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost" title="adapt.instance_based.TrAdaBoost"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrAdaBoost</span></code></a>, <a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2" title="adapt.instance_based.TwoStageTrAdaBoostR2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoStageTrAdaBoostR2</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="rd849abe198b8-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://www.cs.utexas.edu/~dpardoe/papers/ICML10.pdf">[1]</a> D. Pardoe and P. Stone. “Boosting for regression transfer”. In ICML, 2010.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="n">Xs</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yt</span> <span class="o">=</span> <span class="n">Xt</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lr</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Xs</span><span class="p">,</span> <span class="n">Xt</span><span class="p">[:</span><span class="mi">10</span><span class="p">])),</span>
+<span class="gp">... </span>       <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">ys</span><span class="p">,</span> <span class="n">yt</span><span class="p">[:</span><span class="mi">10</span><span class="p">])))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span> <span class="o">-</span> <span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="go">0.30631...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tr</span> <span class="o">=</span> <span class="n">TrAdaBoostR2</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">yt</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+<span class="go">Iteration 0 - Error: 0.4396</span>
+<span class="gp">...</span>
+<span class="go">Iteration 19 - Error: 0.0675</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span> <span class="o">-</span> <span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="go">0.05801...</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>estimators_</strong><span class="classifier">list of object</span></dt><dd><p>List of fitted estimators</p>
+</dd>
+<dt><strong>estimator_errors_</strong><span class="classifier">1D array of float</span></dt><dd><p>Array of weighted estimator errors computed on
+labeled target data.</p>
+</dd>
+<dt><strong>estimator_weights_</strong><span class="classifier">1D array of float</span></dt><dd><p>Array of estimator importance weights.</p>
+</dd>
+<dt><strong>sample_weights_src_</strong><span class="classifier">list of numpy arrays</span></dt><dd><p>List of source sample weight for each iteration.</p>
+</dd>
+<dt><strong>sample_weights_tgt_</strong><span class="classifier">list of numpy arrays</span></dt><dd><p>List of target sample weight for each iteration.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TrAdaBoostR2.__init__" title="adapt.instance_based.TrAdaBoostR2.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([estimator, n_estimators, verbose, …])</p></td>
+<td><p>Initialize self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TrAdaBoostR2.fit" title="adapt.instance_based.TrAdaBoostR2.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(Xs, ys, Xt, yt[, sample_weight_src, …])</p></td>
+<td><p>Fit TrAdaBoost</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TrAdaBoostR2.predict" title="adapt.instance_based.TrAdaBoostR2.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
+<td><p>Return weighted median of estimators.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TrAdaBoostR2.predict_weights" title="adapt.instance_based.TrAdaBoostR2.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>([domain])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="adapt.instance_based.TrAdaBoostR2.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_estimators</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_tradaboost.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.TrAdaBoostR2.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.instance_based.TrAdaBoostR2.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Xs</span></em>, <em class="sig-param"><span class="n">ys</span></em>, <em class="sig-param"><span class="n">Xt</span></em>, <em class="sig-param"><span class="n">yt</span></em>, <em class="sig-param"><span class="n">sample_weight_src</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sample_weight_tgt</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">fit_params</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_tradaboost.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.TrAdaBoostR2.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit TrAdaBoost</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">numpy array</span></dt><dd><p>Source input data.</p>
+</dd>
+<dt><strong>ys</strong><span class="classifier">numpy array</span></dt><dd><p>Source output data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">numpy array</span></dt><dd><p>Target input data.</p>
+</dd>
+<dt><strong>yt</strong><span class="classifier">numpy array</span></dt><dd><p>Target output data.</p>
+</dd>
+<dt><strong>sample_weight_src</strong><span class="classifier">numpy array, (default=None)</span></dt><dd><p>Initial sample weight of source data</p>
+</dd>
+<dt><strong>sample_weight_src</strong><span class="classifier">numpy array, (default=None)</span></dt><dd><p>Initial sample weight of target data</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of the
+estimator.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">returns an instance of self</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.instance_based.TrAdaBoostR2.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_tradaboost.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.TrAdaBoostR2.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return weighted median of estimators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>Input data.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>Median results.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="adapt.instance_based.TrAdaBoostR2.predict_weights">
+<code class="sig-name descname">predict_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">domain</span><span class="o">=</span><span class="default_value">'src'</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based\_tradaboost.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adapt.instance_based.TrAdaBoostR2.predict_weights" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Antoine de Mathelin, Centre Borelli, ENS Paris-Saclay
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
