@@ -30,7 +30,7 @@ jobs:
     - name: Build documentation
       run: |
         make html
-        rm docs/doctrees
+        rm -rf docs/doctrees
         mv docs/html/*(DN) docs/
         rm docs/html
     - name: Push changes to remote
