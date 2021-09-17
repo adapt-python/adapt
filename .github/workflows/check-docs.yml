@@ -16,7 +16,6 @@ jobs:
         python-version: '3.8'
     - name: Install doc dependencies
       run: |
-        $CONDA/bin/conda env update --file environment.yml --name base
         $CONDA/bin/conda install -c conda-forge pandoc
         python -m pip install --upgrade pip
         pip install sphinx numpydoc nbsphinx sphinx_gallery sphinx_rtd_theme pandoc
