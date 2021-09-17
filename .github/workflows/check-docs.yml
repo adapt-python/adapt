@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: docker://pandoc/core:2.9
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
         python-version: '3.8'
     - name: Install doc dependencies
       run: |
+        sudo apt install pandoc
         python -m pip install --upgrade pip
         pip install sphinx numpydoc nbsphinx sphinx_gallery sphinx_rtd_theme
     - name: Install adapt dependencies
