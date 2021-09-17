@@ -19,7 +19,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install sphinx numpydoc nbsphinx sphinx_gallery sphinx_rtd_theme
         $CONDA/bin/conda install -c conda-forge pandoc
-        conda install pandoc
     - name: Install adapt dependencies
       run: |
         python -m pip install --upgrade pip
@@ -30,6 +29,7 @@ jobs:
         pip install -e .
     - name: Build documentation
       run: |
+        conda install pandoc
         make html
     - uses: actions/upload-artifact@v1
       with:
