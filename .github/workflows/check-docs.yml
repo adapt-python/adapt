@@ -29,10 +29,12 @@ jobs:
         pip install -e .
     - name: Build documentation
       run: |
+        sudo rm -r -f docs/*
         make html
         sudo rm -r -f docs/doctrees
         mv -v docs/html/* docs/
         sudo rm -r -f docs/html
+        touch .nojekyll
     - name: Push changes to remote
       run: |
         git config --global user.name "github-actions[bot]"
