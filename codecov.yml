@@ -1,8 +1,5 @@
-# Docs ref: https://docs.codecov.io/docs/codecovyml-reference
+# Docs ref: https://docs.codecov.io/docs/codecovyml-reference 
 # Validation check: $ curl --data-binary @codecov.yml https://codecov.io/validate
-
-ignore:
-  - "adapt/loaders.py"
 
 codecov:
   token: ad499a8d-3f1a-44b1-9672-27164a1281ce
@@ -16,16 +13,3 @@ coverage:
   precision: 2
   round: down
   range: "70...100"
-  status:
-    project:
-      default:
-        base: auto    # target to compare against 
-        target: auto  # target "X%" coverage to hit on project
-        threshold: 1% # allow this much decrease from base
-        if_ci_failed: error
-    patch: off
-      default:
-        base: auto      # target to compare against
-        target: 50%     # target "X%" coverage to hit on patch
-        # threshold: 50%  # allow this much decrease on patch
-    changes: false
