@@ -31,6 +31,8 @@ jobs:
         sudo rm -r -f docs/*
         make html
         sudo rm -r -f docs/doctrees
+        sudo rm -r -f docs/html/_sources
+        sudo rm -r -f docs/html/examples/*.ipynb
         mv -v docs/html/* docs/
         sudo rm -r -f docs/html
         touch .nojekyll

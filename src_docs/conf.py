@@ -83,6 +83,8 @@ html_js_files = [
     'js/custom.js',
 ]
 
+html_show_sourcelink = False
+
 
 #sphinx_gallery_conf = {
 #    'reference_url': {"adapt": None},
