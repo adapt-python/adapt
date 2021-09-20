@@ -1,0 +1,31 @@
+name: Upload package to Pypi
+
+on:
+  workflow_dispatch:
+    inputs:
+      overrideVersion:
+        description: Manually force a version
+
+env:
+  CIBW_BUILD_VERBOSITY: 1
+  SETUPTOOLS_SCM_PRETEND_VERSION: ${{ github.event.inputs.overrideVersion }}
+
+jobs:
+  make_sdist:
+    name: Make SDist
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - name: Install deps
+      run: python -m pip install build twine
+    - name: Build SDist
+      run: python -m build --sdist
+    - uses: actions/upload-artifact@v2
+      with:
+        path: dist/*.tar.gz
+    - name: Check metadata
+      run: twine check dist/*
