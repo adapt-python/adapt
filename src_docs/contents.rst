@@ -37,7 +37,7 @@ projecting application :math:`\phi` which aims to correct the difference between
 and **target** distributions. The **task** is then learned in this **encoded feature space**.
 
 
-.. figure:: images/feature_based.png
+.. figure:: _static/images/feature_based.png
     :align: center
     :alt: alternate text
     :figclass: align-center
@@ -78,7 +78,7 @@ This **reweighting** consists in multiplying, during the training process, the i
 The **reweighted** training instances are then directly used to learn the task.
 
 
-.. figure:: images/instance_based.png
+.. figure:: _static/images/instance_based.png
     :align: center
     :alt: alternate text
     :figclass: align-center
@@ -111,7 +111,7 @@ In parameter-based methods, the **parameters** of one or few pre-trained models 
 the **source** data are adapted to build a suited model for the **task** on the **target** domain.
 
 
-.. figure:: images/parameter_based.png
+.. figure:: _static/images/parameter_based.png
     :align: center
     :alt: alternate text
     :figclass: align-center
