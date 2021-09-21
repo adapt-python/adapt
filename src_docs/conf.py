@@ -31,7 +31,8 @@ extensions = [
  'numpydoc',
  'sphinx.ext.linkcode',
  'nbsphinx',
- 'sphinx_gallery.load_style'
+ 'sphinx_gallery.load_style',
+ 'IPython.sphinxext.ipython_console_highlighting'
  ]
 
 numpydoc_show_inherited_class_members = False
@@ -82,6 +83,8 @@ html_css_files = [
 html_js_files = [
     'js/custom.js',
 ]
+
+html_show_sourcelink = False
 
 
 #sphinx_gallery_conf = {
