@@ -157,7 +157,6 @@
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>Sample Bias 2D</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/examples/sample_bias_2d.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -437,8 +436,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Sample-Bias-2D">
 <h1>Sample Bias 2D<a class="headerlink" href="#Sample-Bias-2D" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="e69fd79389ef4d83978cd9450f2a5758" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/12_9rgPXobyeaKYlXh_fJPNfrbODdvuHY?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="97f0e684b14d4dbba3ab7a5fe9e6a1c1" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/adapt/blob/master/docs/examples/sample_bias_2d.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="807aeb62b66149ec98800cdec58a9c4f" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/12_9rgPXobyeaKYlXh_fJPNfrbODdvuHY?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="7c7237aaf7d44a6da29ba0287facc244" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/sample_bias_2d.ipynb">View on GitHub</a></p>
 </div><p>The following example is a 2D regression domain adaptation issue. The goal is to learn the regression task on the target data (orange points) knowing only the labels on the source data (blue points).</p>
 <p>In this example, there is a sample bias between the source and target datasets. The sources are mostly located in X1=0 whereas the targets are uniformly distributed.</p>
 <p>The following methods are being tested:</p>
@@ -448,10 +447,10 @@ div.rendered_html tbody tr:hover {
 <li><p><a class="reference external" href="#KLIEP">KLIEP</a></p></li>
 </ul>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
@@ -473,10 +472,10 @@ div.rendered_html tbody tr:hover {
 <section id="Setup">
 <h2>Setup<a class="headerlink" href="#Setup" title="Permalink to this headline"></a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">):</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="p">(</span><span class="n">x0</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
     <span class="n">x1</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
@@ -499,10 +498,10 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 
 <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -530,7 +529,7 @@ div.rendered_html tbody tr:hover {
     <span class="n">X_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span>
         <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
         <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">x1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">f</span><span class="p">(</span><span class="n">X_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;X1 = </span><span class="si">%.1f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">x1</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">f</span><span class="p">(</span><span class="n">X_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;X1 = </span><span class="si">%.1f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">x1</span>)
 
 <span class="n">ax3</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
 <span class="n">ax3</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
@@ -555,10 +554,10 @@ div.rendered_html tbody tr:hover {
 <section id="Estimator">
 <h2>Estimator<a class="headerlink" href="#Estimator" title="Permalink to this headline"></a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
@@ -573,10 +572,10 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>## Source Only</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">estimator</span> <span class="o">=</span> <span class="n">clone_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
@@ -586,10 +585,10 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">yp_grid</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">()],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 <span class="n">error_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yp_grid</span><span class="o">-</span><span class="n">z_grid</span><span class="p">)</span>
 
@@ -603,7 +602,7 @@ div.rendered_html tbody tr:hover {
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X0&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Error Map -- Source Only -- Target MAE : </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">score</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Error Map -- Source Only -- Target MAE : </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">sc</span>ore<span class="o">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
@@ -622,10 +621,10 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>## <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.KMM.html">KMM</a></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">kmm</span> <span class="o">=</span> <span class="n">KMM</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">kernel_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">gamma</span><span class="o">=</span><span class="mf">2.</span><span class="p">),</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">kmm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">);</span>
@@ -640,29 +639,29 @@ div.rendered_html tbody tr:hover {
 Fitting weights...
      pcost       dcost       gap    pres   dres
  0:  2.7084e+04 -4.3392e+05  1e+07  6e-01  2e-14
- 1:  2.3438e+02 -1.0551e+05  2e+05  4e-03  1e-11
- 2:  1.7072e+02 -2.1481e+04  2e+04  9e-06  1e-12
- 3:  1.6458e+02 -8.2292e+02  1e+03  4e-07  9e-14
- 4:  1.0422e+02 -6.2452e+02  7e+02  2e-07  5e-14
- 5: -7.2423e+01 -9.3040e+02  9e+02  5e-08  1e-14
+ 1:  2.3438e+02 -1.0551e+05  2e+05  4e-03  2e-11
+ 2:  1.7072e+02 -2.1481e+04  2e+04  9e-06  2e-12
+ 3:  1.6458e+02 -8.2292e+02  1e+03  4e-07  5e-14
+ 4:  1.0422e+02 -6.2452e+02  7e+02  2e-07  3e-14
+ 5: -7.2423e+01 -9.3040e+02  9e+02  5e-08  6e-15
  6: -7.7015e+01 -2.8294e+02  2e+02  1e-08  2e-15
- 7: -7.9350e+01 -2.8047e+02  2e+02  1e-08  2e-15
- 8: -8.7166e+01 -1.2479e+02  4e+01  2e-16  2e-16
- 9: -8.9553e+01 -9.7350e+01  8e+00  2e-16  2e-16
+ 7: -7.9350e+01 -2.8047e+02  2e+02  1e-08  1e-15
+ 8: -8.7166e+01 -1.2479e+02  4e+01  2e-16  3e-16
+ 9: -8.9553e+01 -9.7350e+01  8e+00  2e-16  1e-16
 10: -9.0635e+01 -9.2636e+01  2e+00  2e-16  2e-16
 11: -9.1022e+01 -9.1316e+01  3e-01  2e-16  1e-16
-12: -9.1106e+01 -9.1145e+01  4e-02  2e-16  2e-16
+12: -9.1106e+01 -9.1145e+01  4e-02  2e-16  1e-16
 13: -9.1116e+01 -9.1120e+01  4e-03  2e-16  2e-16
-14: -9.1118e+01 -9.1118e+01  6e-05  2e-16  1e-16
+14: -9.1118e+01 -9.1118e+01  6e-05  2e-16  2e-16
 Optimal solution found.
 Fitting estimator...
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">yp_grid</span> <span class="o">=</span> <span class="n">kmm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">()],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 <span class="n">error_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yp_grid</span><span class="o">-</span><span class="n">z_grid</span><span class="p">)</span>
 
@@ -678,7 +677,7 @@ Fitting estimator...
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X0&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Error Map -- KMM -- Target MAE : </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">score</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Error Map -- KMM -- Target MAE : </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">sc</span>ore<span class="o">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
@@ -697,10 +696,10 @@ Fitting estimator...
 </div>
 <p>## <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.KLIEP.html">KLIEP</a></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">kliep</span> <span class="o">=</span> <span class="n">KLIEP</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">sigmas</span><span class="o">=</span><span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_centers</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 <span class="n">kliep</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">);</span>
@@ -726,10 +725,10 @@ Fitting estimator...
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">yp_grid</span> <span class="o">=</span> <span class="n">kliep</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">()],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 <span class="n">error_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yp_grid</span><span class="o">-</span><span class="n">z_grid</span><span class="p">)</span>
 
@@ -745,7 +744,7 @@ Fitting estimator...
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X0&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Error Map -- KLIEP -- Target MAE : </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">score</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Error Map -- KLIEP -- Target MAE : </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">sc</span>ore<span class="o">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
@@ -760,15 +759,6 @@ Fitting estimator...
 </div>
 <div class="output_area docutils container">
 <img alt="../_images/examples_sample_bias_2d_17_0.png" src="../_images/examples_sample_bias_2d_17_0.png" />
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
-<span></span>
-</pre></div>
 </div>
 </div>
 </section>

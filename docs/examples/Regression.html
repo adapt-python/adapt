@@ -157,7 +157,6 @@
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>Toy Regression</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/examples/Regression.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -437,15 +436,15 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Toy-Regression">
 <h1>Toy Regression<a class="headerlink" href="#Toy-Regression" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="b53ef5cc0194448f997fc9d50a39c9ee" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1adhqoV6b0uEavLDmMfkiwtRjam0DrXux?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="69b6370034a74b07a7cdf6c3b85ce2e9" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/adapt/blob/master/docs/examples/Regression.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="0345a8f206b54dcc934fb63103354ae6" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1adhqoV6b0uEavLDmMfkiwtRjam0DrXux?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="a10428ef134b45afa40e04d4937c800e" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Regression.ipynb">View on GitHub</a></p>
 </div><p>You will find here the application of DA methods from the ADAPT package on a simple one dimensional DA regression problem.</p>
-<p>First we import packages needed in the following. We will use <code class="docutils literal notranslate"><span class="pre">matplotlib</span> <span class="pre">Animation</span></code> tools in order to get a visual understanding of the mselected methods:</p>
+<p>First we import packages needed in the following. We will use <code class="docutils literal notranslate"><span class="pre">matplotlib</span> <span class="pre">Animation</span></code> tools in order to get a visual understanding of the selected methods:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib.animation</span> <span class="k">as</span> <span class="nn">animation</span>
@@ -458,10 +457,10 @@ div.rendered_html tbody tr:hover {
 <h2>Experimental Setup<a class="headerlink" href="#Experimental-Setup" title="Permalink to this headline"></a></h2>
 <p>We now set the synthetic regression DA problem using the <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.utils.make_regression_da.html">make_regression_da</a> function from <code class="docutils literal notranslate"><span class="pre">adapt.utils</span></code>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">adapt.utils</span> <span class="kn">import</span> <span class="n">make_regression_da</span>
 
 <span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span> <span class="o">=</span> <span class="n">make_regression_da</span><span class="p">()</span>
@@ -472,10 +471,10 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>We define here a <code class="docutils literal notranslate"><span class="pre">show</span></code> function which we will use in the following to visualize the algorithms performances on the toy problem.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">X_src</span><span class="o">=</span><span class="n">Xs</span><span class="p">,</span> <span class="n">weights_src</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">weights_tgt</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_src</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">weights_src</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
@@ -485,7 +484,7 @@ div.rendered_html tbody tr:hover {
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;predictions&quot;</span><span class="p">)</span>
         <span class="n">index_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Xt</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">yt</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">[</span><span class="n">index_</span><span class="p">]))</span>
-        <span class="n">score</span> <span class="o">=</span> <span class="s2">&quot; -- Tgt MAE = </span><span class="si">%.2f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">score</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="s2">&quot; -- Tgt MAE = </span><span class="si">%.2f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">sc</span>ore
     <span class="k">else</span><span class="p">:</span>
         <span class="n">score</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">((</span><span class="o">-</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.6</span><span class="p">))</span>
@@ -499,10 +498,10 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">show</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -516,14 +515,13 @@ div.rendered_html tbody tr:hover {
 <img alt="../_images/examples_Regression_9_0.png" src="../_images/examples_Regression_9_0.png" />
 </div>
 </div>
-<p>Notice that we also define a <code class="docutils literal notranslate"><span class="pre">writer</span></code> which will be used to record the evolution of predictions through epochs.</p>
 <p>As we can see in the figure above (plotting the output data <code class="docutils literal notranslate"><span class="pre">y</span></code> with respect to the inputs <code class="docutils literal notranslate"><span class="pre">X</span></code>), source and target data define two distinct domains. We have modeled here a classical supervised DA issue where the goal is to build a good model on orange data knowing only the labels (<code class="docutils literal notranslate"><span class="pre">y</span></code>) of the blue and black points.</p>
 <p>We now define the base model used to learn the task. We use here a neural network with two hidden layer. We also define a <code class="docutils literal notranslate"><span class="pre">SavePrediction</span></code> callback in order to save the prediction of the neural network at each epoch.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras</span> <span class="kn">import</span> <span class="n">Sequential</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Reshape</span>
@@ -540,10 +538,10 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">tensorflow.keras.callbacks</span> <span class="kn">import</span> <span class="n">Callback</span>
 
 <span class="k">class</span> <span class="nc">SavePrediction</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
@@ -568,10 +566,10 @@ div.rendered_html tbody tr:hover {
 <h2>TGT Only<a class="headerlink" href="#TGT-Only" title="Permalink to this headline"></a></h2>
 <p>First, let’s fit a network only on the three labeled target data. As we could have guessed, this is not sufficient to build an efficient model on the whole target domain.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
@@ -582,10 +580,10 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="k">def</span> <span class="nf">animate</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="o">*</span><span class="n">fargs</span><span class="p">):</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
     <span class="n">y_pred</span> <span class="o">=</span> <span class="n">save_preds</span><span class="o">.</span><span class="n">custom_history_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
@@ -596,59 +594,35 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">ani</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animate</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/examples_Regression_17_0.png" src="../_images/examples_Regression_17_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ani</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Output hidden; open in https://colab.research.google.com to view.
-</pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
-<span></span><span class="n">ani</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animate</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">ani</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;tgtOnly.mp4&#39;</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="n">writer</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<p><img alt="tgtOnly" src="../_images/tgtOnly.gif" /></p>
 </section>
 <section id="Src-Only">
 <h2>Src Only<a class="headerlink" href="#Src-Only" title="Permalink to this headline"></a></h2>
 <p>We would like to use the large amount of labeled source data to improve the training of the neural network on the target domain. However, as we can see on the figure below, using only the source dataset fails to provide an efficient model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
@@ -658,49 +632,35 @@ Output hidden; open in https://colab.research.google.com to view.
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">ani</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animate</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/examples_Regression_23_0.png" src="../_images/examples_Regression_23_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ani</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Output hidden; open in https://colab.research.google.com to view.
-</pre></div></div>
-</div>
+<p><img alt="srcOnly" src="../_images/srcOnlyReg.gif" /></p>
 </section>
 <section id="All">
 <h2>All<a class="headerlink" href="#All" title="Permalink to this headline"></a></h2>
 <p>Same thing happen when using both source and target labeled data. As the source sample ovewhelms the target one, the model is not fitted enough on the target domain.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
@@ -713,49 +673,35 @@ Output hidden; open in https://colab.research.google.com to view.
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">ani</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animate</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/examples_Regression_28_0.png" src="../_images/examples_Regression_28_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ani</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Output hidden; open in https://colab.research.google.com to view.
-</pre></div></div>
-</div>
+<p><img alt="all" src="../_images/all.gif" /></p>
 </section>
 <section id="CORAL">
 <h2>CORAL<a class="headerlink" href="#CORAL" title="Permalink to this headline"></a></h2>
 <p>Let’s now consider the domain adaptation method <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.CORAL.html">CORAL</a> This “two-stage” method first perfroms a feature alignment on source data and then fit an estimator on the new feature space.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">adapt.feature_based</span> <span class="kn">import</span> <span class="n">CORAL</span>
 
 <span class="n">save_preds</span> <span class="o">=</span> <span class="n">SavePrediction</span><span class="p">()</span>
@@ -776,11 +722,11 @@ New covariance difference: 0.000624
 Fit estimator...
 </pre></div></div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">X_transformed</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_features</span><span class="p">(</span><span class="n">Xs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;src&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 <span class="n">ani</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animate</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -788,40 +734,26 @@ Fit estimator...
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/examples_Regression_33_0.png" src="../_images/examples_Regression_33_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ani</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Output hidden; open in https://colab.research.google.com to view.
-</pre></div></div>
-</div>
+<p><img alt="coral" src="../_images/coral.gif" /></p>
 <p>As we can see. when using CORAL method, source input data are translated closer to target data. However, for this example, this is not enough to obtain a good model on the target domain.</p>
 </section>
 <section id="TrAdaBoostR2">
 <h2>TrAdaBoostR2<a class="headerlink" href="#TrAdaBoostR2" title="Permalink to this headline"></a></h2>
 <p>We now consider an instance-based method: <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a>. This method consists in a reverse boosting algorithm decreasing the weights of source data poorly predicted at each boosting iteraton.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">adapt.instance_based</span> <span class="kn">import</span> <span class="n">TrAdaBoostR2</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">TrAdaBoostR2</span><span class="p">(</span><span class="n">get_model</span><span class="p">(),</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -853,27 +785,27 @@ Iteration 12 - Error: 0.5000
 Iteration 13 - Error: 0.5000
 Iteration 14 - Error: 0.5000
 Iteration 15 - Error: 0.5000
-Iteration 16 - Error: 0.4436
-Iteration 17 - Error: 0.4358
-Iteration 18 - Error: 0.3870
-Iteration 19 - Error: 0.3309
-Iteration 20 - Error: 0.2878
-Iteration 21 - Error: 0.2025
-Iteration 22 - Error: 0.1251
-Iteration 23 - Error: 0.0577
-Iteration 24 - Error: 0.0391
-Iteration 25 - Error: 0.0311
-Iteration 26 - Error: 0.0234
-Iteration 27 - Error: 0.0199
-Iteration 28 - Error: 0.0187
-Iteration 29 - Error: 0.0183
+Iteration 16 - Error: 0.4443
+Iteration 17 - Error: 0.4412
+Iteration 18 - Error: 0.3904
+Iteration 19 - Error: 0.3342
+Iteration 20 - Error: 0.2935
+Iteration 21 - Error: 0.2071
+Iteration 22 - Error: 0.1451
+Iteration 23 - Error: 0.0569
+Iteration 24 - Error: 0.0438
+Iteration 25 - Error: 0.0251
+Iteration 26 - Error: 0.0243
+Iteration 27 - Error: 0.0221
+Iteration 28 - Error: 0.0202
+Iteration 29 - Error: 0.0170
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="k">def</span> <span class="nf">animate_tradaboost</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
     <span class="n">i</span> <span class="o">*=</span> <span class="mi">10</span>
@@ -885,40 +817,26 @@ Iteration 29 - Error: 0.0183
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">ani</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animate_tradaboost</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="mi">299</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/examples_Regression_40_0.png" src="../_images/examples_Regression_40_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ani</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Output hidden; open in https://colab.research.google.com to view.
-</pre></div></div>
-</div>
+<p><img alt="trada" src="../_images/tradaboost.gif" /></p>
 <p>As we can see on the figure above, <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a> perfroms very well on this toy DA issue! The importance weights are described by the size of data points. We observe that the weights of source instances close to 0 are decreased as the weights of target instances increase. This source instances indeed misleaded the fitting of the network on the target domain. Decreasing their weights helps then a lot to
 obtain a good target model.</p>
 </section>
@@ -926,10 +844,10 @@ obtain a good target model.</p>
 <h2>RegularTransferNN<a class="headerlink" href="#RegularTransferNN" title="Permalink to this headline"></a></h2>
 <p>Finally, we consider here the paremeter-based method <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a>. This method fits the target labeled data with a regularized loss. During training, the mean squared error on target data is regularized with the euclidean distance between the target model parameters and the ones of a pre-trained source model.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">adapt.parameter_based</span> <span class="kn">import</span> <span class="n">RegularTransferNN</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -943,40 +861,26 @@ obtain a good target model.</p>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">ani</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animate</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/examples_Regression_46_0.png" src="../_images/examples_Regression_46_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ani</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Output hidden; open in https://colab.research.google.com to view.
-</pre></div></div>
-</div>
+<p><img alt="regular" src="../_images/regular.gif" /></p>
 </section>
 </section>
 
