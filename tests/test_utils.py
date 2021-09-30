@@ -270,7 +270,7 @@ estimators = [
     Ridge(alpha=10, fit_intercept=False, tol=0.1),
     DecisionTreeClassifier(max_depth=10),
     AdaBoostRegressor(Ridge(alpha=0.01)),
-    TransformedTargetRegressor(Ridge(alpha=25), StandardScaler()),
+    TransformedTargetRegressor(regressor=Ridge(alpha=25), transformer=StandardScaler()),
     MultiOutputRegressor(Ridge(alpha=0.3)),
     make_pipeline(StandardScaler(), Ridge(alpha=0.2)),
     KerasClassifier(_get_model_Sequential, input_shape=(1,)),
