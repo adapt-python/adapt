@@ -364,6 +364,7 @@ class GradientHandler(Layer):
     """
     def __init__(self, lambda_init=1., name="g_handler"):
         super().__init__(name=name)
+        self.lambda_init=1.
         self.lambda_ = tf.Variable(lambda_init,
                                    trainable=False,
                                    dtype="float32")
@@ -382,6 +383,21 @@ class GradientHandler(Layer):
         x, custom gradient function
         """
         return _grad_handler(x, self.lambda_)
+
+
+    def get_config(self):
+        """
+        Return config dictionnary.
+        
+        Returns
+        -------
+        dict
+        """
+        config = super().get_config().copy()
+        config.update({
+            'lambda_init': self.lambda_init
+        })
+        return config
 
 
 def make_classification_da(n_samples=100, 
