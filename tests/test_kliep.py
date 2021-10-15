@@ -4,8 +4,20 @@ Test functions for kliep module.
 
 import numpy as np
 from sklearn.linear_model import LinearRegression
+from sklearn.base import BaseEstimator
 
 from adapt.instance_based import KLIEP
+
+
+class DummyEstimator(BaseEstimator):
+    
+    def __init__(self):
+        pass
+    
+    def fit(self, X, y):
+        self.y = y
+        return self
+
 
 np.random.seed(0)
 Xs = np.concatenate((
@@ -34,3 +46,21 @@ def test_fit():
     assert model.weights_[:50].sum() > 90
     assert model.weights_[50:].sum() < 0.5
     assert np.abs(model.predict(Xt) - yt).sum() < 20
+    
+
+def test_fit_estimator_bootstrap_index():
+    np.random.seed(0)
+    ys_ = np.random.randn(100)
+    model = KLIEP(DummyEstimator(),
+                  sigmas=[10, 100])
+    model.fit_estimator(Xs, ys_, sample_weight=np.random.random(len(ys)))
+    assert len(set(list(model.estimator_.y.ravel())) & set(list(ys_.ravel()))) > 50
+    
+    
+def test_fit_estimator_sample_weight_zeros():
+    np.random.seed(0)
+    ys_ = np.random.randn(100)
+    model = KLIEP(DummyEstimator(),
+                  sigmas=[10, 100])
+    model.fit_estimator(Xs, ys_, sample_weight=np.zeros(len(ys)))
+    assert len(set(list(model.estimator_.y.ravel())) & set(list(ys_.ravel()))) > 50

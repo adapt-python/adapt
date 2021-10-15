@@ -73,7 +73,7 @@ class MDD(BaseDeepFeature):
     task_ : tensorflow Model
         Principal task network.
         
-    task_adv_ : tensorflow Model
+    discriminator_ : tensorflow Model
         Adversarial task network.
     
     model_ : tensorflow Model

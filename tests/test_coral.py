@@ -4,6 +4,7 @@ Test functions for coral module.
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+from scipy import linalg
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense
@@ -62,6 +63,17 @@ def test_fit_coral():
     assert np.abs(model.estimator_.coef_[0][0] /
            model.estimator_.coef_[0][1] + 0.5) < 0.1
     assert (model.predict(Xt) == yt).sum() / len(Xt) >= 0.99
+    
+    
+def test_fit_coral_complex():
+    np.random.seed(0)
+    model = CORAL(LogisticRegression(), lambda_=10000.)
+    Xs_ = np.random.randn(10, 100)
+    Xt_ = np.random.randn(10, 100)
+    model.fit(Xs_, ys[:10], Xt_)
+    assert np.iscomplexobj(linalg.inv(linalg.sqrtm(model.Cs_)))
+    assert np.iscomplexobj(linalg.sqrtm(model.Ct_))
+    model.predict(Xs_)
 
 
 def test_fit_deepcoral():

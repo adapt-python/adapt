@@ -290,6 +290,7 @@ to covariateshift adaptation". In NIPS 2007
                 sample_weight /= (sample_weight.sum() + EPS)
             if sample_weight.sum() <= 0:
                 sample_weight = np.ones(len(sample_weight))
+                sample_weight /= (sample_weight.sum() + EPS)
             bootstrap_index = np.random.choice(
             len(X), size=len(X), replace=True,
             p=sample_weight)

@@ -364,7 +364,7 @@ class GradientHandler(Layer):
     """
     def __init__(self, lambda_init=1., name="g_handler"):
         super().__init__(name=name)
-        self.lambda_init=1.
+        self.lambda_init=lambda_init
         self.lambda_ = tf.Variable(lambda_init,
                                    trainable=False,
                                    dtype="float32")
