@@ -433,6 +433,9 @@ def test_gradienthandler(lambda_):
         gradient = tape.gradient(grad_handler(inputs),
                                  inputs)
     assert np.all(gradient == lambda_ * np.ones(3))
+    config = grad_handler.get_config()
+    assert config['lambda_init'] == lambda_
+    
 
 
 def test_make_classification_da():

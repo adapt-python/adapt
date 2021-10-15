@@ -288,6 +288,9 @@ to covariateshift adaptation". In NIPS 2007
         else:
             if sample_weight is not None:
                 sample_weight /= (sample_weight.sum() + EPS)
+            if sample_weight.sum() <= 0:
+                sample_weight = np.ones(len(sample_weight))
+                sample_weight /= (sample_weight.sum() + EPS)
             bootstrap_index = np.random.choice(
             len(X), size=len(X), replace=True,
             p=sample_weight)
@@ -359,7 +362,7 @@ to covariateshift adaptation". In NIPS 2007
             alpha += b * ((((1-np.dot(np.transpose(b), alpha)) /
                             (np.dot(np.transpose(b), b) + EPS))))
             alpha = np.maximum(0, alpha)
-            alpha /= np.dot(np.transpose(b), alpha)
+            alpha /= (np.dot(np.transpose(b), alpha) + EPS)
             objective = np.mean(np.log(np.dot(A, alpha) + EPS))
             k += 1
             
@@ -389,7 +392,7 @@ to covariateshift adaptation". In NIPS 2007
                                         centers,
                                         sigma),
                     alphas
-                )
+                ) + EPS
             ))
             cv_scores.append(j_score)
         return cv_scores

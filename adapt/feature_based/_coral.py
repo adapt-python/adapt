@@ -196,8 +196,17 @@ class CORAL:
           
         self.Cs_ = self.lambda_ * cov_Xs + np.eye(Xs.shape[1])
         self.Ct_ = self.lambda_ * cov_Xt + np.eye(Xt.shape[1])
-        Xs_emb = np.matmul(Xs, linalg.inv(linalg.sqrtm(self.Cs_)))
-        Xs_emb = np.matmul(Xs_emb, linalg.sqrtm(self.Ct_))
+        
+        Cs_sqrt_inv = linalg.inv(linalg.sqrtm(self.Cs_))
+        Ct_sqrt = linalg.sqrtm(self.Ct_)
+        
+        if np.iscomplexobj(Cs_sqrt_inv):
+            Cs_sqrt_inv = Cs_sqrt_inv.real
+        if np.iscomplexobj(Ct_sqrt):
+            Ct_sqrt = Ct_sqrt.real
+        
+        Xs_emb = np.matmul(Xs, Cs_sqrt_inv)
+        Xs_emb = np.matmul(Xs_emb, Ct_sqrt)
         
         if self.verbose:
             new_cov_Xs = np.cov(Xs_emb, rowvar=False)
@@ -280,8 +289,16 @@ class CORAL:
         if domain in ["tgt", "target"]:
             X_emb = X
         elif domain in ["src", "source"]:
-            X_emb = np.matmul(X, linalg.inv(linalg.sqrtm(self.Cs_)))
-            X_emb = np.matmul(X_emb, linalg.sqrtm(self.Ct_))
+            Cs_sqrt_inv = linalg.inv(linalg.sqrtm(self.Cs_))
+            Ct_sqrt = linalg.sqrtm(self.Ct_)
+
+            if np.iscomplexobj(Cs_sqrt_inv):
+                Cs_sqrt_inv = Cs_sqrt_inv.real
+            if np.iscomplexobj(Ct_sqrt):
+                Ct_sqrt = Ct_sqrt.real
+            
+            X_emb = np.matmul(X, Cs_sqrt_inv)
+            X_emb = np.matmul(X_emb, Ct_sqrt)
         else:
             raise ValueError("`domain `argument "
                              "should be `tgt` or `src`, "
