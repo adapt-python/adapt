@@ -54,7 +54,7 @@ def test_fit_estimator_bootstrap_index():
     model = KLIEP(DummyEstimator(),
                   sigmas=[10, 100])
     model.fit_estimator(Xs, ys_, sample_weight=np.random.random(len(ys)))
-    assert len(set(list(model.estimator_.y.ravel())) & set(list(ys_.ravel()))) > 50
+    assert len(set(list(model.estimator_.y.ravel())) & set(list(ys_.ravel()))) > 33
     
     
 def test_fit_estimator_sample_weight_zeros():
@@ -63,4 +63,4 @@ def test_fit_estimator_sample_weight_zeros():
     model = KLIEP(DummyEstimator(),
                   sigmas=[10, 100])
     model.fit_estimator(Xs, ys_, sample_weight=np.zeros(len(ys)))
-    assert len(set(list(model.estimator_.y.ravel())) & set(list(ys_.ravel()))) > 50
+    assert len(set(list(model.estimator_.y.ravel())) & set(list(ys_.ravel()))) > 33
