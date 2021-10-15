@@ -73,7 +73,7 @@ def test_fit_coral_complex():
     model.fit(Xs_, ys[:10], Xt_)
     assert np.iscomplexobj(linalg.inv(linalg.sqrtm(model.Cs_)))
     assert np.iscomplexobj(linalg.sqrtm(model.Ct_))
-    model.predict(Xs_)
+    model.predict(Xs_, domain="src")
 
 
 def test_fit_deepcoral():
