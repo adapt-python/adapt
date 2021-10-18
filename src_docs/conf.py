@@ -52,8 +52,10 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-#master_doc = 'index'
-#main_doc = "contents"
+#root_doc = "contents"
+#root_doc = "toctree_generation"
+#master_doc = "toctree_generation"
+master_doc = "index"
 
 # -- Options for HTML output -------------------------------------------------
 
