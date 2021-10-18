@@ -123,7 +123,7 @@ class MCD(BaseDeepFeature):
         
     References
     ----------
-    .. [1] `[1] <https://arxiv.org/pdf/1702.05464.pdf>`_ K. Saito, K. Watanabe, \
+    .. [1] `[1] <https://arxiv.org/pdf/1712.02560.pdf>`_ K. Saito, K. Watanabe, \
 Y. Ushiku, and T. Harada. "Maximum  classifier  discrepancy  for  unsupervised  \
 domain adaptation". In CVPR, 2018.
     """

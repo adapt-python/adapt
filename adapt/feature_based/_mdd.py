@@ -100,7 +100,7 @@ class MDD(BaseDeepFeature):
         
     References
     ----------
-    .. [1] `[1] <https://arxiv.org/pdf/1702.05464.pdf>`_ Y. Zhang, \
+    .. [1] `[1] <https://arxiv.org/pdf/1904.05801.pdf>`_ Y. Zhang, \
 T. Liu, M. Long, and M. Jordan. "Bridging theory and algorithm for \
 domain adaptation". ICML, 2019.
     """
