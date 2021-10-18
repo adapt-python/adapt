@@ -9,6 +9,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 
 from adapt.feature_based import WDGRL
+from adapt.feature_based._wdgrl import _Interpolation
 
 Xs = np.concatenate((
     np.linspace(0, 1, 100).reshape(-1, 1),
@@ -49,6 +50,19 @@ def _get_task(input_shape=(1,), output_shape=(1,)):
                     input_shape=input_shape))
     model.compile(loss="mse", optimizer=Adam(0.1))
     return model
+
+
+def test_interpolation():
+    np.random.seed(0)
+    tf.random.set_seed(0)
+
+    zeros = tf.identity(np.zeros((3, 1), dtype=np.float32))
+    ones= tf.identity(np.ones((3, 1), dtype=np.float32))
+
+    inter, dist = _Interpolation().call([zeros, ones])
+    assert np.all(np.round(dist, 3) == np.round(inter, 3))
+    assert np.all(inter >= zeros)
+    assert np.all(inter <= ones)
 
 
 def test_fit_lambda_zero():
