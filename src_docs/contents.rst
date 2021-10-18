@@ -64,6 +64,7 @@ and **target** distributions. The **task** is then learned in this **encoded fea
    feature_based.mSDA
    feature_based.MCD
    feature_based.MDD
+   feature_based.WDGRL
 
    
 .. _adapt.instance_based:
