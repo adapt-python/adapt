@@ -55,7 +55,7 @@ exclude_patterns = []
 #root_doc = "contents"
 #root_doc = "toctree_generation"
 #master_doc = "toctree_generation"
-master_doc = "contents"
+master_doc = "index"
 
 # -- Options for HTML output -------------------------------------------------
 
