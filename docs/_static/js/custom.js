@@ -89,6 +89,6 @@ function changeColor() {
 
 changeColor();
 attributes();
-changeLinks();
+//changeLinks();
 //addLinks();
 

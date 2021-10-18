@@ -6,7 +6,7 @@
   <title>Index &mdash; adapt 0.1.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
@@ -37,13 +37,13 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-<p class="caption"><span class="caption-text">Installation</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu"> 
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="contents.html#adapt-feature-based">Feature-based</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.BaseDeepFeature.html">BaseDeepFeature</a></li>
@@ -55,6 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.mSDA.html">mSDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.MCD.html">MCD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.MDD.html">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.WDGRL.html">WDGRL</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contents.html#adapt-instance-based">Instance-based</a><ul>
@@ -71,8 +72,21 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_arrays.html">check_arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_one_array.html">check_one_array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_estimator.html">check_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_network.html">check_network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.get_default_encoder.html">get_default_encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.get_default_task.html">get_default_task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.get_default_discriminator.html">get_default_discriminator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.GradientHandler.html">GradientHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.make_classification_da.html">make_classification_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.make_regression_da.html">make_regression_da</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Examples Gallery</span></p>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
@@ -80,7 +94,6 @@
 <li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#mSDA">mSDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#Instance-Based">Instance Based</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#See-also">See also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/Two_moons.html">Two Moons</a><ul>
@@ -110,12 +123,10 @@
 <li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#CORAL">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#RegularTransferNN">RegularTransferNN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/Regression.html#See-also">See also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/sample_bias.html">Sample Bias 1D</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/sample_bias.html#Setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/sample_bias.html#Source-Only">Source Only</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/sample_bias.html#KMM">KMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/sample_bias.html#KLIEP">KLIEP</a></li>
 </ul>
@@ -137,7 +148,7 @@
 </ul>
 </li>
 </ul>
-  
+ 
         </div>
       </div>
     </nav>
@@ -177,6 +188,7 @@
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#T"><strong>T</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  
 </div>
 <h2 id="_">_</h2>
@@ -200,6 +212,8 @@
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.__init__">(adapt.feature_based.MDD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.mSDA.html#adapt.feature_based.mSDA.__init__">(adapt.feature_based.mSDA method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.__init__">(adapt.feature_based.WDGRL method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.__init__">(adapt.instance_based.KLIEP method)</a>
 </li>
@@ -250,8 +264,6 @@
 </li>
       <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL">CORAL (class in adapt.feature_based)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.create_model">create_model() (adapt.feature_based.ADDA method)</a>
 
       <ul>
@@ -264,6 +276,8 @@
         <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.create_model">(adapt.feature_based.MCD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.create_model">(adapt.feature_based.MDD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.create_model">(adapt.feature_based.WDGRL method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -304,6 +318,8 @@
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.fit">(adapt.feature_based.MDD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.mSDA.html#adapt.feature_based.mSDA.fit">(adapt.feature_based.mSDA method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.fit">(adapt.feature_based.WDGRL method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.fit">(adapt.instance_based.KLIEP method)</a>
 </li>
@@ -387,6 +403,8 @@
 </li>
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.get_loss">(adapt.feature_based.MDD method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.get_loss">(adapt.feature_based.WDGRL method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -402,6 +420,8 @@
         <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.get_metrics">(adapt.feature_based.MCD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.get_metrics">(adapt.feature_based.MDD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.get_metrics">(adapt.feature_based.WDGRL method)</a>
 </li>
       </ul></li>
       <li><a href="generated/adapt.utils.GradientHandler.html#adapt.utils.GradientHandler">GradientHandler() (in module adapt.utils)</a>
@@ -461,6 +481,8 @@
 </li>
         <li><a href="generated/adapt.feature_based.mSDA.html#adapt.feature_based.mSDA.predict">(adapt.feature_based.mSDA method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.predict">(adapt.feature_based.WDGRL method)</a>
+</li>
         <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.predict">(adapt.instance_based.KLIEP method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.predict">(adapt.instance_based.KMM method)</a>
@@ -491,6 +513,8 @@
 </li>
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.predict_disc">(adapt.feature_based.MDD method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.predict_disc">(adapt.feature_based.WDGRL method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -512,6 +536,8 @@
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.predict_features">(adapt.feature_based.MDD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.mSDA.html#adapt.feature_based.mSDA.predict_features">(adapt.feature_based.mSDA method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.predict_features">(adapt.feature_based.WDGRL method)</a>
 </li>
       </ul></li>
       <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.predict_weights">predict_weights() (adapt.instance_based.KLIEP method)</a>
@@ -553,6 +579,14 @@
       <li><a href="generated/adapt.instance_based.TrAdaBoostR2.html#adapt.instance_based.TrAdaBoostR2">TrAdaBoostR2 (class in adapt.instance_based)</a>
 </li>
       <li><a href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2">TwoStageTrAdaBoostR2 (class in adapt.instance_based)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL">WDGRL (class in adapt.feature_based)</a>
 </li>
   </ul></td>
 </tr></table>

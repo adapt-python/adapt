@@ -7,7 +7,7 @@
   <title>Classification &mdash; adapt 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
@@ -40,13 +40,13 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-<p class="caption"><span class="caption-text">Installation</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu"> 
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.BaseDeepFeature.html">BaseDeepFeature</a></li>
@@ -58,6 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.mSDA.html">mSDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MCD.html">MCD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MDD.html">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.WDGRL.html">WDGRL</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
@@ -74,16 +75,28 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_arrays.html">check_arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_one_array.html">check_one_array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_estimator.html">check_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_network.html">check_network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_encoder.html">get_default_encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_task.html">get_default_task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_discriminator.html">get_default_discriminator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.GradientHandler.html">GradientHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_classification_da.html">make_classification_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_regression_da.html">make_regression_da</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Examples Gallery</span></p>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="#">Classification</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="##Experimental-Setup">Experimental Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##Src-Only">Src Only</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##mSDA">mSDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##DANN">DANN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##Instance-Based">Instance Based</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##See-also">See also</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mSDA">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Instance-Based">Instance Based</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Two_moons.html">Two Moons</a><ul>
@@ -113,12 +126,10 @@
 <li class="toctree-l2"><a class="reference internal" href="Regression.html#CORAL">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Regression.html#RegularTransferNN">RegularTransferNN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Regression.html#See-also">See also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="sample_bias.html">Sample Bias 1D</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="sample_bias.html#Setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sample_bias.html#Source-Only">Source Only</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sample_bias.html#KMM">KMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sample_bias.html#KLIEP">KLIEP</a></li>
 </ul>
@@ -140,7 +151,7 @@
 </ul>
 </li>
 </ul>
-  
+ 
         </div>
       </div>
     </nav>
@@ -436,8 +447,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Classification">
 <h1>Classification<a class="headerlink" href="#Classification" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="09bc92d00b19480cb23f3b0fe9c986ff" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1ANQUix9Y6V4RXu-vAaCFGmU979d5m4bO?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="d524f1683c254916b86993a49a4e365e" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Classification.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="aaf720d69a4845cfb3f988129bcfeff6" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1ANQUix9Y6V4RXu-vAaCFGmU979d5m4bO?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="e63355d9179b498cbdca4110c5e996cd" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Classification.ipynb">View on GitHub</a></p>
 </div><p>You will find here the application of DA methods from the ADAPT package on a simple two dimensional DA classification problem.</p>
 <p>First we import packages needed in the following. We will use <code class="docutils literal notranslate"><span class="pre">matplotlib</span> <span class="pre">Animation</span></code> tools in order to get a visual understanding of the mselected methods:</p>
 <div class="nbinput nblast docutils container">

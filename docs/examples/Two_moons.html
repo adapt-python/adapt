@@ -7,7 +7,7 @@
   <title>Two Moons &mdash; adapt 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
@@ -40,13 +40,13 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-<p class="caption"><span class="caption-text">Installation</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu"> 
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.BaseDeepFeature.html">BaseDeepFeature</a></li>
@@ -58,6 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.mSDA.html">mSDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MCD.html">MCD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MDD.html">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.WDGRL.html">WDGRL</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
@@ -74,8 +75,21 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_arrays.html">check_arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_one_array.html">check_one_array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_estimator.html">check_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_network.html">check_network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_encoder.html">get_default_encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_task.html">get_default_task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_discriminator.html">get_default_discriminator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.GradientHandler.html">GradientHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_classification_da.html">make_classification_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_regression_da.html">make_regression_da</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Examples Gallery</span></p>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Classification.html#Experimental-Setup">Experimental Setup</a></li>
@@ -83,17 +97,16 @@
 <li class="toctree-l2"><a class="reference internal" href="Classification.html#mSDA">mSDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Classification.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Classification.html#Instance-Based">Instance Based</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Classification.html#See-also">See also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#">Two Moons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="##Setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##Network">Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##Source-Only">Source Only</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##DANN">DANN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##ADDA">ADDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##DeepCORAL">DeepCORAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##mSDA">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mSDA">mSDA</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Rotation.html">Rotation</a><ul>
@@ -113,12 +126,10 @@
 <li class="toctree-l2"><a class="reference internal" href="Regression.html#CORAL">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Regression.html#RegularTransferNN">RegularTransferNN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Regression.html#See-also">See also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="sample_bias.html">Sample Bias 1D</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="sample_bias.html#Setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sample_bias.html#Source-Only">Source Only</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sample_bias.html#KMM">KMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sample_bias.html#KLIEP">KLIEP</a></li>
 </ul>
@@ -140,7 +151,7 @@
 </ul>
 </li>
 </ul>
-  
+ 
         </div>
       </div>
     </nav>
@@ -436,8 +447,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Two-Moons">
 <h1>Two Moons<a class="headerlink" href="#Two-Moons" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="0160ff363f9146f49af30cb48bc79126" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Tz-TIkHI8ashHP90Im6D3tMjZ3lkR7s6?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="9f3fb6765a8942c59af6faeb9f67b5c6" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Two_moons.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="6037fc05f3434c7a8a4c8e24fadcea39" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Tz-TIkHI8ashHP90Im6D3tMjZ3lkR7s6?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="0ecce03b3c06482c86602020efec7675" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Two_moons.ipynb">View on GitHub</a></p>
 </div><p>The following example is a binary classification domain adaptation issue. The goal is to learn the classification task on the target data (black points) knowing only the labels on the source data (red and blue points).</p>
 <p>The following methods are being tested:</p>
 <ul class="simple">
@@ -552,7 +563,9 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>## Source Only</p>
+</section>
+<section id="Source-Only">
+<h2>Source Only<a class="headerlink" href="#Source-Only" title="Permalink to this headline"></a></h2>
 <p>For source only, we use a DANN instance with lambda set to zero. Thus, the gradient of the discriminator is not back-propagated through the encoder.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
@@ -640,7 +653,9 @@ div.rendered_html tbody tr:hover {
 <img alt="../_images/examples_Two_moons_14_0.png" src="../_images/examples_Two_moons_14_0.png" />
 </div>
 </div>
-<p>## <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.DANN.html">DANN</a></p>
+</section>
+<section id="DANN">
+<h2><a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.DANN.html">DANN</a><a class="headerlink" href="#DANN" title="Permalink to this headline"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
@@ -727,7 +742,9 @@ div.rendered_html tbody tr:hover {
 <img alt="../_images/examples_Two_moons_19_0.png" src="../_images/examples_Two_moons_19_0.png" />
 </div>
 </div>
-<p>## <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.ADDA.html">ADDA</a></p>
+</section>
+<section id="ADDA">
+<h2><a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.ADDA.html">ADDA</a><a class="headerlink" href="#ADDA" title="Permalink to this headline"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
@@ -815,7 +832,9 @@ div.rendered_html tbody tr:hover {
 <img alt="../_images/examples_Two_moons_24_0.png" src="../_images/examples_Two_moons_24_0.png" />
 </div>
 </div>
-<p>## <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></p>
+</section>
+<section id="DeepCORAL">
+<h2><a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a><a class="headerlink" href="#DeepCORAL" title="Permalink to this headline"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
@@ -904,7 +923,9 @@ div.rendered_html tbody tr:hover {
 <img alt="../_images/examples_Two_moons_29_0.png" src="../_images/examples_Two_moons_29_0.png" />
 </div>
 </div>
-<p>## <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.mSDA.html">mSDA</a></p>
+</section>
+<section id="mSDA">
+<h2><a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.mSDA.html">mSDA</a><a class="headerlink" href="#mSDA" title="Permalink to this headline"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>

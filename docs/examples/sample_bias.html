@@ -7,7 +7,7 @@
   <title>Sample Bias 1D &mdash; adapt 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
@@ -40,13 +40,13 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-<p class="caption"><span class="caption-text">Installation</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu"> 
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.BaseDeepFeature.html">BaseDeepFeature</a></li>
@@ -58,6 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.mSDA.html">mSDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MCD.html">MCD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MDD.html">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.WDGRL.html">WDGRL</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
@@ -74,8 +75,21 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_arrays.html">check_arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_one_array.html">check_one_array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_estimator.html">check_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_network.html">check_network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_encoder.html">get_default_encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_task.html">get_default_task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_discriminator.html">get_default_discriminator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.GradientHandler.html">GradientHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_classification_da.html">make_classification_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_regression_da.html">make_regression_da</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Examples Gallery</span></p>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Classification.html#Experimental-Setup">Experimental Setup</a></li>
@@ -83,7 +97,6 @@
 <li class="toctree-l2"><a class="reference internal" href="Classification.html#mSDA">mSDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Classification.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Classification.html#Instance-Based">Instance Based</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Classification.html#See-also">See also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Two_moons.html">Two Moons</a><ul>
@@ -113,14 +126,12 @@
 <li class="toctree-l2"><a class="reference internal" href="Regression.html#CORAL">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Regression.html#RegularTransferNN">RegularTransferNN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Regression.html#See-also">See also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#">Sample Bias 1D</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="##Setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##Source-Only">Source Only</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##KMM">KMM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="##KLIEP">KLIEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#KLIEP">KLIEP</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="sample_bias_2d.html">Sample Bias 2D</a><ul>
@@ -140,7 +151,7 @@
 </ul>
 </li>
 </ul>
-  
+ 
         </div>
       </div>
     </nav>
@@ -436,8 +447,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Sample-Bias-1D">
 <h1>Sample Bias 1D<a class="headerlink" href="#Sample-Bias-1D" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="b24860a4cd68424a897692c13a620c0b" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Hbg2kDXKjKzeQKJSwxzaV7pwbmORhyA3?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="5a5757d20bfe474c8f302862ac0a538e" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/sample_bias.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="7012aa30846440548b9147917143c2cb" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Hbg2kDXKjKzeQKJSwxzaV7pwbmORhyA3?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="b748ea653e9d45f4997c6dd8062ba686" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/sample_bias.ipynb">View on GitHub</a></p>
 </div><p>The following example is a 1D regression domain adaptation issue. The goal is to learn the regression task on the target data (orange points) knowing only the labels on the source data (blue points).</p>
 <p>In this example, there is a sample bias between the source and target datasets. The sources are drawn according to a gaussian distribution whereas the targets are uniformly distributed.</p>
 <p>The following methods are being tested:</p>
@@ -563,7 +574,9 @@ div.rendered_html tbody tr:hover {
 <img alt="../_images/examples_sample_bias_9_0.png" src="../_images/examples_sample_bias_9_0.png" />
 </div>
 </div>
-<p>## <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.KMM.html">KMM</a></p>
+</section>
+<section id="KMM">
+<h2><a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.KMM.html">KMM</a><a class="headerlink" href="#KMM" title="Permalink to this headline"></a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
@@ -650,7 +663,9 @@ Fitting estimator...
 <img alt="../_images/examples_sample_bias_12_0.png" src="../_images/examples_sample_bias_12_0.png" />
 </div>
 </div>
-<p>## <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.KLIEP.html">KLIEP</a></p>
+</section>
+<section id="KLIEP">
+<h2><a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.KLIEP.html">KLIEP</a><a class="headerlink" href="#KLIEP" title="Permalink to this headline"></a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
