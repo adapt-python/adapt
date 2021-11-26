@@ -209,7 +209,7 @@ class DeepCORAL(BaseDeepFeature):
         return outputs
 
 
-    def get_loss(self, inputs_ys,
+    def get_loss(self, inputs_ys, inputs_yt,
                   task_src, task_tgt,
                   cov_src, cov_tgt):
         

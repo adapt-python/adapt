@@ -259,7 +259,7 @@ In NIPS, 2018
         return outputs
 
     
-    def get_loss(self, inputs_ys,
+    def get_loss(self, inputs_ys, inputs_yt,
                  task_src, task_tgt,
                  disc_src, disc_tgt,
                  task_src_nograd,

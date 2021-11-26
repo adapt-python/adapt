@@ -407,7 +407,7 @@ In CVPR, 2017.
         return outputs
 
 
-    def get_loss(self, inputs_ys, disc_src, disc_tgt,
+    def get_loss(self, inputs_ys, inputs_yt, disc_src, disc_tgt,
                   disc_tgt_nograd, task_tgt):
         
         loss_disc = (-K.log(disc_src + EPS)

@@ -50,7 +50,8 @@ def is_equal_estimator(v1, v2):
     elif isinstance(v1, Tree):
         pass # TODO create a function to check if two tree are equal
     else:
-        assert v1 == v2
+        if not "input" in str(v1):
+            assert v1 == v2
     return True
 
     
