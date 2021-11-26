@@ -12,5 +12,6 @@ from ._deepcoral import DeepCORAL
 from ._mcd import MCD
 from ._mdd import MDD
 from ._wdgrl import WDGRL
+from ._cdan import CDAN
 
-__all__ = ["FE", "CORAL", "DeepCORAL", "ADDA", "DANN", "mSDA", "MCD", "MDD", "WDGRL", "BaseDeepFeature"]
+__all__ = ["FE", "CORAL", "DeepCORAL", "ADDA", "DANN", "mSDA", "MCD", "MDD", "WDGRL", "BaseDeepFeature", "CDAN"]
