@@ -343,9 +343,7 @@ In NIPS, 2018
         return metrics
     
     
-    def _build(self, shape_Xs, shape_ys,
-                    shape_Xt, shape_yt):
-        
+    def _initialize_networks(self, shape_Xt):
         # Call predict to avoid strange behaviour with
         # Sequential model whith unspecified input_shape
         zeros_enc_ = self.encoder_.predict(np.zeros((1,) + shape_Xt));
@@ -357,39 +355,6 @@ In NIPS, 2018
                                        np.expand_dims(zeros_task_, 1))
             zeros_mapping_ = np.reshape(zeros_mapping_, (1, -1))
             self.discriminator_.predict(zeros_mapping_);
-                
-        inputs_Xs = Input(shape_Xs)
-        inputs_ys = Input(shape_ys)
-        inputs_Xt = Input(shape_Xt)
-                
-        if shape_yt is None:
-            inputs_yt = None
-            inputs = [inputs_Xs, inputs_ys, inputs_Xt]
-        else:
-            inputs_yt = Input(shape_yt)
-            inputs = [inputs_Xs, inputs_ys,
-                      inputs_Xt, inputs_yt]
-        
-        outputs = self.create_model(inputs_Xs=inputs_Xs,
-                                    inputs_Xt=inputs_Xt)
-        
-        self.model_ = Model(inputs, outputs)
-        
-        loss = self.get_loss(inputs_ys=inputs_ys,
-                              **outputs)
-        metrics = self.get_metrics(inputs_ys=inputs_ys,
-                                    inputs_yt=inputs_yt,
-                                    **outputs)
-        
-        self.model_.add_loss(loss)
-        for k in metrics:            
-            self.model_.add_metric(tf.reduce_mean(metrics[k]),
-                                   name=k, aggregation="mean")
-        
-        tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
-        self.model_.compile(optimizer=self.optimizer)
-        self.history_ = {}
-        return self
     
     
     def predict_disc(self, X):

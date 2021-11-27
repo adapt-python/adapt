@@ -45,7 +45,7 @@ class CustomDeep(BaseDeepFeature):
         return dict(task_s=task_s, task_t=task_t,
                     disc_s=disc_s, disc_t=disc_t)
     
-    def get_loss(self, inputs_ys,
+    def get_loss(self, inputs_ys, inputs_yt,
                  task_s, task_t,
                  disc_s, disc_t):
         
@@ -132,7 +132,7 @@ def test_basedeep_metrics():
     
 def test_basedeep_silent_methods():
     model = BaseDeepFeature()
-    model.get_loss(0)
+    model.get_loss(0, None)
     model.create_model(0, 0)
     
     
