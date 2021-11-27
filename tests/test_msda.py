@@ -14,7 +14,6 @@ from tensorflow.keras.optimizers import Adam
 from adapt.feature_based import mSDA
 from adapt.utils import make_classification_da
 
-
 Xs, ys, Xt, yt = make_classification_da()
 
 def _get_encoder(input_shape=(2,)):

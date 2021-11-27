@@ -244,14 +244,17 @@ class BaseDeepFeature:
         self.random_state = random_state
         
 
-    def _build(self, shape_Xs, shape_ys,
-                    shape_Xt, shape_yt):
-        
-        # Call predict to avoid strange behaviour with
-        # Sequential model whith unspecified input_shape
+    def _initialize_networks(self, shape_Xt):
         zeros_enc_ = self.encoder_.predict(np.zeros((1,) + shape_Xt));
         self.task_.predict(zeros_enc_);
         self.discriminator_.predict(zeros_enc_);
+    
+    
+    def _build(self, shape_Xs, shape_ys,
+                    shape_Xt, shape_yt):
+        # Call predict to avoid strange behaviour with
+        # Sequential model whith unspecified input_shape
+        self._initialize_networks(shape_Xt)
                 
         inputs_Xs = Input(shape_Xs)
         inputs_ys = Input(shape_ys)
@@ -271,6 +274,7 @@ class BaseDeepFeature:
         self.model_ = Model(inputs, outputs)
         
         loss = self.get_loss(inputs_ys=inputs_ys,
+                             inputs_yt=inputs_yt,
                               **outputs)
         metrics = self.get_metrics(inputs_ys=inputs_ys,
                                     inputs_yt=inputs_yt,
@@ -390,7 +394,7 @@ class BaseDeepFeature:
         pass
 
     
-    def get_loss(self, inputs_ys, **ouputs):
+    def get_loss(self, inputs_ys, inputs_yt, **ouputs):
         """
         Get loss.
         
@@ -398,6 +402,9 @@ class BaseDeepFeature:
         ----------
         inputs_ys : InputLayer
             Input layer for ys entries.
+            
+        inputs_yt : InputLayer
+            Input layer for yt entries.
         
         outputs : dict of tf Tensors
             Model outputs tensors.

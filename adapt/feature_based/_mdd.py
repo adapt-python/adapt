@@ -171,7 +171,7 @@ domain adaptation". ICML, 2019.
         return outputs
 
 
-    def get_loss(self, inputs_ys, task_src,
+    def get_loss(self, inputs_ys, inputs_yt, task_src,
                  task_src_nograd, task_tgt_nograd,
                  task_tgt, disc_src, disc_tgt):
         

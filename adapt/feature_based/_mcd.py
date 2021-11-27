@@ -238,7 +238,7 @@ domain adaptation". In CVPR, 2018.
         return outputs
 
 
-    def get_loss(self, inputs_ys, task_src,
+    def get_loss(self, inputs_ys, inputs_yt, task_src,
                   task_tgt, task_sec_src, task_sec_tgt):
         
         loss_task = 0.5 * (self.loss_(inputs_ys, task_src) + self.loss_(inputs_ys, task_sec_src))

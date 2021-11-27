@@ -1,5 +1,5 @@
 """
-Test functions for dann module.
+Test functions for wdgrl module.
 """
 
 import numpy as np

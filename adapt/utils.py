@@ -306,12 +306,17 @@ def get_default_encoder():
     return model
 
 
-def get_default_task():
+def get_default_task(activation=None):
     """
     Return a tensorflow Model of two hidden layers
     with 10 neurons each and relu activations. The
     last layer is composed of one neuron with linear
     activation.
+    
+    Parameters
+    ----------
+    activation : str (default=None)
+        Final activation
 
     Returns
     -------
@@ -321,7 +326,7 @@ def get_default_task():
     model.add(Flatten())
     model.add(Dense(10, activation="relu"))
     model.add(Dense(10, activation="relu"))
-    model.add(Dense(1, activation=None))
+    model.add(Dense(1, activation=activation))
     return model
 
 
