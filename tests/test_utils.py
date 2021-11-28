@@ -265,6 +265,13 @@ def test_check_network_compile():
             "Please use `model.compile(optimizer, loss)`." 
             in str(excinfo.value))
     
+    
+def test_check_network_high_dataset():
+    Xs, ys, Xt, yt = make_regression_da(100000, 1001)
+    net = _get_model_Sequential(compiled=True)
+    new_net = check_network(net, copy=True, compile_=True)
+    new_net.predict(Xs)
+    
 
 estimators = [
     Ridge(),
