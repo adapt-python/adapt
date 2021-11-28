@@ -18,6 +18,14 @@ from tensorflow.keras.layers import Layer, Dense, Flatten, Input
 from tensorflow.keras.models import clone_model
 
 
+def predict(self, x, **kwargs):
+    if (np.prod(x.shape) <= 10**8):
+        pred = self.__call__(tf.identity(x)).numpy()
+    else:
+        pred = Sequential.predict(self, x, **kwargs)
+    return pred
+
+
 def check_one_array(X, multisource=False):
     """
     Check array and reshape 1D array in 2D array
@@ -288,6 +296,9 @@ def check_network(network, copy=True,
                                  (display_name))
     else:        
         new_network = network
+    
+    # Override the predict method to speed the prediction for small dataset
+    new_network.predict = predict.__get__(new_network)
     return new_network
 
 
