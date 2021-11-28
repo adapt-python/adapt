@@ -61,7 +61,7 @@ def test_fit_lambda_zero():
               epochs=300, verbose=0)
     assert isinstance(model.model_, Model)
     assert model.history_['task_acc_s'][-1] > 0.9
-    assert model.history_['task_acc_t'][-1] < 0.6
+    assert model.history_['task_acc_t'][-1] < 0.7
 
 
 def test_fit_lambda_one_no_entropy():
