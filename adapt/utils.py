@@ -13,9 +13,48 @@ from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin, clone
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 import tensorflow as tf
+import tensorflow.keras.backend as K
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Layer, Dense, Flatten, Input
 from tensorflow.keras.models import clone_model
+
+
+def accuracy(y_true, y_pred):
+    """
+    Custom accuracy function which can handle
+    probas vector in both binary and multi classification
+    
+    Parameters
+    ----------
+    y_true : Tensor
+        True tensor.
+        
+    y_pred : Tensor
+        Predicted tensor.
+        
+    Returns
+    -------
+    Boolean Tensor
+    """
+    # TODO: accuracy can't handle 1D ys.
+    multi_columns_t = K.cast(K.greater(K.shape(y_true)[1], 1),
+                           "float32")
+    binary_t = K.reshape(K.sum(K.cast(K.greater(y_true, 0.5),
+                                    "float32"), axis=-1), (-1,))
+    multi_t = K.reshape(K.cast(K.argmax(y_true, axis=-1),
+                             "float32"), (-1,))
+    y_true = ((1 - multi_columns_t) * binary_t +
+              multi_columns_t * multi_t)
+    
+    multi_columns_p = K.cast(K.greater(K.shape(y_pred)[1], 1),
+                           "float32")
+    binary_p = K.reshape(K.sum(K.cast(K.greater(y_pred, 0.5),
+                                    "float32"), axis=-1), (-1,))
+    multi_p = K.reshape(K.cast(K.argmax(y_pred, axis=-1),
+                             "float32"), (-1,))
+    y_pred = ((1 - multi_columns_p) * binary_p +
+              multi_columns_p * multi_p)        
+    return tf.keras.metrics.get("acc")(y_true, y_pred)
 
 
 def predict(self, x, **kwargs):
@@ -25,111 +64,35 @@ def predict(self, x, **kwargs):
         pred = Sequential.predict(self, x, **kwargs)
     return pred
 
-
-def check_one_array(X, multisource=False):
+      
+def check_arrays(X, y):
     """
-    Check array and reshape 1D array in 2D array
-    of shape (-1, 1).
+    Check arrays and reshape 1D array in 2D array
+    of shape (-1, 1). Check if the length of X
+    match the length of y.
 
     Parameters
     ----------
     X : numpy array
         Input data.
-        
-    multisource : boolean (default=False)
-        Weither to accept list of arrays or not.
-        
-    Returns
-    -------
-    X
-    """
-    if multisource and isinstance(X, (tuple, list)):
-        if len(X) == 0:
-            raise ValueError("Length of given list or tuple is empty.")
-        for i in range(len(Xs)):
-            X[i] = check_array(X[i],
-                               ensure_2d=False,
-                               allow_nd=True)
-            if X[i].ndim == 1:
-                X[i] = X[i].reshape(-1, 1)
-            if i == 0:
-                dim = X[i].shape[1]
-            else:
-                dim_i = X[i].shape[1]
-                if dim_i != dim:
-                    raise ValueError(
-                        "All the given arrays are not of same "
-                        "dimension on axis 1, got: dim %i for index 0 "
-                        "and dim %i for index %i"%(dim, dim_i, i))
-    else:
-        X = check_array(X,
-                        ensure_2d=False,
-                        allow_nd=True)
-        if X.ndim == 1:
-            X = X.reshape(-1, 1)
-    return X
 
-      
-def check_arrays(Xs, ys, Xt, yt=None, multisource=False):
-    """
-    Check arrays and reshape 1D array in 2D array
-    of shape (-1, 1). Check if the length of Xs, Xt
-    match the length of ys, yt.
-
-    Parameters
-    ----------
-    Xs : numpy array
-        Source input data.
-
-    ys : numpy array
-        Source output data.
-
-    Xt : numpy array
-        Target input data.
-            
-    yt : numpy array, optional (default=None)
-        Target output data. `yt` is only used
-        for validation metrics.
-        
-    multisource : boolean (default=False)
-        Weither to accept list of arrays or not.
+    y : numpy array
+        Output data.
         
     Returns
     -------
-    Xs, ys, Xt, yt
-    """
-    if multisource and isinstance(Xs, (tuple, list)):
-        if isinstance(ys, (tuple, list)):
-            if not len(Xs) == len(ys):
-                raise ValueError(
-                    "`Xs` argument is of type list or tuple "
-                    "which is the multi-source setting. `ys` "
-                    "argument was expected to have the same length "
-                    "as Xs but got, len(Xs) = %i vs len(ys) = %i"%
-                    (len(Xs), len(ys)))
-        else:
-            raise ValueError("`Xs` argument is of type list or tuple "
-                             "which is the multi-source setting. `ys` "
-                             "argument was expected to be of same type but "
-                             "got, type(ys) = %s"%str(type(ys)))
-    
-    Xs = check_one_array(Xs, multisource=multisource)
-    Xt = check_one_array(Xt, multisource=multisource)
-    ys = check_one_array(ys, multisource=multisource)
-    
-    if len(Xs) != len(ys):
-        raise ValueError("Length of Xs and ys mismatch: %i != %i"%
-                         (len(Xs), len(ys)))
-    
-    if yt is not None:
-        yt = check_one_array(yt)
-        if len(Xt) != len(yt):
-            raise ValueError("Length of Xt and yt mismatch: %i != %i"%
-                             (len(Xt), len(yt)))
-    return Xs, ys, Xt, yt
+    X, y
+    """    
+    X = check_array(X, ensure_2d=True, allow_nd=True)
+    y = check_array(y, ensure_2d=False, allow_nd=True)
+    if len(X) != len(y):
+        raise ValueError("Length of X and y mismatch: %i != %i"%
+                         (len(X), len(y)))
+    return X, y
 
 
 def check_estimator(estimator=None, copy=True,
+                    name=None,
                     display_name="estimator",
                     task=None,
                     force_copy=False):
@@ -201,10 +164,9 @@ def check_estimator(estimator=None, copy=True,
             new_estimator = estimator    
     elif isinstance(estimator, Model):
         new_estimator = check_network(network=estimator,
-                                  copy=copy, 
-                                  display_name=display_name,
-                                  force_copy=force_copy,
-                                  compile_=True)
+                                    copy=copy, 
+                                  name=name,
+                                  force_copy=force_copy)
     else:
         raise ValueError("`%s` argument is neither a sklearn `BaseEstimator` "
                          "instance nor a tensorflow Model instance. "
@@ -214,8 +176,7 @@ def check_estimator(estimator=None, copy=True,
 
 
 def check_network(network, copy=True,
-                  compile_=False,
-                  display_name="network",
+                  name=None,
                   force_copy=False):
     """
     Check if the given network is a tensorflow Model.
@@ -231,20 +192,15 @@ def check_network(network, copy=True,
         Whether to return a copy of the network or not.
         If cloning fail, a warning is raised.
 
-    compile_ : boolean (default=False)
-        Whether to compile the network after cloning,
-        using copy of the network loss and optimizer.
-
-    display_name : str (default="network")
-        Name to display if an error or warning is raised
+    name : str (default="network")
+        Name for the network.
 
     force_copy : boolean (default=False)
         If True, an error is raised if the cloning failed.
     """
     if not isinstance(network, Model):
-        raise ValueError('Expected `%s` argument '
-                         'to be a `Model` instance, got: %s'%
-                         (display_name, str(network)))
+        raise ValueError('Expected `network` argument '
+                         'to be a `Model` instance, got: %s'%str(network))
     
     if copy:
         try:
@@ -262,47 +218,26 @@ def check_network(network, copy=True,
                 new_network = clone_model(network)
         except Exception as e:
             if force_copy:
-                raise ValueError("`%s` argument can't be duplicated. "
-                                 "Recorded exception: %s. "%
-                                 (display_name, e))
+                raise ValueError("`network` argument can't be duplicated. "
+                                 "Recorded exception: %s. "%str(e))
             else:
-                warnings.warn("`%s` argument can't be duplicated. "
+                warnings.warn("`network` argument can't be duplicated. "
                               "Recorded exception: %s. "
                               "The current network will be used. "
-                              "Use `copy=False` to hide this warning."%
-                              (display_name, e))
+                              "Use `copy=False` to hide this warning."%str(e))
                 new_network = network
-        if compile_:
-            if network.optimizer:
-                # TODO, find a way of giving metrics (for now this 
-                # induces weird behaviour with fitted model having
-                # their loss in metrics)
-                try:
-                    # TODO, can we be sure that deepcopy will always work?
-                    try:
-                        optimizer=deepcopy(network.optimizer)
-                        loss=deepcopy(network.loss)
-                        new_network.compile(optimizer=optimizer,
-                                            loss=loss)
-                    except:
-                        new_network.compile(optimizer=network.optimizer,
-                                            loss=network.loss)
-                except:
-                    raise ValueError("Unable to compile the given `%s` argument."%
-                                     (display_name))
-            else:
-                raise ValueError("The given `%s` argument is not compiled yet. "
-                                 "Please use `model.compile(optimizer, loss)`."%
-                                 (display_name))
     else:        
         new_network = network
+        
+    if name is not None:
+        new_network._name = name
     
     # Override the predict method to speed the prediction for small dataset
     new_network.predict = predict.__get__(new_network)
     return new_network
 
 
-def get_default_encoder():
+def get_default_encoder(name=None):
     """
     Return a tensorflow Model of one layer
     with 10 neurons and a relu activation.
@@ -311,13 +246,13 @@ def get_default_encoder():
     -------
     tensorflow Model
     """
-    model = Sequential()
+    model = Sequential(name=name)
     model.add(Flatten())
     model.add(Dense(10, activation="relu"))
     return model
 
 
-def get_default_task(activation=None):
+def get_default_task(activation=None, name=None):
     """
     Return a tensorflow Model of two hidden layers
     with 10 neurons each and relu activations. The
@@ -333,7 +268,7 @@ def get_default_task(activation=None):
     -------
     tensorflow Model
     """
-    model = Sequential()
+    model = Sequential(name=name)
     model.add(Flatten())
     model.add(Dense(10, activation="relu"))
     model.add(Dense(10, activation="relu"))
@@ -341,7 +276,7 @@ def get_default_task(activation=None):
     return model
 
 
-def get_default_discriminator():
+def get_default_discriminator(name=None):
     """
     Return a tensorflow Model of two hidden layers
     with 10 neurons each and relu activations. The
@@ -352,7 +287,7 @@ def get_default_discriminator():
     -------
     tensorflow Model
     """
-    model = Sequential()
+    model = Sequential(name=name)
     model.add(Flatten())
     model.add(Dense(10, activation="relu"))
     model.add(Dense(10, activation="relu"))
@@ -520,3 +455,66 @@ def make_regression_da(n_samples=100,
     Xt = ((Xt - X.mean(0)) / X.std(0)) / 3
 
     return Xs, ys, Xt, yt
+
+
+def check_sample_weight(sample_weight, X):
+    """
+    Check sample weights.
+    """
+    if not sample_weight is None:
+        sample_weight = check_array(
+            sample_weight,
+            accept_sparse=False,
+            ensure_2d=False,
+        )
+        if len(sample_weight) != len(X):
+            raise ValueError("`sample_weight` and X should have"
+                             " same length, got %i, %i"%
+                             (len(sample_weight), len(X)))
+        if np.any(sample_weight<0):
+            raise ValueError("All weights from `sample_weight`"
+                             " should be positive.")
+        if sample_weight.sum() <= 0:
+            sample_weight = np.ones(len(X))
+    return sample_weight
+
+
+def set_random_seed(random_state):
+    """
+    Set random seed for numpy and 
+    Tensorflow
+    
+    Parameters
+    ----------
+    random_state : int or None
+        Random state, if None
+        the current random generators
+        remain unchanged
+    """
+    if random_state is None:
+        pass
+    else:
+        np.random.seed(random_state)
+        tf.random.set_seed(random_state)
+        
+        
+        
+# Try to save the initial estimator if it is a Keras Model
+# This is required for cloning the adapt method.
+# if isinstance(self.estimator, Model):
+#     self._has_keras_estimator = True
+#     try:
+#         self._deepcopy_estimator = check_estimator(estimator,
+#                                                    copy=True,
+#                                                    task=None,
+#                                                    force_copy=True)
+#     except BaseException as err:
+#         if "The current network will be used" in str(err):
+#             warnings.warn("The Tensorflow model used as estimator"
+#                           " can't be deep copied. "
+#                           "This may provoke some undesired behaviour"
+#                           " when cloning the object.")
+#         else:
+#             raise
+# else:
+#     self._has_keras_estimator = False

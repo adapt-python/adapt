@@ -40,8 +40,9 @@ def test_setup():
 def test_fit():
     np.random.seed(0)
     model = KLIEP(LinearRegression(fit_intercept=False),
+                  Xt,
                   sigmas=[10, 100])
-    model.fit(Xs, ys, Xt)
+    model.fit(Xs, ys)
     assert np.abs(model.estimator_.coef_[0][0] - 0.2) < 10
     assert model.weights_[:50].sum() > 90
     assert model.weights_[50:].sum() < 0.5
@@ -52,6 +53,7 @@ def test_fit_estimator_bootstrap_index():
     np.random.seed(0)
     ys_ = np.random.randn(100)
     model = KLIEP(DummyEstimator(),
+                  Xt,
                   sigmas=[10, 100])
     model.fit_estimator(Xs, ys_, sample_weight=np.random.random(len(ys)))
     assert len(set(list(model.estimator_.y.ravel())) & set(list(ys_.ravel()))) > 33
@@ -61,6 +63,7 @@ def test_fit_estimator_sample_weight_zeros():
     np.random.seed(0)
     ys_ = np.random.randn(100)
     model = KLIEP(DummyEstimator(),
+                  Xt,
                   sigmas=[10, 100])
     model.fit_estimator(Xs, ys_, sample_weight=np.zeros(len(ys)))
     assert len(set(list(model.estimator_.y.ravel())) & set(list(ys_.ravel()))) > 33

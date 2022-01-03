@@ -18,8 +18,8 @@ Xt = np.concatenate((
     np.linspace(0, 1, 100).reshape(-1, 1),
     np.ones((100, 1))
     ), axis=1)
-ys = 0.2 * Xs[:, 0].ravel()
-yt = 0.2 * Xt[:, 0].ravel()
+ys = 0.2 * Xs[:, 0].reshape(-1, 1)
+yt = 0.2 * Xt[:, 0].reshape(-1, 1)
 
 
 def _get_encoder(input_shape=Xs.shape[1:]):
@@ -55,13 +55,13 @@ def test_fit_lambda_zero():
     tf.random.set_seed(0)
     np.random.seed(0)
     model = DANN(_get_encoder(), _get_task(), _get_discriminator(),
-                 lambda_=0, loss="mse", optimizer=Adam(0.01), metrics=["mse"])
-    model.fit(Xs, ys, Xt, yt,
-              epochs=500, batch_size=100, verbose=0)
-    assert isinstance(model.model_, Model)
+                 lambda_=0, loss="mse", optimizer=Adam(0.01), metrics=["mae"])
+    model.fit(Xs, ys, Xt=Xt, yt=yt,
+              epochs=100, batch_size=32, verbose=0)
+    assert isinstance(model, Model)
     assert model.encoder_.get_weights()[0][1][0] == 1.0
-    assert np.sum(np.abs(model.predict(Xs).ravel() - ys)) < 0.01
-    assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) > 10
+    assert np.sum(np.abs(model.predict(Xs) - ys)) < 0.01
+    assert np.sum(np.abs(model.predict(Xt) - yt)) > 10
 
 
 def test_fit_lambda_one():
@@ -70,9 +70,23 @@ def test_fit_lambda_one():
     model = DANN(_get_encoder(), _get_task(), _get_discriminator(),
                  lambda_=1, loss="mse", optimizer=Adam(0.01))
     model.fit(Xs, ys, Xt, yt,
-              epochs=800, batch_size=100, verbose=0)
-    assert isinstance(model.model_, Model)
+              epochs=100, batch_size=32, verbose=0)
+    assert isinstance(model, Model)
     assert np.abs(model.encoder_.get_weights()[0][1][0] / 
-            model.encoder_.get_weights()[0][0][0]) < 0.05
-    assert np.sum(np.abs(model.predict(Xs).ravel() - ys)) < 1
-    assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) < 1
+            model.encoder_.get_weights()[0][0][0]) < 0.07
+    assert np.sum(np.abs(model.predict(Xs) - ys)) < 1
+    assert np.sum(np.abs(model.predict(Xt) - yt)) < 2
+    
+    
+def test_fit_lambda_None():
+    tf.random.set_seed(0)
+    np.random.seed(0)
+    model = DANN(_get_encoder(), _get_task(), _get_discriminator(),
+                 lambda_=None, loss="mse", optimizer=Adam(0.01))
+    model.fit(Xs, ys, Xt=Xt, yt=yt,
+              epochs=100, batch_size=32, verbose=0)
+    assert isinstance(model, Model)
+    assert np.abs(model.encoder_.get_weights()[0][1][0] / 
+            model.encoder_.get_weights()[0][0][0]) < 0.1
+    assert np.sum(np.abs(model.predict(Xs) - ys)) < 1
+    assert np.sum(np.abs(model.predict(Xt) - yt)) < 2

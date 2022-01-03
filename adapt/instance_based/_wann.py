@@ -1,32 +1,17 @@
 """
 Weighting Adversarial Neural Network (WANN)
 """
-from copy import deepcopy
-
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Sequential, Model
-from tensorflow.keras.layers import Layer, multiply
-from tensorflow.keras.callbacks import Callback
-from tensorflow.keras.constraints import MaxNorm
 
-from adapt.utils import (GradientHandler,
-                         check_arrays,
-                         check_one_array,
-                         check_network,
-                         get_default_task)
-from adapt.feature_based import BaseDeepFeature
+from adapt.base import BaseAdaptDeep, make_insert_doc
+from adapt.utils import check_network, get_default_task
+
+EPS = np.finfo(np.float32).eps
 
 
-class StopTraining(Callback):
-    
-    def on_train_batch_end(self, batch, logs={}):
-        if logs.get('loss') < 0.01:
-            print("Weights initialization succeeded !")
-            self.model.stop_training = True
-
-
-class WANN(BaseDeepFeature):
+@make_insert_doc(["task", "weighter"])
+class WANN(BaseAdaptDeep):
     """
     WANN: Weighting Adversarial Neural Network is an instance-based domain adaptation
     method suited for regression tasks. It supposes the supervised setting where some
@@ -44,187 +29,167 @@ class WANN(BaseDeepFeature):
     
     Parameters
     ----------        
-    task : tensorflow Model (default=None)
-        Task netwok. If ``None``, a two layers network with 10
-        neurons per layer and ReLU activation is used as task network.
-        
-    weighter : tensorflow Model (default=None)
-        Encoder netwok. If ``None``, a two layers network with 10
-        neurons per layer and ReLU activation is used as
-        weighter network.
-        
     C : float (default=1.)
         Clipping constant for the weighting networks
         regularization. Low value of ``C`` produce smoother
         weighting map. If ``C<=0``, No regularization is added.
-        
-    init_weights : bool (default=True)
-        If True a pretraining of ``weighter`` is made such
-        that all predicted weights start close to one.
-        
-    loss : string or tensorflow loss (default="mse")
-        Loss function used for the task.
-        
-    metrics : dict or list of string or tensorflow metrics (default=None)
-        Metrics given to the model. If a list is provided,
-        metrics are used on both ``task`` and ``discriminator``
-        outputs. To give seperated metrics, please provide a
-        dict of metrics list with ``"task"`` and ``"disc"`` as keys.
-        
-    optimizer : string or tensorflow optimizer (default=None)
-        Optimizer of the model. If ``None``, the
-        optimizer is set to tf.keras.optimizers.Adam(0.001)
-        
-    copy : boolean (default=True)
-        Whether to make a copy of ``encoder``, ``task`` and
-        ``discriminator`` or not.
-        
-    random_state : int (default=None)
-        Seed of random generator.
     """
     
     def __init__(self,
                  task=None,
                  weighter=None,
+                 Xt=None,
+                 yt=None,
                  C=1.,
-                 init_weights=True,
-                 loss="mse",
-                 metrics=None,
-                 optimizer=None,
+                 verbose=1,
                  copy=True,
-                 random_state=None):
+                 random_state=None,
+                 **params):
+                
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)
         
-        super().__init__(weighter, task, None,
-                         loss, metrics, optimizer, copy,
-                         random_state)
-        
-        self.init_weights = init_weights
-        self.init_weights_ = init_weights
-        self.C = C
-        
-        if weighter is None:
-            self.weighter_ = get_default_task() #activation="relu"
+    
+    def _initialize_networks(self):
+        if self.weighter is None:
+            self.weighter_ = get_default_task(name="weighter")
         else:
-            self.weighter_ = self.encoder_
-        
+            self.weighter_ = check_network(self.weighter,
+                                          copy=self.copy,
+                                          name="weighter")
+        if self.task is None:
+            self.task_ = get_default_task(name="task")
+        else:
+            self.task_ = check_network(self.task,
+                                       copy=self.copy,
+                                       name="task")
+        if self.task is None:
+            self.discriminator_ = get_default_task(name="discriminator")
+        else:
+            self.discriminator_ = check_network(self.task,
+                                                copy=self.copy,
+                                                name="discriminator")
         if self.C > 0.:
             self._add_regularization()
-            
-        self.discriminator_ = check_network(self.task_, 
-                                            copy=True,
-                                            display_name="task",
-                                            force_copy=True)
-        self.discriminator_._name = self.discriminator_._name + "_2"
 
 
     def _add_regularization(self):
         for layer in self.weighter_.layers:
             if hasattr(self.weighter_, "kernel_constraint"):
-                self.weighter_.kernel_constraint = MaxNorm(self.C)
+                self.weighter_.kernel_constraint = tf.keras.constraints.MaxNorm(self.C)
             if hasattr(self.weighter_, "bias_constraint"):
-                self.weighter_.bias_constraint = MaxNorm(self.C)
+                self.weighter_.bias_constraint = tf.keras.constraints.MaxNorm(self.C)
         
     
-    def fit(self, Xs, ys, Xt, yt, **fit_params):
-        Xs, ys, Xt, yt = check_arrays(Xs, ys, Xt, yt)
+    def pretrain_step(self, data):
+        # Unpack the data.
+        Xs, Xt, ys, yt = self._unpack_data(data)
         
-        if self.init_weights_:
-            self._init_weighter(Xs)
-            self.init_weights_ = False
-        self._fit(Xs, ys, Xt, yt, **fit_params)
-        return self
-    
-    
-    def _init_weighter(self, Xs):
-        self.weighter_.compile(optimizer=deepcopy(self.optimizer), loss="mse")
-        batch_size = 64
-        epochs = max(1, int(64*1000/len(Xs)))
-        callback = StopTraining()
-        self.weighter_.fit(Xs, np.ones(len(Xs)),
-                          epochs=epochs, batch_size=batch_size,
-                          callbacks=[callback], verbose=0)
-        
-    
-    def _initialize_networks(self, shape_Xt):
-        self.weighter_.predict(np.zeros((1,) + shape_Xt));
-        self.task_.predict(np.zeros((1,) + shape_Xt));
-        self.discriminator_.predict(np.zeros((1,) + shape_Xt));
+        # Single source
+        Xs = Xs[0]
+        ys = ys[0]
 
+        # loss
+        with tf.GradientTape() as tape:                       
+            # Forward pass
+            weights = tf.math.abs(self.weighter_(Xs, training=True))
             
-    def create_model(self, inputs_Xs, inputs_Xt):
-        
-        Flip = GradientHandler(-1.)
-        
-        # Get networks output for both source and target
-        weights_s = self.weighter_(inputs_Xs)
-        weights_s = tf.math.abs(weights_s)
-        task_s = self.task_(inputs_Xs)
-        task_t = self.task_(inputs_Xt)
-        disc_s = self.discriminator_(inputs_Xs)
-        disc_t = self.discriminator_(inputs_Xt)
-        
-        # Reversal layer at the end of discriminator
-        disc_s = Flip(disc_s)
-        disc_t = Flip(disc_t)
+            loss = tf.reduce_mean(
+                tf.square(weights - tf.ones_like(weights)))
+            
+            # Compute the loss value
+            loss += sum(self.weighter_.losses)
+            
+        # Compute gradients
+        trainable_vars = self.weighter_.trainable_variables
+        gradients = tape.gradient(loss, trainable_vars)
 
-        return dict(task_s=task_s, task_t=task_t,
-                    disc_s=disc_s, disc_t=disc_t,
-                    weights_s=weights_s)
-            
+        # Update weights
+        self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+
+        logs = {"loss": loss}
+        return logs
+        
     
-    def get_loss(self, inputs_ys, inputs_yt, task_s,
-                 task_t, disc_s, disc_t, weights_s):
-        
-        loss_task_s = self.loss_(inputs_ys, task_s)
-        loss_task_s = multiply([weights_s, loss_task_s])
-        
-        loss_disc_s = self.loss_(inputs_ys, disc_s)
-        loss_disc_s = multiply([weights_s, loss_disc_s])
-        
-        loss_disc_t = self.loss_(inputs_yt, disc_t)
-        
-        loss_disc = (tf.reduce_mean(loss_disc_t) - 
-                     tf.reduce_mean(loss_disc_s))
-                         
-        loss = tf.reduce_mean(loss_task_s) + loss_disc
-        return loss
+    def call(self, X):
+        return self.task_(X)
     
     
-    def get_metrics(self, inputs_ys, inputs_yt, task_s,
-                 task_t, disc_s, disc_t, weights_s):
+    def train_step(self, data):
+        # Unpack the data.
+        Xs, Xt, ys, yt = self._unpack_data(data)
         
-        metrics = {}
+        # Single source
+        Xs = Xs[0]
+        ys = ys[0]
         
-        loss_s = self.loss_(inputs_ys, task_s)        
-        loss_t = self.loss_(inputs_yt, task_t) 
+        if self.pretrain_:
+            return self.pretrain_step(data)
         
-        metrics["task_s"] = tf.reduce_mean(loss_s)
-        metrics["task_t"] = tf.reduce_mean(loss_t)
-        
-        names_task, names_disc = self._get_metric_names()
-        
-        for metric, name in zip(self.metrics_task_, names_task):
-            metrics[name + "_s"] = metric(inputs_ys, task_s)
-            metrics[name + "_t"] = metric(inputs_yt, task_t)
-        return metrics
-    
-    
-    def predict(self, X):
-        """
-        Predict method: return the prediction of task network
-        
-        Parameters
-        ----------
-        X: array
-            input data
-            
-        Returns
-        -------
-        y_pred: array
-            prediction of task network
-        """
-        X = check_one_array(X)
-        return self.task_.predict(X)
+        else:
+            # loss
+            with tf.GradientTape() as task_tape, tf.GradientTape() as weight_tape, tf.GradientTape() as disc_tape:
+
+                # Forward pass
+                weights = tf.abs(self.weighter_(Xs, training=True))
+                ys_pred = self.task_(Xs, training=True)
+                ys_disc = self.discriminator_(Xs, training=True)
+
+                yt_pred = self.task_(Xt, training=True)
+                yt_disc = self.discriminator_(Xt, training=True)
+
+                # Reshape
+                ys_pred = tf.reshape(ys_pred, tf.shape(ys))
+                ys_disc = tf.reshape(ys_disc, tf.shape(ys))
+                yt_pred = tf.reshape(yt_pred, tf.shape(yt))
+                yt_disc = tf.reshape(yt_disc, tf.shape(yt))
+
+                # Compute the loss value
+                task_loss = self.task_loss_(ys, ys_pred)
+                disc_src = self.task_loss_(ys, ys_disc)
+                disc_tgt = self.task_loss_(yt, yt_disc)
+
+                weights = tf.reshape(weights, tf.shape(task_loss))
+
+                task_loss = weights * task_loss
+                disc_src = weights * disc_src
+
+                task_loss = tf.reduce_mean(task_loss)
+                disc_src = tf.reduce_mean(disc_src)
+                disc_tgt = tf.reduce_mean(disc_tgt)
+
+                disc_loss = disc_src - disc_tgt
+
+                weight_loss = task_loss - disc_loss
+
+                task_loss += sum(self.task_.losses)
+                disc_loss += sum(self.discriminator_.losses)
+                weight_loss += sum(self.weighter_.losses)
+
+            print(task_loss.shape, weight_loss.shape, disc_loss.shape)
+
+            # Compute gradients
+            trainable_vars_task = self.task_.trainable_variables
+            trainable_vars_weight = self.weighter_.trainable_variables
+            trainable_vars_disc = self.discriminator_.trainable_variables
+
+            gradients_task = task_tape.gradient(task_loss, trainable_vars_task)
+            gradients_weight = weight_tape.gradient(weight_loss, trainable_vars_weight)
+            gradients_disc = disc_tape.gradient(disc_loss, trainable_vars_disc)
+
+            # Update weights
+            self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
+            self.optimizer.apply_gradients(zip(gradients_weight, trainable_vars_weight))
+            self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+
+            # Update metrics
+            self.compiled_metrics.update_state(ys, ys_pred)
+            self.compiled_loss(ys, ys_pred)
+            # Return a dict mapping metric names to current value
+            logs = {m.name: m.result() for m in self.metrics}
+            return logs
     
     
     def predict_weights(self, X):
@@ -258,5 +223,4 @@ class WANN(BaseDeepFeature):
         y_disc : array
             predictions of discriminator network
         """
-        X = check_one_array(X)
         return self.discriminator_.predict(X)

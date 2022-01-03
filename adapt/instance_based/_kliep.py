@@ -2,20 +2,19 @@
 Kullback-Leibler Importance Estimation Procedure
 """
 
-import inspect
-import warnings
-
 import numpy as np
-from sklearn.linear_model import LinearRegression
 from sklearn.metrics import pairwise
 from sklearn.exceptions import NotFittedError
-import tensorflow as tf
+from sklearn.utils import check_array
 
-from adapt.utils import check_arrays, check_one_array, check_estimator
+from adapt.base import BaseAdaptEstimator, make_insert_doc
+from adapt.utils import set_random_seed
 
 EPS = np.finfo(float).eps
 
-class KLIEP:
+
+@make_insert_doc()
+class KLIEP(BaseAdaptEstimator):
     """
     KLIEP: Kullback–Leibler Importance Estimation Procedure
     
@@ -72,12 +71,7 @@ class KLIEP:
     target data to the training set.
     
     Parameters
-    ----------
-    estimator : sklearn estimator or tensorflow Model (default=None)
-        Estimator used to learn the task. 
-        If estimator is ``None``, a ``LinearRegression``
-        instance is used as estimator.
-        
+    ----------        
     sigmas : float or list of float (default=1/nb_features)
         Kernel bandwidths.
         If ``sigmas`` is a list of multiple values, the
@@ -100,15 +94,6 @@ class KLIEP:
     max_iter : int (default=5000)
         Maximal iteration of the gradient ascent
         optimization.
-        
-    copy : boolean (default=True)
-        Whether to make a copy of ``estimator`` or not.
-        
-    verbose : int (default=1)
-        Verbosity level.
-        
-    random_state : int (default=None)
-        Seed of random generator.
 
     Attributes
     ----------
@@ -168,6 +153,8 @@ to covariateshift adaptation". In NIPS 2007
     """
     def __init__(self,
                  estimator=None,
+                 Xt=None,
+                 yt=None,
                  sigmas=None,
                  max_centers=100,
                  cv=5,
@@ -176,23 +163,16 @@ to covariateshift adaptation". In NIPS 2007
                  max_iter=5000,
                  copy=True,
                  verbose=1,
-                 random_state=None):
-        np.random.seed(random_state)
-        tf.random.set_seed(random_state)
+                 random_state=None,
+                 **params):
         
-        self.estimator_ = check_estimator(estimator, copy=copy)
-        self.sigmas = sigmas
-        self.cv = cv
-        self.max_centers = max_centers
-        self.lr = lr
-        self.tol = tol
-        self.max_iter = max_iter
-        self.copy = copy
-        self.verbose = verbose
-        self.random_state = random_state
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)
 
 
-    def fit_weights(self, Xs, Xt):
+    def fit_weights(self, Xs, Xt, **kwargs):
         """
         Fit importance weighting.
         
@@ -204,15 +184,16 @@ to covariateshift adaptation". In NIPS 2007
         Xt : array
             Input target data.
             
+        kwargs : key, value argument
+            Not used, present here for adapt consistency.
+            
         Returns
         -------
         weights_ : sample weights
         """
-        np.random.seed(self.random_state)
-        tf.random.set_seed(self.random_state)
-        
-        Xs = check_one_array(Xs)
-        Xt = check_one_array(Xt)
+        Xs = check_array(Xs)
+        Xt = check_array(Xt)
+        set_random_seed(self.random_state)
         
         self.j_scores_ = []
 
@@ -248,92 +229,36 @@ to covariateshift adaptation". In NIPS 2007
         return self.weights_
     
     
-    def fit_estimator(self, X, y,
-                      sample_weight=None,
-                      **fit_params):
+    def predict_weights(self, X=None):
         """
-        Fit estimator.
+        Return fitted source weights
+        
+        If ``None``, the fitted source weights are returned.
+        Else, sample weights are computing using the fitted
+        ``alphas_`` and the chosen ``centers_`.
         
         Parameters
         ----------
-        X : array
+        X : array (default=None)
             Input data.
-            
-        y : array
-            Output data.
-            
-        sample_weight : array
-            Importance weighting.
-            
-        fit_params : key, value arguments
-            Arguments given to the fit method of
-            the estimator.
-            
-        Returns
-        -------
-        estimator_ : fitted estimator
-        """
-        np.random.seed(self.random_state)
-        tf.random.set_seed(self.random_state)
         
-        X = check_one_array(X)
-        y = check_one_array(y)
-             
-        if "sample_weight" in inspect.signature(self.estimator_.fit).parameters:
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                self.estimator_.fit(X, y, 
-                                    sample_weight=sample_weight,
-                                    **fit_params)
-        else:
-            if sample_weight is not None:
-                sample_weight /= (sample_weight.sum() + EPS)
-            if sample_weight.sum() <= 0:
-                sample_weight = np.ones(len(sample_weight))
-                sample_weight /= (sample_weight.sum() + EPS)
-            bootstrap_index = np.random.choice(
-            len(X), size=len(X), replace=True,
-            p=sample_weight)
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                self.estimator_.fit(X[bootstrap_index], y[bootstrap_index],
-                                    **fit_params)
-        return self.estimator_
-    
-
-    def fit(self, Xs, ys, Xt, **fit_params):
-        """
-        Fit KLIEP.
-
-        Parameters
-        ----------
-        Xs : numpy array
-            Source input data.
-
-        ys : numpy array
-            Source output data.
-
-        Xt : numpy array
-            Target input data.
-
-        fit_params : key, value arguments
-            Arguments given to the fit method of
-            the estimator.
-
         Returns
         -------
-        self : returns an instance of self
+        weights_ : sample weights
         """
-        Xs, ys, Xt, _ = check_arrays(Xs, ys, Xt, None)        
-        if self.verbose:
-            print("Fitting weights...")
-        self.fit_weights(Xs, Xt)
-        if self.verbose:
-            print("Fitting estimator...")
-        self.fit_estimator(Xs, ys,
-                           sample_weight=self.weights_,
-                           **fit_params)
-        return self
+        if hasattr(self, "weights_"):
+            if X is None or not hasattr(self, "alphas_"):
+                return self.weights_
+            else:
+                X = check_array(X)
+                weights = np.dot(
+                pairwise.rbf_kernel(X, self.centers_, self.sigma_),
+                self.alphas_
+                ).ravel()
+                return weights
+        else:
+            raise NotFittedError("Weights are not fitted yet, please "
+                                 "call 'fit_weights' or 'fit' first.")
 
 
     def _fit(self, Xs, Xt, sigma):
@@ -396,53 +321,3 @@ to covariateshift adaptation". In NIPS 2007
             ))
             cv_scores.append(j_score)
         return cv_scores
-
-
-    def predict(self, X):
-        """
-        Return estimator predictions.
-        
-        Parameters
-        ----------
-        X: array
-            input data
-            
-        Returns
-        -------
-        y_pred: array
-            prediction of estimator.
-        """        
-        X = check_one_array(X)
-        return self.estimator_.predict(X)
-
-
-    def predict_weights(self, X=None):
-        """
-        Return fitted source weights
-        
-        If ``None``, the fitted source weights are returned.
-        Else, sample weights are computing using the fitted
-        ``alphas_`` and the chosen ``centers_`.
-        
-        Parameters
-        ----------
-        X : array (default=None)
-            Input data.
-        
-        Returns
-        -------
-        weights_ : sample weights
-        """
-        if hasattr(self, "weights_"):
-            if X is None or not hasattr(self, "alphas_"):
-                return self.weights_
-            else:
-                X = check_one_array(X)
-                weights = np.dot(
-                pairwise.rbf_kernel(X, self.centers_, self.sigma_),
-                self.alphas_
-                ).ravel()
-                return weights
-        else:
-            raise NotFittedError("Weights are not fitted yet, please "
-                                 "call 'fit_weights' or 'fit' first.")

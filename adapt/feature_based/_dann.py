@@ -2,26 +2,16 @@
 DANN
 """
 
-import warnings
-from copy import deepcopy
-
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Model, Sequential
-from tensorflow.keras.layers import Layer, Input, subtract
-from tensorflow.keras.callbacks import Callback
-from tensorflow.keras.optimizers import Adam
-import tensorflow.keras.backend as K
 
-from adapt.utils import (GradientHandler,
-                         check_arrays)
-from adapt.feature_based import BaseDeepFeature
-from adapt.feature_based._deep import UpdateLambda
+from adapt.base import BaseAdaptDeep, make_insert_doc
 
-EPS = K.epsilon()
+EPS = np.finfo(np.float32).eps
 
 
-class DANN(BaseDeepFeature):
+@make_insert_doc(["encoder", "task", "discriminator"])
+class DANN(BaseAdaptDeep):
     """
     DANN: Discriminative Adversarial Neural Network
     
@@ -67,21 +57,7 @@ class DANN(BaseDeepFeature):
         DANN architecture (source: [1])
     
     Parameters
-    ----------
-    encoder : tensorflow Model (default=None)
-        Encoder netwok. If ``None``, a shallow network with 10
-        neurons and ReLU activation is used as encoder network.
-        
-    task : tensorflow Model (default=None)
-        Task netwok. If ``None``, a two layers network with 10
-        neurons per layer and ReLU activation is used as task network.
-        
-    discriminator : tensorflow Model (default=None)
-        Discriminator netwok. If ``None``, a two layers network with 10
-        neurons per layer and ReLU activation is used as discriminator
-        network. Note that the output shape of the discriminator should
-        be ``(None, 1)`` and a ``sigmoid`` activation should be used.
-        
+    ----------        
     lambda_ : float or None (default=0.1)
         Trade-off parameter.
         If ``None``, ``lambda_`` increases gradually
@@ -93,26 +69,6 @@ class DANN(BaseDeepFeature):
         Increase rate parameter.
         Give the increase rate of the trade-off parameter if
         ``lambda_`` is set to ``None``.
-
-    loss : string or tensorflow loss (default="mse")
-        Loss function used for the task.
-        
-    metrics : dict or list of string or tensorflow metrics (default=None)
-        Metrics given to the model. If a list is provided,
-        metrics are used on both ``task`` and ``discriminator``
-        outputs. To give seperated metrics, please provide a
-        dict of metrics list with ``"task"`` and ``"disc"`` as keys.
-        
-    optimizer : string or tensorflow optimizer (default=None)
-        Optimizer of the model. If ``None``, the
-        optimizer is set to tf.keras.optimizers.Adam(0.001)
-        
-    copy : boolean (default=True)
-        Whether to make a copy of ``encoder``, ``task`` and
-        ``discriminator`` or not.
-        
-    random_state : int (default=None)
-        Seed of random generator.
     
     Attributes
     ----------
@@ -124,15 +80,9 @@ class DANN(BaseDeepFeature):
         
     discriminator_ : tensorflow Model
         discriminator network.
-    
-    model_ : tensorflow Model
-        Fitted model: the union of ``encoder_``,
-        ``task_`` and ``discriminator_`` networks.
         
     history_ : dict
         history of the losses and metrics across the epochs.
-        If ``yt`` is given in ``fit`` method, target metrics
-        and losses are recorded too.
         
     Examples
     --------
@@ -165,103 +115,109 @@ class DANN(BaseDeepFeature):
 E. Ustinova, H. Ajakan, P. Germain, H. Larochelle, F. Laviolette, M. Marchand, \
 and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 2016.
     """
-    def __init__(self, 
+    def __init__(self,
                  encoder=None,
                  task=None,
                  discriminator=None,
+                 Xt=None,
+                 yt=None,
                  lambda_=0.1,
                  gamma=10.,
-                 loss="mse",
-                 metrics=None,
-                 optimizer=None,
+                 verbose=1,
                  copy=True,
-                 random_state=None):
+                 random_state=None,
+                 **params):
         
-        self.lambda_ = lambda_
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)
+
+        
+    def train_step(self, data):
+        # Unpack the data.
+        Xs, Xt, ys, yt = self._unpack_data(data)
+        
+        # Single source
+        Xs = Xs[0]
+        ys = ys[0]
+        
         if self.lambda_ is None:
-            self.lambda_init_ = 0.
+            _is_lambda_None = 1.
+            lambda_ = 0.
         else:
-            self.lambda_init_ = self.lambda_
-        self.gamma = gamma        
-        super().__init__(encoder, task, discriminator,
-                         loss, metrics, optimizer, copy,
-                         random_state)
-
+            _is_lambda_None = 0.
+            lambda_ = float(self.lambda_)
+       
+        # loss
+        with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:           
+            
+            # Compute lambda
+            self.steps_.assign_add(1.)
+            progress = self.steps_ / self.total_steps_
+            _lambda_ = 2. / (1. + tf.exp(-self.gamma * progress)) - 1.
+            _lambda_ = (_is_lambda_None * _lambda_ +
+                        (1. - _is_lambda_None) * lambda_)
+            
+            # Forward pass
+            Xs_enc = self.encoder_(Xs, training=True)
+            ys_pred = self.task_(Xs_enc, training=True)
+            ys_disc = self.discriminator_(Xs_enc, training=True)
+            
+            Xt_enc = self.encoder_(Xt, training=True)
+            yt_disc = self.discriminator_(Xt_enc, training=True)
+            
+            # Reshape
+            ys_pred = tf.reshape(ys_pred, tf.shape(ys))
+            
+            # Compute the loss value
+            task_loss = self.task_loss_(ys, ys_pred)
+            
+            disc_loss = (-tf.math.log(ys_disc + EPS)
+                         -tf.math.log(1-yt_disc + EPS))
+            
+            task_loss = tf.reduce_mean(task_loss)
+            disc_loss = tf.reduce_mean(disc_loss)
+            
+            enc_loss = task_loss - _lambda_ * disc_loss
+            
+            task_loss += sum(self.task_.losses)
+            disc_loss += sum(self.discriminator_.losses)
+            enc_loss += sum(self.encoder_.losses)
+            
+        print(task_loss.shape, enc_loss.shape, disc_loss.shape)
+            
+        # Compute gradients
+        trainable_vars_task = self.task_.trainable_variables
+        trainable_vars_enc = self.encoder_.trainable_variables
+        trainable_vars_disc = self.discriminator_.trainable_variables
         
-    def fit(self, Xs, ys, Xt, yt=None, **fit_params):  
-        Xs, ys, Xt, yt = check_arrays(Xs, ys, Xt, yt)
+        gradients_task = task_tape.gradient(task_loss, trainable_vars_task)
+        gradients_enc = enc_tape.gradient(enc_loss, trainable_vars_enc)
+        gradients_disc = disc_tape.gradient(disc_loss, trainable_vars_disc)
         
-        # Define callback for incresing lambda_, if model_ is
-        # already built, do not reinitialized lambda_
-        if self.lambda_ is None and not hasattr(self, "model_"):
-            callback = UpdateLambda(gamma=self.gamma)
-            if "callbacks" in fit_params:
-                fit_params["callbacks"].append(callback)
-            else:
-                fit_params["callbacks"] = [callback]
-
-        self._fit(Xs, ys, Xt, yt, **fit_params)
-        return self
+        # Update weights
+        self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
+        self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+        self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+        
+        # Update metrics
+        self.compiled_metrics.update_state(ys, ys_pred)
+        self.compiled_loss(ys, ys_pred)
+        # Return a dict mapping metric names to current value
+        logs = {m.name: m.result() for m in self.metrics}
+        disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
+        logs.update({"disc_loss": disc_loss})
+        logs.update(disc_metrics)
+        logs.update({"lambda": _lambda_})
+        return logs
+        
     
-    
-    def create_model(self, inputs_Xs, inputs_Xt):
-
-        encoded_src = self.encoder_(inputs_Xs)
-        encoded_tgt = self.encoder_(inputs_Xt)
-        task_src = self.task_(encoded_src)
-        task_tgt = self.task_(encoded_tgt)
-        
-        flip = GradientHandler(-self.lambda_init_)
-        
-        disc_src = flip(encoded_src)
-        disc_src = self.discriminator_(disc_src)
-        disc_tgt = flip(encoded_tgt)
-        disc_tgt = self.discriminator_(disc_tgt)
-        
-        outputs = dict(task_src=task_src,
-                       task_tgt=task_tgt,
-                       disc_src=disc_src,
-                       disc_tgt=disc_tgt)
-        return outputs
-
-
-    def get_loss(self, inputs_ys, inputs_yt,
-                  task_src, task_tgt,
-                  disc_src, disc_tgt):
-        
-        loss_task = self.loss_(inputs_ys, task_src)
-        loss_disc = (-K.log(1-disc_src + EPS)
-                     -K.log(disc_tgt + EPS))
-        
-        loss = K.mean(loss_task) + K.mean(loss_disc)
-        return loss
-    
-    
-    def get_metrics(self, inputs_ys, inputs_yt,
-                     task_src, task_tgt,
-                     disc_src, disc_tgt):
-        metrics = {}
-        
-        task_s = self.loss_(inputs_ys, task_src)
-        disc = (-K.log(1-disc_src + EPS)
-                -K.log(disc_tgt + EPS))
-        
-        metrics["task_s"] = K.mean(task_s)
-        metrics["disc"] = K.mean(disc)
-        if inputs_yt is not None:
-            task_t = self.loss_(inputs_yt, task_tgt)
-            metrics["task_t"] = K.mean(task_t)
-        
-        names_task, names_disc = self._get_metric_names()
-        
-        for metric, name in zip(self.metrics_task_, names_task):
-            metrics[name + "_s"] = metric(inputs_ys, task_src)
-            if inputs_yt is not None:
-                metrics[name + "_t"] = metric(inputs_yt, task_tgt)
-                
-        for metric, name in zip(self.metrics_disc_, names_disc):
-            pred = K.concatenate((disc_src, disc_tgt), axis=0)
-            true = K.concatenate((K.zeros_like(disc_src),
-                                  K.ones_like(disc_tgt)), axis=0)
-            metrics[name] = metric(true, pred)
-        return metrics
+    def _get_disc_metrics(self, ys_disc, yt_disc):
+        disc_dict = {}
+        for m in self.disc_metrics:
+            disc_dict["disc_%s"%m.name] = tf.reduce_mean(0.5 * (
+                m(tf.ones_like(ys_disc), ys_disc)+
+                m(tf.zeros_like(yt_disc), yt_disc)
+            ))
+        return disc_dict

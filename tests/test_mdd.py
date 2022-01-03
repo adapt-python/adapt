@@ -57,8 +57,9 @@ def test_fit():
     model = MDD(_get_encoder(), _get_task(),
                 loss="mse", optimizer=Adam(0.01), metrics=["mse"])
     model.fit(Xs, ys, Xt, yt,
-              epochs=50, batch_size=34, verbose=0)
-    assert isinstance(model.model_, Model)
-    assert np.abs(model.encoder_.get_weights()[0][1][0]) < 0.2
+              epochs=100, batch_size=34, verbose=0)
+    assert isinstance(model, Model)
+    assert np.abs(model.encoder_.get_weights()[0][1][0] /
+                  model.encoder_.get_weights()[0][0][0]) < 0.25
     assert np.sum(np.abs(model.predict(Xs).ravel() - ys)) < 0.1
-    assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) < 2.
+    assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) < 5.

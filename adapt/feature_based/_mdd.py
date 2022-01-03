@@ -2,26 +2,17 @@
 DANN
 """
 
-import warnings
-from copy import deepcopy
-
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Model, Sequential
-from tensorflow.keras.layers import Layer, Input, subtract
-from tensorflow.keras.callbacks import Callback
-from tensorflow.keras.optimizers import Adam
-import tensorflow.keras.backend as K
 
-from adapt.utils import (GradientHandler,
-                         check_arrays,
-                         check_network)
-from adapt.feature_based import BaseDeepFeature
+from adapt.base import BaseAdaptDeep, make_insert_doc
+from adapt.utils import check_network
 
-EPS = K.epsilon()
+EPS = np.finfo(np.float32).eps
 
 
-class MDD(BaseDeepFeature):
+@make_insert_doc(["encoder", "task"])
+class MDD(BaseAdaptDeep):
     """
     MDD: Margin Disparity Discrepancy is a feature-based domain adaptation
     method originally introduced for unsupervised classification DA.
@@ -34,37 +25,12 @@ class MDD(BaseDeepFeature):
     
     Parameters
     ----------
-    encoder : tensorflow Model (default=None)
-        Encoder netwok. If ``None``, a shallow network with 10
-        neurons and ReLU activation is used as encoder network.
-        
-    get_task : tensorflow Model (default=None)
-        Task netwok. If ``None``, a two layers network with 10
-        neurons per layer and ReLU activation is used as task network.
-        
+    lambda_ : float (default=1.)
+        Trade-off parameter
+    
     gamma : float (default=4.)
         Margin parameter.
 
-    loss : string or tensorflow loss (default="mse")
-        Loss function used for the task.
-        
-    metrics : dict or list of string or tensorflow metrics (default=None)
-        Metrics given to the model. If a list is provided,
-        metrics are used on both ``task`` and ``discriminator``
-        outputs. To give seperated metrics, please provide a
-        dict of metrics list with ``"task"`` and ``"disc"`` as keys.
-        
-    optimizer : string or tensorflow optimizer (default=None)
-        Optimizer of the model. If ``None``, the
-        optimizer is set to tf.keras.optimizers.Adam(0.001)
-        
-    copy : boolean (default=True)
-        Whether to make a copy of ``encoder``, ``task`` and
-        ``discriminator`` or not.
-        
-    random_state : int (default=None)
-        Seed of random generator.
-    
     Attributes
     ----------
     encoder_ : tensorflow Model
@@ -75,10 +41,6 @@ class MDD(BaseDeepFeature):
         
     discriminator_ : tensorflow Model
         Adversarial task network.
-    
-    model_ : tensorflow Model
-        Fitted model: the union of ``encoder_``, ``task_``,
-        and ``discriminator_`` networks.
         
     history_ : dict
         history of the losses and metrics across the epochs.
@@ -107,109 +69,126 @@ domain adaptation". ICML, 2019.
     def __init__(self, 
                  encoder=None,
                  task=None,
-                 is_pretrained=False,
+                 Xt=None,
+                 yt=None,
                  lambda_=1.,
                  gamma=4.,
-                 loss="mse",
-                 metrics=None,
-                 optimizer=None,
-                 optimizer_src=None,
                  copy=True,
-                 random_state=None):
-
-        super().__init__(encoder, task, None,
-                         loss, metrics, optimizer, copy,
-                         random_state)
-        self.lambda_ = lambda_
-        self.gamma = gamma
+                 verbose=1,
+                 random_state=None,
+                 **params):
+            
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)   
+    
         
-        if optimizer_src is None:
-            self.optimizer_src = deepcopy(self.optimizer)
+    def train_step(self, data):
+        # Unpack the data.
+        Xs, Xt, ys, yt = self._unpack_data(data)
+        
+        # Single source
+        Xs = Xs[0]
+        ys = ys[0]
+        
+        # If crossentropy take argmax of preds
+        if hasattr(self.task_loss_, "name"):
+            name = self.task_loss_.name
+        elif hasattr(self.task_loss_, "__name__"):
+            name = self.task_loss_.__name__
         else:
-            self.optimizer_src = optimizer_src
-
-        self.discriminator_ = check_network(self.task_, 
-                                       copy=True,
-                                       display_name="task",
-                                       force_copy=True)
-        self.discriminator_._name = self.discriminator_._name + "_2"
+            name = self.task_loss_.__class__.__name__
+       
+        # loss
+        with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:
+            
+            # Forward pass
+            Xs_enc = self.encoder_(Xs, training=True)
+            ys_pred = self.task_(Xs_enc, training=True)
+            ys_disc = self.discriminator_(Xs_enc, training=True)
+            
+            Xt_enc = self.encoder_(Xt, training=True)
+            yt_pred = self.task_(Xt_enc, training=True)
+            yt_disc = self.discriminator_(Xt_enc, training=True)
+            
+            # Reshape
+            ys_pred = tf.reshape(ys_pred, tf.shape(ys))
+            yt_pred = tf.reshape(yt_pred, tf.shape(ys))
+            ys_disc = tf.reshape(ys_disc, tf.shape(ys))
+            yt_disc = tf.reshape(yt_disc, tf.shape(ys))
+            
+            # Compute Disc
+            if name == "categorical_crossentropy":
+                print("ok")
+                argmax_src = tf.one_hot(tf.math.argmax(ys_pred, -1),
+                             tf.shape(ys_pred)[1])
+                argmax_tgt = tf.one_hot(tf.math.argmax(yt_pred, -1),
+                             tf.shape(yt_pred)[1])
+                disc_loss_src = self.task_loss_(argmax_src, ys_disc)
+                disc_loss_tgt = self.task_loss_(argmax_tgt, yt_disc)
+            else:
+                disc_loss_src = self.task_loss_(ys_pred, ys_disc)
+                disc_loss_tgt = self.task_loss_(yt_pred, yt_disc)
+            
+            disc_loss_src = tf.reduce_mean(disc_loss_src)
+            disc_loss_tgt = tf.reduce_mean(disc_loss_tgt)
+            
+            # Compute the loss value
+            task_loss = self.task_loss_(ys, ys_pred)
+            
+            disc_loss = self.gamma * disc_loss_src - disc_loss_tgt
+            
+            task_loss = tf.reduce_mean(task_loss)
+            
+            enc_loss = task_loss - self.lambda_ * disc_loss
+            
+            task_loss += sum(self.task_.losses)
+            disc_loss += sum(self.discriminator_.losses)
+            enc_loss += sum(self.encoder_.losses)
+            
+        print(task_loss.shape, enc_loss.shape, disc_loss.shape)
+            
+        # Compute gradients
+        trainable_vars_task = self.task_.trainable_variables
+        trainable_vars_enc = self.encoder_.trainable_variables
+        trainable_vars_disc = self.discriminator_.trainable_variables
         
-        if hasattr(self.loss_, "__name__"):
-            self.loss_name_ = self.loss_.__name__
-        elif hasattr(self.loss_, "__class__"):
-            self.loss_name_ = self.loss_.__class__.__name__
+        gradients_task = task_tape.gradient(task_loss, trainable_vars_task)
+        gradients_enc = enc_tape.gradient(enc_loss, trainable_vars_enc)
+        gradients_disc = disc_tape.gradient(disc_loss, trainable_vars_disc)
+        
+        # Update weights
+        self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
+        self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+        self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+        
+        # Update metrics
+        self.compiled_metrics.update_state(ys, ys_pred)
+        self.compiled_loss(ys, ys_pred)
+        # Return a dict mapping metric names to current value
+        logs = {m.name: m.result() for m in self.metrics}
+        # disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
+        logs.update({"disc_loss": disc_loss})
+        return logs
+    
+    
+    def _initialize_networks(self):
+        if self.encoder is None:
+            self.encoder_ = get_default_encoder(name="encoder")
         else:
-            self.loss_name_ = ""
-
-      
-    def create_model(self, inputs_Xs, inputs_Xt):
-
-        encoded_src = self.encoder_(inputs_Xs)
-        encoded_tgt = self.encoder_(inputs_Xt)
-
-        task_src = self.task_(encoded_src)
-        task_tgt = self.task_(encoded_tgt)
-        
-        task_src_nograd = GradientHandler(0., name="gh_2")(task_src)
-        task_tgt_nograd = GradientHandler(0., name="gh_3")(task_tgt)
-        
-        # TODO, add condition for bce and cce     
-#         if self.loss_name_ in ["categorical_crossentropy",
-#                                "CategoricalCrossentropy"]:
-
-        disc_src = GradientHandler(-self.lambda_, name="gh_0")(encoded_src)
-        disc_tgt = GradientHandler(-self.lambda_, name="gh_1")(encoded_tgt)
-        disc_src = self.discriminator_(disc_src)
-        disc_tgt = self.discriminator_(disc_tgt)
-
-        outputs = dict(task_src=task_src,
-                       task_tgt=task_tgt,
-                       task_src_nograd=task_src_nograd,
-                       task_tgt_nograd=task_tgt_nograd,
-                       disc_src=disc_src,
-                       disc_tgt=disc_tgt)
-        return outputs
-
-
-    def get_loss(self, inputs_ys, inputs_yt, task_src,
-                 task_src_nograd, task_tgt_nograd,
-                 task_tgt, disc_src, disc_tgt):
-        
-        task_loss = self.loss_(inputs_ys, task_src)
-        
-        disc_loss_src = self.loss_(task_src_nograd, disc_src)
-        disc_loss_tgt = self.loss_(task_tgt_nograd, disc_tgt)
-        
-        disc_loss = disc_loss_tgt - self.gamma * disc_loss_src
-        
-        loss = K.mean(task_loss) - K.mean(disc_loss)
-        return loss
-
-
-    def get_metrics(self, inputs_ys, inputs_yt,
-                    task_src, task_tgt,
-                    task_src_nograd, task_tgt_nograd,
-                    disc_src, disc_tgt):
-        metrics = {}
-        
-        task_s = self.loss_(inputs_ys, task_src)
-        disc = (self.loss_(task_tgt_nograd, disc_tgt) -
-                self.gamma * self.loss_(task_src_nograd, disc_src))
-        
-        metrics["task_s"] = K.mean(task_s)
-        metrics["disc"] = K.mean(disc)
-        if inputs_yt is not None:
-            task_t = self.loss_(inputs_yt, task_tgt)
-            metrics["task_t"] = K.mean(task_t)
-        
-        names_task, names_disc = self._get_metric_names()
-        
-        for metric, name in zip(self.metrics_task_, names_task):
-            metrics[name + "_s"] = metric(inputs_ys, task_src)
-            if inputs_yt is not None:
-                metrics[name + "_t"] = metric(inputs_yt, task_tgt)
-                
-        for metric, name in zip(self.metrics_disc_, names_disc):
-            metrics[name] = (metric(task_tgt_nograd, disc_tgt) -
-                self.gamma * metric(task_src_nograd, disc_src))
-        return metrics
+            self.encoder_ = check_network(self.encoder,
+                                          copy=self.copy,
+                                          name="encoder")
+        if self.task is None:
+            self.task_ = get_default_task(name="task")
+        else:
+            self.task_ = check_network(self.task,
+                                       copy=self.copy,
+                                       name="task")
+        if self.task is None:
+            self.discriminator_ = get_default_task(name="discriminator")
+        else:
+            self.discriminator_ = check_network(self.task,
+                                                copy=self.copy,
+                                                name="discriminator")

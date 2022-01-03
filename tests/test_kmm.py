@@ -27,8 +27,8 @@ def test_setup():
 
 def test_fit():
     np.random.seed(0)
-    model = KMM(LinearRegression(fit_intercept=False))
-    model.fit(Xs, ys, Xt)
+    model = KMM(LinearRegression(fit_intercept=False), gamma=1.)
+    model.fit(Xs, ys, Xt=Xt)
     assert np.abs(model.estimator_.coef_[0][0] - 0.2) < 1
     assert model.weights_[:50].sum() > 50
     assert model.weights_[50:].sum() < 0.1

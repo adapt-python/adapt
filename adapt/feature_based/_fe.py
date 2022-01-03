@@ -5,12 +5,14 @@ Frustratingly Easy Domain Adaptation module.
 import warnings
 
 import numpy as np
-import tensorflow as tf
+from sklearn.utils import check_array
 
-from adapt.utils import check_arrays, check_one_array, check_estimator
+from adapt.base import BaseAdaptEstimator, make_insert_doc
+from adapt.utils import check_arrays
 
 
-class FE:
+@make_insert_doc()
+class FE(BaseAdaptEstimator):
     """
     FE: Frustratingly Easy Domain Adaptation.
 
@@ -57,8 +59,6 @@ class FE:
 
     Attributes
     ----------
-    estimator_ : object
-        Estimator.
         
     See also
     --------
@@ -96,163 +96,90 @@ class FE:
     for arguments Xs, ys of fit method : Xs = [Xs1, Xs2, ...],
     ys = [ys1, ys2, ...]
     """
-    def __init__(self, estimator=None, copy=True, verbose=1, random_state=None):
-        np.random.seed(random_state)
-        tf.random.set_seed(random_state)
+    def __init__(self,
+                 estimator=None,
+                 Xt=None,
+                 yt=None,
+                 copy=True,
+                 verbose=1,
+                 random_state=None,
+                 **params):
         
-        self.verbose = verbose
-        self.estimator_ = check_estimator(estimator, copy=copy)
-        self.copy = copy
-        self.random_state = random_state
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)
 
 
-    def fit(self, Xs, ys, Xt, yt, **fit_params):
-        """
-        Fit FE.
-
-        Parameters
-        ----------
-        Xs : numpy array or list of arrays
-            Source input data. A list of
-            arrays can be given for multi-source DA.
-
-        ys : numpy array or list of arrays
-            Source output data. A list of
-            arrays can be given for multi-source DA.
-
-        Xt : numpy array
-            Target input data.
-            
-        yt : numpy array
-            Target output data.
-
-        fit_params : key, value arguments
-            Arguments given to the fit method of the
-            estimator.
-
-        Returns
-        -------
-        self : returns an instance of self
-        """
-        Xs, ys, Xt, yt = check_arrays(Xs, ys, Xt, yt, True)        
-        if self.verbose:
-            print("Augmenting feature space...")
-        Xs_emb, Xt_emb = self.fit_embeddings(Xs, Xt)
-        if self.verbose:
-            print("Fit estimator...")
-        X = np.concatenate((Xs_emb, Xt_emb))
-        y = np.concatenate((ys, yt))
-        self.fit_estimator(X, y, **fit_params)
-        return self
-
-        
-    def fit_embeddings(self, Xs, Xt):
+    def fit_transform(self, Xs, Xt, ys, yt, domains=None, **kwargs):
         """
         Fit embeddings.
         
         Parameters
         ----------
-        Xs : numpy array or list of arrays
-            Source input data. A list of
-            arrays can be given for multi-source DA.
+        Xs : array
+            Source input data.
             
         Xt : array
-            Input target data.
+            Target input data.
             
+        ys : array
+            Source output data.
+            
+        yt : array
+            Target output data.
+            
+        domains : array (default=None)
+            Vector giving the domain for each source
+            data. Can be used for multisource purpose.
+        
+        kwargs : key, value argument
+            Not used, present here for adapt consistency.
+        
         Returns
         -------
-        Xs_emb, Xt_emb : embedded source and target data
+        X_emb, y : embedded input and output data
         """
-        Xs = check_one_array(Xs, multisource=True)           
+        Xs, ys = check_arrays(Xs, ys)
+        Xt, yt = check_arrays(Xt, yt)
+        
         if self.verbose:
             print("Previous shape: %s"%str(Xs.shape))
-        if isinstance(Xs, (tuple, list)):
-            dim = Xs[0].shape[1]
-            self.length_ = len(Xs)
-            Xs_emb = np.concatenate(
-                (Xs[0], np.zeros((len(Xs[0]), dim*self.length_)), Xs[0]),
-                axis=-1)
-            for i in range(1, self.length_):
-                Xs_emb_i = np.concatenate((
-                    np.zeros((len(Xs[i]), dim*i)),
-                    Xs[i],
-                    np.zeros((len(Xs[i]), dim*(self.length_-i))),
-                    Xs[i]), axis=-1)
-                Xs_emb = np.concatenate((Xs_emb, Xs_emb_i))
-            Xt_emb = np.concatenate((np.zeros((len(Xt), dim*self.length_)),
-                                     Xt, Xt), axis=-1)
-        else:
-            Xs_emb = np.concatenate((Xs, np.zeros(Xs.shape), Xs), axis=-1)
-            Xt_emb = np.concatenate((np.zeros(Xt.shape), Xt, Xt), axis=-1)
-        if self.verbose:
-            print("New shape: %s"%str(Xs_emb.shape))
-        return Xs_emb, Xt_emb
-    
-    
-    def fit_estimator(self, X, y, **fit_params):
-        """
-        Fit estimator.
         
-        Parameters
-        ----------
-        X : array
-            Input data.
-            
-        y : array
-            Output data.
-            
-        fit_params : key, value arguments
-            Arguments given to the fit method of
-            the estimator.
-            
-        Returns
-        -------
-        estimator_ : fitted estimator
-        """
-        X = check_one_array(X)
-        np.random.seed(self.random_state)
-        tf.random.set_seed(self.random_state)
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            self.estimator_.fit(X, y, **fit_params)
-        return self.estimator_
+        if domains is None:
+            domains = np.zeros(len(Xs))
+        
+        domains = self._check_domains(domains).astype(int)
+        
+        self.n_domains_ = max(domains)+1
+        dim = Xs.shape[-1]
+        
+        for i in range(self.n_domains_):
+            Xs_emb_i = np.concatenate(
+                (np.zeros((np.sum(domains==i), dim*i)),
+                 Xs[domains==i],
+                 np.zeros((np.sum(domains==i), dim*(self.n_domains_-i))),
+                 Xs[domains==i]),
+                axis=-1)
+            if i == 0:
+                Xs_emb = Xs_emb_i
+                ys_emb = ys[domains==i]
+            else:
+                Xs_emb = np.concatenate((Xs_emb, Xs_emb_i))
+                ys_emb = np.concatenate((ys_emb, ys[domains==i]))
+        
+        Xt_emb = np.concatenate((np.zeros((len(Xt), dim*self.n_domains_)),
+                                 Xt, Xt), axis=-1)
+        
+        X = np.concatenate((Xs_emb, Xt_emb))
+        y = np.concatenate((ys_emb, yt))
+        
+        if self.verbose:
+            print("New shape: %s"%str(X.shape))
+        return X, y
 
 
-    def predict(self, X, domain="tgt"):
-        """
-        Return the predictions of ``estimator_`` on the
-        augmented feature space.
-
-        ``domain`` arguments specifies how features from ``X``
-        will be considered: as ``"source"`` or
-        ``"target"`` features.
-
-        Parameters
-        ----------
-        X : array
-            Input data.
-
-        domain : str (default="tgt")
-            Choose between ``"source", "src"`` and
-            ``"target", "tgt"`` feature augmentation,
-            or "src_0", "src_1", ... in multisource setting.
-
-        Returns
-        -------
-        y_pred : array
-            Prediction of ``estimator_``.
-
-        Notes
-        -----
-        As FE is an anti-symetric feature-based method, one should indicates the
-        domain of ``X`` in order to apply the appropriate feature transformation.
-        """
-        X = check_one_array(X)
-        X_emb = self.predict_features(X, domain=domain)
-        return self.estimator_.predict(X_emb)
-    
-    
-    def predict_features(self, X, domain="tgt"):
+    def transform(self, X, domain="tgt"):
         """
         Return augmented features for X.
         
@@ -270,19 +197,30 @@ class FE:
         -------
         X_emb : array
             Embeddings of X.
+
+        Notes
+        -----
+        As FE is an anti-symetric feature-based method, one should indicates the
+        domain of ``X`` in order to apply the appropriate feature transformation.
         """
-        X = check_one_array(X)
+        X = check_array(X, allow_nd=True)
         if domain in ["tgt", "target"]:
-            X_emb = np.concatenate((np.zeros(X.shape), X, X), axis=1)
+            X_emb = np.concatenate((np.zeros((len(X), X.shape[-1]*self.n_domains_)),
+                                    X,
+                                    X),
+                                   axis=-1)
         elif domain in ["src", "source"]:
-            X_emb = np.concatenate((X, np.zeros(X.shape), X), axis=1)
+            X_emb = np.concatenate((X,
+                                    np.zeros((len(X), X.shape[-1]*self.n_domains_)),
+                                    X),
+                                   axis=-1)
         elif "src_" in domain:
-            num_dom = int(domain.split("src_")[0])
-            dim = X.shape[1]
+            num_dom = int(domain.split("src_")[1])
+            dim = X.shape[-1]
             X_emb = np.concatenate((
                     np.zeros((len(X), dim*num_dom)),
                     X,
-                    np.zeros((len(X), dim*(self.length_-num_dom))),
+                    np.zeros((len(X), dim*(self.n_domains_-num_dom))),
                     X), axis=-1)
         else:
             raise ValueError("`domain `argument "
