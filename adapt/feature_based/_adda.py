@@ -288,7 +288,7 @@ In CVPR, 2017.
         self.encoder_(np.zeros((1,) + shape_X))
         
         # Set same weights to encoder_src
-        self.encoder_src_ = check_network(self.encoder,
+        self.encoder_src_ = check_network(self.encoder_,
                                           copy=True,
                                           name="encoder_src")
         

@@ -16,7 +16,7 @@ from sklearn.multioutput import MultiOutputRegressor
 from sklearn.compose import TransformedTargetRegressor
 from sklearn.base import BaseEstimator, RegressorMixin, ClassifierMixin
 from sklearn.tree._tree import Tree
-from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
+# from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 from tensorflow.keras import Model, Sequential
 from tensorflow.keras.layers import Input, Dense, Flatten, Reshape
 from tensorflow.python.keras.engine.input_layer import InputLayer
@@ -28,7 +28,7 @@ def is_equal_estimator(v1, v2):
     assert type(v2) == type(v1)
     if isinstance(v1, np.ndarray):
         assert np.array_equal(v1, v2)
-    elif isinstance(v1, (BaseEstimator, KerasClassifier, KerasRegressor)):
+    elif isinstance(v1, BaseEstimator):  # KerasClassifier, KerasRegressor
         assert is_equal_estimator(v1.__dict__, v2.__dict__)
     elif isinstance(v1, Model):
         assert is_equal_estimator(v1.get_config(),
@@ -198,7 +198,7 @@ estimators = [
     TransformedTargetRegressor(regressor=Ridge(alpha=25), transformer=StandardScaler()),
     MultiOutputRegressor(Ridge(alpha=0.3)),
     make_pipeline(StandardScaler(), Ridge(alpha=0.2)),
-    KerasClassifier(_get_model_Sequential, input_shape=(1,)),
+    # KerasClassifier(_get_model_Sequential, input_shape=(1,)),
     CustomEstimator()
 ]
 
@@ -212,10 +212,10 @@ def test_check_estimator_estimators(est):
     else:
         est.fit(np.linspace(0, 1, 10).reshape(-1, 1),
                 (np.linspace(0, 1, 10)<0.5).astype(float))
-    if isinstance(est, KerasClassifier):
-        new_est = check_estimator(est, copy=False)
-    else:
-        new_est = check_estimator(est, copy=True, force_copy=True)
+    # if isinstance(est, KerasClassifier):
+    #     new_est = check_estimator(est, copy=False)
+    # else:
+    new_est = check_estimator(est, copy=True, force_copy=True)
     assert is_equal_estimator(est, new_est)
     
     

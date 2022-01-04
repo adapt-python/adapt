@@ -265,7 +265,11 @@ class BaseAdapt:
         if src_index is None:
             src_index = np.arange(len(Xs))
         if hasattr(self, "transform"):
-            args = inspect.getfullargspec(self.transform).args
+            args = [
+                p.name
+                for p in inspect.signature(self.transform).parameters.values()
+                if p.name != "self" and p.kind != p.VAR_KEYWORD
+            ]
             if "domain" in args:
                 Xt = self.transform(Xt, domain="tgt")
                 Xs = self.transform(Xs, domain="src")
@@ -333,7 +337,11 @@ class BaseAdapt:
     
     def _filter_params(self, func, override={}, prefix=""):
         kwargs = {}
-        args = inspect.getfullargspec(func).args
+        args = [
+            p.name
+            for p in inspect.signature(func).parameters.values()
+            if p.name != "self" and p.kind != p.VAR_KEYWORD
+        ]
         for key, value in self.__dict__.items():
             new_key = key.replace(prefix+"__", "")
             if new_key in args and prefix in key:
@@ -575,7 +583,12 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
 
         fit_params = self._filter_params(self.estimator_.fit, fit_params)
         
-        if "sample_weight" in inspect.getfullargspec(self.estimator_.fit).args:
+        fit_args = [
+            p.name
+            for p in inspect.signature(self.estimator_.fit).parameters.values()
+            if p.name != "self" and p.kind != p.VAR_KEYWORD
+        ]
+        if "sample_weight" in fit_args:
             sample_weight = check_sample_weight(sample_weight, X)
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
@@ -718,7 +731,11 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
                 
         legal_params = ["domain", "val_sample_size"]
         for func in legal_params_fct:
-            args = list(inspect.getfullargspec(func).args)
+            args = [
+                p.name
+                for p in inspect.signature(func).parameters.values()
+                if p.name != "self" and p.kind != p.VAR_KEYWORD
+            ]
             legal_params = legal_params + args
         
         # Add kernel params for kernel based algorithm
@@ -1190,7 +1207,11 @@ class BaseAdaptDeep(Model, BaseAdapt):
         
         legal_params = ["domain", "val_sample_size"]
         for func in legal_params_fct:
-            args = list(inspect.getfullargspec(func).args)
+            args = [
+                p.name
+                for p in inspect.signature(func).parameters.values()
+                if p.name != "self" and p.kind != p.VAR_KEYWORD
+            ]
             legal_params = legal_params + args
         
         if "pretrain" in legal_params:
@@ -1200,7 +1221,11 @@ class BaseAdaptDeep(Model, BaseAdapt):
                     legal_params_fct.append(params["pretrain__optimizer"].__init__)
 
             for func in legal_params_fct:
-                args = list(inspect.getfullargspec(func).args)
+                args = [
+                    p.name
+                    for p in inspect.signature(func).parameters.values()
+                    if p.name != "self" and p.kind != p.VAR_KEYWORD
+                ]
                 legal_params = legal_params + ["pretrain__"+name for name in args]
         return legal_params
     

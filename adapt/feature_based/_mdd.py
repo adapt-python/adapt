@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 
 from adapt.base import BaseAdaptDeep, make_insert_doc
-from adapt.utils import check_network
+from adapt.utils import check_network, get_default_encoder, get_default_task
 
 EPS = np.finfo(np.float32).eps
 

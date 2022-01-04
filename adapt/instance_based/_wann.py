@@ -28,7 +28,12 @@ class WANN(BaseAdaptDeep):
           between the reweighted source and target distributions: the Y-discrepancy
     
     Parameters
-    ----------        
+    ----------
+    pretrain : bool (default=True)
+        Weither to perform pretraining of the ``weighter``
+        network or not. If True, the ``weighter`` is 
+        pretrained in order to predict 1 for each source.
+    
     C : float (default=1.)
         Clipping constant for the weighting networks
         regularization. Low value of ``C`` produce smoother
@@ -40,6 +45,7 @@ class WANN(BaseAdaptDeep):
                  weighter=None,
                  Xt=None,
                  yt=None,
+                 pretrain=True,
                  C=1.,
                  verbose=1,
                  copy=True,

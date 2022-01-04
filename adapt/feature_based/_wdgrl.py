@@ -71,10 +71,6 @@ class WDGRL(BaseAdaptDeep):
         
     discriminator_ : tensorflow Model
         discriminator network.
-    
-    model_ : tensorflow Model
-        Fitted model: the union of ``encoder_``,
-        ``task_`` and ``discriminator_`` networks.
         
     history_ : dict
         history of the losses and metrics across the epochs.

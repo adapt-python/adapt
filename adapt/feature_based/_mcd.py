@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 
 from adapt.base import BaseAdaptDeep, make_insert_doc
-from adapt.utils import check_network
+from adapt.utils import check_network, get_default_encoder, get_default_task
 
 EPS = np.finfo(np.float32).eps
 
@@ -27,10 +27,10 @@ class MCD(BaseAdaptDeep):
     
     Parameters
     ----------       
-    pretrain_steps : int (default=None)
-        Specify the number of pretraining of source encoder
-        and task networks. If `None` the number of pretrain
-        steps is equal to half the total number of training steps.
+    pretrain : bool (default=True)
+        Weither to pretrain the networks or not.
+        If True, the three networks are fitted on source
+        labeled data.
     
     Attributes
     ----------

@@ -248,8 +248,6 @@ In NIPS, 2018
             disc_loss += sum(self.discriminator_.losses)
             enc_loss += sum(self.encoder_.losses)
             
-        print(task_loss.shape, enc_loss.shape, disc_loss.shape)
-            
         # Compute gradients
         trainable_vars_task = self.task_.trainable_variables
         trainable_vars_enc = self.encoder_.trainable_variables
@@ -295,8 +293,10 @@ In NIPS, 2018
                                         self.max_features])
             self._random_enc = tf.random.normal([Xs_enc.get_shape()[1],
                                            self.max_features])
+            self.discriminator_(np.zeros((1, self.max_features)))
         else:
             self.is_overloaded_ = False
+            self.discriminator_(np.zeros((1, Xs_enc.get_shape()[1] * ys_pred.get_shape()[1])))
     
     
     def _initialize_networks(self):
@@ -318,6 +318,7 @@ In NIPS, 2018
             self.discriminator_ = check_network(self.discriminator,
                                                 copy=self.copy,
                                                 name="discriminator")
+        
     
     
     # def _initialize_networks(self, shape_Xt):
