@@ -96,13 +96,13 @@ class DANN(BaseAdaptDeep):
     >>> ys = 0.2 * Xs[:, 0]
     >>> yt = 0.2 * Xt[:, 0]
     >>> model = DANN(lambda_=0., random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.history_["task_t"][-1]
-    0.0240...
+    >>> model.fit(Xs, ys, Xt, epochs=100, verbose=0)
+    >>> model.score_estimator(Xt, yt)
+    0.0231...
     >>> model = DANN(lambda_=0.1, random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.history_["task_t"][-1]
-    0.0022...
+    >>> model.fit(Xs, ys, Xt, epochs=100, verbose=0)
+    >>> model.score_estimator(Xt, yt)
+    0.0010...
     
     See also
     --------
@@ -185,7 +185,6 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
             disc_loss += sum(self.discriminator_.losses)
             enc_loss += sum(self.encoder_.losses)
             
-        print(task_loss.shape, enc_loss.shape, disc_loss.shape)
             
         # Compute gradients
         trainable_vars_task = self.task_.trainable_variables
@@ -209,7 +208,6 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
         logs.update({"disc_loss": disc_loss})
         logs.update(disc_metrics)
-        logs.update({"lambda": _lambda_})
         return logs
         
     

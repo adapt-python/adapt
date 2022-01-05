@@ -1,4 +1,4 @@
-:ref:`adapt.feature_based <adapt.feature_based>`.FE
+﻿:ref:`adapt.feature_based <adapt.feature_based>`.FE
 ==========================================================
 
 .. currentmodule:: adapt.feature_based
@@ -17,18 +17,28 @@
 	    
 		~FE.__init__
 		~FE.fit
-		~FE.fit_embeddings
 		~FE.fit_estimator
+		~FE.fit_transform
+		~FE.get_params
 		~FE.predict
-		~FE.predict_features
+		~FE.predict_estimator
+		~FE.score
+		~FE.score_estimator
+		~FE.set_params
+		~FE.transform
 	
 	
 	.. automethod:: __init__
 	.. automethod:: fit
-	.. automethod:: fit_embeddings
 	.. automethod:: fit_estimator
+	.. automethod:: fit_transform
+	.. automethod:: get_params
 	.. automethod:: predict
-	.. automethod:: predict_features
+	.. automethod:: predict_estimator
+	.. automethod:: score
+	.. automethod:: score_estimator
+	.. automethod:: set_params
+	.. automethod:: transform
 	
     
 	

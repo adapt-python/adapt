@@ -99,7 +99,7 @@ class RegularTransferLR(BaseAdaptEstimator):
     >>> lr.score(Xt.reshape(-1, 1), yt)
     0.2912...
     >>> rt = RegularTransferLR(lr, lambda_=0.01, random_state=0)
-    >>> rt.fit(Xt[:10], yt[:10])
+    >>> rt.fit(Xt[:10].reshape(-1, 1), yt[:10])
     >>> rt.estimator_.score(Xt.reshape(-1, 1), yt)
     0.3276...
         
@@ -253,7 +253,7 @@ class RegularTransferLC(RegularTransferLR):
     >>> lc.score(Xt.reshape(-1, 1), yt)
     0.67
     >>> rt = RegularTransferLC(lc, lambda_=0.01, random_state=0)
-    >>> rt.fit(Xt[:10], yt[:10])
+    >>> rt.fit(Xt[:10].reshape(-1, 1), yt[:10].reshape(-1, 1))
     >>> rt.estimator_.score(Xt.reshape(-1, 1), yt)
     0.67
 
@@ -312,14 +312,6 @@ class RegularTransferNN(BaseAdaptDeep):
     
     Different trade-off can be given to the layer of the 
     neural network through the ``lambdas`` parameter.
-    Some layers can also be frozen during training via
-    the ``training`` parameter.
-    
-    .. figure:: ../_static/images/regulartransfer.png
-        :align: center
-        
-        Transferring parameters of a CNN pretrained on Imagenet
-        (source: [2])
 
     Parameters
     ----------        
@@ -362,10 +354,9 @@ class RegularTransferNN(BaseAdaptDeep):
     >>> np.abs(model.predict(Xt).ravel() - yt).mean()
     0.48265...
     >>> rt = RegularTransferNN(model, lambdas=0.01, random_state=0)
-    >>> rt.fit(Xt[:10], yt[:10], epochs=300, verbose=0)
-    >>> rt.predict(Xt.reshape(-1, 1))
-    >>> np.abs(rt.predict(Xt).ravel() - yt).mean()
-    0.23114...
+    >>> rt.fit(Xt[:10].reshape(-1,1), yt[:10], epochs=300, verbose=0)
+    >>> np.abs(rt.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
+    0.1900...
         
     See also
     --------
@@ -377,11 +368,6 @@ class RegularTransferNN(BaseAdaptDeep):
 content/uploads/2004/07/2004-chelba-emnlp.pdf>`_ C. Chelba and \
 A. Acero. "Adaptation of maximum entropy classifier: Little data \
 can help a lot". In EMNLP, 2004.
-
-    .. [2] `[2] <https://hal.inria.fr/hal-00911179v1/document>`_ \
-Oquab M., Bottou L., Laptev I., Sivic J. "Learning and \
-transferring mid-level image representations using convolutional \
-neural networks". In CVPR, 2014.
     """
     def __init__(self,
                  task=None,

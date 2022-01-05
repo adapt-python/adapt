@@ -1,9 +1,9 @@
-﻿:ref:`adapt.feature_based <adapt.feature_based>`.ADDA
-============================================================
+﻿:ref:`adapt.instance_based <adapt.instance_based>`.WANN
+=============================================================
 
-.. currentmodule:: adapt.feature_based
+.. currentmodule:: adapt.instance_based
 
-.. autoclass:: ADDA
+.. autoclass:: WANN
 	:no-members:
 	:no-inherited-members:
 	:no-special-members:
@@ -15,18 +15,19 @@
 	
 	.. autosummary::
 	    
-		~ADDA.__init__
-		~ADDA.compile
-		~ADDA.fit
-		~ADDA.get_params
-		~ADDA.predict
-		~ADDA.predict_disc
-		~ADDA.predict_task
-		~ADDA.pretrain_step
-		~ADDA.score
-		~ADDA.score_estimator
-		~ADDA.set_params
-		~ADDA.transform
+		~WANN.__init__
+		~WANN.compile
+		~WANN.fit
+		~WANN.get_params
+		~WANN.predict
+		~WANN.predict_disc
+		~WANN.predict_task
+		~WANN.predict_weights
+		~WANN.pretrain_step
+		~WANN.score
+		~WANN.score_estimator
+		~WANN.set_params
+		~WANN.transform
 	
 	
 	.. automethod:: __init__
@@ -36,6 +37,7 @@
 	.. automethod:: predict
 	.. automethod:: predict_disc
 	.. automethod:: predict_task
+	.. automethod:: predict_weights
 	.. automethod:: pretrain_step
 	.. automethod:: score
 	.. automethod:: score_estimator
@@ -49,5 +51,5 @@
 
    <h2> Examples </h2>
 	
-.. include:: ../gallery/ADDA.rst
+.. include:: ../gallery/WANN.rst
 	

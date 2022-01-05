@@ -83,7 +83,7 @@ base_doc_2 ="""
         It can be, for instance, compile or fit parameters of the
         estimator or kernel parameters etc...
         Accepted parameters can be found by calling the method
-        `_get_legal_params(params)`.
+        ``_get_legal_params(params)``.
 """
 
 
@@ -199,24 +199,26 @@ class BaseAdapt:
         """
         Return adaptation score.
         
-        The normalized discrepancy distance is computed
+        For parameter-based methods, the estimator score
+        on X, y is computed.
+        
+        For instance-based and feature-based methods,
+        the normalized discrepancy distance is computed
         between the reweighted/transformed source input
         data and the target input data.
         
         Parameters
         ----------
         X : array (default=None)
-            Not used, present here for sklearn consistency
-            by convention. The training source data
-            are used instead.
+            Not used for instance and feature based methods.
+            The training source data are used instead.
             
         y : array (default=None)
-            Not used, present here for sklearn consistency
-            by convention.
+            Not used for instance and feature based methods.
+            The training source data are used instead.
             
         sample_weight : array (default=None)
-            Not used, present here for sklearn consistency
-            by convention.
+            Not used for instance and feature based methods.
             
         Returns
         -------
@@ -227,7 +229,7 @@ class BaseAdapt:
             Xs = self.Xs_
             Xt = self.Xt_
             src_index = self.src_index_
-            score = self.score_adapt(Xs, Xt, src_index)
+            score = self._score_adapt(Xs, Xt, src_index)
         elif hasattr(self, "score_estimator"):
             score = self.score_estimator(X, y, sample_weight=sample_weight)
         else:
@@ -236,7 +238,7 @@ class BaseAdapt:
         return score
 
 
-    def score_adapt(self, Xs, Xt, src_index=None):
+    def _score_adapt(self, Xs, Xt, src_index=None):
         """
         Return adaptation score.
         
@@ -416,33 +418,6 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         
         for key, value in params.items():
             setattr(self, key, value)
-        
-
-#     def get_params(self, deep=True):
-#         """
-#         Get parameters for this estimator.
-        
-#         Parameters
-#         ----------
-#         deep : bool (default=True)
-#             If True, will return the parameters for this estimator and
-#             contained subobjects that are estimators.
-        
-#         Returns
-#         -------
-#         params : dict
-#             Parameter names mapped to their values.
-#         """
-#         out = dict()
-#         legal_params = self._get_legal_params(self.__dict__)
-#         params_names = set(self.__dict__) & set(legal_params)
-#         for key in params_names:
-#             value = getattr(self, key)
-#             if deep and hasattr(value, "get_params"):
-#                 deep_items = value.get_params().items()
-#                 out.update((key + "__" + k, val) for k, val in deep_items)
-#             out[key] = value
-#         return out
     
     
     def fit(self, X, y, Xt=None, yt=None, domains=None, **fit_params):
@@ -551,7 +526,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         """
         X, y = check_arrays(X, y)
         set_random_seed(random_state)
-        
+
         if (not warm_start) or (not hasattr(self, "estimator_")):
             estimator = self.estimator
             self.estimator_ = check_estimator(estimator,
@@ -575,14 +550,16 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
                         optim_params = self._filter_params(
                             compile_params["optimizer"].__init__)
                         if len(optim_params) > 0:
-                            optimizer = compile_params["optimizer"].__class__(**optim_params)
+                            kwargs = compile_params["optimizer"].get_config()
+                            kwargs.update(optim_params)
+                            optimizer = compile_params["optimizer"].__class__(**kwargs)
                         else:
                             optimizer = compile_params["optimizer"]
                         compile_params["optimizer"] = optimizer
                 self.estimator_.compile(**compile_params)
 
         fit_params = self._filter_params(self.estimator_.fit, fit_params)
-        
+
         fit_args = [
             p.name
             for p in inspect.signature(self.estimator_.fit).parameters.values()
@@ -592,7 +569,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
             sample_weight = check_sample_weight(sample_weight, X)
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                self.estimator_.fit(X, y, 
+                self.estimator_.fit(X, y,
                                     sample_weight=sample_weight,
                                     **fit_params)
         else:
@@ -1018,15 +995,100 @@ class BaseAdaptDeep(Model, BaseAdapt):
     
     
     def compile(self,
-        optimizer=None,
-        loss=None,
-        metrics=None,
-        loss_weights=None,
-        weighted_metrics=None,
-        run_eagerly=None,
-        steps_per_execution=None,
-        **kwargs):
-        
+                optimizer=None,
+                loss=None,
+                metrics=None,
+                loss_weights=None,
+                weighted_metrics=None,
+                run_eagerly=None,
+                steps_per_execution=None,
+                **kwargs):
+        """
+        Configures the model for training.
+
+        Parameters
+        ----------
+        optimizer: str or `tf.keras.optimizer` instance
+            Optimizer
+
+        loss: str or `tf.keras.losses.Loss` instance
+            Loss function. A loss function is any callable
+            with the signature `loss = fn(y_true, y_pred)`,
+            where `y_true` are the ground truth values, and
+            `y_pred` are the model's predictions.
+            `y_true` should have shape
+            `(batch_size, d0, .. dN)` (except in the case of
+            sparse loss functions such as
+            sparse categorical crossentropy which expects integer arrays of shape
+            `(batch_size, d0, .. dN-1)`).
+            `y_pred` should have shape `(batch_size, d0, .. dN)`.
+            The loss function should return a float tensor.
+            If a custom `Loss` instance is
+            used and reduction is set to `None`, return value has shape
+            `(batch_size, d0, .. dN-1)` i.e. per-sample or per-timestep loss
+            values; otherwise, it is a scalar. If the model has multiple outputs,
+            you can use a different loss on each output by passing a dictionary
+            or a list of losses. The loss value that will be minimized by the
+            model will then be the sum of all individual losses, unless
+            `loss_weights` is specified.
+
+        metrics: list of str or list of `tf.keras.metrics.Metric` instance
+            List of metrics to be evaluated by the model during training
+            and testing. Typically you will use `metrics=['accuracy']`. A
+            function is any callable with the signature `result = fn(y_true,
+            y_pred)`. To specify different metrics for different outputs of a
+            multi-output model, you could also pass a dictionary, such as
+            `metrics={'output_a': 'accuracy', 'output_b': ['accuracy', 'mse']}`.
+            You can also pass a list to specify a metric or a list of metrics
+            for each output, such as `metrics=[['accuracy'], ['accuracy', 'mse']]`
+            or `metrics=['accuracy', ['accuracy', 'mse']]`. When you pass the
+            strings 'accuracy' or 'acc', we convert this to one of
+            `tf.keras.metrics.BinaryAccuracy`,
+            `tf.keras.metrics.CategoricalAccuracy`,
+            `tf.keras.metrics.SparseCategoricalAccuracy` based on the loss
+            function used and the model output shape. We do a similar
+            conversion for the strings 'crossentropy' and 'ce' as well.
+
+        loss_weights: List or dict of floats
+            Scalars to weight the loss contributions of different model
+            outputs. The loss value that will be minimized by the model will then
+            be the *weighted sum* of all individual losses, weighted by the
+            `loss_weights` coefficients.
+            If a list, it is expected to have a 1:1 mapping to the model's
+            outputs. If a dict, it is expected to map output names (strings)
+            to scalar coefficients.
+
+        weighted_metrics: list of metrics
+            List of metrics to be evaluated and weighted by
+            `sample_weight` or `class_weight` during training and testing.
+
+        run_eagerly: bool (default=False)
+            If `True`, this `Model`'s logic will not be wrapped
+            in a `tf.function`. Recommended to leave
+            this as `None` unless your `Model` cannot be run inside a
+            `tf.function`. `run_eagerly=True` is not supported when using
+            `tf.distribute.experimental.ParameterServerStrategy`.
+
+        steps_per_execution: int (default=1)
+            The number of batches to run during each
+            `tf.function` call. Running multiple batches
+            inside a single `tf.function` call can greatly improve performance
+            on TPUs or small models with a large Python overhead.
+            At most, one full epoch will be run each
+            execution. If a number larger than the size of the epoch is passed,
+            the execution will be truncated to the size of the epoch.
+            Note that if `steps_per_execution` is set to `N`,
+            `Callback.on_batch_begin` and `Callback.on_batch_end` methods
+            will only be called every `N` batches
+            (i.e. before/after each `tf.function` execution).
+
+        **kwargs: key, value arguments
+            Arguments supported for backwards compatibility only.
+            
+        Returns
+        -------
+        None: None
+        """
         if hasattr(self, "_adapt_metrics") and metrics is None:
             metrics = self._adapt_metrics
                 
@@ -1078,11 +1140,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
         )
         compile_params = {k: v for k, v in compile_params.items() if v is not None}
         
-        print(compile_params)
-        
         compile_params = self._filter_params(super().compile, compile_params)
-        
-        print(compile_params)
         
         if ((not "optimizer" in compile_params) or 
             (compile_params["optimizer"] is None)):
@@ -1093,7 +1151,9 @@ class BaseAdaptDeep(Model, BaseAdapt):
                     optim_params = self._filter_params(
                         compile_params["optimizer"].__init__)
                     if len(optim_params) > 0:
-                        optimizer = compile_params["optimizer"].__class__(**optim_params)
+                        kwargs = compile_params["optimizer"].get_config()
+                        kwargs.update(optim_params)
+                        optimizer = compile_params["optimizer"].__class__(**kwargs)
                     else:
                         optimizer = compile_params["optimizer"]
                     compile_params["optimizer"] = optimizer
@@ -1140,7 +1200,87 @@ class BaseAdaptDeep(Model, BaseAdapt):
                 return_metrics[metric.name] = result
         return return_metrics
     
+        
+    def predict(self,
+                x,
+                batch_size=None,
+                verbose=0,
+                steps=None,
+                callbacks=None,
+                max_queue_size=10,
+                workers=1,
+                use_multiprocessing=False):
+        """
+        Generates output predictions for the input samples.
 
+        Computation is done in batches. This method is designed for performance in
+        large scale inputs. For small amount of inputs that fit in one batch,
+        directly using `__call__()` is recommended for faster execution, e.g.,
+        `model(x)`, or `model(x, training=False)` if you have layers such as
+        `tf.keras.layers.BatchNormalization` that behaves differently during
+        inference. Also, note the fact that test loss is not affected by
+        regularization layers like noise and dropout.
+        
+        Parameters
+        ----------
+        x: array
+            Input samples.
+            
+        batch_size: int (default=`None`)
+            Number of samples per batch.
+            If unspecified, `batch_size` will default to 32.
+            Do not specify the `batch_size` if your data is in the
+            form of dataset, generators, or `keras.utils.Sequence` instances
+            (since they generate batches).
+            
+        verbose: int (default=0)
+            Verbosity mode, 0 or 1.
+        
+        steps: int (default=None)
+            Total number of steps (batches of samples)
+            before declaring the prediction round finished.
+            Ignored with the default value of `None`. If x is a `tf.data`
+            dataset and `steps` is None, `predict()` will
+            run until the input dataset is exhausted.
+            
+        callbacks: List of `keras.callbacks.Callback` instances.
+            List of callbacks to apply during prediction.
+            See [callbacks](/api_docs/python/tf/keras/callbacks).
+
+        max_queue_size: int (default=10)
+            Used for generator or `keras.utils.Sequence`
+            input only. Maximum size for the generator queue.
+            If unspecified, `max_queue_size` will default to 10.
+
+        workers: int (default=1)
+            Used for generator or `keras.utils.Sequence` input
+            only. Maximum number of processes to spin up when using
+            process-based threading. If unspecified, `workers` will default
+            to 1.
+            
+        use_multiprocessing: bool (default=False)
+            Used for generator or `keras.utils.Sequence` input only.
+            If `True`, use process-based
+            threading. If unspecified, `use_multiprocessing` will default to
+            `False`. Note that because this implementation relies on
+            multiprocessing, you should not pass non-picklable arguments to
+            the generator as they can't be passed easily to children processes.
+
+        Returns
+        -------
+        y_pred : array
+            Numpy array(s) of predictions.
+        """
+        return super().predict(x,
+                    batch_size=batch_size,
+                    verbose=verbose,
+                    steps=steps,
+                    callbacks=callbacks,
+                    max_queue_size=max_queue_size,
+                    workers=workers,
+                    use_multiprocessing=use_multiprocessing)
+    
+    
     def transform(self, X):
         """
         Return the encoded features of X.
@@ -1190,6 +1330,44 @@ class BaseAdaptDeep(Model, BaseAdapt):
             predictions of task network
         """     
         return self.task_.predict(self.transform(X))
+    
+    
+    def score_estimator(self, X, y, sample_weight=None):
+        """
+        Return the evaluation of the model on X, y.
+        
+        Call `evaluate` on tensorflow Model.
+        
+        Parameters
+        ----------
+        X : array
+            input data
+            
+        y : array
+            output data
+            
+        sample_weight : array (default=None)
+            Sample weights
+            
+        Returns
+        -------
+        score : float
+            Score.
+        """
+        if np.prod(X.shape) <= 10**8:
+            score = self.evaluate(
+                    X, y,
+                    sample_weight=sample_weight,
+                    batch_size=len(X)
+                )
+        else:
+            score = self.evaluate(
+                X, y,
+                sample_weight=sample_weight
+            )
+        if isinstance(score, (tuple, list)):
+            score = score[0]
+        return score
 
     
     def _get_legal_params(self, params):

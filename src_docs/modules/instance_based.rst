@@ -9,3 +9,4 @@ Instance-based
    ../generated/adapt.instance_based.TrAdaBoost
    ../generated/adapt.instance_based.TrAdaBoostR2
    ../generated/adapt.instance_based.TwoStageTrAdaBoostR2
+   ../generated/adapt.instance_based.WANN

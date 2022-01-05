@@ -109,7 +109,7 @@ class KLIEP(BaseAdaptEstimator):
     centers_ : numpy array
         Center points for kernels.
         
-    self.j_scores_ : list of float
+    j_scores_ : list of float
         List of J scores.
         
     estimator_ : object
@@ -126,17 +126,17 @@ class KLIEP(BaseAdaptEstimator):
     >>> ys = np.array([-0.2 * x if x<0.5 else 1. for x in Xs])
     >>> yt = -0.2 * Xt
     >>> kliep = KLIEP(sigmas=[0.1, 1, 10], random_state=0)
-    >>> kliep.fit_estimator(Xs, ys)
-    >>> np.abs(kliep.predict(Xt).ravel() - yt).mean()
+    >>> kliep.fit_estimator(Xs.reshape(-1,1), ys)
+    >>> np.abs(kliep.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
     0.09388...
-    >>> kliep.fit(Xs, ys, Xt)
+    >>> kliep.fit(Xs.reshape(-1,1), ys, Xt.reshape(-1,1))
     Fitting weights...
     Cross Validation process...
     Parameter sigma = 0.1000 -- J-score = 0.059 (0.001)
     Parameter sigma = 1.0000 -- J-score = 0.427 (0.003)
     Parameter sigma = 10.0000 -- J-score = 0.704 (0.017)
     Fitting estimator...
-    >>> np.abs(kliep.predict(Xt).ravel() - yt).mean()
+    >>> np.abs(kliep.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
     0.00302...
 
     See also
@@ -235,7 +235,7 @@ to covariateshift adaptation". In NIPS 2007
         
         If ``None``, the fitted source weights are returned.
         Else, sample weights are computing using the fitted
-        ``alphas_`` and the chosen ``centers_`.
+        ``alphas_`` and the chosen ``centers_``.
         
         Parameters
         ----------

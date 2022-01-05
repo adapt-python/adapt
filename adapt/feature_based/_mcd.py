@@ -174,7 +174,6 @@ domain adaptation". In CVPR, 2018.
                 disc_loss += sum(self.discriminator_.losses)
                 enc_loss += sum(self.encoder_.losses)
 
-            print(discrepancy.shape, enc_loss.shape, disc_loss.shape)
 
             # Compute gradients
             trainable_vars_task = self.task_.trainable_variables

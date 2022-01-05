@@ -1,4 +1,4 @@
-:ref:`adapt.instance_based <adapt.instance_based>`.TrAdaBoost
+﻿:ref:`adapt.instance_based <adapt.instance_based>`.TrAdaBoost
 ===================================================================
 
 .. currentmodule:: adapt.instance_based
@@ -17,14 +17,26 @@
 	    
 		~TrAdaBoost.__init__
 		~TrAdaBoost.fit
+		~TrAdaBoost.fit_estimator
+		~TrAdaBoost.get_params
 		~TrAdaBoost.predict
+		~TrAdaBoost.predict_estimator
 		~TrAdaBoost.predict_weights
+		~TrAdaBoost.score
+		~TrAdaBoost.score_estimator
+		~TrAdaBoost.set_params
 	
 	
 	.. automethod:: __init__
 	.. automethod:: fit
+	.. automethod:: fit_estimator
+	.. automethod:: get_params
 	.. automethod:: predict
+	.. automethod:: predict_estimator
 	.. automethod:: predict_weights
+	.. automethod:: score
+	.. automethod:: score_estimator
+	.. automethod:: set_params
 	
     
 	

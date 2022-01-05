@@ -123,11 +123,11 @@ class ADDA(BaseAdaptDeep):
     >>> ys = 0.2 * Xs[:, 0]
     >>> yt = 0.2 * Xt[:, 0]
     >>> model = ADDA(random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.history_src_["task_t"][-1]
-    0.0234...
-    >>> model.history_["task_t"][-1]
-    0.0009...
+    >>> model.fit(Xs, ys, Xt, epochs=100, verbose=0)
+    >>> np.abs(model.predict_task(Xt, domain="src").ravel() - yt).mean()
+    0.1531...
+    >>> np.abs(model.predict_task(Xt, domain="tgt").ravel() - yt).mean()
+    0.0227...
     
     See also
     --------
@@ -241,8 +241,6 @@ In CVPR, 2017.
                 task_loss += sum(self.task_.losses)
                 disc_loss += sum(self.discriminator_.losses)
                 enc_loss += sum(self.encoder_.losses)
-
-            print(task_loss.shape, enc_loss.shape, disc_loss.shape)
 
             # Compute gradients
             trainable_vars_task = self.task_.trainable_variables

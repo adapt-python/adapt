@@ -1,4 +1,4 @@
-:ref:`adapt.feature_based <adapt.feature_based>`.CORAL
+﻿:ref:`adapt.feature_based <adapt.feature_based>`.CORAL
 =============================================================
 
 .. currentmodule:: adapt.feature_based
@@ -17,18 +17,28 @@
 	    
 		~CORAL.__init__
 		~CORAL.fit
-		~CORAL.fit_embeddings
 		~CORAL.fit_estimator
+		~CORAL.fit_transform
+		~CORAL.get_params
 		~CORAL.predict
-		~CORAL.predict_features
+		~CORAL.predict_estimator
+		~CORAL.score
+		~CORAL.score_estimator
+		~CORAL.set_params
+		~CORAL.transform
 	
 	
 	.. automethod:: __init__
 	.. automethod:: fit
-	.. automethod:: fit_embeddings
 	.. automethod:: fit_estimator
+	.. automethod:: fit_transform
+	.. automethod:: get_params
 	.. automethod:: predict
-	.. automethod:: predict_features
+	.. automethod:: predict_estimator
+	.. automethod:: score
+	.. automethod:: score_estimator
+	.. automethod:: set_params
+	.. automethod:: transform
 	
     
 	

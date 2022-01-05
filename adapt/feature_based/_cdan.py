@@ -43,10 +43,10 @@ class CDAN(BaseAdaptDeep):
     .. math::
     
         \min_{\phi, F} & \; \mathcal{L}_{task}(F(\phi(X_S)), y_S) -
-        \lambda \\left( \log(1 - D(\phi(X_S) \\bigotimes F(X_S)) + \\\\
-        \log(D(\phi(X_T) \\bigotimes F(X_T)) \\right) \\\\
-        \max_{D} & \; \log(1 - D(\phi(X_S) \\bigotimes F(X_S)) + \\\\
-        \log(D(\phi(X_T) \\bigotimes F(X_T))
+        \lambda \\left( \log(1 - D(\phi(X_S) \\otimes F(X_S)) +
+        \log(D(\phi(X_T) \\otimes F(X_T)) \\right) \\\\
+        \max_{D} & \; \log(1 - D(\phi(X_S) \\otimes F(X_S)) +
+        \log(D(\phi(X_T) \\otimes F(X_T))
         
     Where:
     
@@ -55,7 +55,7 @@ class CDAN(BaseAdaptDeep):
     - :math:`\phi, F, D` are respectively the **encoder**, the **task**
       and the **discriminator** networks
     - :math:`\lambda` is the trade-off parameter.
-    - :math:`\phi(X_S) \\bigotimes F(X_S)` is the multilinear map between
+    - :math:`\phi(X_S) \\otimes F(X_S)` is the multilinear map between
       the encoded sources and the task predictions.
     
     In CDAN+E, an entropy regularization is added to prioritize the
@@ -65,15 +65,15 @@ class CDAN(BaseAdaptDeep):
     .. math::
     
         \min_{\phi, F} & \; \mathcal{L}_{task}(F(\phi(X_S)), y_S) -
-        \lambda \\left( \log(1 - W_S D(\phi(X_S) \\bigotimes F(X_S)) + \\\\
-        W_T \log(D(\phi(X_T) \\bigotimes F(X_T)) \\right) \\\\
-        \max_{D} & \; \log(1 - W_S D(\phi(X_S) \\bigotimes F(X_S)) + \\\\
-        W_T \log(D(\phi(X_T) \\bigotimes F(X_T))
+        \lambda \\left( \log(1 - W_S D(\phi(X_S) \\otimes F(X_S)) +
+        W_T \log(D(\phi(X_T) \\otimes F(X_T)) \\right) \\\\
+        \max_{D} & \; \log(1 - W_S D(\phi(X_S) \\otimes F(X_S)) +
+        W_T \log(D(\phi(X_T) \\otimes F(X_T))
         
     Where:
     
-    - :math:`W_S = 1+\exp{-\\text{entropy}(F(X_S))}`
-    - :math:`\\text{entropy}(F(X_S)) = - \sum_{i < C} F(X_S)_i \log(F(X_S)_i)`
+    - :math:`W_S = 1+\exp^{-\\text{ent}(F(X_S))}`
+    - :math:`\\text{ent}(F(X_S)) = - \sum_{i < C} F(X_S)_i \log(F(X_S)_i)`
       with :math:`C` the number of classes.
       
     .. figure:: ../_static/images/cdan.png

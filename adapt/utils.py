@@ -460,6 +460,18 @@ def make_regression_da(n_samples=100,
 def check_sample_weight(sample_weight, X):
     """
     Check sample weights.
+    
+    Parameters
+    ----------
+    sample_weight : array
+        Sample weights.
+        
+    X : array
+        Input array
+        
+    Returns
+    -------
+    sample_weight : array
     """
     if not sample_weight is None:
         sample_weight = check_array(

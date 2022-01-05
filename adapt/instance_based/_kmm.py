@@ -61,9 +61,9 @@ class KMM(BaseAdaptEstimator):
     B: float (default=1000)
         Bounding weights parameter.
         
-    epsilon: float, optional (default=None)
+    eps: float, optional (default=None)
         Constraint parameter.
-        If ``None`` epsilon is set to
+        If ``None`` eps is set to
         ``(np.sqrt(len(Xs)) - 1)/np.sqrt(len(Xs))``
         with ``Xs`` the source input dataset.
         
@@ -108,10 +108,10 @@ class KMM(BaseAdaptEstimator):
     >>> ys = np.array([-0.2 * x if x<0.5 else 1. for x in Xs])
     >>> yt = -0.2 * Xt
     >>> kmm = KMM(random_state=0)
-    >>> kmm.fit_estimator(Xs, ys)
-    >>> np.abs(kmm.predict(Xt).ravel() - yt).mean()
+    >>> kmm.fit_estimator(Xs.reshape(-1,1), ys)
+    >>> np.abs(kmm.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
     0.09388...
-    >>> kmm.fit(Xs, ys, Xt)
+    >>> kmm.fit(Xs.reshape(-1,1), ys, Xt.reshape(-1,1))
     Fitting weights...
      pcost       dcost       gap    pres   dres
      0:  3.7931e+04 -1.2029e+06  3e+07  4e-01  2e-15
@@ -119,7 +119,7 @@ class KMM(BaseAdaptEstimator):
     13: -4.9095e+03 -4.9095e+03  8e-04  2e-16  1e-16
     Optimal solution found.
     Fitting estimator...
-    >>> np.abs(kmm.predict(Xt).ravel() - yt).mean()
+    >>> np.abs(kmm.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
     0.00588...
 
     See also
@@ -138,7 +138,7 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
                  Xt=None,
                  yt=None,
                  B=1000,
-                 epsilon=None,
+                 eps=None,
                  kernel="rbf",
                  max_size=1000,
                  tol=None,
@@ -201,10 +201,10 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         n_t = len(Xt)
         
         # Get epsilon
-        if self.epsilon is None:
-            epsilon = (np.sqrt(n_s) - 1)/np.sqrt(n_s)
+        if self.eps is None:
+            eps = (np.sqrt(n_s) - 1)/np.sqrt(n_s)
         else:
-            epsilon = self.epsilon
+            eps = self.eps
 
         # Compute Kernel Matrix
         kernel_params = {k: v for k, v in self.__dict__.items()
@@ -228,8 +228,8 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         G[2:n_s+2] = np.eye(n_s)
         G[n_s+2:n_s*2+2] = -np.eye(n_s)
         h = np.ones(2*n_s+2)
-        h[0] = n_s*(1+epsilon)
-        h[1] = n_s*(epsilon-1)
+        h[0] = n_s*(1+eps)
+        h[1] = n_s*(eps-1)
         h[2:n_s+2] = self.B
         h[n_s+2:] = 0
 

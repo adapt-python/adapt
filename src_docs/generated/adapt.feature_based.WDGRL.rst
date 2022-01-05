@@ -1,9 +1,9 @@
-﻿:ref:`adapt.feature_based <adapt.feature_based>`.MDD
-===========================================================
+﻿:ref:`adapt.feature_based <adapt.feature_based>`.WDGRL
+=============================================================
 
 .. currentmodule:: adapt.feature_based
 
-.. autoclass:: MDD
+.. autoclass:: WDGRL
 	:no-members:
 	:no-inherited-members:
 	:no-special-members:
@@ -15,17 +15,17 @@
 	
 	.. autosummary::
 	    
-		~MDD.__init__
-		~MDD.compile
-		~MDD.fit
-		~MDD.get_params
-		~MDD.predict
-		~MDD.predict_disc
-		~MDD.predict_task
-		~MDD.score
-		~MDD.score_estimator
-		~MDD.set_params
-		~MDD.transform
+		~WDGRL.__init__
+		~WDGRL.compile
+		~WDGRL.fit
+		~WDGRL.get_params
+		~WDGRL.predict
+		~WDGRL.predict_disc
+		~WDGRL.predict_task
+		~WDGRL.score
+		~WDGRL.score_estimator
+		~WDGRL.set_params
+		~WDGRL.transform
 	
 	
 	.. automethod:: __init__
@@ -47,5 +47,5 @@
 
    <h2> Examples </h2>
 	
-.. include:: ../gallery/MDD.rst
+.. include:: ../gallery/WDGRL.rst
 	

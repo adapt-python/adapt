@@ -1,8 +1,8 @@
-:ref:`adapt.utils <adapt.utils>`.check_one_array
+﻿:ref:`adapt.utils <adapt.utils>`.set_random_seed
 ===============================================================
 
 .. currentmodule:: adapt.utils
 
-.. autofunction:: check_one_array
+.. autofunction:: set_random_seed
 
 	

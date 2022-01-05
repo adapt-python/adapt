@@ -1,4 +1,4 @@
-:ref:`adapt.utils <adapt.utils>`.get_default_task
+﻿:ref:`adapt.utils <adapt.utils>`.get_default_task
 ================================================================
 
 .. currentmodule:: adapt.utils

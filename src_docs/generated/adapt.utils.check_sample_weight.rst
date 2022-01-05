@@ -1,8 +1,8 @@
-﻿:ref:`adapt.utils <adapt.utils>`.get_default_encoder
+﻿:ref:`adapt.utils <adapt.utils>`.check_sample_weight
 ===================================================================
 
 .. currentmodule:: adapt.utils
 
-.. autofunction:: get_default_encoder
+.. autofunction:: check_sample_weight
 
 	

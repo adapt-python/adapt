@@ -80,9 +80,9 @@ class FE(BaseAdaptEstimator):
     Previous shape: (100, 1)
     New shape: (100, 3)
     Fit estimator...
-    >>> np.abs(model.predict(Xt, "src") - yt).mean()
+    >>> np.abs(model.predict(Xt, domain="src") - yt).mean()
     0.9846...
-    >>> np.abs(model.predict(Xt, "tgt") - yt).mean()
+    >>> np.abs(model.predict(Xt, domain="tgt") - yt).mean()
     0.1010...
 
     References

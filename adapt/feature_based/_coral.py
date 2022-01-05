@@ -41,8 +41,8 @@ class CORAL(BaseAdaptEstimator):
     and the features transformation can be computed through this
     four steps algorithm:
     
-    - :math:`C_S = \\lambda Cov(X_S) + I_p`
-    - :math:`C_T = \\lambda Cov(X_T) + I_p`
+    - :math:`C_S = Cov(X_S) + \\lambda I_p`
+    - :math:`C_T = Cov(X_T) + \\lambda I_p`
     - :math:`X_S = X_S C_S^{-\\frac{1}{2}}`
     - :math:`X_S^{enc} = X_S C_T^{\\frac{1}{2}}`
     
@@ -80,22 +80,22 @@ class CORAL(BaseAdaptEstimator):
     >>> yt = np.zeros(100)
     >>> ys[Xs[:, 1]>0] = 1
     >>> yt[(Xt[:, 1]-0.5*Xt[:, 0])>0] = 1
+    >>> model = CORAL(lambda_=1000.)
+    >>> model.fit(Xs, ys, Xt);
+    Covariance Matrix alignement...
+    Previous covariance difference: 0.258273
+    New covariance difference: 0.258072
+    Fit estimator...
+    >>> model.estimator_.score(Xt, yt)
+    0.5750...
     >>> model = CORAL(lambda_=0.)
     >>> model.fit(Xs, ys, Xt);
     Covariance Matrix alignement...
     Previous covariance difference: 0.258273
-    New covariance difference: 0.258273
+    New covariance difference: 0.000000
     Fit estimator...
     >>> model.estimator_.score(Xt, yt)
-    0.5750...
-    >>> model = CORAL(lambda_=100.)
-    >>> model.fit(Xs, ys, Xt);
-    Covariance Matrix alignement...
-    Previous covariance difference: 0.258273
-    New covariance difference: 0.040564
-    Fit estimator...
-    >>> model.estimator_.score(Xt, yt)
-    0.5992...
+    0.5717...
         
     See also
     --------

@@ -55,16 +55,15 @@ and **target** distributions. The **task** is then learned in this **encoded fea
    :toctree: generated/
    :template: class.rst
 
-   feature_based.BaseDeepFeature
    feature_based.FE
    feature_based.CORAL
    feature_based.DeepCORAL
    feature_based.DANN
    feature_based.ADDA
-   feature_based.mSDA
+   feature_based.WDGRL
+   feature_based.CDAN
    feature_based.MCD
    feature_based.MDD
-   feature_based.WDGRL
 
    
 .. _adapt.instance_based:
@@ -102,6 +101,7 @@ The **reweighted** training instances are then directly used to learn the task.
    instance_based.TrAdaBoost
    instance_based.TrAdaBoostR2
    instance_based.TwoStageTrAdaBoostR2
+   instance_based.WANN
 
 .. _adapt.parameter_based:
 
@@ -150,8 +150,8 @@ This module contains utility functions used in the previous modules.
    :toctree: generated/
    :template: function.rst
 
+   utils.accuracy
    utils.check_arrays
-   utils.check_one_array
    utils.check_estimator
    utils.check_network
    utils.get_default_encoder
@@ -160,6 +160,8 @@ This module contains utility functions used in the previous modules.
    utils.GradientHandler
    utils.make_classification_da
    utils.make_regression_da
+   utils.check_sample_weight
+   utils.set_random_seed
    
    
 .. include:: examples_gallery.rst

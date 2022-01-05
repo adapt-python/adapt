@@ -38,6 +38,20 @@ class WANN(BaseAdaptDeep):
         Clipping constant for the weighting networks
         regularization. Low value of ``C`` produce smoother
         weighting map. If ``C<=0``, No regularization is added.
+        
+    Attributes
+    ----------
+    weighter_ : tensorflow Model
+        weighting network.
+        
+    task_ : tensorflow Model
+        task network.
+        
+    discriminator_ : tensorflow Model
+        discriminator network.
+        
+    history_ : dict
+        history of the losses and metrics across the epochs.
     """
     
     def __init__(self,

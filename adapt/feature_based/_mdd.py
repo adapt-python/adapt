@@ -120,7 +120,6 @@ domain adaptation". ICML, 2019.
             
             # Compute Disc
             if name == "categorical_crossentropy":
-                print("ok")
                 argmax_src = tf.one_hot(tf.math.argmax(ys_pred, -1),
                              tf.shape(ys_pred)[1])
                 argmax_tgt = tf.one_hot(tf.math.argmax(yt_pred, -1),
@@ -147,7 +146,6 @@ domain adaptation". ICML, 2019.
             disc_loss += sum(self.discriminator_.losses)
             enc_loss += sum(self.encoder_.losses)
             
-        print(task_loss.shape, enc_loss.shape, disc_loss.shape)
             
         # Compute gradients
         trainable_vars_task = self.task_.trainable_variables

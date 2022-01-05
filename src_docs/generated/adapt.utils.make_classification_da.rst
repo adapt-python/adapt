@@ -1,4 +1,4 @@
-:ref:`adapt.utils <adapt.utils>`.make_classification_da
+﻿:ref:`adapt.utils <adapt.utils>`.make_classification_da
 ======================================================================
 
 .. currentmodule:: adapt.utils

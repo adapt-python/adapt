@@ -1,4 +1,4 @@
-:ref:`adapt.utils <adapt.utils>`.make_regression_da
+﻿:ref:`adapt.utils <adapt.utils>`.make_regression_da
 ==================================================================
 
 .. currentmodule:: adapt.utils

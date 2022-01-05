@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 
 from adapt.base import BaseAdaptDeep, make_insert_doc
-from adapt.utils import check_network
+from adapt.utils import check_network, get_default_encoder, get_default_task
 
 EPS = np.finfo(np.float32).eps
 
@@ -93,13 +93,13 @@ class DeepCORAL(BaseAdaptDeep):
     >>> ys[Xs[:, 1]>0] = 1
     >>> yt[(Xt[:, 1]-0.5*Xt[:, 0])>0] = 1
     >>> model = DeepCORAL(lambda_=0., random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=500, batch_size=100, verbose=0)
-    >>> model.history_["task_t"][-1]
-    1.30188e-05
+    >>> model.fit(Xs, ys, Xt, epochs=500, batch_size=100, verbose=0)
+    >>> model.score_estimator(Xt, yt)
+    0.0574...
     >>> model = DeepCORAL(lambda_=1., random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=500, batch_size=100, verbose=0)
-    >>> model.history_["task_t"][-1]
-    5.4704474e-06
+    >>> model.fit(Xs, ys, Xt, epochs=500, batch_size=100, verbose=0)
+    >>> model.score_estimator(Xt, yt)
+    0.0649...
         
     See also
     --------
@@ -199,8 +199,6 @@ class DeepCORAL(BaseAdaptDeep):
             loss = task_loss + disc_loss
             
             loss += sum(self.task_.losses) + sum(self.encoder_.losses)
-            
-        print(cov_src.shape, cov_tgt.shape, disc_loss.shape)
             
         # Compute gradients
         trainable_vars = self.task_.trainable_variables + self.encoder_.trainable_variables

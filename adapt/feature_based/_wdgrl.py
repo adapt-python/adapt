@@ -90,12 +90,12 @@ class WDGRL(BaseAdaptDeep):
     >>> yt = 0.2 * Xt[:, 0]
     >>> model = WDGRL(lambda_=0., random_state=0)
     >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.history_["task_t"][-1]
-    0.0223...
+    >>> model.score_estimator(Xt, yt)
+    0.0231...
     >>> model = WDGRL(lambda_=1, random_state=0)
     >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.history_["task_t"][-1]
-    0.0044...
+    >>> model.score_estimator(Xt, yt)
+    0.0014...
         
     See also
     --------
@@ -180,8 +180,6 @@ In AAAI, 2018.
             task_loss += sum(self.task_.losses)
             disc_loss += sum(self.discriminator_.losses)
             enc_loss += sum(self.encoder_.losses)
-            
-        print(task_loss.shape, enc_loss.shape, disc_loss.shape)
             
         # Compute gradients
         trainable_vars_task = self.task_.trainable_variables

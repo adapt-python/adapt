@@ -1,9 +1,9 @@
-﻿:ref:`adapt.feature_based <adapt.feature_based>`.MDD
-===========================================================
+﻿:ref:`adapt.feature_based <adapt.feature_based>`.CDAN
+============================================================
 
 .. currentmodule:: adapt.feature_based
 
-.. autoclass:: MDD
+.. autoclass:: CDAN
 	:no-members:
 	:no-inherited-members:
 	:no-special-members:
@@ -15,17 +15,17 @@
 	
 	.. autosummary::
 	    
-		~MDD.__init__
-		~MDD.compile
-		~MDD.fit
-		~MDD.get_params
-		~MDD.predict
-		~MDD.predict_disc
-		~MDD.predict_task
-		~MDD.score
-		~MDD.score_estimator
-		~MDD.set_params
-		~MDD.transform
+		~CDAN.__init__
+		~CDAN.compile
+		~CDAN.fit
+		~CDAN.get_params
+		~CDAN.predict
+		~CDAN.predict_disc
+		~CDAN.predict_task
+		~CDAN.score
+		~CDAN.score_estimator
+		~CDAN.set_params
+		~CDAN.transform
 	
 	
 	.. automethod:: __init__
@@ -47,5 +47,5 @@
 
    <h2> Examples </h2>
 	
-.. include:: ../gallery/MDD.rst
+.. include:: ../gallery/CDAN.rst
 	

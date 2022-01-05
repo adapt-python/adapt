@@ -294,7 +294,7 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         ys_pred = estimator.predict(Xs)
         yt_pred = estimator.predict(Xt)
         
-        if ys_pred.ndim == 1:
+        if ys_pred.ndim == 1 or ys.ndim == 1:
             ys = ys.reshape(-1, 1)
             yt = yt.reshape(-1, 1)
             ys_pred = ys_pred.reshape(-1, 1)
@@ -502,6 +502,7 @@ class TrAdaBoostR2(TrAdaBoost):
     Examples
     --------
     >>> import numpy as np
+    >>> from sklearn.linear_model import LinearRegression
     >>> from adapt.instance_based import TrAdaBoostR2
     >>> np.random.seed(0)
     >>> Xs = np.random.random((100, 2))

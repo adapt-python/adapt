@@ -1,4 +1,4 @@
-:ref:`adapt.feature_based <adapt.feature_based>`.DANN
+﻿:ref:`adapt.feature_based <adapt.feature_based>`.DANN
 ============================================================
 
 .. currentmodule:: adapt.feature_based
@@ -16,23 +16,29 @@
 	.. autosummary::
 	    
 		~DANN.__init__
-		~DANN.create_model
+		~DANN.compile
 		~DANN.fit
-		~DANN.get_loss
-		~DANN.get_metrics
+		~DANN.get_params
 		~DANN.predict
 		~DANN.predict_disc
-		~DANN.predict_features
+		~DANN.predict_task
+		~DANN.score
+		~DANN.score_estimator
+		~DANN.set_params
+		~DANN.transform
 	
 	
 	.. automethod:: __init__
-	.. automethod:: create_model
+	.. automethod:: compile
 	.. automethod:: fit
-	.. automethod:: get_loss
-	.. automethod:: get_metrics
+	.. automethod:: get_params
 	.. automethod:: predict
 	.. automethod:: predict_disc
-	.. automethod:: predict_features
+	.. automethod:: predict_task
+	.. automethod:: score
+	.. automethod:: score_estimator
+	.. automethod:: set_params
+	.. automethod:: transform
 	
     
 	
