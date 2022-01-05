@@ -47,6 +47,8 @@ def test_fit():
     assert model.weights_[:50].sum() > 90
     assert model.weights_[50:].sum() < 0.5
     assert np.abs(model.predict(Xt) - yt).sum() < 20
+    assert np.all(model.weights_ == model.predict_weights())
+    assert np.all(model.weights_ == model.predict_weights(Xs))
     
 
 def test_fit_estimator_bootstrap_index():

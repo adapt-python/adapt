@@ -52,6 +52,13 @@ class WANN(BaseAdaptDeep):
         
     history_ : dict
         history of the losses and metrics across the epochs.
+        
+    
+    References
+    ----------
+    .. [1] `[1] <https://arxiv.org/pdf/2006.08251.pdf>`_ A. de Mathelin, \
+G. Richard, F. Deheeger, M. Mougeot and N. Vayatis  "Adversarial Weighting \
+for Domain Adaptation in Regression". In ICTAI, 2021.
     """
     
     def __init__(self,

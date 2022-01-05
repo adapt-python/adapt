@@ -363,6 +363,7 @@ class BaseAdapt:
             size = min(self.val_sample_size, len(Xt))
             tgt_index = np.random.choice(len(Xt), size, replace=False)
             self.Xt_ = Xt[tgt_index]
+            self.src_index_ = src_index
         else:
             self.Xs_ = Xs
             self.Xt_ = Xt
@@ -780,9 +781,20 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         config = model.get_config()
         klass = model.__class__
         
-        return dict(weights=weights,
-                    config=config,
-                    klass=klass)
+        config = dict(weights=weights,
+                     config=config,
+                     klass=klass)
+        
+        if hasattr(model, "loss"):
+            config["loss"] = model.loss
+            
+        if hasattr(model, "optimizer"):
+            try:
+                config["optimizer_klass"] = model.optimizer.__class__
+                config["optimizer_config"] = model.optimizer.get_config()
+            except:
+                pass
+        return config
 
 
     def _from_config_keras_model(self, dict_):
@@ -794,6 +806,16 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
 
         if weights is not None:
             model.set_weights(weights)
+        
+        if "loss" in dict_ and "optimizer_klass" in dict_:
+            loss = dict_["loss"]
+            optimizer = dict_["optimizer_klass"].from_config(
+                    dict_["optimizer_config"])
+            try:
+                model.compile(loss=loss, optimizer=optimizer)
+            except:
+                print("Unable to compile model")
+        
         return model
 
 
@@ -1414,14 +1436,6 @@ class BaseAdaptDeep(Model, BaseAdapt):
             X_enc = self.encoder_(np.zeros((1,) + shape_X))
             if hasattr(self, "discriminator_"):
                 self.discriminator_(X_enc)
-    
-    
-    def _check_pretrain(self, params):
-        self.pretrain = False
-        for param in params:
-            if "pretrain__" in param:
-                self.pretrain = True
-                break
 
 
     def _unpack_data(self, data):

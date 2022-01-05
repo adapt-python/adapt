@@ -804,7 +804,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         ys_pred = estimator.predict(Xs)
         yt_pred = estimator.predict(Xt)
         
-        if ys_pred.ndim == 1:
+        if ys_pred.ndim == 1 or ys.ndim == 1:
             ys = ys.reshape(-1, 1)
             yt = yt.reshape(-1, 1)
             ys_pred = ys_pred.reshape(-1, 1)
