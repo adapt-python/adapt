@@ -33,7 +33,7 @@ class CORAL(BaseAdaptEstimator):
     Where:
     
     - :math:`A` is the feature transformation matrix such that
-    :math:`X_S^{enc} = X_S A`
+      :math:`X_S^{enc} = X_S A`
     - :math:`C_S` is the correlation matrix of input source data
     - :math:`C_T` is the correlation matrix of input target data
     

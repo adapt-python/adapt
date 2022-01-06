@@ -73,9 +73,6 @@ class KMM(BaseAdaptEstimator):
         ‘linear’, ‘poly’, ‘polynomial’, ‘rbf’,
         ‘laplacian’, ‘sigmoid’, ‘cosine’]
         
-    kernel_params : dict (default=None)
-        Kernel additional parameters
-        
     max_size : int (default=1000)
         Batch computation to speed up the fitting.
         If len(Xs) > ``max_size``, KMM is applied
