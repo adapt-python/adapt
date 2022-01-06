@@ -1,4 +1,4 @@
-:ref:`adapt.utils <adapt.utils>`.check_arrays
+﻿:ref:`adapt.utils <adapt.utils>`.check_arrays
 ============================================================
 
 .. currentmodule:: adapt.utils

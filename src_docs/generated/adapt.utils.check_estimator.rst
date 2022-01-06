@@ -1,4 +1,4 @@
-:ref:`adapt.utils <adapt.utils>`.check_estimator
+﻿:ref:`adapt.utils <adapt.utils>`.check_estimator
 ===============================================================
 
 .. currentmodule:: adapt.utils

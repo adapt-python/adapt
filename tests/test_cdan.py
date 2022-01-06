@@ -55,13 +55,12 @@ def test_fit_lambda_zero():
     np.random.seed(1)
     model = CDAN(_get_encoder(), _get_task(), _get_discriminator(),
                  lambda_=0, loss="categorical_crossentropy",
-                 optimizer=Adam(0.01), metrics=["accuracy"],
-                 random_state=0)
+                 optimizer=Adam(0.001), metrics=["acc"],
+                 random_state=0, validation_data=(Xt, ytt))
     model.fit(Xs, yss, Xt, ytt,
               epochs=300, verbose=0)
-    assert isinstance(model.model_, Model)
-    assert model.history_['task_acc_s'][-1] > 0.9
-    assert model.history_['task_acc_t'][-1] < 0.7
+    assert model.history_['acc'][-1] > 0.9
+    assert model.history_['val_acc'][-1] < 0.9
 
 
 def test_fit_lambda_one_no_entropy():
@@ -69,13 +68,12 @@ def test_fit_lambda_one_no_entropy():
     np.random.seed(1)
     model = CDAN(_get_encoder(), _get_task(), _get_discriminator(),
                  lambda_=1., entropy=False, loss="categorical_crossentropy",
-                 optimizer=Adam(0.01), metrics=["accuracy"],
-                 random_state=0)
+                 optimizer=Adam(0.001), metrics=["acc"],
+                 random_state=0, validation_data=(Xt, ytt))
     model.fit(Xs, yss, Xt, ytt,
               epochs=300, verbose=0)
-    assert isinstance(model.model_, Model)
-    assert model.history_['task_acc_s'][-1] > 0.9
-    assert model.history_['task_acc_t'][-1] > 0.9
+    assert model.history_['acc'][-1] > 0.9
+    assert model.history_['val_acc'][-1] > 0.9
     
     
 def test_fit_lambda_entropy():
@@ -85,18 +83,17 @@ def test_fit_lambda_entropy():
     encoder.trainable = False
     model = CDAN(encoder, _get_task(), _get_discriminator(),
                  lambda_=1., entropy=True, loss="categorical_crossentropy",
-                 optimizer=Adam(0.01), metrics=["accuracy"],
+                 optimizer=Adam(0.01), metrics=["acc"],
                  random_state=0)
     model.fit(Xs, yss, Xt, ytt,
               epochs=40, verbose=0)
-    assert isinstance(model.model_, Model)
     
     ys_disc = model.predict_disc(Xs).ravel()
     ys_ent = _entropy(model.predict(Xs))
     yt_disc = model.predict_disc(Xt).ravel()
     yt_ent = _entropy(model.predict(Xt))
-    assert np.corrcoef(yt_ent, yt_disc)[0, 1] < 0.
-    assert np.corrcoef(ys_ent, ys_disc)[0, 1] > 0.
+    assert np.corrcoef(yt_ent, yt_disc)[0, 1] > 0.
+    assert np.corrcoef(ys_ent, ys_disc)[0, 1] < 0.
     
     
 def test_fit_max_features():
@@ -104,12 +101,11 @@ def test_fit_max_features():
     np.random.seed(1)
     model = CDAN(_get_encoder(), _get_task(), _get_discriminator((10,)), max_features=10,
                  lambda_=0., entropy=False, loss="categorical_crossentropy",
-                 optimizer=Adam(0.01), metrics=["accuracy"],
+                 optimizer=Adam(0.01), metrics=["acc"],
                  random_state=0)
     model.fit(Xs, yss, Xt, ytt,
               epochs=30, verbose=0)
-    assert isinstance(model.model_, Model)
     assert model._random_task.shape == (2, 10)
     assert model._random_enc.shape == (10, 10)
-    assert model.predict_disc(Xt).mean() > 0.5
-    assert model.predict_disc(Xs).mean() < 0.5
+    assert model.predict_disc(Xt).mean() < 0.5
+    assert model.predict_disc(Xs).mean() > 0.5

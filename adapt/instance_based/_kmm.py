@@ -2,20 +2,20 @@
 Kernel Mean Matching
 """
 
-import inspect
-import warnings
-
 import numpy as np
-from sklearn.linear_model import LinearRegression
 from sklearn.metrics import pairwise
+from sklearn.utils import check_array
+from sklearn.metrics.pairwise import KERNEL_PARAMS
 from cvxopt import matrix, solvers
-import tensorflow as tf
 
-from adapt.utils import check_arrays, check_one_array, check_estimator
+from adapt.base import BaseAdaptEstimator, make_insert_doc
+from adapt.utils import set_random_seed
 
 EPS = np.finfo(float).eps
 
-class KMM:
+
+@make_insert_doc()
+class KMM(BaseAdaptEstimator):
     """
     KMM: Kernel Mean Matching
     
@@ -57,18 +57,13 @@ class KMM:
     target data to the training set.
 
     Parameters
-    ----------
-    estimator : sklearn estimator or tensorflow Model (default=None)
-        Estimator used to learn the task. 
-        If estimator is ``None``, a ``LinearRegression``
-        instance is used as estimator.
-        
+    ----------        
     B: float (default=1000)
         Bounding weights parameter.
         
-    epsilon: float, optional (default=None)
+    eps: float, optional (default=None)
         Constraint parameter.
-        If ``None`` epsilon is set to
+        If ``None`` eps is set to
         ``(np.sqrt(len(Xs)) - 1)/np.sqrt(len(Xs))``
         with ``Xs`` the source input dataset.
         
@@ -78,14 +73,11 @@ class KMM:
         ‘linear’, ‘poly’, ‘polynomial’, ‘rbf’,
         ‘laplacian’, ‘sigmoid’, ‘cosine’]
         
-    kernel_params : dict (default=None)
-        Kernel additional parameters
-        
-    batch_size : int (default=1000)
+    max_size : int (default=1000)
         Batch computation to speed up the fitting.
-        If len(Xs) > ``batch_size``, KMM is applied
+        If len(Xs) > ``max_size``, KMM is applied
         successively on seperated batch
-        of size lower than ``batch_size``.
+        of size lower than ``max_size``.
         
     tol: float (default=None)
         Optimization threshold. If ``None``
@@ -93,15 +85,6 @@ class KMM:
         
     max_iter: int (default=100)
         Maximal iteration of the optimization.
-        
-    copy : boolean (default=True)
-        Whether to make a copy of ``estimator`` or not.
-        
-    verbose : int (default=1)
-        Verbosity level.
-        
-    random_state : int (default=None)
-        Seed of random generator.
 
     Attributes
     ----------  
@@ -122,10 +105,10 @@ class KMM:
     >>> ys = np.array([-0.2 * x if x<0.5 else 1. for x in Xs])
     >>> yt = -0.2 * Xt
     >>> kmm = KMM(random_state=0)
-    >>> kmm.fit_estimator(Xs, ys)
-    >>> np.abs(kmm.predict(Xt).ravel() - yt).mean()
+    >>> kmm.fit_estimator(Xs.reshape(-1,1), ys)
+    >>> np.abs(kmm.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
     0.09388...
-    >>> kmm.fit(Xs, ys, Xt)
+    >>> kmm.fit(Xs.reshape(-1,1), ys, Xt.reshape(-1,1))
     Fitting weights...
      pcost       dcost       gap    pres   dres
      0:  3.7931e+04 -1.2029e+06  3e+07  4e-01  2e-15
@@ -133,7 +116,7 @@ class KMM:
     13: -4.9095e+03 -4.9095e+03  8e-04  2e-16  1e-16
     Optimal solution found.
     Fitting estimator...
-    >>> np.abs(kmm.predict(Xt).ravel() - yt).mean()
+    >>> np.abs(kmm.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
     0.00588...
 
     See also
@@ -149,72 +132,26 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
 
     def __init__(self,
                  estimator=None,
+                 Xt=None,
+                 yt=None,
                  B=1000,
-                 epsilon=None,
+                 eps=None,
                  kernel="rbf",
-                 kernel_params=None,
-                 batch_size=1000,
+                 max_size=1000,
                  tol=None,
                  max_iter=100,
                  copy=True,
                  verbose=1,
-                 random_state=None):
+                 random_state=None,
+                 **params):
 
-        np.random.seed(random_state)
-        tf.random.set_seed(random_state)
-        
-        self.estimator_ = check_estimator(estimator, copy=copy)
-        self.B = B
-        self.epsilon = epsilon
-        self.kernel = kernel
-        self.kernel_params = kernel_params
-        self.batch_size = batch_size
-        self.tol = tol
-        self.max_iter = max_iter
-        self.copy = copy
-        self.verbose = verbose
-        self.random_state = random_state
-        
-        if self.kernel_params is None:
-            self.kernel_params = {}
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)
 
 
-    def fit(self, Xs, ys, Xt, **fit_params):
-        """
-        Fit KMM.
-
-        Parameters
-        ----------
-        Xs : numpy array
-            Source input data.
-
-        ys : numpy array
-            Source output data.
-
-        Xt : numpy array
-            Target input data.
-
-        fit_params : key, value arguments
-            Arguments given to the fit method of
-            the estimator.
-
-        Returns
-        -------
-        self : returns an instance of self
-        """
-        Xs, ys, Xt, _ = check_arrays(Xs, ys, Xt, None)        
-        if self.verbose:
-            print("Fitting weights...")
-        self.fit_weights(Xs, Xt)
-        if self.verbose:
-            print("Fitting estimator...")
-        self.fit_estimator(Xs, ys,
-                           sample_weight=self.weights_,
-                           **fit_params)
-        return self
-
-
-    def fit_weights(self, Xs, Xt):
+    def fit_weights(self, Xs, Xt, **kwargs):
         """
         Fit importance weighting.
         
@@ -226,20 +163,21 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         Xt : array
             Input target data.
             
+        kwargs : key, value argument
+            Not used, present here for adapt consistency.
+            
         Returns
         -------
         weights_ : sample weights
         """
-        np.random.seed(self.random_state)
-        tf.random.set_seed(self.random_state)
+        Xs = check_array(Xs)
+        Xt = check_array(Xt)
+        set_random_seed(self.random_state)
         
-        Xs = check_one_array(Xs)
-        Xt = check_one_array(Xt)
-        
-        if len(Xs) > self.batch_size:
+        if len(Xs) > self.max_size:
             size = len(Xs)
             power = 0
-            while size > self.batch_size:
+            while size > self.max_size:
                 size = size / 2
                 power += 1
             split = int(len(Xs) / 2**power)
@@ -260,20 +198,22 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         n_t = len(Xt)
         
         # Get epsilon
-        if self.epsilon is None:
-            epsilon = (np.sqrt(n_s) - 1)/np.sqrt(n_s)
+        if self.eps is None:
+            eps = (np.sqrt(n_s) - 1)/np.sqrt(n_s)
         else:
-            epsilon = self.epsilon
+            eps = self.eps
 
         # Compute Kernel Matrix
+        kernel_params = {k: v for k, v in self.__dict__.items()
+                         if k in KERNEL_PARAMS[self.kernel]}
         K = pairwise.pairwise_kernels(Xs, Xs, metric=self.kernel,
-                                      **self.kernel_params)
+                                      **kernel_params)
         K = (1/2) * (K + K.transpose())
 
         # Compute q
         kappa = pairwise.pairwise_kernels(Xs, Xt,
                                           metric=self.kernel,
-                                          **self.kernel_params)
+                                          **kernel_params)
         kappa = (n_s/n_t) * np.dot(kappa, np.ones((n_t, 1)))
         
         P = matrix(K)
@@ -285,8 +225,8 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         G[2:n_s+2] = np.eye(n_s)
         G[n_s+2:n_s*2+2] = -np.eye(n_s)
         h = np.ones(2*n_s+2)
-        h[0] = n_s*(1+epsilon)
-        h[1] = n_s*(epsilon-1)
+        h[0] = n_s*(1+eps)
+        h[1] = n_s*(eps-1)
         h[2:n_s+2] = self.B
         h[n_s+2:] = 0
 
@@ -306,74 +246,6 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
         
         weights = solvers.qp(P, q, G, h)['x']
         return np.array(weights).ravel()
-
-        
-    def fit_estimator(self, X, y,
-                      sample_weight=None,
-                      **fit_params):
-        """
-        Fit estimator.
-        
-        Parameters
-        ----------
-        X : array
-            Input data.
-            
-        y : array
-            Output data.
-            
-        sample_weight : array
-            Importance weighting.
-            
-        fit_params : key, value arguments
-            Arguments given to the fit method of
-            the estimator.
-            
-        Returns
-        -------
-        estimator_ : fitted estimator
-        """
-        np.random.seed(self.random_state)
-        tf.random.set_seed(self.random_state)
-        
-        X = check_one_array(X)
-        y = check_one_array(y)
-             
-        if "sample_weight" in inspect.signature(self.estimator_.fit).parameters:
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                self.estimator_.fit(X, y, 
-                                    sample_weight=sample_weight,
-                                    **fit_params)
-        else:
-            if sample_weight is not None:
-                sample_weight /= (sample_weight.sum() + EPS)
-            bootstrap_index = np.random.choice(
-            len(X), size=len(X), replace=True,
-            p=sample_weight)
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                self.estimator_.fit(X[bootstrap_index], y[bootstrap_index],
-                                    **fit_params)
-        return self.estimator_
-
-
-    def predict(self, X):
-        """
-        Return estimator predictions.
-        
-        Parameters
-        ----------
-        X: array
-            input data
-            
-        Returns
-        -------
-        y_pred: array
-            prediction of estimator.
-        """
-        X = check_one_array(X)
-        return self.estimator_.predict(X)
 
     
     def predict_weights(self):

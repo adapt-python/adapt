@@ -16,7 +16,7 @@ from sklearn.multioutput import MultiOutputRegressor
 from sklearn.compose import TransformedTargetRegressor
 from sklearn.base import BaseEstimator, RegressorMixin, ClassifierMixin
 from sklearn.tree._tree import Tree
-from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
+# from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 from tensorflow.keras import Model, Sequential
 from tensorflow.keras.layers import Input, Dense, Flatten, Reshape
 from tensorflow.python.keras.engine.input_layer import InputLayer
@@ -28,7 +28,7 @@ def is_equal_estimator(v1, v2):
     assert type(v2) == type(v1)
     if isinstance(v1, np.ndarray):
         assert np.array_equal(v1, v2)
-    elif isinstance(v1, (BaseEstimator, KerasClassifier, KerasRegressor)):
+    elif isinstance(v1, BaseEstimator):  # KerasClassifier, KerasRegressor
         assert is_equal_estimator(v1.__dict__, v2.__dict__)
     elif isinstance(v1, Model):
         assert is_equal_estimator(v1.get_config(),
@@ -109,68 +109,22 @@ arrays_nd = [np.ones((10, 1)), np.zeros((10, 10)),
 
 @pytest.mark.parametrize("z", arrays_nd)
 def test_check_arrays_nd(z):
-    Xs, ys, Xt, yt = check_arrays(z, z, z, z)
+    Xs, ys = check_arrays(z, z)
     assert np.array_equal(Xs, z)
     assert np.array_equal(ys, z)
-    assert np.array_equal(Xt, z)
-    assert np.array_equal(yt, z)
-    
-    
-def test_check_arrays_diff_input():
-    Xs, ys, Xt, yt = arrays_nd[:4]
-    assert np.array_equal(Xs, arrays_nd[0])
-    assert np.array_equal(ys, arrays_nd[1])
-    assert np.array_equal(Xt, arrays_nd[2])
-    assert np.array_equal(yt, arrays_nd[3])
-    
-    
-arrays_1d = [np.ones((10,)), np.ones((1,))]
-arrays_2d = [np.ones((10, 1)), np.ones((1, 1))]
-
-@pytest.mark.parametrize("z, zz", zip(arrays_1d, arrays_2d))
-def test_check_arrays_1d(z, zz):
-    Xs, ys, Xt, yt = check_arrays(z, z, z, z)
-    assert np.array_equal(Xs, zz)
-    assert np.array_equal(ys, zz)
-    assert np.array_equal(Xt, zz)
-    assert np.array_equal(yt, zz)
-
-
-def test_check_arrays_no_yt():
-    z = arrays_nd[0]
-    Xs, ys, Xt, yt = check_arrays(z, z, z)
-    assert yt is None
-    assert np.array_equal(Xs, z)
-    assert np.array_equal(ys, z)
-    assert np.array_equal(Xt, z)
 
 
 def test_check_arrays_length_error():
     z = arrays_nd[0]
     with pytest.raises(ValueError) as excinfo:
-         Xs, ys, Xt, yt = check_arrays(z, z[:5], z)
-    assert "Length of Xs and ys mismatch: 10 != 5" in str(excinfo.value)
-    with pytest.raises(ValueError) as excinfo:
-         Xs, ys, Xt, yt = check_arrays(z, z, z, z[:5])
-    assert "Length of Xt and yt mismatch: 10 != 5" in str(excinfo.value)
+         Xs, ys = check_arrays(z, z[:5])
+    assert "Length of X and y mismatch: 10 != 5" in str(excinfo.value)
     
     
 def test_check_arrays_no_array():
     z = np.array([1,2,3])
-    with pytest.raises(TypeError) as excinfo:
-         Xs, ys, Xt, yt = check_arrays("123", z, z)
-            
-
-@pytest.mark.parametrize("X", arrays_nd)
-def test_check_one_array_nd(X):
-    Xt = check_one_array(X)
-    assert np.array_equal(Xt, X)
-    
-    
-@pytest.mark.parametrize("X, Xtt", zip(arrays_1d, arrays_2d))
-def test_check_one_array_1d(X, Xtt):
-    Xt = check_one_array(X)
-    assert np.array_equal(Xt, Xtt)
+    with pytest.raises(ValueError) as excinfo:
+         Xs, ys = check_arrays("lala", z)
 
     
 networks = [
@@ -186,14 +140,14 @@ networks = [
 
 @pytest.mark.parametrize("net", networks)
 def test_check_network_network(net):
-    new_net = check_network(net, compile_=False)
+    new_net = check_network(net)
     assert is_equal_estimator(new_net, net)
     if net.built:
         for i in range(len(net.get_weights())):
             assert np.array_equal(net.get_weights()[i],
                               new_net.get_weights()[i])
     net.predict(np.ones((10, 10)))
-    new_net = check_network(net, compile_=False)
+    new_net = check_network(net)
     assert is_equal_estimator(new_net, net)
     for i in range(len(net.get_weights())):
         assert np.array_equal(net.get_weights()[i],
@@ -202,9 +156,9 @@ def test_check_network_network(net):
 
 @pytest.mark.parametrize("net", networks)
 def test_check_network_copy(net):
-    new_net = check_network(net, copy=True, compile_=False)
+    new_net = check_network(net, copy=True)
     assert hex(id(new_net)) != hex(id(net))
-    new_net = check_network(net, copy=False, compile_=False)
+    new_net = check_network(net, copy=False)
     assert hex(id(new_net)) == hex(id(net))
     
 
@@ -217,11 +171,6 @@ def test_check_network_no_model(no_net):
     assert ("Expected `network` argument "
             "to be a `Model` instance,"
             " got: %s"%str(no_net) in str(excinfo.value))
-    with pytest.raises(ValueError) as excinfo:
-        new_net = check_network(no_net, display_name="tireli")
-    assert ("Expected `tireli` argument "
-            "to be a `Model` instance,"
-            " got: %s"%str(no_net) in str(excinfo.value))
     
 
 def test_check_network_force_copy():
@@ -230,46 +179,14 @@ def test_check_network_force_copy():
         new_net = check_network(model, copy=True, force_copy=True)
     assert ("`network` argument can't be duplicated. "
             "Recorded exception: " in str(excinfo.value))
-    with pytest.raises(ValueError) as excinfo:
-        new_net = check_network(model, copy=True, force_copy=True,
-                                display_name="tireli")
-    assert ("`tireli` argument can't be duplicated. "
-            "Recorded exception: " in str(excinfo.value))
-    
-    with pytest.warns(UserWarning) as record:
-        new_net = check_network(model, copy=True, force_copy=False,
-                                compile_=False)
-    assert ("`network` argument can't be duplicated. "
-            "Recorded exception: " in str(record[0].message))
-    with pytest.warns(UserWarning) as record:
-        new_net = check_network(model, copy=True, force_copy=False,
-                                compile_=False,
-                                display_name="tireli")
-    assert ("`tireli` argument can't be duplicated. "
-            "Recorded exception: " in str(record[0].message))
     
     new_net = check_network(model, copy=False, force_copy=True)
-    
-    
-def test_check_network_compile():
-    net = _get_model_Sequential(compiled=False)
-    with pytest.raises(ValueError) as excinfo:
-        new_net = check_network(net, copy=True, compile_=True)
-    assert ("The given `network` argument is not compiled yet. "
-            "Please use `model.compile(optimizer, loss)`." 
-            in str(excinfo.value))
-    with pytest.raises(ValueError) as excinfo:
-        new_net = check_network(net, copy=True, compile_=True,
-                                display_name="tireli")
-    assert ("The given `tireli` argument is not compiled yet. "
-            "Please use `model.compile(optimizer, loss)`." 
-            in str(excinfo.value))
     
     
 def test_check_network_high_dataset():
     Xs, ys, Xt, yt = make_regression_da(100000, 1001)
     net = _get_model_Sequential(compiled=True)
-    new_net = check_network(net, copy=True, compile_=True)
+    new_net = check_network(net, copy=True)
     new_net.predict(Xs)
     
 
@@ -281,7 +198,7 @@ estimators = [
     TransformedTargetRegressor(regressor=Ridge(alpha=25), transformer=StandardScaler()),
     MultiOutputRegressor(Ridge(alpha=0.3)),
     make_pipeline(StandardScaler(), Ridge(alpha=0.2)),
-    KerasClassifier(_get_model_Sequential, input_shape=(1,)),
+    # KerasClassifier(_get_model_Sequential, input_shape=(1,)),
     CustomEstimator()
 ]
 
@@ -295,10 +212,10 @@ def test_check_estimator_estimators(est):
     else:
         est.fit(np.linspace(0, 1, 10).reshape(-1, 1),
                 (np.linspace(0, 1, 10)<0.5).astype(float))
-    if isinstance(est, KerasClassifier):
-        new_est = check_estimator(est, copy=False)
-    else:
-        new_est = check_estimator(est, copy=True, force_copy=True)
+    # if isinstance(est, KerasClassifier):
+    #     new_est = check_estimator(est, copy=False)
+    # else:
+    new_est = check_estimator(est, copy=True, force_copy=True)
     assert is_equal_estimator(est, new_est)
     
     
@@ -470,3 +387,25 @@ def test_make_regression_da():
     assert len(ys) == 1000
     assert Xt.shape == (1000, 10)
     assert len(yt) == 1000
+    
+    
+def test_accuracy():
+    y_true = tf.Variable([[0, 1, 0],
+             [1, 0, 0],
+             [1, 0, 0],
+             [0, 0, 1]],
+            dtype="float32")
+    y_pred = tf.Variable([[0.5, 0.3, 0.2],
+             [0.9, 0.1, 0.],
+             [0.6, 0.1, 0.3],
+             [0.1, 0.7, 0.2]],
+            dtype="float32")
+    acc = accuracy(y_true, y_pred)
+    assert np.all(np.array([0, 1, 1, 0]) == acc.numpy())
+    
+    y_true = tf.Variable([[0], [1], [0]],
+                         dtype="float32")
+    y_pred = tf.Variable([[0.6], [0.3], [0.2]],
+                         dtype="float32")
+    acc = accuracy(y_true, y_pred)
+    assert np.all(np.array([0, 0, 1]) == acc.numpy())

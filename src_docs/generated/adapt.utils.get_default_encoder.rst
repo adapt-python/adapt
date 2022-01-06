@@ -1,4 +1,4 @@
-:ref:`adapt.utils <adapt.utils>`.get_default_encoder
+﻿:ref:`adapt.utils <adapt.utils>`.get_default_encoder
 ===================================================================
 
 .. currentmodule:: adapt.utils

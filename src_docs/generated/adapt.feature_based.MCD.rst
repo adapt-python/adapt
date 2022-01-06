@@ -1,4 +1,4 @@
-:ref:`adapt.feature_based <adapt.feature_based>`.MCD
+﻿:ref:`adapt.feature_based <adapt.feature_based>`.MCD
 ===========================================================
 
 .. currentmodule:: adapt.feature_based
@@ -16,27 +16,31 @@
 	.. autosummary::
 	    
 		~MCD.__init__
-		~MCD.create_model
+		~MCD.compile
 		~MCD.fit
-		~MCD.fit_source
-		~MCD.fit_target
-		~MCD.get_loss
-		~MCD.get_metrics
+		~MCD.get_params
 		~MCD.predict
 		~MCD.predict_disc
-		~MCD.predict_features
+		~MCD.predict_task
+		~MCD.pretrain_step
+		~MCD.score
+		~MCD.score_estimator
+		~MCD.set_params
+		~MCD.transform
 	
 	
 	.. automethod:: __init__
-	.. automethod:: create_model
+	.. automethod:: compile
 	.. automethod:: fit
-	.. automethod:: fit_source
-	.. automethod:: fit_target
-	.. automethod:: get_loss
-	.. automethod:: get_metrics
+	.. automethod:: get_params
 	.. automethod:: predict
 	.. automethod:: predict_disc
-	.. automethod:: predict_features
+	.. automethod:: predict_task
+	.. automethod:: pretrain_step
+	.. automethod:: score
+	.. automethod:: score_estimator
+	.. automethod:: set_params
+	.. automethod:: transform
 	
     
 	

@@ -2,29 +2,21 @@
 Regular Transfer
 """
 
-import copy
-import warnings
-
 import numpy as np
-from sklearn.linear_model import (LinearRegression,
-                                  Ridge,
-                                  LogisticRegression,
-                                  RidgeClassifier)
 from sklearn.exceptions import NotFittedError
 from scipy.optimize import minimize
-import tensorflow.keras.backend as K
 import tensorflow as tf
-from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Flatten, Dense
 
+from adapt.base import BaseAdaptEstimator, BaseAdaptDeep, make_insert_doc
 from adapt.utils import (check_arrays,
-                         check_one_array,
+                         set_random_seed,
                          check_estimator,
                          check_network)
 
 
-def get_zeros_network():
+def get_zeros_network(name=None):
     """
     Return a tensorflow Model of two hidden layers
     with 10 neurons each and relu activations. The
@@ -35,7 +27,7 @@ def get_zeros_network():
     -------
     tensorflow Model
     """
-    model = Sequential()
+    model = Sequential(name=name)
     model.add(Flatten())
     model.add(Dense(10, activation="relu",
                     kernel_initializer="zeros",
@@ -49,7 +41,8 @@ def get_zeros_network():
     return model
 
 
-class RegularTransferLR:
+@make_insert_doc()
+class RegularTransferLR(BaseAdaptEstimator):
     """
     Regular Transfer with Linear Regression
     
@@ -80,26 +73,14 @@ class RegularTransferLR:
     - :math:`\\lambda` is a trade-off parameter.
 
     Parameters
-    ----------
-    estimator : sklearn LinearRegression or Ridge instance
-        Estimator used to learn the task.
-        
+    ----------        
     lambda_ : float (default=1.0)
         Trade-Off parameter.
-        
-    copy : boolean (default=True)
-        Whether to make a copy of ``estimator`` or not.
-            
-    verbose : int (default=1)
-        Verbosity level.
-        
-    random_state : int (default=None)
-        Seed of random generator.
 
     Attributes
     ----------
-    estimator_ : instance of LinearRegression or Ridge
-        Estimator.
+    estimator_ : Same class as estimator
+        Fitted Estimator.
         
     Examples
     --------
@@ -118,7 +99,7 @@ class RegularTransferLR:
     >>> lr.score(Xt.reshape(-1, 1), yt)
     0.2912...
     >>> rt = RegularTransferLR(lr, lambda_=0.01, random_state=0)
-    >>> rt.fit(Xt[:10], yt[:10])
+    >>> rt.fit(Xt[:10].reshape(-1, 1), yt[:10])
     >>> rt.estimator_.score(Xt.reshape(-1, 1), yt)
     0.3276...
         
@@ -134,98 +115,90 @@ A. Acero. "Adaptation of maximum entropy classifier: Little data \
 can help a lot". In EMNLP, 2004.
     """
     def __init__(self,
-                 estimator,
-                 lambda_=1.0,
+                 estimator=None,
+                 Xt=None,
+                 yt=None,
+                 lambda_=1.,
                  copy=True,
-                 random_state=None):
-        
-        if (not isinstance(estimator, LinearRegression) and
-            not isinstance(estimator, Ridge)):
-            raise ValueError("`estimator` argument should be a"
-                             " `LinearRegression` or `Ridge`"
-                             " instance.")
-        
+                 verbose=1,
+                 random_state=None,
+                 **params):
+                
         if not hasattr(estimator, "coef_"):
-            raise NotFittedError("`estimator` argument is not fitted yet, "
-                                 "please call `fit` on `estimator`.")
+            raise NotFittedError("`estimator` argument has no ``coef_`` attribute, "
+                                 "please call `fit` on `estimator` or use "
+                                 "another estimator.")
 
-        self.estimator_ = check_estimator(estimator,
-                                          copy=copy)
-        self.lambda_ = lambda_
-        self.copy = copy
-        self.random_state = random_state
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)
 
     
-    def fit(self, Xt, yt, **fit_params):
+    def fit(self, Xt=None, yt=None, **fit_params):
         """
         Fit RegularTransferLR.
 
         Parameters
         ----------
-        Xt : numpy array
+        Xt : numpy array (default=None)
             Target input data.
 
-        yt : numpy array
+        yt : numpy array (default=None)
             Target output data.
+            
+        fit_params : key, value arguments
+            Not used. Here for sklearn compatibility.
 
         Returns
         -------
         self : returns an instance of self
         """        
-        np.random.seed(self.random_state)
-        tf.random.set_seed(self.random_state)
+        Xt, yt = self._get_target_data(Xt, yt)
+        Xt, yt = check_arrays(Xt, yt)
+        set_random_seed(self.random_state)
         
-        Xt = check_one_array(Xt)
-        yt = check_one_array(yt)
-                
+        self.estimator_ = check_estimator(self.estimator,
+                                          copy=self.copy,
+                                          force_copy=True)
+        
         if self.estimator_.fit_intercept:
             beta_src = np.concatenate((
-                np.array([self.estimator_.intercept_]),
-                self.estimator_.coef_
+                self.estimator_.intercept_ * np.ones(yt.shape).mean(0, keepdims=True),
+                self.estimator_.coef_.transpose()
             ))
             Xt = np.concatenate(
                 (np.ones((len(Xt), 1)), Xt),
                 axis=-1)
         else:
-            beta_src = self.estimator_.coef_
+            beta_src = self.estimator_.coef_.transpose()
         
-        def func(beta):
-            return (np.linalg.norm(Xt.dot(beta.reshape(-1, 1)) - yt) ** 2 +
-                    self.lambda_ * np.linalg.norm(beta - beta_src) ** 2)
-
+        func = self._get_func(Xt, yt, beta_src)
+        
         beta_tgt = minimize(func, beta_src)['x']
+        beta_tgt = beta_tgt.reshape(beta_src.shape)
 
         if self.estimator_.fit_intercept:
-            self.estimator_.intercept_ = beta_tgt[[0]]
-            self.estimator_.coef_ = np.array([beta_tgt[1:]])
+            self.estimator_.intercept_ = beta_tgt[0]
+            self.estimator_.coef_ = beta_tgt[1:].transpose()
         else:
-            self.estimator_.intercept_ = np.array([0.])
-            self.estimator_.coef_ = np.array([beta_tgt])
+            self.estimator_.coef_ = beta_tgt.transpose()
         return self
-
-
-    def predict(self, X):
-        """
-        Return the predictions of the target estimator.
-
-        Parameters
-        ----------
-        X : array
-            Input data.
-
-        Returns
-        -------
-        y_pred : array
-            Prediction of target estimator.
-        """
-        X = check_one_array(X)
-        return self.estimator_.predict(X)
     
     
+    def _get_func(self, Xt, yt, beta_src):
+        def func(beta):
+            beta = beta.reshape(beta_src.shape)
+            return (np.linalg.norm(Xt.dot(beta) - yt) ** 2 +
+                    self.lambda_ * np.linalg.norm(beta - beta_src) ** 2)
+        return func
+
     
-class RegularTransferLC:
+
+@make_insert_doc()
+class RegularTransferLC(RegularTransferLR):
     """
-    Regular Transfer for Binary Linear Classification
+    Regular Transfer for Linear Classification
     
     RegularTransferLC is a parameter-based domain adaptation method.
     
@@ -255,26 +228,14 @@ class RegularTransferLC:
     - :math:`\\lambda` is a trade-off parameter.
 
     Parameters
-    ----------
-    estimator : sklearn LogisticRegression or RidgeClassifier instance
-        Estimator used to learn the task.
-        
+    ----------        
     lambda_ : float (default=1.0)
         Trade-Off parameter.
-        
-    copy : boolean (default=True)
-        Whether to make a copy of ``estimator`` or not.
-            
-    verbose : int (default=1)
-        Verbosity level.
-        
-    random_state : int (default=None)
-        Seed of random generator.
 
     Attributes
     ----------
-    estimator_ : instance of LogisticRegression or RidgeClassifier
-        Estimator.
+    estimator_ : Same class as estimator
+        Fitted Estimator.
             
     Examples
     --------
@@ -292,7 +253,7 @@ class RegularTransferLC:
     >>> lc.score(Xt.reshape(-1, 1), yt)
     0.67
     >>> rt = RegularTransferLC(lc, lambda_=0.01, random_state=0)
-    >>> rt.fit(Xt[:10], yt[:10])
+    >>> rt.fit(Xt[:10].reshape(-1, 1), yt[:10].reshape(-1, 1))
     >>> rt.estimator_.score(Xt.reshape(-1, 1), yt)
     0.67
 
@@ -307,97 +268,19 @@ content/uploads/2004/07/2004-chelba-emnlp.pdf>`_ C. Chelba and \
 A. Acero. "Adaptation of maximum entropy classifier: Little data \
 can help a lot". In EMNLP, 2004.
     """
-    def __init__(self,
-                 estimator,
-                 lambda_=1.0,
-                 copy=True,
-                 random_state=None):
-        
-        if (not isinstance(estimator, LogisticRegression) and
-            not isinstance(estimator, RidgeClassifier)):
-            raise ValueError("`estimator` argument should be a"
-                             " `LogisticRegression` or `RidgeClassifier`"
-                             " instance.")
-        
-        if not hasattr(estimator, "coef_"):
-            raise NotFittedError("`estimator` argument is not fitted yet, "
-                                 "please call `fit` on `estimator`.")
-
-        self.estimator_ = check_estimator(estimator,
-                                          copy=copy)
-        self.lambda_ = lambda_
-        self.copy = copy
-        self.random_state = random_state
-
-
-    def fit(self, Xt, yt, **fit_params):
-        """
-        Fit RegularTransferLC.
-
-        Parameters
-        ----------
-        Xt : numpy array
-            Target input data.
-
-        yt : numpy array
-            Target output data.
-
-        Returns
-        -------
-        self : returns an instance of self
-        """        
-        np.random.seed(self.random_state)
-        tf.random.set_seed(self.random_state)
-        
-        Xt = check_one_array(Xt)
-        yt = check_one_array(yt)
-                
-        if self.estimator_.fit_intercept:
-            beta_src = np.concatenate((
-                np.array([self.estimator_.intercept_[0]]),
-                self.estimator_.coef_[0]
-            ))
-            Xt = np.concatenate(
-                (np.ones((len(Xt), 1)), Xt),
-                axis=-1)
-        else:
-            beta_src = self.estimator_.coef_[0]
-        
+    ### TODO reshape yt for multiclass.
+    
+    def _get_func(self, Xt, yt, beta_src):
         def func(beta):
+            beta = beta.reshape(beta_src.shape)
             return (np.sum(np.log(1 + np.exp(
-                    -(2*yt-1) * Xt.dot(beta.reshape(-1, 1))))) +
-                    self.lambda_ * np.linalg.norm(beta - beta_src) ** 2)
-
-        beta_tgt = minimize(func, beta_src)['x']
-
-        if self.estimator_.fit_intercept:
-            self.estimator_.intercept_ = beta_tgt[[0]]
-            self.estimator_.coef_ = np.array([beta_tgt[1:]])
-        else:
-            self.estimator_.intercept_ = np.array([0.])
-            self.estimator_.coef_ = np.array([beta_tgt])
-        return self
+                -(2*yt-1) * Xt.dot(beta)))) +
+                self.lambda_ * np.linalg.norm(beta - beta_src) ** 2)
+        return func
 
 
-    def predict(self, X):
-        """
-        Return the predictions of the target estimator.
-
-        Parameters
-        ----------
-        X : array
-            Input data.
-
-        Returns
-        -------
-        y_pred : array
-            Prediction of target estimator.
-        """
-        X = check_one_array(X)
-        return self.estimator_.predict(X)
-
-
-class RegularTransferNN:
+@make_insert_doc(["task"])
+class RegularTransferNN(BaseAdaptDeep):
     """
     Regular Transfer with Neural Network
     
@@ -429,22 +312,9 @@ class RegularTransferNN:
     
     Different trade-off can be given to the layer of the 
     neural network through the ``lambdas`` parameter.
-    Some layers can also be frozen during training via
-    the ``training`` parameter.
-    
-    .. figure:: ../_static/images/regulartransfer.png
-        :align: center
-        
-        Transferring parameters of a CNN pretrained on Imagenet
-        (source: [2])
 
     Parameters
-    ----------
-    network : tensorflow Model (default=None)
-        Base netwok. If ``None``, a neural network with two
-        hidden layers of 10 neurons with ReLU activation each
-        is used and all weights initialized to zeros.
-        
+    ----------        
     lambdas : float or list of float, optional (default=1.0)
         Trade-off parameters.
         If a list is given, values from ``lambdas`` are assigned
@@ -453,35 +323,10 @@ class RegularTransferNN:
         If the length of ``lambdas`` is smaller than the length of
         ``network`` layers list, the last trade-off value will be
         asigned to the remaining layers.
-        
-    trainables : boolean or list of boolean, optional (default=True)
-        Whether to train the layer or not.
-        If a list is given, values from ``trainables`` are assigned
-        successively to the list of ``network`` layers with 
-        weights parameters going from the last layer to the first one.
-        If the length of ``trainables`` is smaller than the length of
-        ``network`` layers list, the last trade-off value will be
-        asigned to the remaining layers.
-        
-    regularizer : str (default="l2")
-        Regularizing function used. Possible values:
-        [`l2`, `l1`]
-        
-    copy : boolean (default=True)
-        Whether to make a copy of ``network`` or not.
-        
-    random_state : int (default=None)
-        Seed of random generator.
-    
-    compil_params : key, value arguments, optional
-        Additional arguments for autoencoder compiler
-        (loss, optimizer...).
-        If none, loss is set to ``"mean_squared_error"``
-        and optimizer to ``Adam(0.001)``.
 
     Attributes
     ----------
-    network_ : tensorflow Model
+    task_ : tensorflow Model
         Network.
         
     history_ : dict
@@ -509,10 +354,9 @@ class RegularTransferNN:
     >>> np.abs(model.predict(Xt).ravel() - yt).mean()
     0.48265...
     >>> rt = RegularTransferNN(model, lambdas=0.01, random_state=0)
-    >>> rt.fit(Xt[:10], yt[:10], epochs=300, verbose=0)
-    >>> rt.predict(Xt.reshape(-1, 1))
-    >>> np.abs(rt.predict(Xt).ravel() - yt).mean()
-    0.23114...
+    >>> rt.fit(Xt[:10].reshape(-1,1), yt[:10], epochs=300, verbose=0)
+    >>> np.abs(rt.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
+    0.1900...
         
     See also
     --------
@@ -524,143 +368,120 @@ class RegularTransferNN:
 content/uploads/2004/07/2004-chelba-emnlp.pdf>`_ C. Chelba and \
 A. Acero. "Adaptation of maximum entropy classifier: Little data \
 can help a lot". In EMNLP, 2004.
-
-    .. [2] `[2] <https://hal.inria.fr/hal-00911179v1/document>`_ \
-Oquab M., Bottou L., Laptev I., Sivic J. "Learning and \
-transferring mid-level image representations using convolutional \
-neural networks". In CVPR, 2014.
     """
     def __init__(self,
-                 network=None,
+                 task=None,
+                 Xt=None,
+                 yt=None,
                  lambdas=1.0,
-                 trainables=True,
                  regularizer="l2",
+                 verbose=1,
                  copy=True,
                  random_state=None,
-                 **compil_params):
-        np.random.seed(random_state)
-        tf.random.set_seed(random_state)
+                 **params):
         
-        if network is None:
-            network = get_zeros_network()
-        
-        self.network_ = check_network(network, copy=copy,
-                                           compile_=False)
-        self.lambdas = lambdas
-        self.trainables = trainables
-        self.copy = copy
-        self.random_state = random_state
-        self.compil_params = compil_params
-        self.is_built_ = False
-        
-        if regularizer in ["l1", "l2"]:
-            self.regularizer = regularizer
-        else:
+        if not regularizer in ["l1", "l2"]:
             raise ValueError("`regularizer` argument should be "
                              "'l1' or 'l2', got, %s"%str(regularizer))
         
-        if not hasattr(self.lambdas, "__iter__"):
-            self.lambdas = [self.lambdas]
-        if not hasattr(self.trainables, "__iter__"):
-            self.trainables = [self.trainables]
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)
 
 
-    def _build(self, shape_X):
-        self.history_ = {}
-        self.network_.predict(np.zeros((1,) + shape_X))
-        self._add_regularization()
-        
-        compil_params = copy.deepcopy(self.compil_params)
-        if not "loss" in compil_params:
-            compil_params["loss"] = "mean_squared_error"
-        if not "optimizer" in compil_params:
-            compil_params["optimizer"] = Adam(0.001)
-        
-        self.network_.compile(**compil_params)
-        return self
-
-
-    def fit(self, Xt, yt, **fit_params):
+    def fit(self, Xt=None, yt=None, **fit_params):
         """
         Fit RegularTransferNN.
 
         Parameters
         ----------
-        Xt : numpy array
+        Xt : numpy array (default=None)
             Target input data.
 
-        yt : numpy array
+        yt : numpy array (default=None)
             Target output data.
+            
+        fit_params : key, value arguments
+            Arguments given to the fit method of the model
+            (epochs, batch_size, callbacks...).
 
         Returns
         -------
         self : returns an instance of self
         """        
-        np.random.seed(self.random_state)
-        tf.random.set_seed(self.random_state)
-        
-        Xt = check_one_array(Xt)
-        yt = check_one_array(yt)
-        
-        if not self.is_built_:
-            self._build(Xt.shape[1:])
-            self.is_built_ = True
-        
-        hist = self.network_.fit(Xt, yt, **fit_params)
-        
-        for k, v in hist.history.items():
-            self.history_[k] = self.history_.get(k, []) + v
-        
-        return self
+        Xt, yt = self._get_target_data(Xt, yt)
+        Xs = Xt
+        ys = yt
+        return super().fit(Xs, ys, Xt=Xt, yt=yt, **fit_params)
+    
+    
+    def _initialize_networks(self):
+        if self.task is None:
+            self.task_ = get_zeros_network(name="task")
+        else:
+            self.task_ = check_network(self.task,
+                                       copy=self.copy,
+                                       name="task")
+        self._add_regularization()
     
     
     def _get_regularizer(self, old_weight, weight, lambda_=1.):
         if self.regularizer == "l2":
             def regularizer():
-                return lambda_ * K.mean(K.square(old_weight - weight))
+                return lambda_ * tf.reduce_mean(tf.square(old_weight - weight))
         if self.regularizer == "l1":
             def regularizer():
-                return lambda_ * K.mean(K.abs(old_weight - weight))
+                return lambda_ * tf.reduce_mean(tf.abs(old_weight - weight))
         return regularizer
 
 
     def _add_regularization(self):
         i = 0
-        for layer in reversed(self.network_.layers):
+        if not hasattr(self.lambdas, "__iter__"):
+            lambdas = [self.lambdas]
+        else:
+            lambdas = self.lambdas
+        
+        for layer in reversed(self.task_.layers):
             if (hasattr(layer, "weights") and 
             layer.weights is not None and
             len(layer.weights) != 0):
-                if i >= len(self.trainables):
-                    trainable = self.trainables[-1]
+                if i >= len(lambdas):
+                    lambda_ = lambdas[-1]
                 else:
-                    trainable = self.trainables[i]
-                if i >= len(self.lambdas):
-                    lambda_ = self.lambdas[-1]
-                else:
-                    lambda_ = self.lambdas[i]
-                if not trainable:
-                    layer.trainable = False
+                    lambda_ = lambdas[i]
                 for weight in reversed(layer.weights):
                     old_weight = tf.identity(weight)
                     old_weight.trainable = False
-                    self.network_.add_loss(self._get_regularizer(
+                    self.add_loss(self._get_regularizer(
                         old_weight, weight, lambda_))
                 i += 1
         
         
-    def predict(self, X):
+    def call(self, inputs):
+        return self.task_(inputs)
+    
+    
+    def transform(self, X):
         """
-        Return predictions of target network.
+        Return X
         
         Parameters
         ----------
-        X: array
+        X : array
             input data
             
         Returns
         -------
-        y_pred: array
-            predictions of target network
+        X_enc : array
+            predictions of encoder network
         """
-        X = check_one_array(X)
-        return self.network_.predict(X)
+        return X
+    
+    
+    def predict_disc(self, X):
+        """
+        Not used.
+        """     
+        pass

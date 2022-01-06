@@ -35,6 +35,7 @@ extensions = [
  'IPython.sphinxext.ipython_console_highlighting'
  ]
 
+
 numpydoc_show_inherited_class_members = False
 numpydoc_show_class_members = False
 numpydoc_class_members_toctree = False
@@ -119,7 +120,7 @@ def linkcode_resolve(domain, info):
     
     object_name = "_" + object_name
     
-    if "utils" in info['module']:
+    if "utils" in info['module'] or "metrics" in info['module']:
         filename = info['module'].replace('.', '/')
     else:
         filename = os.path.join(info['module'].replace('.', '/'), object_name)

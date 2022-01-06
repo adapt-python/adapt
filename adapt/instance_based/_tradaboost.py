@@ -2,18 +2,14 @@
 Transfer Adaboost
 """
 
-import inspect
-import warnings
-
 import numpy as np
-from sklearn.linear_model import LinearRegression
+import tensorflow as tf
 from sklearn.base import BaseEstimator
 from sklearn.exceptions import NotFittedError
-import tensorflow as tf
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.utils import to_categorical
+from sklearn.utils import check_array
 
-from adapt.utils import check_arrays, check_one_array, check_estimator
+from adapt.base import BaseAdaptEstimator, make_insert_doc
+from adapt.utils import check_arrays, check_estimator, set_random_seed
 
 EPS = np.finfo(float).eps
 
@@ -64,7 +60,8 @@ def _binary_search(func, verbose=1):
     return best
 
 
-class TrAdaBoost:
+@make_insert_doc()
+class TrAdaBoost(BaseAdaptEstimator):
     """
     Transfer AdaBoost for Classification
     
@@ -106,20 +103,9 @@ class TrAdaBoost:
     :math:`\\beta_T`.
     
     Parameters
-    ----------
-    estimator : sklearn estimator or tensorflow Model (default=None)
-        Base estimator used to learn the task. 
-        If estimator is ``None``, a ``LogisticRegression``
-        instance is used as base estimator.
-        
+    ----------        
     n_estimators : int (default=10)
         Number of boosting iteration.
-        
-    verbose : int (default=1)
-        Verbosity level.
-        
-    random_state : int (default=None)
-        Seed of random generator.
 
     Attributes
     ----------
@@ -173,24 +159,23 @@ class TrAdaBoost:
 Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
     """
 
-    def __init__(self, estimator=None, n_estimators=10,
-                 verbose=1, random_state=None):
-        np.random.seed(random_state)
-        tf.random.set_seed(random_state)
-        
-        self.task_ = "class"
-        if isinstance(self, TrAdaBoostR2):
-            self.task_ = "reg"
-        
-        self.base_estimator_ = check_estimator(estimator, copy=True,
-                                               force_copy=True,
-                                               task=self.task_)
-        self.n_estimators = n_estimators
-        self.verbose = verbose
-        self.random_state = random_state
+    def __init__(self,
+                 estimator=None,
+                 Xt=None,
+                 yt=None,
+                 n_estimators=10,
+                 copy=True,
+                 verbose=1,
+                 random_state=None,
+                 **params):
+
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)
 
 
-    def fit(self, Xs, ys, Xt, yt,
+    def fit(self, X, y, Xt=None, yt=None,
             sample_weight_src=None,
             sample_weight_tgt=None,
             **fit_params):
@@ -199,17 +184,19 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         
         Parameters
         ----------
-        Xs : numpy array
+        X : numpy array
             Source input data.
 
-        ys : numpy array
+        y : numpy array
             Source output data.
-
-        Xt : numpy array
-            Target input data.
             
-        yt : numpy array
-            Target output data.
+        Xt : array (default=None)
+            Target input data. If None, the `Xt` argument
+            given in `init` is used.
+
+        yt : array (default=None)
+            Target input data. If None, the `Xt` argument
+            given in `init` is used.
             
         sample_weight_src : numpy array, (default=None)
             Initial sample weight of source data
@@ -220,16 +207,25 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         fit_params : key, value arguments
             Arguments given to the fit method of the
             estimator.
+            
+        Other Parameters
+        ----------------
+        Xt : array (default=self.Xt)
+            Target input data.
+
+        yt : array (default=self.yt)
+            Target output data.
 
         Returns
         -------
         self : returns an instance of self
         """
-        np.random.seed(self.random_state)
-        tf.random.set_seed(self.random_state)
+        set_random_seed(self.random_state)
         tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
         
-        Xs, ys, Xt, yt = check_arrays(Xs, ys, Xt, yt)
+        Xs, ys = check_arrays(X, y)
+        Xt, yt = self._get_target_data(Xt, yt)
+        Xt, yt = check_arrays(Xt, yt)
         
         n_s = len(Xs) 
         n_t = len(Xt)
@@ -289,29 +285,22 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         sample_weight = np.concatenate((sample_weight_src,
                                         sample_weight_tgt))
         
-        estimator = check_estimator(self.base_estimator_,
-                                    copy=True, force_copy=True)
-        
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            if "sample_weight" in inspect.signature(estimator.fit).parameters:
-                estimator.fit(X, y, 
-                              sample_weight=sample_weight,
-                              **fit_params)
-            else:
-                bootstrap_index = np.random.choice(
-                len(X), size=len(X), replace=True, p=sample_weight)
-                estimator.fit(X[bootstrap_index], y[bootstrap_index],
-                              **fit_params)
+        estimator = self.fit_estimator(X, y,
+                                       sample_weight=sample_weight,
+                                       random_state=None,
+                                       warm_start=False,
+                                       **fit_params)
         
         ys_pred = estimator.predict(Xs)
         yt_pred = estimator.predict(Xt)
         
-        if ys_pred.ndim == 1:
+        if ys_pred.ndim == 1 or ys.ndim == 1:
+            ys = ys.reshape(-1, 1)
+            yt = yt.reshape(-1, 1)
             ys_pred = ys_pred.reshape(-1, 1)
             yt_pred = yt_pred.reshape(-1, 1)
         
-        if self.task_ == "reg":
+        if isinstance(self, TrAdaBoostR2):
             error_vect_src = np.abs(ys_pred - ys).mean(tuple(range(1, ys.ndim)))
             error_vect_tgt = np.abs(yt_pred - yt).mean(tuple(range(1, yt.ndim)))
             error_vect = np.concatenate((error_vect_src, error_vect_tgt))
@@ -387,7 +376,7 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         y_pred : array
             Vote results.
         """
-        X = check_one_array(X)
+        X = check_array(X)
         N = len(self.estimators_)
         weights = self.estimator_weights_[int(N/2):]
         predictions = []
@@ -437,7 +426,7 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
                                  "call 'fit' first.")
 
 
-
+@make_insert_doc()
 class TrAdaBoostR2(TrAdaBoost):
     """
     Transfer AdaBoost for Regression
@@ -488,20 +477,9 @@ class TrAdaBoostR2(TrAdaBoost):
     :math:`N \\setminus 2` last estimators.
     
     Parameters
-    ----------
-    estimator : sklearn estimator or tensorflow Model (default=None)
-        Base estimator used to learn the task. 
-        If estimator is ``None``, a ``LinearRegression``
-        instance is used as base estimator.
-        
+    ----------        
     n_estimators : int (default=10)
         Number of boosting iteration.
-        
-    verbose : int (default=1)
-        Verbosity level.
-        
-    random_state : int (default=None)
-        Seed of random generator.
 
     Attributes
     ----------
@@ -524,6 +502,7 @@ class TrAdaBoostR2(TrAdaBoost):
     Examples
     --------
     >>> import numpy as np
+    >>> from sklearn.linear_model import LinearRegression
     >>> from adapt.instance_based import TrAdaBoostR2
     >>> np.random.seed(0)
     >>> Xs = np.random.random((100, 2))
@@ -567,7 +546,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         y_pred : array
             Median results.
         """
-        X = check_one_array(X)
+        X = check_array(X)
         N = len(self.estimators_)
         weights = self.estimator_weights_
         weights = weights[int(N/2):]
@@ -587,7 +566,8 @@ class _AdaBoostR2(TrAdaBoostR2):
     """
     pass
 
-    
+
+@make_insert_doc()    
 class TwoStageTrAdaBoostR2(TrAdaBoostR2):
     """
     Two Stage Transfer AdaBoost for Regression
@@ -654,12 +634,7 @@ class TwoStageTrAdaBoostR2(TrAdaBoostR2):
     to cross-validation scores.
     
     Parameters
-    ----------
-    estimator : sklearn estimator or tensorflow Model (default=None)
-        Base estimator used to learn the task. 
-        If estimator is ``None``, a ``LinearRegression``
-        instance is used as base estimator.
-        
+    ----------        
     n_estimators : int (default=10)
         Number of boosting iteration.
         
@@ -669,12 +644,6 @@ class TwoStageTrAdaBoostR2(TrAdaBoostR2):
         
     cv: int, optional (default=5)
         Split cross-validation parameter.
-        
-    verbose : int (default=1)
-        Verbosity level.
-        
-    random_state : int (default=None)
-        Seed of random generator.
 
     Attributes
     ----------
@@ -725,28 +694,38 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
     """
     def __init__(self,
                  estimator=None,
+                 Xt=None,
+                 yt=None,
                  n_estimators=10,
                  n_estimators_fs=10,
                  cv=5,
+                 copy=True,
                  verbose=1,
-                 random_state=None):
-        super().__init__(estimator,
-                         n_estimators,
-                         verbose,
-                         random_state)
-        self.n_estimators_fs = n_estimators_fs
-        self.cv = cv
+                 random_state=None,
+                 **params):
+        
+        super().__init__(estimator=estimator,
+                         Xt=Xt,
+                         yt=yt,
+                         n_estimators=n_estimators,
+                         n_estimators_fs = n_estimators_fs,
+                         cv=cv,
+                         copy=copy,
+                         verbose=verbose,
+                         random_state=random_state,
+                         **params)
 
 
-    def fit(self, Xs, ys, Xt, yt,
+    def fit(self, X, y, Xt=None, yt=None,
             sample_weight_src=None,
             sample_weight_tgt=None,
             **fit_params):
-        np.random.seed(self.random_state)
-        tf.random.set_seed(self.random_state)
+        set_random_seed(self.random_state)
         tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
         
-        Xs, ys, Xt, yt = check_arrays(Xs, ys, Xt, yt)
+        Xs, ys = check_arrays(X, y)
+        Xt, yt = self._get_target_data(Xt, yt)
+        Xt, yt = check_arrays(Xt, yt)
         
         n_s = len(Xs) 
         n_t = len(Xt)
@@ -808,23 +787,26 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
     def _boost(self, iboost, Xs, ys, Xt, yt,
                sample_weight_src, sample_weight_tgt, **fit_params):
 
-        estimator = _AdaBoostR2(estimator=self.base_estimator_,
+        estimator = _AdaBoostR2(estimator=self.estimator,
                                 n_estimators=self.n_estimators_fs,
                                 verbose=self.verbose-1,
-                                random_state=self.random_state)
+                                random_state=None)
         
         if self.verbose > 1:
             print("First Stages...")
         
-        estimator.fit(Xs, ys, Xt, yt,
-                      sample_weight_src,
-                      sample_weight_tgt,
+        estimator.fit(Xs, ys,
+                      Xt=Xt, yt=yt,
+                      sample_weight_src=sample_weight_src,
+                      sample_weight_tgt=sample_weight_tgt,
                       **fit_params)
         
         ys_pred = estimator.predict(Xs)
         yt_pred = estimator.predict(Xt)
         
-        if ys_pred.ndim == 1:
+        if ys_pred.ndim == 1 or ys.ndim == 1:
+            ys = ys.reshape(-1, 1)
+            yt = yt.reshape(-1, 1)
             ys_pred = ys_pred.reshape(-1, 1)
             yt_pred = yt_pred.reshape(-1, 1)
         
@@ -887,10 +869,6 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
                 test_index = tgt_index[i * split: (i + 1) * split]
             train_index = list(set(tgt_index) - set(test_index))
             
-            estimator = check_estimator(self.base_estimator_,
-                                        copy=True, force_copy=True,
-                                        display_name="base_estimator_")
-            
             X = np.concatenate((Xs, Xt[train_index]))
             y = np.concatenate((ys, yt[train_index]))
             sample_weight = np.concatenate((sample_weight_src,
@@ -902,20 +880,15 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
                     sample_weight_tgt[train_index].sum()
                 )
 
-            if "sample_weight" in inspect.signature(estimator.fit).parameters:
-                estimator.fit(X, y, 
-                              sample_weight=sample_weight,
-                              **fit_params)
-            else:
-                bootstrap_index = np.random.choice(
-                len(X), size=len(X), replace=True, p=sample_weight)
-                estimator.fit(X[bootstrap_index], y[bootstrap_index],
-                              **fit_params)
+            estimator = self.fit_estimator(X, y,
+                               sample_weight=sample_weight,
+                               random_state=None,
+                               warm_start=False,
+                               **fit_params)
 
             y_pred = estimator.predict(Xt[test_index])
             
-            if y_pred.ndim == 1:
-                y_pred = y_pred.reshape(-1, 1)
+            y_pred = y_pred.reshape(yt[test_index].shape)
             
             scores.append(np.abs(y_pred - yt[test_index]).mean())
         return np.array(scores)
@@ -936,7 +909,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         y_pred : array
             Best estimator predictions.
         """
-        X = check_one_array(X)
+        X = check_array(X)
         best_estimator = self.estimators_[
             self.estimator_errors_.argmin()]
         return best_estimator.predict(X)

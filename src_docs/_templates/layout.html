@@ -18,16 +18,15 @@
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("contents") }}{{ contents }}{{ "adapt-feature-based" }}">Feature-based</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.BaseDeepFeature") }}">BaseDeepFeature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.FE") }}">FE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.CORAL") }}">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.DeepCORAL") }}">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.DANN") }}">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.ADDA") }}">ADDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.mSDA") }}">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.WDGRL") }}">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.CDAN") }}">CDAN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.MCD") }}">MCD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.MDD") }}">MDD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.WDGRL") }}">WDGRL</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("contents") }}{{ contents }}{{ "adapt-instance-based" }}">Instance-based</a><ul>
@@ -36,6 +35,7 @@
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.TrAdaBoost") }}">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.TrAdaBoostR2") }}">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.TwoStageTrAdaBoostR2") }}">TwoStageTrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.WANN") }}">WANN</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("contents") }}{{ contents }}{{ "adapt-parameter-based" }}">Parameter-based</a><ul>
@@ -44,9 +44,20 @@
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.parameter_based.RegularTransferNN") }}">RegularTransferNN</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("contents") }}{{ contents }}{{ "adapt-metrics" }}">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.metrics.cov_distance") }}">cov_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.metrics.j_score") }}">j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.metrics.linear_discrepancy") }}">linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.metrics.normalized_linear_discrepancy") }}">normalized_linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.metrics.frechet_distance") }}">frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.metrics.normalized_frechet_distance") }}">normalized_frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.metrics.domain_classifier") }}">domain_classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.metrics.reverse_validation") }}">reverse_validation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("contents") }}{{ contents }}{{ "adapt-utils" }}">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.utils.accuracy") }}">accuracy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.utils.check_arrays") }}">check_arrays</a></li>
-<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.utils.check_one_array") }}">check_one_array</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.utils.check_estimator") }}">check_estimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.utils.check_network") }}">check_network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.utils.get_default_encoder") }}">get_default_encoder</a></li>
@@ -55,6 +66,8 @@
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.utils.GradientHandler") }}">GradientHandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.utils.make_classification_da") }}">make_classification_da</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.utils.make_regression_da") }}">make_regression_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.utils.check_sample_weight") }}">check_sample_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.utils.set_random_seed") }}">set_random_seed</a></li>
 </ul>
 </li>
 </ul>
@@ -63,7 +76,6 @@
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Classification") }}">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}{{ Classification }}{{ "Experimental-Setup" }}">Experimental Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}{{ Classification }}{{ "Src-Only" }}">Src Only</a></li>
-<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}{{ Classification }}{{ "mSDA" }}">mSDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}{{ Classification }}{{ "DANN" }}">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}{{ Classification }}{{ "Instance-Based" }}">Instance Based</a></li>
 </ul>
@@ -75,7 +87,11 @@
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}{{ Two_moons }}{{ "DANN" }}">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}{{ Two_moons }}{{ "ADDA" }}">ADDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}{{ Two_moons }}{{ "DeepCORAL" }}">DeepCORAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}{{ Two_moons }}{{ "mSDA" }}">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}{{ Two_moons }}{{ "CORAL" }}">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}{{ Two_moons }}{{ "MCD" }}">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}{{ Two_moons }}{{ "MDD" }}">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}{{ Two_moons }}{{ "WDGRL" }}">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Two_moons") }}{{ Two_moons }}{{ "CDAN" }}">CDAN</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Rotation") }}">Rotation</a><ul>
@@ -84,7 +100,6 @@
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Rotation") }}{{ Rotation }}{{ "CORAL" }}">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Rotation") }}{{ Rotation }}{{ "DANN" }}">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Rotation") }}{{ Rotation }}{{ "ADDA" }}">ADDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Rotation") }}{{ Rotation }}{{ "mSDA" }}">mSDA</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Regression") }}">Toy Regression</a><ul>

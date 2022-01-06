@@ -1,4 +1,4 @@
-:ref:`adapt.feature_based <adapt.feature_based>`.MDD
+﻿:ref:`adapt.feature_based <adapt.feature_based>`.MDD
 ===========================================================
 
 .. currentmodule:: adapt.feature_based
@@ -16,23 +16,29 @@
 	.. autosummary::
 	    
 		~MDD.__init__
-		~MDD.create_model
+		~MDD.compile
 		~MDD.fit
-		~MDD.get_loss
-		~MDD.get_metrics
+		~MDD.get_params
 		~MDD.predict
 		~MDD.predict_disc
-		~MDD.predict_features
+		~MDD.predict_task
+		~MDD.score
+		~MDD.score_estimator
+		~MDD.set_params
+		~MDD.transform
 	
 	
 	.. automethod:: __init__
-	.. automethod:: create_model
+	.. automethod:: compile
 	.. automethod:: fit
-	.. automethod:: get_loss
-	.. automethod:: get_metrics
+	.. automethod:: get_params
 	.. automethod:: predict
 	.. automethod:: predict_disc
-	.. automethod:: predict_features
+	.. automethod:: predict_task
+	.. automethod:: score
+	.. automethod:: score_estimator
+	.. automethod:: set_params
+	.. automethod:: transform
 	
     
 	

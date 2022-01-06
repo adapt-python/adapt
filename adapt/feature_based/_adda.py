@@ -2,27 +2,30 @@
 DANN
 """
 
-import warnings
-from copy import deepcopy
-
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Model, Sequential
-from tensorflow.keras.layers import Layer, Input, subtract
-from tensorflow.keras.callbacks import Callback
-from tensorflow.keras.optimizers import Adam
-import tensorflow.keras.backend as K
 
-from adapt.utils import (GradientHandler,
-                         check_arrays,
-                         check_network,
-                         check_one_array)
-from adapt.feature_based import BaseDeepFeature
+from adapt.base import BaseAdaptDeep, make_insert_doc
+from adapt.utils import check_network
 
-EPS = K.epsilon()
+EPS = np.finfo(np.float32).eps
 
 
-class ADDA(BaseDeepFeature):
+# class SetEncoder(tf.keras.callbacks.Callback):
+    
+#     def __init__(self):
+#         self.pretrain = True
+    
+#     def on_epoch_end(self, epoch, logs=None):
+#         if (not logs.get("pretrain")) and self.pretrain:
+#             self.pretrain = False
+#             self.model.encoder_.set_weights(
+#                 self.model.encoder_src_.get_weights())
+            
+
+
+@make_insert_doc(["encoder", "task", "discriminator"])
+class ADDA(BaseAdaptDeep):
     """
     ADDA: Adversarial Discriminative Domain Adaptation
 
@@ -75,52 +78,19 @@ class ADDA(BaseDeepFeature):
     
     Parameters
     ----------
-    encoder : tensorflow Model (default=None)
-        Encoder netwok. If ``None``, a shallow network with 10
-        neurons and ReLU activation is used as encoder network.
+    pretrain : bool (default=True)
+        Weither to perform pretraining of the ``encoder_src_``
+        and ``task_`` networks on source data or not.
+        separated compile and fit arguments for the
+        pretraining can be given by using the prefix
+        ``pretrain__`` as ``pretrain__epochs=10`` or
+        ``pretrain__learning_rate=0.1`` for instance.
+        If no pretrain arguments are given, the training
+        arguments are used by default
         
-    task : tensorflow Model (default=None)
-        Task netwok. If ``None``, a two layers network with 10
-        neurons per layer and ReLU activation is used as task network.
-        
-    discriminator : tensorflow Model (default=None)
-        Discriminator netwok. If ``None``, a two layers network with 10
-        neurons per layer and ReLU activation is used as discriminator
-        network. Note that the output shape of the discriminator should
-        be ``(None, 1)`` and a ``sigmoid`` activation should be used.
-        
-    encoder_src : tensorflow Model (default=None)
-        Source encoder netwok. A source encoder network can be
-        given in the case of heterogenous features between
-        source and target domains. If ``None``, a copy of the
-        ``encoder`` network is used as source encoder.
-        
-    is_pretrained : boolean (default=False)
-        Specify if the encoder is already pretrained on source or not
-
-    loss : string or tensorflow loss (default="mse")
-        Loss function used for the task.
-        
-    metrics : dict or list of string or tensorflow metrics (default=None)
-        Metrics given to the model. If a list is provided,
-        metrics are used on both ``task`` and ``discriminator``
-        outputs. To give seperated metrics, please provide a
-        dict of metrics list with ``"task"`` and ``"disc"`` as keys.
-        
-    optimizer : string or tensorflow optimizer (default=None)
-        Optimizer of the model. If ``None``, the
-        optimizer is set to tf.keras.optimizers.Adam(0.001)
-        
-    optimizer_src : string or tensorflow optimizer (default=None)
-        Optimizer of the source model. If ``None``, the source
-        optimizer is a copy of ``optimizer``.
-        
-    copy : boolean (default=True)
-        Whether to make a copy of ``encoder``, ``task`` and
-        ``discriminator`` or not.
-        
-    random_state : int (default=None)
-        Seed of random generator.
+    tol : float (default=0.001)
+        Tolerance on the loss for early stopping of 
+        pretraining.
     
     Attributes
     ----------
@@ -132,32 +102,14 @@ class ADDA(BaseDeepFeature):
         
     discriminator_ : tensorflow Model
         discriminator network.
-    
-    model_ : tensorflow Model
-        Fitted model: the union of ``encoder_``,
-        and ``discriminator_`` networks.
         
     encoder_src_ : tensorflow Model
         Source encoder network
-        
-    model_src_ : tensorflow Model
-        Fitted source model: the union of ``encoder_src_``
-        and ``task_`` networks.
         
     history_ : dict
         history of the losses and metrics across the epochs.
         If ``yt`` is given in ``fit`` method, target metrics
         and losses are recorded too.
-        
-    history_src_ : dict
-        Source model history of the losses and metrics
-        across the epochs. If ``yt`` is given in ``fit``
-        method, target metrics and losses are recorded too.
-        
-    is_pretrained_ : boolean
-        Specify if the encoder is already pretrained on
-        source or not. If True, the ``fit`` method will
-        only performs the second stage of ADDA.
         
     Examples
     --------
@@ -171,11 +123,11 @@ class ADDA(BaseDeepFeature):
     >>> ys = 0.2 * Xs[:, 0]
     >>> yt = 0.2 * Xt[:, 0]
     >>> model = ADDA(random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.history_src_["task_t"][-1]
-    0.0234...
-    >>> model.history_["task_t"][-1]
-    0.0009...
+    >>> model.fit(Xs, ys, Xt, epochs=100, verbose=0)
+    >>> np.abs(model.predict_task(Xt, domain="src").ravel() - yt).mean()
+    0.1531...
+    >>> np.abs(model.predict_task(Xt, domain="tgt").ravel() - yt).mean()
+    0.0227...
     
     See also
     --------
@@ -188,288 +140,177 @@ class ADDA(BaseDeepFeature):
 K. Saenko, and T. Darrell. "Adversarial discriminative domain adaptation". \
 In CVPR, 2017.
     """
-    def __init__(self, 
+    def __init__(self,
                  encoder=None,
                  task=None,
                  discriminator=None,
-                 encoder_src=None,
-                 is_pretrained=False,
-                 loss="mse",
-                 metrics=None,
-                 optimizer=None,
-                 optimizer_src=None,
+                 Xt=None,
+                 yt=None,
+                 pretrain=True,
+                 tol=0.001,
                  copy=True,
-                 random_state=None):
-
-        super().__init__(encoder, task, discriminator,
-                         loss, metrics, optimizer, copy,
-                         random_state)
-        self.is_pretrained_ = is_pretrained
+                 verbose=1,
+                 random_state=None,
+                 **params):
         
-        if optimizer_src is None:
-            self.optimizer_src = deepcopy(self.optimizer)
-        else:
-            self.optimizer_src = optimizer_src
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)
         
-        if encoder_src is None:
-            self.encoder_src_ = check_network(self.encoder_,
-                                              copy=True,
-                                              display_name="encoder",
-                                              force_copy=True,
-                                              compile_=False)
-            self.same_encoder_ = True
-        else:
-            self.encoder_src_ = check_network(encoder_src,
-                                              copy=copy,
-                                              display_name="encoder_src",
-                                              compile_=False)
-            self.same_encoder_ = False
+    
+    def _initialize_pretain_networks(self):
+        self.encoder_.set_weights(
+        self.encoder_src_.get_weights())
+    
+    
+    def pretrain_step(self, data):
+        # Unpack the data.
+        Xs, Xt, ys, yt = self._unpack_data(data)
 
-        
-    def fit_source(self, Xs, ys, Xt=None, yt=None, **fit_params):
-        """
-        Build and fit source encoder and task networks
-        on source data.
-        
-        This method performs the first stage of ADDA.
+        # Single source
+        Xs = Xs[0]
+        ys = ys[0]
 
-        Parameters
-        ----------
-        Xs : numpy array
-            Source input data.
+        # loss
+        with tf.GradientTape() as tape:                       
+            # Forward pass
+            Xs_enc = self.encoder_src_(Xs, training=True)
+            ys_pred = self.task_(Xs_enc, training=True)
 
-        ys : numpy array
-            Source output data.
+            # Reshape
+            ys_pred = tf.reshape(ys_pred, tf.shape(ys))
 
-        Xt : numpy array (default=None)
-            Target input data. Target data are only
-            used in the fit method of ``model_src_`` as
-            validation data.
+            # Compute the loss value
+            loss = self.task_loss_(ys, ys_pred)
+            loss += sum(self.task_.losses) + sum(self.encoder_src_.losses)
             
-        yt : numpy array (default=None)
-            Target output data. Target data are only
-            used in the fit method of ``model_src_`` as
-            validation data.
+        # Compute gradients
+        trainable_vars = self.task_.trainable_variables + self.encoder_src_.trainable_variables
+        gradients = tape.gradient(loss, trainable_vars)
 
-        fit_params : key, value arguments
-            Arguments given to the fit method of the model
-            (epochs, batch_size, callbacks...).
+        # Update weights
+        self.optimizer.apply_gradients(zip(gradients, trainable_vars))
 
-        Returns
-        -------
-        model_src_ : returns the fitted source model.
-        """
-        np.random.seed(self.random_state)
-        tf.random.set_seed(self.random_state)
-                
-        # Call predict to avoid strange behaviour with
-        # Sequential model whith unspecified input_shape
-        zeros_enc_ = self.encoder_src_.predict(np.zeros((1,) + Xs.shape[1:]));
-        self.task_.predict(zeros_enc_);
+        # Update metrics
+        self.compiled_metrics.update_state(ys, ys_pred)
+        self.compiled_loss(ys, ys_pred)
+        # Return a dict mapping metric names to current value
+        logs = {m.name: m.result() for m in self.metrics}
+        return logs
+    
+    
+    def train_step(self, data):
+        # Pretrain
+        if self.pretrain_:
+            return self.pretrain_step(data)
         
-        self.model_src_ = Sequential()
-        self.model_src_.add(self.encoder_src_)
-        self.model_src_.add(self.task_)
-        self.model_src_.compile(loss=self.loss_,
-                                metrics=self.metrics_task_,
-                                optimizer=self.optimizer_src)
-        
-        if (Xt is not None and yt is not None and 
-            not "validation_data" in fit_params):
-            hist = self.model_src_.fit(Xs, ys,
-                                       validation_data=(Xt, yt),
-                                       **fit_params)
-            hist.history["task_t"] = hist.history.pop("val_loss")
-            for k in hist.history:
-                if "val_" in k:
-                    hist.history[k.replace("val_", "") + "_t"] = hist.history.pop(k)
         else:
-            hist = self.model_src_.fit(Xs, ys, **fit_params)
+            # Unpack the data.
+            Xs, Xt, ys, yt = self._unpack_data(data)
 
-        hist.history["task_s"] = hist.history.pop("loss")
-        
-        for k, v in hist.history.items():
-            if not hasattr(self, "history_src_"):
-                self.history_src_ = {}
-            self.history_src_[k] = self.history_src_.get(k, []) + v
-        return self.model_src_
+            # Single source
+            Xs = Xs[0]
+            ys = ys[0]
 
+            # loss
+            with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:                       
+                # Forward pass
+                Xs_enc = self.encoder_src_(Xs, training=True)
+                ys_pred = self.task_(Xs_enc, training=True)
+                ys_disc = self.discriminator_(Xs_enc, training=True)
 
-    def fit_target(self, Xs_enc, ys, Xt, yt=None, **fit_params):
-        """
-        Build and fit target encoder and discriminator
-        networks on source data.
-        
-        This method performs the second stage of ADDA.
+                Xt_enc = self.encoder_(Xt, training=True)
+                yt_disc = self.discriminator_(Xt_enc, training=True)
 
-        Parameters
-        ----------
-        Xs_enc : numpy array
-            Source encoded data.
+                # Reshape
+                ys_pred = tf.reshape(ys_pred, tf.shape(ys))
 
-        ys : numpy array
-            Source output data.
+                # Compute the loss value
+                task_loss = self.task_loss_(ys, ys_pred)
 
-        Xt : numpy array
-            Target input data.
-            
-        yt : numpy array (default=None)
-            Target output data. `yt` is only used
-            for validation metrics.
+                disc_loss = (-tf.math.log(ys_disc + EPS)
+                             -tf.math.log(1-yt_disc + EPS))
 
-        fit_params : key, value arguments
-            Arguments given to the fit method of the model
-            (epochs, batch_size, callbacks...).
+                enc_loss = -tf.math.log(yt_disc + EPS)
 
-        Returns
-        -------
-        model_ : return the fitted target model.
-        """
-        self._fit(Xs_enc, ys, Xt, yt, **fit_params)
-        return self.model_
-        
-    
-    def fit(self, Xs, ys, Xt, yt=None, fit_params_src=None, **fit_params):
-        """
-        Perform the two stages of ADDA.
-        
-        First ``encoder_src_`` and ``task_`` are fitted using
-        ``Xs`` and ``ys``. Then ``encoder_`` and ``discriminator_``
-        are fitted using ``Xs``, ``Xt`` and ``ys``.
-        
-        Note that if fit is called again, only the training of
-        ``encoder_`` and ``discriminator_`` is extended,
-        ``encoder_src_`` and ``task_`` remaining as they are.
-        
-        Parameters
-        ----------
-        Xs : numpy array
-            Source input data.
+                task_loss = tf.reduce_mean(task_loss)
+                disc_loss = tf.reduce_mean(disc_loss)
+                enc_loss = tf.reduce_mean(enc_loss)
 
-        ys : numpy array
-            Source output data.
+                task_loss += sum(self.task_.losses)
+                disc_loss += sum(self.discriminator_.losses)
+                enc_loss += sum(self.encoder_.losses)
 
-        Xt : numpy array
-            Target input data.
-            
-        yt : numpy array (default=None)
-            Target output data. `yt` is only used
-            for validation metrics.
+            # Compute gradients
+            trainable_vars_task = self.task_.trainable_variables
+            trainable_vars_enc = self.encoder_.trainable_variables
+            trainable_vars_disc = self.discriminator_.trainable_variables
 
-        fit_params_src : dict (default=None)
-            Arguments given to the fit method of the
-            source model (epochs, batch_size, callbacks...).
-            If ``None``, fit_params_src is set to fit_params.
+            gradients_task = task_tape.gradient(task_loss, trainable_vars_task)
+            gradients_enc = enc_tape.gradient(enc_loss, trainable_vars_enc)
+            gradients_disc = disc_tape.gradient(disc_loss, trainable_vars_disc)
 
-        fit_params : key, value arguments
-            Arguments given to the fit method of the
-            target model (epochs, batch_size, callbacks...).
+            # Update weights
+            self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
+            self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+            self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
 
-        Returns
-        -------
-        self : returns an instance of self
-        """
-        if fit_params_src is None:
-            fit_params_src = fit_params
-        
-        Xs, ys, Xt, yt = check_arrays(Xs, ys, Xt, yt)
-        
-        if not self.is_pretrained_:
-            self.fit_source(Xs, ys, Xt, yt, **fit_params_src)
-            self.is_pretrained_ = True
-            if self.same_encoder_:
-                # Call predict to set architecture if no
-                # input_shape is given
-                self.encoder_.predict(np.zeros((1,) + Xt.shape[1:]))
-                self.encoder_.set_weights(self.encoder_src_.get_weights())
-        
-        Xs_enc = self.encoder_src_.predict(Xs)
-        
-        self.fit_target(Xs_enc, ys, Xt, yt, **fit_params)
-        return self
+            # Update metrics
+            self.compiled_metrics.update_state(ys, ys_pred)
+            self.compiled_loss(ys, ys_pred)
+            # Return a dict mapping metric names to current value
+            logs = {m.name: m.result() for m in self.metrics}
+            disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
+            logs.update(disc_metrics)
+            return logs
     
     
-    def create_model(self, inputs_Xs, inputs_Xt):
-
-        encoded_tgt = self.encoder_(inputs_Xt)
-        encoded_tgt_nograd = GradientHandler(0.)(encoded_tgt)
-        
-        task_tgt = self.task_(encoded_tgt)
-
-        disc_src = self.discriminator_(inputs_Xs)
-        disc_tgt = self.discriminator_(encoded_tgt)
-        disc_tgt_nograd = self.discriminator_(encoded_tgt_nograd)
-        
-        outputs = dict(disc_src=disc_src,
-                       disc_tgt=disc_tgt,
-                       disc_tgt_nograd=disc_tgt_nograd,
-                       task_tgt=task_tgt)
-        return outputs
-
-
-    def get_loss(self, inputs_ys, inputs_yt, disc_src, disc_tgt,
-                  disc_tgt_nograd, task_tgt):
-        
-        loss_disc = (-K.log(disc_src + EPS)
-                     -K.log(1-disc_tgt_nograd + EPS))
-        
-        # The second term is here to cancel the gradient update on
-        # the discriminator
-        loss_enc = (-K.log(disc_tgt + EPS)
-                    +K.log(disc_tgt_nograd + EPS))
-        
-        loss = K.mean(loss_disc) + K.mean(loss_enc)
-        return loss
+    def _get_disc_metrics(self, ys_disc, yt_disc):
+        disc_dict = {}
+        disc_dict["disc_loss"] = tf.reduce_mean(
+            (-tf.math.log(ys_disc + EPS)
+             -tf.math.log(1-yt_disc + EPS))
+        )
+        for m in self.disc_metrics:
+            disc_dict["disc_%s"%m.name] = tf.reduce_mean(0.5 * (
+                m(tf.ones_like(ys_disc), ys_disc)+
+                m(tf.zeros_like(yt_disc), yt_disc)
+            ))
+        return disc_dict
     
     
-    def get_metrics(self, inputs_ys, inputs_yt,
-                     disc_src, disc_tgt,
-                     disc_tgt_nograd, task_tgt):
-        metrics = {}
+    def _initialize_weights(self, shape_X):
+        # Init weights encoder
+        self(np.zeros((1,) + shape_X))
+        self.encoder_(np.zeros((1,) + shape_X))
         
-        disc = (-K.log(disc_src + EPS)
-                -K.log(1-disc_tgt_nograd + EPS))
+        # Set same weights to encoder_src
+        self.encoder_src_ = check_network(self.encoder_,
+                                          copy=True,
+                                          name="encoder_src")
         
-        metrics["disc"] = K.mean(disc)
-        if inputs_yt is not None:
-            task_t = self.loss_(inputs_yt, task_tgt)
-            metrics["task_t"] = K.mean(task_t)
         
-        names_task, names_disc = self._get_metric_names()
-        
-        if inputs_yt is not None:
-            for metric, name in zip(self.metrics_task_, names_task):
-                metrics[name + "_t"] = metric(inputs_yt, task_tgt)
-                      
-        for metric, name in zip(self.metrics_disc_, names_disc):
-            pred = K.concatenate((disc_src, disc_tgt), axis=0)
-            true = K.concatenate((K.ones_like(disc_src),
-                                  K.zeros_like(disc_tgt)), axis=0)
-            metrics[name] = metric(true, pred)
-        return metrics
-    
-    
-    def predict_features(self, X, domain="tgt"):
+    def transform(self, X, domain="tgt"):
         """
         Return the encoded features of X.
         
         Parameters
         ----------
         X : array
-            Input data
-
+            input data
+            
         domain: str (default="tgt")
             If domain is ``"tgt"`` or ``"target"``,
-            outputs of ``encoder_`` are returned.
+            the target encoder is used.
             If domain is ``"src"`` or ``"source"``,
-            outputs of ``encoder_src_`` are returned.
+            the source encoder is used.
             
         Returns
         -------
         X_enc : array
             predictions of encoder network
         """
-        X = check_one_array(X)
         if domain in ["tgt", "target"]:
             return self.encoder_.predict(X)
         elif domain in ["src", "source"]:
@@ -478,30 +319,6 @@ In CVPR, 2017.
             raise ValueError("`domain `argument "
                              "should be `tgt` or `src`, "
                              "got, %s"%domain)
-        
-        
-    def predict(self, X, domain="tgt"):
-        """
-        Return predictions of the task network on the encoded features.
-        
-        Parameters
-        ----------
-        X : array
-            Input data
-            
-        domain : str (default="tgt")
-            If domain is ``"tgt"`` or ``"target"``,
-            outputs of ``encoder_`` are used.
-            If domain is ``"src"`` or ``"source"``,
-            outputs of ``encoder_src_`` are used.
-            
-        Returns
-        -------
-        y_pred : array
-            predictions of task network
-        """
-        X = check_one_array(X)
-        return self.task_.predict(self.predict_features(X, domain))
     
     
     def predict_disc(self, X, domain="tgt"):
@@ -511,18 +328,41 @@ In CVPR, 2017.
         Parameters
         ----------
         X : array
-            Input data
+            input data
             
-        domain : str (default="tgt")
+        domain: str (default="tgt")
             If domain is ``"tgt"`` or ``"target"``,
-            outputs of ``encoder_`` are used.
+            the target encoder is used.
             If domain is ``"src"`` or ``"source"``,
-            outputs of ``encoder_src_`` are used.
+            the source encoder is used.
             
         Returns
         -------
         y_disc : array
             predictions of discriminator network
+        """     
+        return self.discriminator_.predict(self.transform(X, domain=domain))
+    
+    
+    def predict_task(self, X, domain="tgt"):
         """
-        X = check_one_array(X)
-        return self.discriminator_.predict(self.predict_features(X, domain))
+        Return predictions of the task on the encoded features.
+        
+        Parameters
+        ----------
+        X : array
+            input data
+            
+        domain: str (default="tgt")
+            If domain is ``"tgt"`` or ``"target"``,
+            the target encoder is used.
+            If domain is ``"src"`` or ``"source"``,
+            the source encoder is used.
+            
+        Returns
+        -------
+        y_task : array
+            predictions of task network
+        """     
+        return self.task_.predict(self.transform(X, domain=domain))
+        

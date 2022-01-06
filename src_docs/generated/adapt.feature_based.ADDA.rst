@@ -1,4 +1,4 @@
-:ref:`adapt.feature_based <adapt.feature_based>`.ADDA
+﻿:ref:`adapt.feature_based <adapt.feature_based>`.ADDA
 ============================================================
 
 .. currentmodule:: adapt.feature_based
@@ -16,27 +16,31 @@
 	.. autosummary::
 	    
 		~ADDA.__init__
-		~ADDA.create_model
+		~ADDA.compile
 		~ADDA.fit
-		~ADDA.fit_source
-		~ADDA.fit_target
-		~ADDA.get_loss
-		~ADDA.get_metrics
+		~ADDA.get_params
 		~ADDA.predict
 		~ADDA.predict_disc
-		~ADDA.predict_features
+		~ADDA.predict_task
+		~ADDA.pretrain_step
+		~ADDA.score
+		~ADDA.score_estimator
+		~ADDA.set_params
+		~ADDA.transform
 	
 	
 	.. automethod:: __init__
-	.. automethod:: create_model
+	.. automethod:: compile
 	.. automethod:: fit
-	.. automethod:: fit_source
-	.. automethod:: fit_target
-	.. automethod:: get_loss
-	.. automethod:: get_metrics
+	.. automethod:: get_params
 	.. automethod:: predict
 	.. automethod:: predict_disc
-	.. automethod:: predict_features
+	.. automethod:: predict_task
+	.. automethod:: pretrain_step
+	.. automethod:: score
+	.. automethod:: score_estimator
+	.. automethod:: set_params
+	.. automethod:: transform
 	
     
 	

@@ -4,41 +4,14 @@ WDGRL
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Model, Sequential
-from tensorflow.keras.layers import Layer, subtract
-from tensorflow.keras.optimizers import Adam
-import tensorflow.keras.backend as K
 
-from adapt.utils import (GradientHandler,
-                         check_arrays)
-from adapt.feature_based import BaseDeepFeature
+from adapt.base import BaseAdaptDeep, make_insert_doc
 
-EPS = K.epsilon()
+EPS = np.finfo(np.float32).eps
 
 
-class _Interpolation(Layer):
-    """
-    Layer that produces interpolates points between
-    two entries, with the distance of the interpolation
-    to the first entry.
-    """
-    
-    def call(self, inputs):
-        Xs = inputs[0]
-        Xt = inputs[1]
-        batch_size = tf.shape(Xs)[0]
-        dim = tf.shape(Xs)[1:]
-        alphas = tf.random.uniform([batch_size]+[1]*len(dim))
-        tiled_shape = tf.concat(([1], dim), 0)
-        tiled_alphas = tf.tile(alphas, tiled_shape)
-        differences = Xt - Xs
-        interpolates = Xs + tiled_alphas * differences
-        distances = K.sqrt(K.mean(K.square(tiled_alphas * differences),
-                          axis=[i for i in range(1, len(dim))]) + EPS)
-        return interpolates, distances
-
-
-class WDGRL(BaseDeepFeature):
+@make_insert_doc(["encoder", "task", "discriminator"])
+class WDGRL(BaseAdaptDeep):
     """
     WDGRL (Wasserstein Distance Guided Representation Learning) is an
     unsupervised domain adaptation method on the model of the 
@@ -70,21 +43,7 @@ class WDGRL(BaseDeepFeature):
         WDGRL architecture (source: [1])
     
     Parameters
-    ----------
-    encoder : tensorflow Model (default=None)
-        Encoder netwok. If ``None``, a shallow network with 10
-        neurons and ReLU activation is used as encoder network.
-        
-    task : tensorflow Model (default=None)
-        Task netwok. If ``None``, a two layers network with 10
-        neurons per layer and ReLU activation is used as task network.
-        
-    discriminator : tensorflow Model (default=None)
-        Discriminator netwok. If ``None``, a two layers network with 10
-        neurons per layer and ReLU activation is used as discriminator
-        network. Note that the output shape of the discriminator should
-        be ``(None, 1)``.
-        
+    ----------        
     lambda_ : float or None (default=1)
         Trade-off parameter. This parameter gives the trade-off
         for the encoder between learning the task and matching
@@ -101,26 +60,6 @@ class WDGRL(BaseDeepFeature):
         the gradient penalty term is in the same order than the
         "disc loss". If `gamma=0`, no penalty is given on the
         discriminator gradient.
-        
-    loss : string or tensorflow loss (default="mse")
-        Loss function used for the task.
-        
-    metrics : dict or list of string or tensorflow metrics (default=None)
-        Metrics given to the model. If a list is provided,
-        metrics are used on both ``task`` and ``discriminator``
-        outputs. To give seperated metrics, please provide a
-        dict of metrics list with ``"task"`` and ``"disc"`` as keys.
-        
-    optimizer : string or tensorflow optimizer (default=None)
-        Optimizer of the model. If ``None``, the
-        optimizer is set to tf.keras.optimizers.Adam(0.001)
-        
-    copy : boolean (default=True)
-        Whether to make a copy of ``encoder``, ``task`` and
-        ``discriminator`` or not.
-        
-    random_state : int (default=None)
-        Seed of random generator.
     
     Attributes
     ----------
@@ -132,10 +71,6 @@ class WDGRL(BaseDeepFeature):
         
     discriminator_ : tensorflow Model
         discriminator network.
-    
-    model_ : tensorflow Model
-        Fitted model: the union of ``encoder_``,
-        ``task_`` and ``discriminator_`` networks.
         
     history_ : dict
         history of the losses and metrics across the epochs.
@@ -155,12 +90,12 @@ class WDGRL(BaseDeepFeature):
     >>> yt = 0.2 * Xt[:, 0]
     >>> model = WDGRL(lambda_=0., random_state=0)
     >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.history_["task_t"][-1]
-    0.0223...
+    >>> model.score_estimator(Xt, yt)
+    0.0231...
     >>> model = WDGRL(lambda_=1, random_state=0)
     >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.history_["task_t"][-1]
-    0.0044...
+    >>> model.score_estimator(Xt, yt)
+    0.0014...
         
     See also
     --------
@@ -174,91 +109,107 @@ class WDGRL(BaseDeepFeature):
 and Yu, Y. Wasserstein distance guided representation learning for domain adaptation. \
 In AAAI, 2018.
     """
-    def __init__(self, 
+    def __init__(self,
                  encoder=None,
                  task=None,
                  discriminator=None,
-                 lambda_=1.,
-                 gamma=1.,
-                 loss="mse",
-                 metrics=None,
-                 optimizer=None,
+                 Xt=None,
+                 yt=None,
+                 lambda_=0.1,
+                 gamma=10.,
+                 verbose=1,
                  copy=True,
-                 random_state=None):
+                 random_state=None,
+                 **params):
         
-        self.lambda_ = lambda_
-        self.gamma = gamma        
-        super().__init__(encoder, task, discriminator,
-                         loss, metrics, optimizer, copy,
-                         random_state)
-
-    
-    def create_model(self, inputs_Xs, inputs_Xt):
-
-        encoded_src = self.encoder_(inputs_Xs)
-        encoded_tgt = self.encoder_(inputs_Xt)
-        task_src = self.task_(encoded_src)
-        task_tgt = self.task_(encoded_tgt)
-        
-        flip = GradientHandler(-self.lambda_, name="flip")
-        no_grad = GradientHandler(0, name="no_grad")
-        
-        disc_src = flip(encoded_src)
-        disc_src = self.discriminator_(disc_src)
-        disc_tgt = flip(encoded_tgt)
-        disc_tgt = self.discriminator_(disc_tgt)
-        
-        encoded_src_no_grad = no_grad(encoded_src)
-        encoded_tgt_no_grad = no_grad(encoded_tgt)
-        
-        interpolates, distances = _Interpolation()([encoded_src_no_grad, encoded_tgt_no_grad])
-        disc_grad = K.abs(
-            subtract([self.discriminator_(interpolates), self.discriminator_(encoded_src_no_grad)])
-        )
-        disc_grad /= distances
-        
-        outputs = dict(task_src=task_src,
-                       task_tgt=task_tgt,
-                       disc_src=disc_src,
-                       disc_tgt=disc_tgt,
-                       disc_grad=disc_grad)
-        return outputs
-
-    
-    def get_loss(self, inputs_ys, inputs_yt,
-                  task_src, task_tgt,
-                  disc_src, disc_tgt,
-                  disc_grad):
-        
-        loss_task = self.loss_(inputs_ys, task_src)
-        loss_disc = K.mean(disc_src) - K.mean(disc_tgt)
-        gradient_penalty = K.mean(K.square(disc_grad-1.))
-                            
-        loss = K.mean(loss_task) - K.mean(loss_disc) + self.gamma * K.mean(gradient_penalty)
-        return loss
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)
     
     
-    def get_metrics(self, inputs_ys, inputs_yt,
-                     task_src, task_tgt,
-                     disc_src, disc_tgt, disc_grad):
-        metrics = {}
+    def train_step(self, data):
+        # Unpack the data.
+        Xs, Xt, ys, yt = self._unpack_data(data)
         
-        task_s = self.loss_(inputs_ys, task_src)
-        disc = K.mean(disc_src) - K.mean(disc_tgt)
-        grad_pen = K.square(disc_grad-1.)
-        
-        metrics["task_s"] = K.mean(task_s)
-        metrics["disc"] = K.mean(disc)
-        metrics["grad_pen"] = self.gamma * K.mean(grad_pen)
+        # Single source
+        Xs = Xs[0]
+        ys = ys[0]
        
-        if inputs_yt is not None:
-            task_t = self.loss_(inputs_yt, task_tgt)
-            metrics["task_t"] = K.mean(task_t)
+        # loss
+        with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:           
+
+            # Forward pass
+            Xs_enc = self.encoder_(Xs, training=True)
+            ys_pred = self.task_(Xs_enc, training=True)
+            ys_disc = self.discriminator_(Xs_enc, training=True)
+            
+            Xt_enc = self.encoder_(Xt, training=True)
+            yt_disc = self.discriminator_(Xt_enc, training=True)
+                       
+            # Reshape
+            ys_pred = tf.reshape(ys_pred, tf.shape(ys))
+            
+            # 1-Lipschitz penalization
+            batch_size = tf.shape(Xs_enc)[0]
+            dim = len(Xs_enc.shape)-1
+            alphas = tf.random.uniform([batch_size]+[1]*dim)
+            # tiled_shape = tf.concat(([1], dim), 0)
+            # tiled_alphas = tf.tile(alphas, tiled_shape)
+            # differences = Xt_enc - Xs_enc
+            interpolations = alphas * Xs_enc + (1.-alphas) * Xt_enc
+                        
+            with tf.GradientTape() as tape_pen:
+                tape_pen.watch(interpolations)
+                inter_disc = self.discriminator_(interpolations)
+            gradients_pen = tape_pen.gradient(inter_disc, interpolations)
+            norm_pen = tf.sqrt(tf.reduce_sum(tf.square(gradients_pen),
+                                             axis=[i for i in range(1, dim)]) + EPS)
+            penalty = self.gamma * tf.reduce_mean(tf.square(1. - norm_pen))
+            
+            # Compute the loss value
+            task_loss = self.task_loss_(ys, ys_pred)
+            task_loss = tf.reduce_mean(task_loss)
+            
+            disc_loss_enc = tf.reduce_mean(ys_disc) - tf.reduce_mean(yt_disc)
+            
+            enc_loss = task_loss - self.lambda_ * disc_loss_enc
+            
+            disc_loss = disc_loss_enc + penalty
+            
+            task_loss += sum(self.task_.losses)
+            disc_loss += sum(self.discriminator_.losses)
+            enc_loss += sum(self.encoder_.losses)
+            
+        # Compute gradients
+        trainable_vars_task = self.task_.trainable_variables
+        trainable_vars_enc = self.encoder_.trainable_variables
+        trainable_vars_disc = self.discriminator_.trainable_variables
         
-        names_task, names_disc = self._get_metric_names()
+        gradients_task = task_tape.gradient(task_loss, trainable_vars_task)
+        gradients_enc = enc_tape.gradient(enc_loss, trainable_vars_enc)
+        gradients_disc = disc_tape.gradient(disc_loss, trainable_vars_disc)
         
-        for metric, name in zip(self.metrics_task_, names_task):
-            metrics[name + "_s"] = metric(inputs_ys, task_src)
-            if inputs_yt is not None:
-                metrics[name + "_t"] = metric(inputs_yt, task_tgt)
-        return metrics
+        # Update weights
+        self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
+        self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+        self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+        
+        # Update metrics
+        self.compiled_metrics.update_state(ys, ys_pred)
+        self.compiled_loss(ys, ys_pred)
+        # Return a dict mapping metric names to current value
+        logs = {m.name: m.result() for m in self.metrics}
+        disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
+        logs.update(disc_metrics)
+        logs.update({"gp": penalty})
+        return logs
+    
+    
+    def _get_disc_metrics(self, ys_disc, yt_disc):
+        disc_dict = {}
+        disc_dict["disc_loss"] = tf.reduce_mean(ys_disc) - tf.reduce_mean(yt_disc)
+        for m in self.disc_metrics:
+            disc_dict["disc_%s"%m.name] = tf.reduce_mean(
+                m(ys_disc, yt_disc))
+        return disc_dict

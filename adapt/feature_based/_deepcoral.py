@@ -2,25 +2,17 @@
 DANN
 """
 
-import warnings
-from copy import deepcopy
-
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Model, Sequential
-from tensorflow.keras.layers import Layer, Input, subtract
-from tensorflow.keras.callbacks import Callback
-from tensorflow.keras.optimizers import Adam
-import tensorflow.keras.backend as K
 
-from adapt.utils import (GradientHandler,
-                         check_arrays)
-from adapt.feature_based import BaseDeepFeature
+from adapt.base import BaseAdaptDeep, make_insert_doc
+from adapt.utils import check_network, get_default_encoder, get_default_task
 
-EPS = K.epsilon()
+EPS = np.finfo(np.float32).eps
 
 
-class DeepCORAL(BaseDeepFeature):
+@make_insert_doc(["encoder", "task"])
+class DeepCORAL(BaseAdaptDeep):
     """
     DeepCORAL: Deep CORrelation ALignment
     
@@ -65,35 +57,15 @@ class DeepCORAL(BaseDeepFeature):
     
     Parameters
     ----------
-    encoder : tensorflow Model (default=None)
-        Encoder netwok. If ``None``, a shallow network with 10
-        neurons and ReLU activation is used as encoder network.
-        
-    task : tensorflow Model (default=None)
-        Task netwok. If ``None``, a two layers network with 10
-        neurons per layer and ReLU activation is used as task network.
-        
     lambda_ : float (default=1.)
         Trade-off parameter.
+        
+    match_mean : bool (default=False)
+        Weither to match the means of source
+        and target or not. If ``False`` only
+        the second moment is matched as in the
+        original algorithm.
 
-    loss : string or tensorflow loss (default="mse")
-        Loss function used for the task.
-        
-    metrics : dict or list of string or tensorflow metrics (default=None)
-        Metrics given to the model. Metrics are used
-        on ``task`` outputs.
-        
-    optimizer : string or tensorflow optimizer (default=None)
-        Optimizer of the model. If ``None``, the
-        optimizer is set to tf.keras.optimizers.Adam(0.001)
-        
-    copy : boolean (default=True)
-        Whether to make a copy of ``encoder``
-        and ``task`` or not.
-        
-    random_state : int (default=None)
-        Seed of random generator.
-    
     Attributes
     ----------
     encoder_ : tensorflow Model
@@ -101,10 +73,6 @@ class DeepCORAL(BaseDeepFeature):
         
     task_ : tensorflow Model
         task network.
-    
-    model_ : tensorflow Model
-        Fitted model: the union of ``encoder_``
-        and ``task_`` networks.
         
     history_ : dict
         history of the losses and metrics across the epochs.
@@ -125,13 +93,13 @@ class DeepCORAL(BaseDeepFeature):
     >>> ys[Xs[:, 1]>0] = 1
     >>> yt[(Xt[:, 1]-0.5*Xt[:, 0])>0] = 1
     >>> model = DeepCORAL(lambda_=0., random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=500, batch_size=100, verbose=0)
-    >>> model.history_["task_t"][-1]
-    1.30188e-05
+    >>> model.fit(Xs, ys, Xt, epochs=500, batch_size=100, verbose=0)
+    >>> model.score_estimator(Xt, yt)
+    0.0574...
     >>> model = DeepCORAL(lambda_=1., random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=500, batch_size=100, verbose=0)
-    >>> model.history_["task_t"][-1]
-    5.4704474e-06
+    >>> model.fit(Xs, ys, Xt, epochs=500, batch_size=100, verbose=0)
+    >>> model.score_estimator(Xt, yt)
+    0.0649...
         
     See also
     --------
@@ -147,98 +115,118 @@ class DeepCORAL(BaseDeepFeature):
     def __init__(self, 
                  encoder=None,
                  task=None,
+                 Xt=None,
+                 yt=None,
                  lambda_=1.,
-                 loss="mse",
-                 metrics=None,
-                 optimizer=None,
+                 match_mean=False,
                  copy=True,
-                 random_state=None):
+                 verbose=1,
+                 random_state=None,
+                 **params):
         
-        self.lambda_ = lambda_    
-        super().__init__(encoder, task, None,
-                         loss, metrics, optimizer, copy,
-                         random_state)
+        names = self._get_param_names()
+        kwargs = {k: v for k, v in locals().items() if k in names}
+        kwargs.update(params)
+        super().__init__(**kwargs)
 
+
+    def train_step(self, data):
+        # Unpack the data.
+        Xs, Xt, ys, yt = self._unpack_data(data)
         
-    def fit(self, Xs, ys, Xt, yt=None, **fit_params):
-        self._fit(Xs, ys, Xt, yt, **fit_params)
-        return self
-    
-    
-    def create_model(self, inputs_Xs, inputs_Xt):
-               
-        encoded_src = self.encoder_(inputs_Xs)
-        encoded_tgt = self.encoder_(inputs_Xt)
-        
-        batch_size = K.mean(K.sum(K.ones_like(inputs_Xs), 0))
-        dim = len(encoded_src.shape)
-        
-        if dim != 2:
+        # Single source
+        Xs = Xs[0]
+        ys = ys[0]
+                
+        if len(Xs.shape) != 2:
             raise ValueError("Encoded space should "
                              "be 2 dimensional, got, "
                              "%s"%encoded_src.shape)
             
-        task_src = self.task_(encoded_src)
-        task_tgt = self.task_(encoded_tgt)
+        if self.match_mean:
+            _match_mean = 1.
+        else:
+            _match_mean = 0.
+
+        # loss
+        with tf.GradientTape() as tape:           
+                        
+            # Forward pass
+            Xs_enc = self.encoder_(Xs, training=True)
+            ys_pred = self.task_(Xs_enc, training=True)
+            
+            Xt_enc = self.encoder_(Xt, training=True)
+            
+            # Reshape
+            ys_pred = tf.reshape(ys_pred, tf.shape(ys))
+                       
+            batch_size = tf.cast(tf.shape(Xs_enc)[0], Xs_enc.dtype)
+
+            factor_1 = 1. / (batch_size - 1. + EPS)
+            factor_2 = 1. / batch_size
+
+            sum_src = tf.reduce_sum(Xs_enc, axis=0)
+            sum_src_row = tf.reshape(sum_src, (1, -1))
+            sum_src_col = tf.reshape(sum_src, (-1, 1))
+
+            cov_src = factor_1 * (
+                tf.matmul(tf.transpose(Xs_enc), Xs_enc) -
+                factor_2 * tf.matmul(sum_src_col, sum_src_row)
+            )
+
+            sum_tgt = tf.reduce_sum(Xt_enc, axis=0)
+            sum_tgt_row = tf.reshape(sum_tgt, (1, -1))
+            sum_tgt_col = tf.reshape(sum_tgt, (-1, 1))
+
+            cov_tgt = factor_1 * (
+                tf.matmul(tf.transpose(Xt_enc), Xt_enc) -
+                factor_2 * tf.matmul(sum_tgt_col, sum_tgt_row)
+            )
+            
+            mean_src = tf.reduce_mean(Xs_enc, 0)
+            mean_tgt = tf.reduce_mean(Xt_enc, 0)
+            
+            # Compute the loss value
+            task_loss = self.task_loss_(ys, ys_pred)
+            disc_loss_cov = 0.25 * tf.square(cov_src - cov_tgt)
+            disc_loss_mean = tf.square(mean_src - mean_tgt)
+            
+            task_loss = tf.reduce_mean(task_loss)
+            disc_loss_cov = tf.reduce_mean(disc_loss_cov)
+            disc_loss_mean = tf.reduce_mean(disc_loss_mean)
+            disc_loss = self.lambda_ * (disc_loss_cov + _match_mean * disc_loss_mean)
+            
+            loss = task_loss + disc_loss
+            
+            loss += sum(self.task_.losses) + sum(self.encoder_.losses)
+            
+        # Compute gradients
+        trainable_vars = self.task_.trainable_variables + self.encoder_.trainable_variables
         
-        factor_1 = 1 / (batch_size - 1 + EPS)
-        factor_2 = 1 / batch_size
+        gradients = tape.gradient(loss, trainable_vars)
         
-        sum_src = K.sum(encoded_src, axis=0)
-        sum_src_row = K.reshape(sum_src, (1, -1))
-        sum_src_col = K.reshape(sum_src, (-1, 1))
+        # Update weights
+        self.optimizer.apply_gradients(zip(gradients, trainable_vars))
         
-        cov_src = factor_1 * (
-            K.dot(K.transpose(encoded_src), encoded_src) -
-            factor_2 * K.dot(sum_src_col, sum_src_row)
-        )
-        
-        sum_tgt = K.sum(encoded_tgt, axis=0)
-        sum_tgt_row = K.reshape(sum_tgt, (1, -1))
-        sum_tgt_col = K.reshape(sum_tgt, (-1, 1))
-        
-        cov_tgt = factor_1 * (
-            K.dot(K.transpose(encoded_tgt), encoded_tgt) -
-            factor_2 * K.dot(sum_tgt_col, sum_tgt_row)
-        )
-        
-        outputs = dict(task_src=task_src,
-                       task_tgt=task_tgt,
-                       cov_src=cov_src,
-                       cov_tgt=cov_tgt)
-        return outputs
+        # Update metrics
+        self.compiled_metrics.update_state(ys, ys_pred)
+        self.compiled_loss(ys, ys_pred)
+        # Return a dict mapping metric names to current value
+        logs = {m.name: m.result() for m in self.metrics}
+        logs.update({"disc_loss": disc_loss})
+        return logs
 
 
-    def get_loss(self, inputs_ys, inputs_yt,
-                  task_src, task_tgt,
-                  cov_src, cov_tgt):
-        
-        loss_task = self.loss_(inputs_ys, task_src)
-        loss_disc = 0.25 * K.mean(K.square(subtract([cov_src, cov_tgt])))
-        loss_disc_lambda = self.lambda_ * loss_disc
-        
-        loss = K.mean(loss_task) + loss_disc_lambda
-        return loss
-    
-    
-    def get_metrics(self, inputs_ys, inputs_yt,
-                     task_src, task_tgt,
-                     cov_src, cov_tgt):
-        metrics = {}
-        
-        task_s = self.loss_(inputs_ys, task_src)
-        disc = 0.25 * K.mean(K.square(subtract([cov_src, cov_tgt])))
-        
-        metrics["task_s"] = K.mean(task_s)
-        metrics["disc"] = self.lambda_ * K.mean(disc)
-        if inputs_yt is not None:
-            task_t = self.loss_(inputs_yt, task_tgt)
-            metrics["task_t"] = K.mean(task_t)
-        
-        names_task, names_disc = self._get_metric_names()
-        
-        for metric, name in zip(self.metrics_task_, names_task):
-            metrics[name + "_s"] = metric(inputs_ys, task_src)
-            if inputs_yt is not None:
-                metrics[name + "_t"] = metric(inputs_yt, task_tgt)
-        return metrics
+    def _initialize_networks(self):
+        if self.encoder is None:
+            self.encoder_ = get_default_encoder(name="encoder")
+        else:
+            self.encoder_ = check_network(self.encoder,
+                                          copy=self.copy,
+                                          name="encoder")
+        if self.task is None:
+            self.task_ = get_default_task(name="task")
+        else:
+            self.task_ = check_network(self.task,
+                                       copy=self.copy,
+                                       name="task")

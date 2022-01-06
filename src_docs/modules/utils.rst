@@ -5,7 +5,6 @@ Utility Functions
    :maxdepth: 2
 
    ../generated/adapt.utils.check_arrays
-   ../generated/adapt.utils.check_one_array
    ../generated/adapt.utils.check_estimator
    ../generated/adapt.utils.check_network
    ../generated/adapt.utils.get_default_encoder
@@ -14,3 +13,5 @@ Utility Functions
    ../generated/adapt.utils.GradientHandler
    ../generated/adapt.utils.make_classification_da
    ../generated/adapt.utils.make_regression_da
+   ../generated/adapt.utils.check_sample_weight
+   ../generated/adapt.utils.set_random_seed

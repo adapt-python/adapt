@@ -58,8 +58,7 @@ def test_fit():
                 loss="mse", optimizer=Adam(0.01), metrics=["mse"])
     model.fit(Xs, ys, Xt, yt,
               epochs=50, batch_size=34, verbose=0)
-    assert isinstance(model.model_, Model)
-    assert isinstance(model.model_src_, Model)
+    assert isinstance(model, Model)
     assert np.abs(model.encoder_.get_weights()[0][1][0]) < 0.2
     assert np.sum(np.abs(model.predict(Xs).ravel() - ys)) > 5
     assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) < 11
