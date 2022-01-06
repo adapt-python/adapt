@@ -133,6 +133,34 @@ the **source** data are adapted to build a suited model for the **task** on the 
    parameter_based.RegularTransferLC
    parameter_based.RegularTransferNN
 
+
+.. _adapt.metrics:
+
+:ref:`adapt.metrics <adapt.metrics>`: Metrics
+---------------------------------------------------
+
+This module contains functions to compute adaptation metrics.
+
+.. automodule: adapt.metrics
+	:no-members:
+    :no-inherited-members:
+	
+.. currentmodule:: adapt
+
+.. autosummary::
+   :toctree: generated/
+   :template: function.rst
+
+   metrics.cov_distance
+   metrics.j_score
+   metrics.linear_discrepancy
+   metrics.normalized_linear_discrepancy
+   metrics.frechet_distance
+   metrics.normalized_frechet_distance
+   metrics.domain_classifier
+   metrics.reverse_validation
+
+
 .. _adapt.utils:
 
 :ref:`adapt.utils <adapt.utils>`: Utility Functions
