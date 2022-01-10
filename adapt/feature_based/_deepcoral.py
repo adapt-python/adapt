@@ -137,11 +137,6 @@ class DeepCORAL(BaseAdaptDeep):
         # Single source
         Xs = Xs[0]
         ys = ys[0]
-                
-        if len(Xs.shape) != 2:
-            raise ValueError("Encoded space should "
-                             "be 2 dimensional, got, "
-                             "%s"%encoded_src.shape)
             
         if self.match_mean:
             _match_mean = 1.

@@ -458,7 +458,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         if yt is not None:
             Xt, yt = check_arrays(Xt, yt)
         else:
-            Xt = check_array(Xt)
+            Xt = check_array(Xt, ensure_2d=True, allow_nd=True)
         set_random_seed(self.random_state)
 
         self._save_validation_data(X, Xt)
@@ -907,7 +907,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
             
         if yt is None:
             yt = y
-            check_array(Xt)
+            check_array(Xt, ensure_2d=True, allow_nd=True)
         else:
             check_arrays(Xt, yt)
         
