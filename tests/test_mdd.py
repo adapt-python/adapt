@@ -63,3 +63,20 @@ def test_fit():
                   model.encoder_.get_weights()[0][0][0]) < 0.25
     assert np.sum(np.abs(model.predict(Xs).ravel() - ys)) < 0.1
     assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) < 5.
+    
+    
+def test_not_same_weights():
+    tf.random.set_seed(0)
+    np.random.seed(0)
+    task = _get_task()
+    encoder = _get_encoder()
+    X_enc = encoder.predict(Xs)
+    task.predict(X_enc)
+    model = MDD(encoder, task, copy=False,
+                loss="mse", optimizer=Adam(0.01), metrics=["mse"])
+    model.fit(Xs, ys, Xt, yt,
+              epochs=0, batch_size=34, verbose=0)
+    assert np.any(model.task_.get_weights()[0] !=
+                  model.discriminator_.get_weights()[0])
+    assert np.all(model.task_.get_weights()[0] ==
+                  task.get_weights()[0])

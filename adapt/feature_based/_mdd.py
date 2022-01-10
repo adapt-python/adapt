@@ -187,6 +187,22 @@ domain adaptation". ICML, 2019.
         if self.task is None:
             self.discriminator_ = get_default_task(name="discriminator")
         else:
+            # Impose Copy, else undesired behaviour
             self.discriminator_ = check_network(self.task,
-                                                copy=self.copy,
+                                                copy=True,
                                                 name="discriminator")
+            
+    def _initialize_weights(self, shape_X):
+        # Init weights encoder
+        self(np.zeros((1,) + shape_X))
+        X_enc = self.encoder_(np.zeros((1,) + shape_X))
+        self.task_(X_enc)
+        self.discriminator_(X_enc)
+        
+        # Add noise to discriminator in order to
+        # differentiate from task
+        weights = self.discriminator_.get_weights()
+        for i in range(len(weights)):
+            weights[i] += (0.01 * weights[i] *
+                           np.random.standard_normal(weights[i].shape))
+        self.discriminator_.set_weights(weights)
