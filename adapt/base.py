@@ -897,40 +897,63 @@ class BaseAdaptDeep(Model, BaseAdapt):
             self._is_fitted = True
             self._initialize_networks()
             self._initialize_weights(X.shape[1:])
-        
-        # 2. Prepare dataset
-        Xt, yt = self._get_target_data(Xt, yt)
-
-        check_arrays(X, y)
-        if len(y.shape) <= 1:
-            y = y.reshape(-1, 1)
             
-        if yt is None:
-            yt = y
-            check_array(Xt, ensure_2d=True, allow_nd=True)
-        else:
-            check_arrays(Xt, yt)
+        # 2. Get Fit params
+        fit_params = self._filter_params(super().fit, fit_params)
         
-        if len(yt.shape) <= 1:
-            yt = yt.reshape(-1, 1)
+        verbose = fit_params.get("verbose", 1)
+        epochs = fit_params.get("epochs", 1)
+        batch_size = fit_params.pop("batch_size", 32)
+        shuffle = fit_params.pop("shuffle", True)
+        validation_data = fit_params.pop("validation_data", None)
+        validation_split = fit_params.pop("validation_split", 0.)
+        validation_batch_size = fit_params.pop("validation_batch_size", batch_size)
+        
+        # 3. Prepare dataset
+        
+        ### 3.1 Source
+        if not isinstance(X, tf.data.Dataset):
+            check_arrays(X, y)
+            if len(y.shape) <= 1:
+                y = y.reshape(-1, 1)
+            
+        ### 3.2 Target
+        Xt, yt = self._get_target_data(Xt, yt)
+        if not isinstance(Xt, tf.data.Dataset):
+            if yt is None:
+                yt = y
+                check_array(Xt, ensure_2d=True, allow_nd=True)
+            else:
+                check_arrays(Xt, yt)
+            
+            if len(yt.shape) <= 1:
+                yt = yt.reshape(-1, 1)
             
         self._save_validation_data(X, Xt)
         
+        ### 3.3 Domains
         domains = fit_params.pop("domains", None)
-        
+
         if domains is None:
             domains = np.zeros(len(X))
-        
+
         domains = self._check_domains(domains)
 
         self.n_sources_ = int(np.max(domains)+1)
-        
+
         sizes = np.array(
             [np.sum(domains==dom) for dom in range(self.n_sources_)]+
             [len(Xt)])
-        
+
         max_size = np.max(sizes)
         repeats = np.ceil(max_size/sizes)
+        
+        # Split if validation_split
+        # if validation_data is None and validation_split>0.:
+        #     frac = int(len(dataset)*validation_split)
+        #     validation_data = dataset.take(frac)
+        #     dataset = dataset.skip(frac)
+        
         
         dataset_X = tf.data.Dataset.zip(tuple(
             tf.data.Dataset.from_tensor_slices(X[domains==dom]).repeat(repeats[dom])
@@ -943,15 +966,6 @@ class BaseAdaptDeep(Model, BaseAdapt):
             for dom in range(self.n_sources_))+
             (tf.data.Dataset.from_tensor_slices(yt).repeat(repeats[-1]),)
         )
-        
-        
-        # 3. Get Fit params
-        fit_params = self._filter_params(super().fit, fit_params)
-        
-        verbose = fit_params.get("verbose", 1)
-        epochs = fit_params.get("epochs", 1)
-        batch_size = fit_params.pop("batch_size", 32)
-        shuffle = fit_params.pop("shuffle", True)
         
         # 4. Pretraining
         if not hasattr(self, "pretrain_"):
@@ -993,7 +1007,21 @@ class BaseAdaptDeep(Model, BaseAdapt):
                 
             self._initialize_pretain_networks()
             
-        # 5. Training
+        # 5. Define validation Set
+        if isinstance(validation_data, tuple):
+            X_val = validation_data[0]
+            y_val = validation_data[1]
+        
+            validation_data = tf.data.Dataset.zip(
+                (tf.data.Dataset.from_tensor_slices(X_val),
+                 tf.data.Dataset.from_tensor_slices(y_val))
+            )
+            if shuffle:
+                validation_data = validation_data.shuffle(buffer_size=1024).batch(batch_size)
+            else:
+                validation_data = validation_data.batch(batch_size)            
+        
+        # 6. Training
         if (not self._is_compiled) or (self.pretrain_):
             self.compile()
         
@@ -1004,12 +1032,12 @@ class BaseAdaptDeep(Model, BaseAdapt):
             dataset = tf.data.Dataset.zip((dataset_X, dataset_y)).shuffle(buffer_size=1024).batch(batch_size)
         else:
             dataset = tf.data.Dataset.zip((dataset_X, dataset_y)).batch(batch_size)
-            
+             
         self.pretrain_ = False
         self.steps_ = tf.Variable(0.)
         self.total_steps_ = float(np.ceil(max_size/batch_size)*epochs)
         
-        hist = super().fit(dataset, **fit_params)
+        hist = super().fit(dataset, validation_data=validation_data, **fit_params)
                
         for k, v in hist.history.items():
             self.history_[k] = self.history_.get(k, []) + v
