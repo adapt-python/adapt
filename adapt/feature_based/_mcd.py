@@ -89,10 +89,6 @@ domain adaptation". In CVPR, 2018.
     def pretrain_step(self, data):
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
-        
-        # Single source
-        Xs = Xs[0]
-        ys = ys[0]
 
         # loss
         with tf.GradientTape() as tape:                       
@@ -136,10 +132,6 @@ domain adaptation". In CVPR, 2018.
         else:
             # Unpack the data.
             Xs, Xt, ys, yt = self._unpack_data(data)
-
-            # Single source
-            Xs = Xs[0]
-            ys = ys[0]
             
             # loss
             with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:

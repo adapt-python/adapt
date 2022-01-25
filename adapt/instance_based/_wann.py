@@ -113,10 +113,6 @@ for Domain Adaptation in Regression". In ICTAI, 2021.
     def pretrain_step(self, data):
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
-        
-        # Single source
-        Xs = Xs[0]
-        ys = ys[0]
 
         # loss
         with tf.GradientTape() as tape:                       
@@ -147,10 +143,6 @@ for Domain Adaptation in Regression". In ICTAI, 2021.
     def train_step(self, data):
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
-        
-        # Single source
-        Xs = Xs[0]
-        ys = ys[0]
         
         if self.pretrain_:
             return self.pretrain_step(data)

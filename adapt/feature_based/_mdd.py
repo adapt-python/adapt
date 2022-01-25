@@ -88,10 +88,6 @@ domain adaptation". ICML, 2019.
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
         
-        # Single source
-        Xs = Xs[0]
-        ys = ys[0]
-        
         # If crossentropy take argmax of preds
         if hasattr(self.task_loss_, "name"):
             name = self.task_loss_.name

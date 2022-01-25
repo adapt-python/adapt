@@ -133,10 +133,6 @@ class DeepCORAL(BaseAdaptDeep):
     def train_step(self, data):
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
-        
-        # Single source
-        Xs = Xs[0]
-        ys = ys[0]
             
         if self.match_mean:
             _match_mean = 1.

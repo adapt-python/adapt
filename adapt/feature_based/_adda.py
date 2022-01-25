@@ -168,10 +168,6 @@ In CVPR, 2017.
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
 
-        # Single source
-        Xs = Xs[0]
-        ys = ys[0]
-
         # loss
         with tf.GradientTape() as tape:                       
             # Forward pass
@@ -208,11 +204,7 @@ In CVPR, 2017.
         else:
             # Unpack the data.
             Xs, Xt, ys, yt = self._unpack_data(data)
-
-            # Single source
-            Xs = Xs[0]
-            ys = ys[0]
-
+            
             # loss
             with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:                       
                 # Forward pass
