@@ -135,22 +135,6 @@ def test_base_adapt_keras_estimator():
 
 
 def test_base_adapt_deep():
-    model = BaseAdaptDeep(Xt=Xt, loss="mse", optimizer=Adam(), learning_rate=0.1)
-    model.fit(Xs, ys)
-    model.predict(Xt)
-    model.score(Xt, yt)
-    model.transform(Xs)
-    model.predict_task(np.random.randn(10, 10))
-    model.predict_disc(np.random.randn(10, 10))
-    
-    assert isinstance(model.opimizer, Adam)
-    assert model.optimizer.learning_rate.numpy() == 0.1
-    assert hasattr(model, "encoder_")
-    assert hasattr(model, "task_")
-    assert hasattr(model, "discriminator_")
-
-
-def test_base_adapt_deep():
     model = BaseAdaptDeep(Xt=Xt, loss="mse",
                           epochs=2,
                           optimizer=Adam(),
@@ -191,3 +175,34 @@ def test_base_adapt_deep():
     assert np.all(ypd == ypd2)
     assert np.all(X_enc == X_enc2)
     assert np.mean(np.abs(yp - yp3)) < 1e-6
+    
+    
+def test_base_deep_validation_data():
+    model = BaseAdaptDeep(Xt=Xt)
+    model.fit(Xs, ys, validation_data=(Xt, yt))
+    model.fit(Xs, ys, validation_split=0.1)
+    
+    model = BaseAdaptDeep(Xt=Xt, yt=yt)
+    model.fit(Xs, ys, validation_data=(Xt, yt))
+    model.fit(Xs, ys, validation_split=0.1)
+    
+    
+def test_base_deep_dataset():
+    model = BaseAdaptDeep()
+    model.fit(Xs, ys, Xt=Xt, validation_data=(Xs, ys))
+    
+    dataset = tf.data.Dataset.zip((tf.data.Dataset.from_tensor_slices(Xs),
+                                   tf.data.Dataset.from_tensor_slices(ys.reshape(-1,1))
+                                  ))
+    model = BaseAdaptDeep()
+    model.fit(dataset, Xt=dataset, validation_data=dataset.batch(10))
+    
+    def gens():
+        for i in range(40):
+            yield Xs[i], ys[i]
+            
+    dataset = tf.data.Dataset.from_generator(gens,
+                                             output_shapes=([2], []),
+                                             output_types=("float32", "float32"))
+    model = BaseAdaptDeep()
+    model.fit(dataset, Xt=Xt, validation_data=dataset.batch(10))

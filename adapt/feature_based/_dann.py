@@ -138,10 +138,6 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
         
-        # Single source
-        Xs = Xs[0]
-        ys = ys[0]
-        
         if self.lambda_ is None:
             _is_lambda_None = 1.
             lambda_ = 0.
