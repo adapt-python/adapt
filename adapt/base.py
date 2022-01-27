@@ -889,7 +889,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
         Returns
         -------
         self : returns an instance of self
-        """        
+        """
         set_random_seed(self.random_state)
         
         # 1. Initialize networks
@@ -906,7 +906,6 @@ class BaseAdaptDeep(Model, BaseAdapt):
                     shape = first_elem[0].shape
             else:
                 shape = X.shape[1:]
-            print(shape)
             self._initialize_weights(shape)
             
         # 2. Get Fit params
@@ -984,9 +983,9 @@ class BaseAdaptDeep(Model, BaseAdapt):
         self._save_validation_data(X, Xt)
         
         # 4. Get validation data
-        validation_data = self._check_validation_data(validation_data,
-                                                      validation_batch_size,
-                                                      shuffle)
+#         validation_data = self._check_validation_data(validation_data,
+#                                                       validation_batch_size,
+#                                                       shuffle)
         
         if validation_data is None and validation_split>0.:
             if shuffle:
@@ -1053,20 +1052,20 @@ class BaseAdaptDeep(Model, BaseAdapt):
                 
             self._initialize_pretain_networks()
         
-        # 6. Training
+        # 6. Compile
         if (not self._is_compiled) or (self.pretrain_):
             self.compile()
         
         if not hasattr(self, "history_"):
             self.history_ = {}
 
+        # .7 Training
         if shuffle:
             dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt)).shuffle(buffer_size=1024).batch(batch_size)
         else:
             dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt)).batch(batch_size)
-             
+
         self.pretrain_ = False
-        self.steps_ = tf.Variable(0.)
         
         hist = super().fit(dataset, validation_data=validation_data, **fit_params)
                
@@ -1247,6 +1246,12 @@ class BaseAdaptDeep(Model, BaseAdapt):
         super().compile(
             **compile_params
         )
+        
+        # Set optimizer for encoder and discriminator
+        if not hasattr(self, "optimizer_enc"):
+            self.optimizer_enc = self.optimizer
+        if not hasattr(self, "optimizer_disc"):
+            self.optimizer_disc = self.optimizer
     
     
     def call(self, inputs):
@@ -1431,7 +1436,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
         score : float
             Score.
         """
-        if np.prod(X.shape) <= 10**8:
+        if hasattr(X, "shape") and np.prod(X.shape) <= 10**8:
             score = self.evaluate(
                     X, y,
                     sample_weight=sample_weight,
@@ -1447,20 +1452,20 @@ class BaseAdaptDeep(Model, BaseAdapt):
         return score
     
     
-    def _check_validation_data(self, validation_data, batch_size, shuffle):
-        if isinstance(validation_data, tuple):
-            X_val = validation_data[0]
-            y_val = validation_data[1]
+#     def _check_validation_data(self, validation_data, batch_size, shuffle):
+#         if isinstance(validation_data, tuple):
+#             X_val = validation_data[0]
+#             y_val = validation_data[1]
         
-            validation_data = tf.data.Dataset.zip(
-                (tf.data.Dataset.from_tensor_slices(X_val),
-                 tf.data.Dataset.from_tensor_slices(y_val))
-            )
-            if shuffle:
-                validation_data = validation_data.shuffle(buffer_size=1024).batch(batch_size)
-            else:
-                validation_data = validation_data.batch(batch_size)
-        return validation_data
+#             validation_data = tf.data.Dataset.zip(
+#                 (tf.data.Dataset.from_tensor_slices(X_val),
+#                  tf.data.Dataset.from_tensor_slices(y_val))
+#             )
+#             if shuffle:
+#                 validation_data = validation_data.shuffle(buffer_size=1024).batch(batch_size)
+#             else:
+#                 validation_data = validation_data.batch(batch_size)
+#         return validation_data
 
     
     def _get_legal_params(self, params):
@@ -1476,7 +1481,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
         if (optimizer is not None) and (not isinstance(optimizer, str)):
             legal_params_fct.append(optimizer.__init__)
         
-        legal_params = ["domain", "val_sample_size"]
+        legal_params = ["domain", "val_sample_size", "optimizer_enc", "optimizer_disc"]
         for func in legal_params_fct:
             args = [
                 p.name

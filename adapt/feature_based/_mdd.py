@@ -154,8 +154,8 @@ domain adaptation". ICML, 2019.
         
         # Update weights
         self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-        self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
-        self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+        self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
         
         # Update metrics
         self.compiled_metrics.update_state(ys, ys_pred)
@@ -164,7 +164,6 @@ domain adaptation". ICML, 2019.
         logs = {m.name: m.result() for m in self.metrics}
         # disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
         logs.update({"disc_loss": disc_loss})
-        logs.update({"disc_src": disc_loss_src, "disc_tgt": disc_loss_tgt})
         return logs
     
     

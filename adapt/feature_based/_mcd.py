@@ -31,6 +31,9 @@ class MCD(BaseAdaptDeep):
         Weither to pretrain the networks or not.
         If True, the three networks are fitted on source
         labeled data.
+        
+    n_steps : int (default=1)
+        Number of encoder updates for one discriminator update.
     
     Attributes
     ----------
@@ -75,6 +78,7 @@ domain adaptation". In CVPR, 2018.
                  Xt=None,
                  yt=None,
                  pretrain=True,
+                 n_steps=1,
                  copy=True,
                  verbose=1,
                  random_state=None,
@@ -91,7 +95,7 @@ domain adaptation". In CVPR, 2018.
         Xs, Xt, ys, yt = self._unpack_data(data)
 
         # loss
-        with tf.GradientTape() as tape:                       
+        with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:                
             # Forward pass
             Xs_enc = self.encoder_(Xs, training=True)
             ys_pred = self.task_(Xs_enc, training=True)
@@ -102,18 +106,28 @@ domain adaptation". In CVPR, 2018.
             ys_disc = tf.reshape(ys_disc, tf.shape(ys))
 
             # Loss
-            loss = self.task_loss_(ys, ys_pred) + self.task_loss_(ys, ys_disc)
-            loss = tf.reduce_mean(loss)
+            task_loss = tf.reduce_mean(self.task_loss_(ys, ys_pred))
+            disc_loss = tf.reduce_mean(self.task_loss_(ys, ys_disc))
+            enc_loss = task_loss + disc_loss
             
             # Compute the loss value
-            loss += sum(self.task_.losses) + sum(self.discriminator_.losses) + sum(self.encoder_.losses)
+            task_loss += sum(self.task_.losses)
+            disc_loss += sum(self.discriminator_.losses)
+            enc_loss += sum(self.encoder_.losses)
             
         # Compute gradients
-        trainable_vars = self.task_.trainable_variables + self.discriminator_.trainable_variables + self.encoder_.trainable_variables
-        gradients = tape.gradient(loss, trainable_vars)
+        trainable_vars_task = self.task_.trainable_variables
+        trainable_vars_enc = self.encoder_.trainable_variables
+        trainable_vars_disc = self.discriminator_.trainable_variables
+
+        gradients_task = task_tape.gradient(task_loss, trainable_vars_task)
+        gradients_enc = enc_tape.gradient(enc_loss, trainable_vars_enc)
+        gradients_disc = disc_tape.gradient(disc_loss, trainable_vars_disc)
 
         # Update weights
-        self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+        self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
+        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+        self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
 
         # Update metrics
         self.compiled_metrics.update_state(ys, ys_pred)
@@ -134,7 +148,7 @@ domain adaptation". In CVPR, 2018.
             Xs, Xt, ys, yt = self._unpack_data(data)
             
             
-            for _ in range(4):
+            for _ in range(self.n_steps-1):
                 with tf.GradientTape() as enc_tape:
                     Xt_enc = self.encoder_(Xt, training=True)
                     yt_pred = self.task_(Xt_enc, training=True)
@@ -197,8 +211,8 @@ domain adaptation". In CVPR, 2018.
 
             # Update weights
             self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-            self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
-            self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+            self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+            self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
 
             # Update metrics
             self.compiled_metrics.update_state(ys, ys_pred)

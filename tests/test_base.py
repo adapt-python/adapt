@@ -190,12 +190,16 @@ def test_base_deep_validation_data():
 def test_base_deep_dataset():
     model = BaseAdaptDeep()
     model.fit(Xs, ys, Xt=Xt, validation_data=(Xs, ys))
+    model.predict(Xs)
+    model.evaluate(Xs, ys)
     
     dataset = tf.data.Dataset.zip((tf.data.Dataset.from_tensor_slices(Xs),
                                    tf.data.Dataset.from_tensor_slices(ys.reshape(-1,1))
                                   ))
     model = BaseAdaptDeep()
     model.fit(dataset, Xt=dataset, validation_data=dataset.batch(10))
+    model.predict(tf.data.Dataset.from_tensor_slices(Xs).batch(32))
+    model.evaluate(dataset.batch(32))
     
     def gens():
         for i in range(40):
@@ -206,3 +210,5 @@ def test_base_deep_dataset():
                                              output_types=("float32", "float32"))
     model = BaseAdaptDeep()
     model.fit(dataset, Xt=Xt, validation_data=dataset.batch(10))
+    model.predict(tf.data.Dataset.from_tensor_slices(Xs).batch(32))
+    model.evaluate(dataset.batch(32))

@@ -82,7 +82,11 @@ for Domain Adaptation in Regression". In ICTAI, 2021.
     def _initialize_networks(self):
         if self.weighter is None:
             self.weighter_ = get_default_task(name="weighter")
+            if self.C > 0.:
+                self.weighter_ = self._add_regularization(self.weighter_)
         else:
+            if self.C > 0.:
+                self.weighter_ = self._add_regularization(self.weighter)
             self.weighter_ = check_network(self.weighter,
                                           copy=self.copy,
                                           name="weighter")
@@ -98,16 +102,19 @@ for Domain Adaptation in Regression". In ICTAI, 2021.
             self.discriminator_ = check_network(self.task,
                                                 copy=self.copy,
                                                 name="discriminator")
-        if self.C > 0.:
-            self._add_regularization()
 
 
-    def _add_regularization(self):
-        for layer in self.weighter_.layers:
-            if hasattr(self.weighter_, "kernel_constraint"):
-                self.weighter_.kernel_constraint = tf.keras.constraints.MaxNorm(self.C)
-            if hasattr(self.weighter_, "bias_constraint"):
-                self.weighter_.bias_constraint = tf.keras.constraints.MaxNorm(self.C)
+    def _add_regularization(self, weighter):                
+        for i in range(len(weighter.layers)):
+            if hasattr(weighter.layers[i], "kernel_constraint"):
+                setattr(weighter.layers[i],
+                        "kernel_constraint",
+                        tf.keras.constraints.MaxNorm(self.C))
+            if hasattr(weighter.layers[i], "bias_constraint"):
+                setattr(weighter.layers[i],
+                        "bias_constraint",
+                        tf.keras.constraints.MaxNorm(self.C))
+        return weighter
         
     
     def pretrain_step(self, data):
@@ -186,8 +193,6 @@ for Domain Adaptation in Regression". In ICTAI, 2021.
                 task_loss += sum(self.task_.losses)
                 disc_loss += sum(self.discriminator_.losses)
                 weight_loss += sum(self.weighter_.losses)
-
-            print(task_loss.shape, weight_loss.shape, disc_loss.shape)
 
             # Compute gradients
             trainable_vars_task = self.task_.trainable_variables

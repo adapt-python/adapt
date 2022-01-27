@@ -9,6 +9,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 
 from adapt.feature_based import DANN
+from adapt.utils import UpdateLambda
 
 Xs = np.concatenate((
     np.linspace(0, 1, 100).reshape(-1, 1),
@@ -78,15 +79,36 @@ def test_fit_lambda_one():
     assert np.sum(np.abs(model.predict(Xt) - yt)) < 2
     
     
-def test_fit_lambda_None():
+def test_fit_lambda_update():
     tf.random.set_seed(0)
     np.random.seed(0)
     model = DANN(_get_encoder(), _get_task(), _get_discriminator(),
-                 lambda_=None, loss="mse", optimizer=Adam(0.01))
+                 lambda_=tf.Variable(0.), loss="mse", optimizer=Adam(0.01))
     model.fit(Xs, ys, Xt=Xt, yt=yt,
-              epochs=100, batch_size=32, verbose=0)
+              epochs=100, batch_size=32, verbose=0,
+              callbacks=UpdateLambda(max_steps=400, gamma=10.))
     assert isinstance(model, Model)
     assert np.abs(model.encoder_.get_weights()[0][1][0] / 
             model.encoder_.get_weights()[0][0][0]) < 0.1
     assert np.sum(np.abs(model.predict(Xs) - ys)) < 1
     assert np.sum(np.abs(model.predict(Xt) - yt)) < 2
+    assert model.lambda_.numpy() == 1
+    
+    
+def test_optimizer_enc_disc():
+    tf.random.set_seed(0)
+    np.random.seed(0)
+    encoder = _get_encoder()
+    task = _get_task()
+    disc = _get_discriminator()
+    X_enc = encoder.predict(Xs)
+    task.predict(X_enc)
+    disc.predict(X_enc)
+    model = DANN(encoder, task, disc, copy=True,
+                 optimizer_enc=Adam(0.0), optimizer_disc=Adam(0.001),
+                 lambda_=tf.Variable(0.), loss="mse", optimizer=Adam(0.01))
+    model.fit(Xs, ys, Xt=Xt, yt=yt,
+              epochs=10, batch_size=32, verbose=0)
+    assert np.all(model.encoder_.get_weights()[0] == encoder.get_weights()[0])
+    assert np.any(model.task_.get_weights()[0] != task.get_weights()[0])
+    assert np.any(model.discriminator_.get_weights()[0] != disc.get_weights()[0])

@@ -188,8 +188,8 @@ In AAAI, 2018.
         
         # Update weights
         self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-        self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
-        self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+        self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
         
         # Update metrics
         self.compiled_metrics.update_state(ys, ys_pred)

@@ -169,7 +169,7 @@ In CVPR, 2017.
         Xs, Xt, ys, yt = self._unpack_data(data)
 
         # loss
-        with tf.GradientTape() as tape:                       
+        with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape:                       
             # Forward pass
             Xs_enc = self.encoder_src_(Xs, training=True)
             ys_pred = self.task_(Xs_enc, training=True)
@@ -179,14 +179,19 @@ In CVPR, 2017.
 
             # Compute the loss value
             loss = self.task_loss_(ys, ys_pred)
-            loss += sum(self.task_.losses) + sum(self.encoder_src_.losses)
+            task_loss = loss + sum(self.task_.losses)
+            enc_loss = loss + sum(self.encoder_src_.losses)
             
         # Compute gradients
-        trainable_vars = self.task_.trainable_variables + self.encoder_src_.trainable_variables
-        gradients = tape.gradient(loss, trainable_vars)
+        trainable_vars_task = self.task_.trainable_variables
+        trainable_vars_enc = self.encoder_src_.trainable_variables
+
+        gradients_task = task_tape.gradient(task_loss, trainable_vars_task)
+        gradients_enc = enc_tape.gradient(enc_loss, trainable_vars_enc)
 
         # Update weights
-        self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+        self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
+        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
 
         # Update metrics
         self.compiled_metrics.update_state(ys, ys_pred)
@@ -206,55 +211,48 @@ In CVPR, 2017.
             Xs, Xt, ys, yt = self._unpack_data(data)
             
             # loss
-            with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:                       
+            with tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:                       
                 # Forward pass
-                Xs_enc = self.encoder_src_(Xs, training=True)
-                ys_pred = self.task_(Xs_enc, training=True)
+                if self.pretrain:
+                    Xs_enc = self.encoder_src_(Xs, training=False)
+                else:
+                    # encoder src is not needed if pretrain=False
+                    Xs_enc = Xs
+                    
                 ys_disc = self.discriminator_(Xs_enc, training=True)
 
                 Xt_enc = self.encoder_(Xt, training=True)
                 yt_disc = self.discriminator_(Xt_enc, training=True)
 
-                # Reshape
-                ys_pred = tf.reshape(ys_pred, tf.shape(ys))
-
                 # Compute the loss value
-                task_loss = self.task_loss_(ys, ys_pred)
-
                 disc_loss = (-tf.math.log(ys_disc + EPS)
                              -tf.math.log(1-yt_disc + EPS))
 
                 enc_loss = -tf.math.log(yt_disc + EPS)
 
-                task_loss = tf.reduce_mean(task_loss)
                 disc_loss = tf.reduce_mean(disc_loss)
                 enc_loss = tf.reduce_mean(enc_loss)
 
-                task_loss += sum(self.task_.losses)
                 disc_loss += sum(self.discriminator_.losses)
                 enc_loss += sum(self.encoder_.losses)
 
             # Compute gradients
-            trainable_vars_task = self.task_.trainable_variables
             trainable_vars_enc = self.encoder_.trainable_variables
             trainable_vars_disc = self.discriminator_.trainable_variables
 
-            gradients_task = task_tape.gradient(task_loss, trainable_vars_task)
             gradients_enc = enc_tape.gradient(enc_loss, trainable_vars_enc)
             gradients_disc = disc_tape.gradient(disc_loss, trainable_vars_disc)
 
             # Update weights
-            self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-            self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
-            self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+            self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+            self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
 
             # Update metrics
-            self.compiled_metrics.update_state(ys, ys_pred)
-            self.compiled_loss(ys, ys_pred)
+            # self.compiled_metrics.update_state(ys, ys_pred)
+            # self.compiled_loss(ys, ys_pred)
             # Return a dict mapping metric names to current value
-            logs = {m.name: m.result() for m in self.metrics}
-            disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
-            logs.update(disc_metrics)
+            # logs = {m.name: m.result() for m in self.metrics}
+            logs = self._get_disc_metrics(ys_disc, yt_disc)
             return logs
     
     
@@ -275,12 +273,14 @@ In CVPR, 2017.
     def _initialize_weights(self, shape_X):
         # Init weights encoder
         self(np.zeros((1,) + shape_X))
-        self.encoder_(np.zeros((1,) + shape_X))
         
         # Set same weights to encoder_src
-        self.encoder_src_ = check_network(self.encoder_,
-                                          copy=True,
-                                          name="encoder_src")
+        if self.pretrain:
+            # encoder src is not needed if pretrain=False
+            self.encoder_(np.zeros((1,) + shape_X))
+            self.encoder_src_ = check_network(self.encoder_,
+                                              copy=True,
+                                              name="encoder_src")
         
         
     def transform(self, X, domain="tgt"):
