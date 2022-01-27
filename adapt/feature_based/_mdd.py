@@ -25,7 +25,7 @@ class MDD(BaseAdaptDeep):
     
     Parameters
     ----------
-    lambda_ : float (default=1.)
+    lambda_ : float (default=0.1)
         Trade-off parameter
     
     gamma : float (default=4.)
@@ -71,7 +71,7 @@ domain adaptation". ICML, 2019.
                  task=None,
                  Xt=None,
                  yt=None,
-                 lambda_=1.,
+                 lambda_=0.1,
                  gamma=4.,
                  copy=True,
                  verbose=1,
@@ -124,8 +124,8 @@ domain adaptation". ICML, 2019.
                              tf.shape(ys_pred)[1])
                 argmax_tgt = tf.one_hot(tf.math.argmax(yt_pred, -1),
                              tf.shape(yt_pred)[1])
-                disc_loss_src = self.task_loss_(argmax_src, ys_disc)
-                disc_loss_tgt = self.task_loss_(argmax_tgt, yt_disc)
+                disc_loss_src = -tf.math.log(tf.reduce_sum(argmax_src * ys_disc, 1) + EPS)
+                disc_loss_tgt = tf.math.log(1. - tf.reduce_sum(argmax_tgt * yt_disc, 1) + EPS)
             else:
                 disc_loss_src = self.task_loss_(ys_pred, ys_disc)
                 disc_loss_tgt = self.task_loss_(yt_pred, yt_disc)
@@ -168,6 +168,7 @@ domain adaptation". ICML, 2019.
         logs = {m.name: m.result() for m in self.metrics}
         # disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
         logs.update({"disc_loss": disc_loss})
+        logs.update({"disc_src": disc_loss_src, "disc_tgt": disc_loss_tgt})
         return logs
     
     

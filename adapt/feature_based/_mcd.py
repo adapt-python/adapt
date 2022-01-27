@@ -141,6 +141,26 @@ domain adaptation". In CVPR, 2018.
             Xs = Xs[0]
             ys = ys[0]
             
+            
+            for _ in range(4):
+                with tf.GradientTape() as enc_tape:
+                    Xt_enc = self.encoder_(Xt, training=True)
+                    yt_pred = self.task_(Xt_enc, training=True)
+                    yt_disc = self.discriminator_(Xt_enc, training=True)
+
+                    # Reshape
+                    yt_pred = tf.reshape(yt_pred, tf.shape(ys))
+                    yt_disc = tf.reshape(yt_disc, tf.shape(ys))
+
+                    discrepancy = tf.reduce_mean(tf.abs(yt_pred - yt_disc))
+                    enc_loss = discrepancy
+                    enc_loss += sum(self.encoder_.losses)
+                    
+                # Compute gradients
+                trainable_vars_enc = self.encoder_.trainable_variables
+                gradients_enc = enc_tape.gradient(enc_loss, trainable_vars_enc)
+                self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+            
             # loss
             with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:
                 # Forward pass
@@ -173,7 +193,6 @@ domain adaptation". In CVPR, 2018.
                 task_loss += sum(self.task_.losses)
                 disc_loss += sum(self.discriminator_.losses)
                 enc_loss += sum(self.encoder_.losses)
-
 
             # Compute gradients
             trainable_vars_task = self.task_.trainable_variables
