@@ -212,3 +212,27 @@ def test_base_deep_dataset():
     model.fit(dataset, Xt=Xt, validation_data=dataset.batch(10))
     model.predict(tf.data.Dataset.from_tensor_slices(Xs).batch(32))
     model.evaluate(dataset.batch(32))
+    
+    
+def _unpack_data_ms(self, data):
+    data_src = data[0]
+    data_tgt = data[1]
+    Xs = data_src[0][0]
+    ys = data_src[1][0]
+    if isinstance(data_tgt, tuple):
+        Xt = data_tgt[0]
+        yt = data_tgt[1]
+        return Xs, Xt, ys, yt
+    else:
+        Xt = data_tgt
+        return Xs, Xt, ys, None
+    
+    
+def test_multisource():
+    np.random.seed(0)
+    model = BaseAdaptDeep()
+    model._unpack_data = _unpack_data_ms.__get__(model)
+    model.fit(Xs, ys, Xt=Xt, domains=np.random.choice(2, len(Xs)))
+    model.predict(Xs)
+    model.evaluate(Xs, ys)
+    assert model.n_sources_ == 2
