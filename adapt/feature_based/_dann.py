@@ -58,12 +58,8 @@ class DANN(BaseAdaptDeep):
     
     Parameters
     ----------        
-    lambda_ : float or None (default=0.1)
+    lambda_ : float (default=0.1)
         Trade-off parameter.
-        If ``None``, ``lambda_`` increases gradually
-        according to the following formula:
-        ``lambda_`` = 2/(1 + exp(-``gamma`` * p)) - 1.
-        With p growing from 0 to 1 during training.
         
     gamma : float (default=10.0)
         Increase rate parameter.
@@ -137,28 +133,9 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
     def train_step(self, data):
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
-        
-        # Single source
-        Xs = Xs[0]
-        ys = ys[0]
-        
-        if self.lambda_ is None:
-            _is_lambda_None = 1.
-            lambda_ = 0.
-        else:
-            _is_lambda_None = 0.
-            lambda_ = float(self.lambda_)
        
         # loss
-        with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:           
-            
-            # Compute lambda
-            self.steps_.assign_add(1.)
-            progress = self.steps_ / self.total_steps_
-            _lambda_ = 2. / (1. + tf.exp(-self.gamma * progress)) - 1.
-            _lambda_ = (_is_lambda_None * _lambda_ +
-                        (1. - _is_lambda_None) * lambda_)
-            
+        with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:
             # Forward pass
             Xs_enc = self.encoder_(Xs, training=True)
             ys_pred = self.task_(Xs_enc, training=True)
@@ -179,7 +156,7 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
             task_loss = tf.reduce_mean(task_loss)
             disc_loss = tf.reduce_mean(disc_loss)
             
-            enc_loss = task_loss - _lambda_ * disc_loss
+            enc_loss = task_loss - self.lambda_ * disc_loss
             
             task_loss += sum(self.task_.losses)
             disc_loss += sum(self.discriminator_.losses)
@@ -197,8 +174,8 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         
         # Update weights
         self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-        self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
-        self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+        self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
         
         # Update metrics
         self.compiled_metrics.update_state(ys, ys_pred)

@@ -133,15 +133,6 @@ class DeepCORAL(BaseAdaptDeep):
     def train_step(self, data):
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
-        
-        # Single source
-        Xs = Xs[0]
-        ys = ys[0]
-                
-        if len(Xs.shape) != 2:
-            raise ValueError("Encoded space should "
-                             "be 2 dimensional, got, "
-                             "%s"%encoded_src.shape)
             
         if self.match_mean:
             _match_mean = 1.
@@ -149,7 +140,7 @@ class DeepCORAL(BaseAdaptDeep):
             _match_mean = 0.
 
         # loss
-        with tf.GradientTape() as tape:           
+        with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape:           
                         
             # Forward pass
             Xs_enc = self.encoder_(Xs, training=True)
@@ -196,17 +187,19 @@ class DeepCORAL(BaseAdaptDeep):
             disc_loss_mean = tf.reduce_mean(disc_loss_mean)
             disc_loss = self.lambda_ * (disc_loss_cov + _match_mean * disc_loss_mean)
             
-            loss = task_loss + disc_loss
-            
-            loss += sum(self.task_.losses) + sum(self.encoder_.losses)
+            task_loss += sum(self.task_.losses)
+            disc_loss += sum(self.encoder_.losses)
             
         # Compute gradients
-        trainable_vars = self.task_.trainable_variables + self.encoder_.trainable_variables
+        trainable_vars_task = self.task_.trainable_variables
+        trainable_vars_enc = self.encoder_.trainable_variables
         
-        gradients = tape.gradient(loss, trainable_vars)
+        gradients_task = task_tape.gradient(task_loss, trainable_vars_task)
+        gradients_enc = enc_tape.gradient(disc_loss, trainable_vars_enc)
         
         # Update weights
-        self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+        self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
+        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
         
         # Update metrics
         self.compiled_metrics.update_state(ys, ys_pred)

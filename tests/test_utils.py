@@ -68,7 +68,7 @@ class CustomEstimator(BaseEstimator):
 class DummyModel(Model):
     
     def __init__(self):
-        pass
+        super().__init__()
     
 
 class CantBeDeepCopied(BaseEstimator):
@@ -409,3 +409,14 @@ def test_accuracy():
                          dtype="float32")
     acc = accuracy(y_true, y_pred)
     assert np.all(np.array([0, 0, 1]) == acc.numpy())
+    
+    
+def test_updatelambda():
+    up = UpdateLambda()
+    dummy = DummyModel()
+    dummy.lambda_ = tf.Variable(0.)
+    up.model = dummy
+    for _ in range(1000):
+        up.on_batch_end(0, None)
+    assert dummy.lambda_.numpy() == 1.
+    

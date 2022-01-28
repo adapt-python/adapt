@@ -131,10 +131,6 @@ In AAAI, 2018.
     def train_step(self, data):
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
-        
-        # Single source
-        Xs = Xs[0]
-        ys = ys[0]
        
         # loss
         with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:           
@@ -192,8 +188,8 @@ In AAAI, 2018.
         
         # Update weights
         self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-        self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
-        self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+        self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
         
         # Update metrics
         self.compiled_metrics.update_state(ys, ys_pred)

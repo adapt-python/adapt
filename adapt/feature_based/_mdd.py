@@ -25,7 +25,7 @@ class MDD(BaseAdaptDeep):
     
     Parameters
     ----------
-    lambda_ : float (default=1.)
+    lambda_ : float (default=0.1)
         Trade-off parameter
     
     gamma : float (default=4.)
@@ -71,7 +71,7 @@ domain adaptation". ICML, 2019.
                  task=None,
                  Xt=None,
                  yt=None,
-                 lambda_=1.,
+                 lambda_=0.1,
                  gamma=4.,
                  copy=True,
                  verbose=1,
@@ -87,10 +87,6 @@ domain adaptation". ICML, 2019.
     def train_step(self, data):
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
-        
-        # Single source
-        Xs = Xs[0]
-        ys = ys[0]
         
         # If crossentropy take argmax of preds
         if hasattr(self.task_loss_, "name"):
@@ -124,8 +120,8 @@ domain adaptation". ICML, 2019.
                              tf.shape(ys_pred)[1])
                 argmax_tgt = tf.one_hot(tf.math.argmax(yt_pred, -1),
                              tf.shape(yt_pred)[1])
-                disc_loss_src = self.task_loss_(argmax_src, ys_disc)
-                disc_loss_tgt = self.task_loss_(argmax_tgt, yt_disc)
+                disc_loss_src = -tf.math.log(tf.reduce_sum(argmax_src * ys_disc, 1) + EPS)
+                disc_loss_tgt = tf.math.log(1. - tf.reduce_sum(argmax_tgt * yt_disc, 1) + EPS)
             else:
                 disc_loss_src = self.task_loss_(ys_pred, ys_disc)
                 disc_loss_tgt = self.task_loss_(yt_pred, yt_disc)
@@ -158,8 +154,8 @@ domain adaptation". ICML, 2019.
         
         # Update weights
         self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-        self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
-        self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+        self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
         
         # Update metrics
         self.compiled_metrics.update_state(ys, ys_pred)
@@ -187,6 +183,22 @@ domain adaptation". ICML, 2019.
         if self.task is None:
             self.discriminator_ = get_default_task(name="discriminator")
         else:
+            # Impose Copy, else undesired behaviour
             self.discriminator_ = check_network(self.task,
-                                                copy=self.copy,
+                                                copy=True,
                                                 name="discriminator")
+            
+    def _initialize_weights(self, shape_X):
+        # Init weights encoder
+        self(np.zeros((1,) + shape_X))
+        X_enc = self.encoder_(np.zeros((1,) + shape_X))
+        self.task_(X_enc)
+        self.discriminator_(X_enc)
+        
+        # Add noise to discriminator in order to
+        # differentiate from task
+        weights = self.discriminator_.get_weights()
+        for i in range(len(weights)):
+            weights[i] += (0.01 * weights[i] *
+                           np.random.standard_normal(weights[i].shape))
+        self.discriminator_.set_weights(weights)

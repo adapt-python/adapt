@@ -19,6 +19,53 @@ from tensorflow.keras.layers import Layer, Dense, Flatten, Input
 from tensorflow.keras.models import clone_model
 
 
+class UpdateLambda(tf.keras.callbacks.Callback):
+    """
+    Update Lambda trade-off
+
+    This Callback increases the ``lambda_`` trade-off parameter
+    at each batch.
+
+    The trade-off is increased from ``lambda_init`` to ``lambda_max``
+    in ``max_steps`` number of gradient steps according to the
+    following formula:
+
+    ``lambda_`` = A * [ 2/(1 + exp(-``gamma`` * p)) - 1. ] + B
+    
+    With p increasing from 0 to 1 and A, B two constants.
+    
+    Parameters
+    ----------
+    lambda_init : float (default=0.)
+        Initial trade-off
+        
+    lambda_max : float (default=1.)
+        Trade-off after ``max_steps`` gradient updates.
+        
+    max_steps : int (default=1000)
+        Number of gradient updates before getting ``lambda_max``
+        
+    gamma : float (default=1.)
+        Speed factor. High ``gamma`` will increase the speed of
+        ``lambda_`` increment.
+    """
+    def __init__(self, lambda_init=0., lambda_max=1., max_steps=1000, gamma=1.):
+        self.lambda_init = lambda_init
+        self.lambda_max = lambda_max
+        self.max_steps = max_steps
+        self.gamma = gamma
+        self.steps = 0.
+
+    def on_batch_end(self, batch, logs=None):
+        self.steps += 1.
+        progress = min(self.steps / self.max_steps, 1.)
+        lambda_ = 2. / (1. + tf.exp(-self.gamma * progress)) - 1.
+        lambda_ /= (2 / (1. + tf.exp(-self.gamma)) - 1.)
+        lambda_ *= (self.lambda_max - self.lambda_init)
+        lambda_ += self.lambda_init
+        self.model.lambda_.assign(lambda_)
+
+
 def accuracy(y_true, y_pred):
     """
     Custom accuracy function which can handle
@@ -58,7 +105,7 @@ def accuracy(y_true, y_pred):
 
 
 def predict(self, x, **kwargs):
-    if (np.prod(x.shape) <= 10**8):
+    if hasattr(x, "shape") and (np.prod(x.shape) <= 10**8):
         pred = self.__call__(tf.identity(x)).numpy()
     else:
         pred = Sequential.predict(self, x, **kwargs)
