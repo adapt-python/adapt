@@ -47,16 +47,15 @@
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.BaseDeepFeature.html">BaseDeepFeature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.FE.html">FE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CORAL.html">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DANN.html">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.ADDA.html">ADDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.mSDA.html">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.WDGRL.html">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CDAN.html">CDAN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MCD.html">MCD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MDD.html">MDD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.WDGRL.html">WDGRL</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
@@ -65,6 +64,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.WANN.html">WANN</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
@@ -73,9 +73,20 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.cov_distance.html">cov_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.j_score.html">j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.frechet_distance.html">frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.normalized_frechet_distance.html">normalized_frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.domain_classifier.html">domain_classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.reverse_validation.html">reverse_validation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.accuracy.html">accuracy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_arrays.html">check_arrays</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_one_array.html">check_one_array</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_estimator.html">check_estimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_network.html">check_network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#">get_default_encoder</a></li>
@@ -84,6 +95,8 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.GradientHandler.html">GradientHandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.make_classification_da.html">make_classification_da</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.make_regression_da.html">make_regression_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.set_random_seed.html">set_random_seed</a></li>
 </ul>
 </li>
 </ul>
@@ -92,7 +105,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Src-Only">Src Only</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#mSDA">mSDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Instance-Based">Instance Based</a></li>
 </ul>
@@ -104,7 +116,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#ADDA">ADDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DeepCORAL">DeepCORAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#mSDA">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#CDAN">CDAN</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/Rotation.html">Rotation</a><ul>
@@ -113,7 +129,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#CORAL">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#ADDA">ADDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#mSDA">mSDA</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/Regression.html">Toy Regression</a><ul>
@@ -201,7 +216,7 @@
 <h1><a class="reference internal" href="../contents.html#adapt-utils"><span class="std std-ref">adapt.utils</span></a>.get_default_encoder<a class="headerlink" href="#adapt-utils-get-default-encoder" title="Permalink to this headline"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="adapt.utils.get_default_encoder">
-<span class="sig-prename descclassname"><span class="pre">adapt.utils.</span></span><span class="sig-name descname"><span class="pre">get_default_encoder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/utils.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.utils.get_default_encoder" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">adapt.utils.</span></span><span class="sig-name descname"><span class="pre">get_default_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/utils.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.utils.get_default_encoder" title="Permalink to this definition"></a></dt>
 <dd><p>Return a tensorflow Model of one layer
 with 10 neurons and a relu activation.</p>
 <dl class="field-list simple">

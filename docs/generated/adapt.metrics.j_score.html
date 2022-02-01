@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>adapt.utils.check_one_array &mdash; adapt 0.1.0 documentation</title>
+  <title>adapt.metrics.j_score &mdash; adapt 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
@@ -18,6 +18,8 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script src="../_static/js/custom.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -47,16 +49,15 @@
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.BaseDeepFeature.html">BaseDeepFeature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.FE.html">FE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CORAL.html">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DANN.html">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.ADDA.html">ADDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.mSDA.html">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.WDGRL.html">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CDAN.html">CDAN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MCD.html">MCD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MDD.html">MDD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.WDGRL.html">WDGRL</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
@@ -65,6 +66,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.WANN.html">WANN</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
@@ -73,9 +75,20 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.cov_distance.html">cov_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.frechet_distance.html">frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.normalized_frechet_distance.html">normalized_frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.domain_classifier.html">domain_classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.reverse_validation.html">reverse_validation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.accuracy.html">accuracy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_arrays.html">check_arrays</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#">check_one_array</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_estimator.html">check_estimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_network.html">check_network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.get_default_encoder.html">get_default_encoder</a></li>
@@ -84,6 +97,8 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.GradientHandler.html">GradientHandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.make_classification_da.html">make_classification_da</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.make_regression_da.html">make_regression_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.set_random_seed.html">set_random_seed</a></li>
 </ul>
 </li>
 </ul>
@@ -92,7 +107,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Src-Only">Src Only</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#mSDA">mSDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Instance-Based">Instance Based</a></li>
 </ul>
@@ -104,7 +118,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#ADDA">ADDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DeepCORAL">DeepCORAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#mSDA">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#CDAN">CDAN</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/Rotation.html">Rotation</a><ul>
@@ -113,7 +131,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#CORAL">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#ADDA">ADDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#mSDA">mSDA</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/Regression.html">Toy Regression</a><ul>
@@ -164,7 +181,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="xref std std-ref">adapt.utils</span>.check_one_array</li>
+      <li><span class="xref std std-ref">adapt.metrics</span>.j_score</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -197,26 +214,55 @@
     text-align: unset;
 }
 </style>
-<section id="adapt-utils-check-one-array">
-<h1><a class="reference internal" href="../contents.html#adapt-utils"><span class="std std-ref">adapt.utils</span></a>.check_one_array<a class="headerlink" href="#adapt-utils-check-one-array" title="Permalink to this headline"></a></h1>
+<section id="adapt-metrics-j-score">
+<h1><a class="reference internal" href="../contents.html#adapt-metrics"><span class="std std-ref">adapt.metrics</span></a>.j_score<a class="headerlink" href="#adapt-metrics-j-score" title="Permalink to this headline"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="adapt.utils.check_one_array">
-<span class="sig-prename descclassname"><span class="pre">adapt.utils.</span></span><span class="sig-name descname"><span class="pre">check_one_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multisource</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/utils.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.utils.check_one_array" title="Permalink to this definition"></a></dt>
-<dd><p>Check array and reshape 1D array in 2D array
-of shape (-1, 1).</p>
+<dt class="sig sig-object py" id="adapt.metrics.j_score">
+<span class="sig-prename descclassname"><span class="pre">adapt.metrics.</span></span><span class="sig-name descname"><span class="pre">j_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_centers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/metrics.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.metrics.j_score" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the negative J-score between Xs and Xt.</p>
+<div class="math notranslate nohighlight">
+\[\Delta = -\int_{\mathcal{X}} P(X_T) \log(P(X_T) / P(X_S))\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(P(X_S), P(X_T)\)</span> are the probability density
+functions of Xs and Xt.</p></li>
+</ul>
+<p>The source and target probability density functions
+are approximated with a mixture of gaussian kernels
+of bandwith <code class="docutils literal notranslate"><span class="pre">sigma</span></code> and centered in <code class="docutils literal notranslate"><span class="pre">max_centers</span></code>
+random points of Xt. The coefficient of the mixture
+are determined by solving a convex optimization (see [1])</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">numpy array</span></dt><dd><p>Input data.</p>
+<dt><strong>Xs</strong><span class="classifier">array</span></dt><dd><p>Source array</p>
 </dd>
-<dt><strong>multisource</strong><span class="classifier">boolean (default=False)</span></dt><dd><p>Weither to accept list of arrays or not.</p>
+<dt><strong>Xt</strong><span class="classifier">array</span></dt><dd><p>Target array</p>
+</dd>
+<dt><strong>max_centers</strong><span class="classifier">int (default=100)</span></dt><dd><p>Maximum number of centers from Xt</p>
+</dd>
+<dt><strong>sigma</strong><span class="classifier">float (default=None)</span></dt><dd><p>Kernel bandwidth. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the mean
+of pairwise distances between data from
+Xt is used.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>X</dt><dd></dd>
+<dt><strong>score</strong><span class="classifier">float</span></dt><dd></dd>
 </dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">KLIEP</span></code></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="re1c29fa71807-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://papers.nips.cc/paper/3248-direct-importance-estimation-with-model-selection-and-its-application-to-covariate-shift-adaptation.pdf">[1]</a> M. Sugiyama, S. Nakajima, H. Kashima, P. von Bünau and  M. Kawanabe. “Direct importance estimation with model selection and its application to covariateshift adaptation”. In NIPS 2007</p>
 </dd>
 </dl>
 </dd></dl>

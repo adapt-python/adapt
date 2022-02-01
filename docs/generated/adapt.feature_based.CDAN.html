@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adapt.feature_based.CDAN &mdash; adapt 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../_static/js/custom.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> adapt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu"> 
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.FE.html">FE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CORAL.html">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DANN.html">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.ADDA.html">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.WDGRL.html">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">CDAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MCD.html">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MDD.html">MDD</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KLIEP.html">KLIEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.WANN.html">WANN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.cov_distance.html">cov_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.j_score.html">j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.frechet_distance.html">frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.normalized_frechet_distance.html">normalized_frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.domain_classifier.html">domain_classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.reverse_validation.html">reverse_validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.accuracy.html">accuracy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_arrays.html">check_arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_estimator.html">check_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_network.html">check_network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.get_default_encoder.html">get_default_encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.get_default_task.html">get_default_task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.get_default_discriminator.html">get_default_discriminator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.GradientHandler.html">GradientHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.make_classification_da.html">make_classification_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.make_regression_da.html">make_regression_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.set_random_seed.html">set_random_seed</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Instance-Based">Instance Based</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Two_moons.html">Two Moons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#CDAN">CDAN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Rotation.html">Rotation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#ADDA">ADDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Regression.html">Toy Regression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#TGT-Only">TGT Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#All">All</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/sample_bias.html">Sample Bias 1D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/sample_bias_2d.html">Sample Bias 2D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Estimator">Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Multi_fidelity.html">Multi-Fidelity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Low-fidelity-only">Low fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#High-fidelity-only">High fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+ 
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><span class="xref std std-ref">adapt.feature_based</span>.CDAN</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="adapt-feature-based-cdan">
+<h1><a class="reference internal" href="../contents.html#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>.CDAN<a class="headerlink" href="#adapt-feature-based-cdan" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.feature_based.</span></span><span class="sig-name descname"><span class="pre">CDAN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN" title="Permalink to this definition"></a></dt>
+<dd><p>CDAN (Conditional Adversarial Domain Adaptation) is an
+unsupervised domain adaptation method on the model of the 
+<span class="xref std std-ref">DANN</span>. In CDAN the discriminator
+is conditioned on the prediction of the task network for
+source and target data. This should , in theory, focus the
+source-target matching of instances belonging to the same class.</p>
+<p>To condition the <strong>discriminator</strong> network on each class, a
+multilinear map of shape: <code class="docutils literal notranslate"><span class="pre">nb_class</span> <span class="pre">*</span> <span class="pre">encoder.output_shape[1]</span></code>
+is given as input. If the shape is too large (&gt;4096), a random
+sub-multilinear map of lower dimension is considered.</p>
+<p>The optimization formulation of CDAN is the following:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\min_{\phi, F} &amp; \; \mathcal{L}_{task}(F(\phi(X_S)), y_S) -
+\lambda \left( \log(1 - D(\phi(X_S) \otimes F(X_S)) +
+\log(D(\phi(X_T) \otimes F(X_T)) \right) \\
+\max_{D} &amp; \; \log(1 - D(\phi(X_S) \otimes F(X_S)) +
+\log(D(\phi(X_T) \otimes F(X_T))\end{split}\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\((X_S, y_S), (X_T)\)</span> are respectively the labeled source data
+and the unlabeled target data.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\phi, F, D\)</span> are respectively the <strong>encoder</strong>, the <strong>task</strong>
+and the <strong>discriminator</strong> networks</p></li>
+<li><p><span class="math notranslate nohighlight">\(\lambda\)</span> is the trade-off parameter.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\phi(X_S) \otimes F(X_S)\)</span> is the multilinear map between
+the encoded sources and the task predictions.</p></li>
+</ul>
+<p>In CDAN+E, an entropy regularization is added to prioritize the
+transfer of easy-to-transfer exemples. The optimization formulation
+of CDAN+E is the following:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\min_{\phi, F} &amp; \; \mathcal{L}_{task}(F(\phi(X_S)), y_S) -
+\lambda \left( \log(1 - W_S D(\phi(X_S) \otimes F(X_S)) +
+W_T \log(D(\phi(X_T) \otimes F(X_T)) \right) \\
+\max_{D} &amp; \; \log(1 - W_S D(\phi(X_S) \otimes F(X_S)) +
+W_T \log(D(\phi(X_T) \otimes F(X_T))\end{split}\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(W_S = 1+\exp^{-\text{ent}(F(X_S))}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\text{ent}(F(X_S)) = - \sum_{i &lt; C} F(X_S)_i \log(F(X_S)_i)\)</span>
+with <span class="math notranslate nohighlight">\(C\)</span> the number of classes.</p></li>
+</ul>
+<figure class="align-center" id="id3">
+<img alt="../_images/cdan.png" src="../_images/cdan.png" />
+<figcaption>
+<p><span class="caption-text">CDAN architecture (source: [1])</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>encoder</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Encoder netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a shallow network with 10
+neurons and ReLU activation is used as encoder network.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target input data.</p>
+</dd>
+<dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data.</p>
+</dd>
+<dt><strong>task</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Task netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a two layers network with 10
+neurons per layer and ReLU activation is used as task network.
+<code class="docutils literal notranslate"><span class="pre">task</span></code> should end with a softmax activation.</p>
+</dd>
+<dt><strong>discriminator</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Discriminator netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a two layers network with 10
+neurons per layer and ReLU activation is used as discriminator
+network. Note that the output shape of the discriminator should
+be <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">1)</span></code> and the input shape: 
+<code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">encoder.output_shape[1]</span> <span class="pre">*</span> <span class="pre">nb_class)</span></code>.</p>
+</dd>
+<dt><strong>lambda_</strong><span class="classifier">float or None (default=1)</span></dt><dd><p>Trade-off parameter. This parameter gives the trade-off
+for the encoder between learning the task and matching
+the source and target distribution. If <cite>lambda_`is small
+the encoder will focus on the task. If `lambda_=0</cite>, CDAN
+is equivalent to a “source only” method.</p>
+</dd>
+<dt><strong>entropy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to use or not the entropy regularization.
+Adding this regularization will prioritize the
+<code class="docutils literal notranslate"><span class="pre">discriminator</span></code> on easy-to-transfer examples.
+This, in theory, should make the transfer “safer”.</p>
+</dd>
+<dt><strong>max_features</strong><span class="classifier">int (default=4096)</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">encoder.output_shape[1]</span> <span class="pre">*</span> <span class="pre">nb_class)</span></code> is higer than
+<code class="docutils literal notranslate"><span class="pre">max_features</span></code> the multilinear map is produced with
+considering random sub vectors of the encoder and task outputs.</p>
+</dd>
+<dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">estimator</span></code> or not.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">int (default=1)</span></dt><dd><p>Verbosity level.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int (default=None)</span></dt><dd><p>Seed of random generator.</p>
+</dd>
+<dt><strong>params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given at the different level of the adapt object.
+It can be, for instance, compile or fit parameters of the
+estimator or kernel parameters etc…
+Accepted parameters can be found by calling the method
+<code class="docutils literal notranslate"><span class="pre">_get_legal_params(params)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="adapt.feature_based.DANN.html#adapt.feature_based.DANN" title="adapt.feature_based.DANN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DANN</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="adapt.feature_based.ADDA.html#adapt.feature_based.ADDA" title="adapt.feature_based.ADDA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ADDA</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL" title="adapt.feature_based.WDGRL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WDGRL</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>CDAN is specific for multi-class classification tasks. Be sure to add a
+softmax activation at the end of the task network.</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r65617b6162d0-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://arxiv.org/pdf/1705.10667.pdf">[1]</a> Long, M., Cao, Z., Wang, J., and Jordan, M. I. “Conditional adversarial domain adaptation”. In NIPS, 2018</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>encoder_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>encoder network.</p>
+</dd>
+<dt><strong>task_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>task network.</p>
+</dd>
+<dt><strong>discriminator_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>discriminator network.</p>
+</dd>
+<dt><strong>history_</strong><span class="classifier">dict</span></dt><dd><p>history of the losses and metrics across the epochs.
+If <code class="docutils literal notranslate"><span class="pre">yt</span></code> is given in <code class="docutils literal notranslate"><span class="pre">fit</span></code> method, target metrics
+and losses are recorded too.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.CDAN.__init__" title="adapt.feature_based.CDAN.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([encoder, task, discriminator, Xt, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.CDAN.compile" title="adapt.feature_based.CDAN.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a>([optimizer, loss, metrics, ...])</p></td>
+<td><p>Configures the model for training.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.CDAN.fit" title="adapt.feature_based.CDAN.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X[, y, Xt, yt, domains])</p></td>
+<td><p>Fit Model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.CDAN.get_params" title="adapt.feature_based.CDAN.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<td><p>Get parameters for this estimator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.CDAN.predict" title="adapt.feature_based.CDAN.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, batch_size, verbose, steps, ...])</p></td>
+<td><p>Generates output predictions for the input samples.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.CDAN.predict_disc" title="adapt.feature_based.CDAN.predict_disc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_disc</span></code></a>(X)</p></td>
+<td><p>Return predictions of the discriminator on the encoded features.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.CDAN.predict_task" title="adapt.feature_based.CDAN.predict_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_task</span></code></a>(X)</p></td>
+<td><p>Return predictions of the task on the encoded features.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.CDAN.score" title="adapt.feature_based.CDAN.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>([X, y, sample_weight])</p></td>
+<td><p>Return adaptation score.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.CDAN.score_estimator" title="adapt.feature_based.CDAN.score_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score_estimator</span></code></a>(X, y[, sample_weight])</p></td>
+<td><p>Return the evaluation of the model on X, y.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.CDAN.set_params" title="adapt.feature_based.CDAN.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
+<td><p>Set the parameters of this estimator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.CDAN.transform" title="adapt.feature_based.CDAN.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(X)</p></td>
+<td><p>Return the encoded features of X.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discriminator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entropy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4096</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.__init__.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighted_metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_eagerly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps_per_execution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.compile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN.compile" title="Permalink to this definition"></a></dt>
+<dd><p>Configures the model for training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>optimizer: str or `tf.keras.optimizer` instance</strong></dt><dd><p>Optimizer</p>
+</dd>
+<dt><strong>loss: str or `tf.keras.losses.Loss` instance</strong></dt><dd><p>Loss function. A loss function is any callable
+with the signature <cite>loss = fn(y_true, y_pred)</cite>,
+where <cite>y_true</cite> are the ground truth values, and
+<cite>y_pred</cite> are the model’s predictions.
+<cite>y_true</cite> should have shape
+<cite>(batch_size, d0, .. dN)</cite> (except in the case of
+sparse loss functions such as
+sparse categorical crossentropy which expects integer arrays of shape
+<cite>(batch_size, d0, .. dN-1)</cite>).
+<cite>y_pred</cite> should have shape <cite>(batch_size, d0, .. dN)</cite>.
+The loss function should return a float tensor.
+If a custom <cite>Loss</cite> instance is
+used and reduction is set to <cite>None</cite>, return value has shape
+<cite>(batch_size, d0, .. dN-1)</cite> i.e. per-sample or per-timestep loss
+values; otherwise, it is a scalar. If the model has multiple outputs,
+you can use a different loss on each output by passing a dictionary
+or a list of losses. The loss value that will be minimized by the
+model will then be the sum of all individual losses, unless
+<cite>loss_weights</cite> is specified.</p>
+</dd>
+<dt><strong>metrics: list of str or list of `tf.keras.metrics.Metric` instance</strong></dt><dd><p>List of metrics to be evaluated by the model during training
+and testing. Typically you will use <cite>metrics=[‘accuracy’]</cite>. A
+function is any callable with the signature <cite>result = fn(y_true,
+y_pred)</cite>. To specify different metrics for different outputs of a
+multi-output model, you could also pass a dictionary, such as
+<cite>metrics={‘output_a’: ‘accuracy’, ‘output_b’: [‘accuracy’, ‘mse’]}</cite>.
+You can also pass a list to specify a metric or a list of metrics
+for each output, such as <cite>metrics=[[‘accuracy’], [‘accuracy’, ‘mse’]]</cite>
+or <cite>metrics=[‘accuracy’, [‘accuracy’, ‘mse’]]</cite>. When you pass the
+strings ‘accuracy’ or ‘acc’, we convert this to one of
+<cite>tf.keras.metrics.BinaryAccuracy</cite>,
+<cite>tf.keras.metrics.CategoricalAccuracy</cite>,
+<cite>tf.keras.metrics.SparseCategoricalAccuracy</cite> based on the loss
+function used and the model output shape. We do a similar
+conversion for the strings ‘crossentropy’ and ‘ce’ as well.</p>
+</dd>
+<dt><strong>loss_weights: List or dict of floats</strong></dt><dd><p>Scalars to weight the loss contributions of different model
+outputs. The loss value that will be minimized by the model will then
+be the <em>weighted sum</em> of all individual losses, weighted by the
+<cite>loss_weights</cite> coefficients.
+If a list, it is expected to have a 1:1 mapping to the model’s
+outputs. If a dict, it is expected to map output names (strings)
+to scalar coefficients.</p>
+</dd>
+<dt><strong>weighted_metrics: list of metrics</strong></dt><dd><p>List of metrics to be evaluated and weighted by
+<cite>sample_weight</cite> or <cite>class_weight</cite> during training and testing.</p>
+</dd>
+<dt><strong>run_eagerly: bool (default=False)</strong></dt><dd><p>If <cite>True</cite>, this <cite>Model</cite>’s logic will not be wrapped
+in a <cite>tf.function</cite>. Recommended to leave
+this as <cite>None</cite> unless your <cite>Model</cite> cannot be run inside a
+<cite>tf.function</cite>. <cite>run_eagerly=True</cite> is not supported when using
+<cite>tf.distribute.experimental.ParameterServerStrategy</cite>.</p>
+</dd>
+<dt><strong>steps_per_execution: int (default=1)</strong></dt><dd><p>The number of batches to run during each
+<cite>tf.function</cite> call. Running multiple batches
+inside a single <cite>tf.function</cite> call can greatly improve performance
+on TPUs or small models with a large Python overhead.
+At most, one full epoch will be run each
+execution. If a number larger than the size of the epoch is passed,
+the execution will be truncated to the size of the epoch.
+Note that if <cite>steps_per_execution</cite> is set to <cite>N</cite>,
+<cite>Callback.on_batch_begin</cite> and <cite>Callback.on_batch_end</cite> methods
+will only be called every <cite>N</cite> batches
+(i.e. before/after each <cite>tf.function</cite> execution).</p>
+</dd>
+<dt><strong>**kwargs: key, value arguments</strong></dt><dd><p>Arguments supported for backwards compatibility only.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>None: None</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domains</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.fit.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit Model. Note that <code class="docutils literal notranslate"><span class="pre">fit</span></code> does not reset
+the model but extend the training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array or Tensor</span></dt><dd><p>Source input data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array or Tensor (default=None)</span></dt><dd><p>Source output data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. If None, the <cite>Xt</cite> argument
+given in <cite>init</cite> is used.</p>
+</dd>
+<dt><strong>yt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. If None, the <cite>Xt</cite> argument
+given in <cite>init</cite> is used.</p>
+</dd>
+<dt><strong>domains</strong><span class="classifier">array (default=None)</span></dt><dd><p>Vector giving the domain for each source
+data. Can be used for multisource purpose.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of the model
+(epochs, batch_size, callbacks…).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">returns an instance of self</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.get_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN.get_params" title="Permalink to this definition"></a></dt>
+<dd><p>Get parameters for this estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>deep</strong><span class="classifier">bool, default=True</span></dt><dd><p>Not used, here for scikit-learn compatibility.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>Parameter names mapped to their values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_queue_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_multiprocessing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.predict.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN.predict" title="Permalink to this definition"></a></dt>
+<dd><p>Generates output predictions for the input samples.</p>
+<p>Computation is done in batches. This method is designed for performance in
+large scale inputs. For small amount of inputs that fit in one batch,
+directly using <cite>__call__()</cite> is recommended for faster execution, e.g.,
+<cite>model(x)</cite>, or <cite>model(x, training=False)</cite> if you have layers such as
+<cite>tf.keras.layers.BatchNormalization</cite> that behaves differently during
+inference. Also, note the fact that test loss is not affected by
+regularization layers like noise and dropout.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x: array</strong></dt><dd><p>Input samples.</p>
+</dd>
+<dt><strong>batch_size: int (default=`None`)</strong></dt><dd><p>Number of samples per batch.
+If unspecified, <cite>batch_size</cite> will default to 32.
+Do not specify the <cite>batch_size</cite> if your data is in the
+form of dataset, generators, or <cite>keras.utils.Sequence</cite> instances
+(since they generate batches).</p>
+</dd>
+<dt><strong>verbose: int (default=0)</strong></dt><dd><p>Verbosity mode, 0 or 1.</p>
+</dd>
+<dt><strong>steps: int (default=None)</strong></dt><dd><p>Total number of steps (batches of samples)
+before declaring the prediction round finished.
+Ignored with the default value of <cite>None</cite>. If x is a <cite>tf.data</cite>
+dataset and <cite>steps</cite> is None, <cite>predict()</cite> will
+run until the input dataset is exhausted.</p>
+</dd>
+<dt><strong>callbacks: List of `keras.callbacks.Callback` instances.</strong></dt><dd><p>List of callbacks to apply during prediction.
+See [callbacks](/api_docs/python/tf/keras/callbacks).</p>
+</dd>
+<dt><strong>max_queue_size: int (default=10)</strong></dt><dd><p>Used for generator or <cite>keras.utils.Sequence</cite>
+input only. Maximum size for the generator queue.
+If unspecified, <cite>max_queue_size</cite> will default to 10.</p>
+</dd>
+<dt><strong>workers: int (default=1)</strong></dt><dd><p>Used for generator or <cite>keras.utils.Sequence</cite> input
+only. Maximum number of processes to spin up when using
+process-based threading. If unspecified, <cite>workers</cite> will default
+to 1.</p>
+</dd>
+<dt><strong>use_multiprocessing: bool (default=False)</strong></dt><dd><p>Used for generator or <cite>keras.utils.Sequence</cite> input only.
+If <cite>True</cite>, use process-based
+threading. If unspecified, <cite>use_multiprocessing</cite> will default to
+<cite>False</cite>. Note that because this implementation relies on
+multiprocessing, you should not pass non-picklable arguments to
+the generator as they can’t be passed easily to children processes.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>Numpy array(s) of predictions.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN.predict_disc">
+<span class="sig-name descname"><span class="pre">predict_disc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.predict_disc.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN.predict_disc" title="Permalink to this definition"></a></dt>
+<dd><p>Return predictions of the discriminator on the encoded features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_disc</strong><span class="classifier">array</span></dt><dd><p>predictions of discriminator network</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN.predict_task">
+<span class="sig-name descname"><span class="pre">predict_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.predict_task.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN.predict_task" title="Permalink to this definition"></a></dt>
+<dd><p>Return predictions of the task on the encoded features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_task</strong><span class="classifier">array</span></dt><dd><p>predictions of task network</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN.score" title="Permalink to this definition"></a></dt>
+<dd><p>Return adaptation score.</p>
+<p>For parameter-based methods, the estimator score
+on X, y is computed.</p>
+<p>For instance-based and feature-based methods,
+the normalized discrepancy distance is computed
+between the reweighted/transformed source input
+data and the target input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array (default=None)</span></dt><dd><p>Not used for instance and feature based methods.
+The training source data are used instead.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array (default=None)</span></dt><dd><p>Not used for instance and feature based methods.
+The training source data are used instead.</p>
+</dd>
+<dt><strong>sample_weight</strong><span class="classifier">array (default=None)</span></dt><dd><p>Not used for instance and feature based methods.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>score</strong><span class="classifier">float</span></dt><dd><p>Adaptation score.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN.score_estimator">
+<span class="sig-name descname"><span class="pre">score_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.score_estimator.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN.score_estimator" title="Permalink to this definition"></a></dt>
+<dd><p>Return the evaluation of the model on X, y.</p>
+<p>Call <cite>evaluate</cite> on tensorflow Model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>output data</p>
+</dd>
+<dt><strong>sample_weight</strong><span class="classifier">array (default=None)</span></dt><dd><p>Sample weights</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>score</strong><span class="classifier">float</span></dt><dd><p>Score.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.set_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN.set_params" title="Permalink to this definition"></a></dt>
+<dd><p>Set the parameters of this estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>**params</strong><span class="classifier">dict</span></dt><dd><p>Estimator parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">estimator instance</span></dt><dd><p>Estimator instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.CDAN.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_cdan.transform.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.CDAN.transform" title="Permalink to this definition"></a></dt>
+<dd><p>Return the encoded features of X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>X_enc</strong><span class="classifier">array</span></dt><dd><p>predictions of encoder network</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<h2> Examples </h2><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="../_images/examples_Two_moons_6_0.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="../examples/Two_moons.html">
+          <span class="std std-ref">Two Moons</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-clear"></div></section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Antoine de Mathelin, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

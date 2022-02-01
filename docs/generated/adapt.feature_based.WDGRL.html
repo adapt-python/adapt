@@ -18,8 +18,8 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script src="../_static/js/custom.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -49,16 +49,15 @@
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.BaseDeepFeature.html">BaseDeepFeature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.FE.html">FE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CORAL.html">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DANN.html">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.ADDA.html">ADDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.mSDA.html">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CDAN.html">CDAN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MCD.html">MCD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MDD.html">MDD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#">WDGRL</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
@@ -67,6 +66,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.WANN.html">WANN</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
@@ -75,9 +75,20 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.cov_distance.html">cov_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.j_score.html">j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.frechet_distance.html">frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.normalized_frechet_distance.html">normalized_frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.domain_classifier.html">domain_classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.reverse_validation.html">reverse_validation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.accuracy.html">accuracy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_arrays.html">check_arrays</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_one_array.html">check_one_array</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_estimator.html">check_estimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_network.html">check_network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.get_default_encoder.html">get_default_encoder</a></li>
@@ -86,6 +97,8 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.GradientHandler.html">GradientHandler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.make_classification_da.html">make_classification_da</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.make_regression_da.html">make_regression_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.set_random_seed.html">set_random_seed</a></li>
 </ul>
 </li>
 </ul>
@@ -94,7 +107,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Src-Only">Src Only</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#mSDA">mSDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Instance-Based">Instance Based</a></li>
 </ul>
@@ -106,7 +118,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#ADDA">ADDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DeepCORAL">DeepCORAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#mSDA">mSDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#CDAN">CDAN</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/Rotation.html">Rotation</a><ul>
@@ -115,7 +131,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#CORAL">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#DANN">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#ADDA">ADDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#mSDA">mSDA</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/Regression.html">Toy Regression</a><ul>
@@ -203,7 +218,7 @@
 <h1><a class="reference internal" href="../contents.html#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>.WDGRL<a class="headerlink" href="#adapt-feature-based-wdgrl" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adapt.feature_based.WDGRL">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">adapt.feature_based.</span></span><span class="sig-name descname"><span class="pre">WDGRL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discriminator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mse'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.feature_based.</span></span><span class="sig-name descname"><span class="pre">WDGRL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL" title="Permalink to this definition"></a></dt>
 <dd><p>WDGRL (Wasserstein Distance Guided Representation Learning) is an
 unsupervised domain adaptation method on the model of the 
 <span class="xref std std-ref">DANN</span>. In WDGRL the discriminator
@@ -242,7 +257,11 @@ neurons per layer and ReLU activation is used as task network.</p>
 <dt><strong>discriminator</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Discriminator netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a two layers network with 10
 neurons per layer and ReLU activation is used as discriminator
 network. Note that the output shape of the discriminator should
-be <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">1)</span></code>.</p>
+be <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">1)</span></code> and a <code class="docutils literal notranslate"><span class="pre">sigmoid</span></code> activation should be used.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target input data.</p>
+</dd>
+<dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data.</p>
 </dd>
 <dt><strong>lambda_</strong><span class="classifier">float or None (default=1)</span></dt><dd><p>Trade-off parameter. This parameter gives the trade-off
 for the encoder between learning the task and matching
@@ -259,20 +278,17 @@ the gradient penalty term is in the same order than the
 “disc loss”. If <cite>gamma=0</cite>, no penalty is given on the
 discriminator gradient.</p>
 </dd>
-<dt><strong>loss</strong><span class="classifier">string or tensorflow loss (default=”mse”)</span></dt><dd><p>Loss function used for the task.</p>
+<dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">estimator</span></code> or not.</p>
 </dd>
-<dt><strong>metrics</strong><span class="classifier">dict or list of string or tensorflow metrics (default=None)</span></dt><dd><p>Metrics given to the model. If a list is provided,
-metrics are used on both <code class="docutils literal notranslate"><span class="pre">task</span></code> and <code class="docutils literal notranslate"><span class="pre">discriminator</span></code>
-outputs. To give seperated metrics, please provide a
-dict of metrics list with <code class="docutils literal notranslate"><span class="pre">&quot;task&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;disc&quot;</span></code> as keys.</p>
-</dd>
-<dt><strong>optimizer</strong><span class="classifier">string or tensorflow optimizer (default=None)</span></dt><dd><p>Optimizer of the model. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the
-optimizer is set to tf.keras.optimizers.Adam(0.001)</p>
-</dd>
-<dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">encoder</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code> and
-<code class="docutils literal notranslate"><span class="pre">discriminator</span></code> or not.</p>
+<dt><strong>verbose</strong><span class="classifier">int (default=1)</span></dt><dd><p>Verbosity level.</p>
 </dd>
 <dt><strong>random_state</strong><span class="classifier">int (default=None)</span></dt><dd><p>Seed of random generator.</p>
+</dd>
+<dt><strong>params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given at the different level of the adapt object.
+It can be, for instance, compile or fit parameters of the
+estimator or kernel parameters etc…
+Accepted parameters can be found by calling the method
+<code class="docutils literal notranslate"><span class="pre">_get_legal_params(params)</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -303,12 +319,12 @@ optimizer is set to tf.keras.optimizers.Adam(0.001)</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">yt</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">Xt</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">WDGRL</span><span class="p">(</span><span class="n">lambda_</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">history_</span><span class="p">[</span><span class="s2">&quot;task_t&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">0.0223...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">score_estimator</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">)</span>
+<span class="go">0.0231...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">WDGRL</span><span class="p">(</span><span class="n">lambda_</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">history_</span><span class="p">[</span><span class="s2">&quot;task_t&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">0.0044...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">score_estimator</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">)</span>
+<span class="go">0.0014...</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -319,9 +335,6 @@ optimizer is set to tf.keras.optimizers.Adam(0.001)</p>
 <dt><strong>task_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>task network.</p>
 </dd>
 <dt><strong>discriminator_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>discriminator network.</p>
-</dd>
-<dt><strong>model_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted model: the union of <code class="docutils literal notranslate"><span class="pre">encoder_</span></code>,
-<code class="docutils literal notranslate"><span class="pre">task_</span></code> and <code class="docutils literal notranslate"><span class="pre">discriminator_</span></code> networks.</p>
 </dd>
 <dt><strong>history_</strong><span class="classifier">dict</span></dt><dd><p>history of the losses and metrics across the epochs.
 If <code class="docutils literal notranslate"><span class="pre">yt</span></code> is given in <code class="docutils literal notranslate"><span class="pre">fit</span></code> method, target metrics
@@ -337,57 +350,127 @@ and losses are recorded too.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.__init__" title="adapt.feature_based.WDGRL.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([encoder, task, discriminator, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.__init__" title="adapt.feature_based.WDGRL.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([encoder, task, discriminator, Xt, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.create_model" title="adapt.feature_based.WDGRL.create_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_model</span></code></a>(inputs_Xs, inputs_Xt)</p></td>
-<td><p>Create model.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.compile" title="adapt.feature_based.WDGRL.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a>([optimizer, loss, metrics, ...])</p></td>
+<td><p>Configures the model for training.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.fit" title="adapt.feature_based.WDGRL.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(Xs, ys, Xt[, yt])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.fit" title="adapt.feature_based.WDGRL.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X[, y, Xt, yt, domains])</p></td>
 <td><p>Fit Model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.get_loss" title="adapt.feature_based.WDGRL.get_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_loss</span></code></a>(inputs_ys, task_src, task_tgt, ...)</p></td>
-<td><p>Get loss.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.get_params" title="adapt.feature_based.WDGRL.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<td><p>Get parameters for this estimator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.get_metrics" title="adapt.feature_based.WDGRL.get_metrics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metrics</span></code></a>(inputs_ys, inputs_yt, task_src, ...)</p></td>
-<td><p>Get Metrics.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.predict" title="adapt.feature_based.WDGRL.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, batch_size, verbose, steps, ...])</p></td>
+<td><p>Generates output predictions for the input samples.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.predict" title="adapt.feature_based.WDGRL.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
-<td><p>Return predictions of the task network on the encoded features.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.predict_disc" title="adapt.feature_based.WDGRL.predict_disc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_disc</span></code></a>(X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.predict_disc" title="adapt.feature_based.WDGRL.predict_disc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_disc</span></code></a>(X)</p></td>
 <td><p>Return predictions of the discriminator on the encoded features.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.predict_features" title="adapt.feature_based.WDGRL.predict_features"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_features</span></code></a>(X)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.predict_task" title="adapt.feature_based.WDGRL.predict_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_task</span></code></a>(X)</p></td>
+<td><p>Return predictions of the task on the encoded features.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.score" title="adapt.feature_based.WDGRL.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>([X, y, sample_weight])</p></td>
+<td><p>Return adaptation score.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.score_estimator" title="adapt.feature_based.WDGRL.score_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score_estimator</span></code></a>(X, y[, sample_weight])</p></td>
+<td><p>Return the evaluation of the model on X, y.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.set_params" title="adapt.feature_based.WDGRL.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
+<td><p>Set the parameters of this estimator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.WDGRL.transform" title="adapt.feature_based.WDGRL.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(X)</p></td>
 <td><p>Return the encoded features of X.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.feature_based.WDGRL.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discriminator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mse'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.__init__.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discriminator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.__init__.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.feature_based.WDGRL.create_model">
-<span class="sig-name descname"><span class="pre">create_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs_Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs_Xt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.create_model.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.create_model" title="Permalink to this definition"></a></dt>
-<dd><p>Create model.</p>
-<p>Give the model architecture from the Xs, Xt
-inputs to the outputs.</p>
+<dt class="sig sig-object py" id="adapt.feature_based.WDGRL.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighted_metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_eagerly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps_per_execution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.compile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.compile" title="Permalink to this definition"></a></dt>
+<dd><p>Configures the model for training.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>inputs_Xs</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for Xs entries.</p>
+<dt><strong>optimizer: str or `tf.keras.optimizer` instance</strong></dt><dd><p>Optimizer</p>
 </dd>
-<dt><strong>inputs_Xt</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for Xt entries.</p>
+<dt><strong>loss: str or `tf.keras.losses.Loss` instance</strong></dt><dd><p>Loss function. A loss function is any callable
+with the signature <cite>loss = fn(y_true, y_pred)</cite>,
+where <cite>y_true</cite> are the ground truth values, and
+<cite>y_pred</cite> are the model’s predictions.
+<cite>y_true</cite> should have shape
+<cite>(batch_size, d0, .. dN)</cite> (except in the case of
+sparse loss functions such as
+sparse categorical crossentropy which expects integer arrays of shape
+<cite>(batch_size, d0, .. dN-1)</cite>).
+<cite>y_pred</cite> should have shape <cite>(batch_size, d0, .. dN)</cite>.
+The loss function should return a float tensor.
+If a custom <cite>Loss</cite> instance is
+used and reduction is set to <cite>None</cite>, return value has shape
+<cite>(batch_size, d0, .. dN-1)</cite> i.e. per-sample or per-timestep loss
+values; otherwise, it is a scalar. If the model has multiple outputs,
+you can use a different loss on each output by passing a dictionary
+or a list of losses. The loss value that will be minimized by the
+model will then be the sum of all individual losses, unless
+<cite>loss_weights</cite> is specified.</p>
+</dd>
+<dt><strong>metrics: list of str or list of `tf.keras.metrics.Metric` instance</strong></dt><dd><p>List of metrics to be evaluated by the model during training
+and testing. Typically you will use <cite>metrics=[‘accuracy’]</cite>. A
+function is any callable with the signature <cite>result = fn(y_true,
+y_pred)</cite>. To specify different metrics for different outputs of a
+multi-output model, you could also pass a dictionary, such as
+<cite>metrics={‘output_a’: ‘accuracy’, ‘output_b’: [‘accuracy’, ‘mse’]}</cite>.
+You can also pass a list to specify a metric or a list of metrics
+for each output, such as <cite>metrics=[[‘accuracy’], [‘accuracy’, ‘mse’]]</cite>
+or <cite>metrics=[‘accuracy’, [‘accuracy’, ‘mse’]]</cite>. When you pass the
+strings ‘accuracy’ or ‘acc’, we convert this to one of
+<cite>tf.keras.metrics.BinaryAccuracy</cite>,
+<cite>tf.keras.metrics.CategoricalAccuracy</cite>,
+<cite>tf.keras.metrics.SparseCategoricalAccuracy</cite> based on the loss
+function used and the model output shape. We do a similar
+conversion for the strings ‘crossentropy’ and ‘ce’ as well.</p>
+</dd>
+<dt><strong>loss_weights: List or dict of floats</strong></dt><dd><p>Scalars to weight the loss contributions of different model
+outputs. The loss value that will be minimized by the model will then
+be the <em>weighted sum</em> of all individual losses, weighted by the
+<cite>loss_weights</cite> coefficients.
+If a list, it is expected to have a 1:1 mapping to the model’s
+outputs. If a dict, it is expected to map output names (strings)
+to scalar coefficients.</p>
+</dd>
+<dt><strong>weighted_metrics: list of metrics</strong></dt><dd><p>List of metrics to be evaluated and weighted by
+<cite>sample_weight</cite> or <cite>class_weight</cite> during training and testing.</p>
+</dd>
+<dt><strong>run_eagerly: bool (default=False)</strong></dt><dd><p>If <cite>True</cite>, this <cite>Model</cite>’s logic will not be wrapped
+in a <cite>tf.function</cite>. Recommended to leave
+this as <cite>None</cite> unless your <cite>Model</cite> cannot be run inside a
+<cite>tf.function</cite>. <cite>run_eagerly=True</cite> is not supported when using
+<cite>tf.distribute.experimental.ParameterServerStrategy</cite>.</p>
+</dd>
+<dt><strong>steps_per_execution: int (default=1)</strong></dt><dd><p>The number of batches to run during each
+<cite>tf.function</cite> call. Running multiple batches
+inside a single <cite>tf.function</cite> call can greatly improve performance
+on TPUs or small models with a large Python overhead.
+At most, one full epoch will be run each
+execution. If a number larger than the size of the epoch is passed,
+the execution will be truncated to the size of the epoch.
+Note that if <cite>steps_per_execution</cite> is set to <cite>N</cite>,
+<cite>Callback.on_batch_begin</cite> and <cite>Callback.on_batch_end</cite> methods
+will only be called every <cite>N</cite> batches
+(i.e. before/after each <cite>tf.function</cite> execution).</p>
+</dd>
+<dt><strong>**kwargs: key, value arguments</strong></dt><dd><p>Arguments supported for backwards compatibility only.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Outputs tensors of the model
-(used to compute the loss).</p>
-</dd>
+<dt>None: None</dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -395,20 +478,24 @@ inputs to the outputs.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.feature_based.WDGRL.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.fit.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.fit" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domains</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.fit.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Fit Model. Note that <code class="docutils literal notranslate"><span class="pre">fit</span></code> does not reset
 the model but extend the training.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>Xs</strong><span class="classifier">numpy array</span></dt><dd><p>Source input data.</p>
+<dt><strong>X</strong><span class="classifier">array or Tensor</span></dt><dd><p>Source input data.</p>
 </dd>
-<dt><strong>ys</strong><span class="classifier">numpy array</span></dt><dd><p>Source output data.</p>
+<dt><strong>y</strong><span class="classifier">array or Tensor (default=None)</span></dt><dd><p>Source output data.</p>
 </dd>
-<dt><strong>Xt</strong><span class="classifier">numpy array</span></dt><dd><p>Target input data.</p>
+<dt><strong>Xt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. If None, the <cite>Xt</cite> argument
+given in <cite>init</cite> is used.</p>
 </dd>
-<dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data. <cite>yt</cite> is only used
-for validation metrics.</p>
+<dt><strong>yt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. If None, the <cite>Xt</cite> argument
+given in <cite>init</cite> is used.</p>
+</dd>
+<dt><strong>domains</strong><span class="classifier">array (default=None)</span></dt><dd><p>Vector giving the domain for each source
+data. Can be used for multisource purpose.</p>
 </dd>
 <dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of the model
 (epochs, batch_size, callbacks…).</p>
@@ -424,47 +511,19 @@ for validation metrics.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.feature_based.WDGRL.get_loss">
-<span class="sig-name descname"><span class="pre">get_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs_ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_tgt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disc_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disc_tgt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disc_grad</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.get_loss.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.get_loss" title="Permalink to this definition"></a></dt>
-<dd><p>Get loss.</p>
+<dt class="sig sig-object py" id="adapt.feature_based.WDGRL.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.get_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.get_params" title="Permalink to this definition"></a></dt>
+<dd><p>Get parameters for this estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>inputs_ys</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for ys entries.</p>
-</dd>
-<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model outputs tensors.</p>
+<dt><strong>deep</strong><span class="classifier">bool, default=True</span></dt><dd><p>Not used, here for scikit-learn compatibility.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>loss</strong><span class="classifier">tf Tensor</span></dt><dd><p>Model loss</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adapt.feature_based.WDGRL.get_metrics">
-<span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs_ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs_yt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_tgt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disc_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disc_tgt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disc_grad</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.get_metrics.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.get_metrics" title="Permalink to this definition"></a></dt>
-<dd><p>Get Metrics.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>inputs_ys</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for ys entries.</p>
-</dd>
-<dt><strong>inputs_yt</strong><span class="classifier">InputLayer</span></dt><dd><p>Input layer for yt entries.</p>
-</dd>
-<dt><strong>outputs</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model outputs tensors.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>metrics</strong><span class="classifier">dict of tf Tensors</span></dt><dd><p>Model metrics. dict keys give the
-name of the metric and dict values
-give the corresponding Tensor.</p>
+<dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>Parameter names mapped to their values.</p>
 </dd>
 </dl>
 </dd>
@@ -473,18 +532,58 @@ give the corresponding Tensor.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.feature_based.WDGRL.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.predict.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.predict" title="Permalink to this definition"></a></dt>
-<dd><p>Return predictions of the task network on the encoded features.</p>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_queue_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_multiprocessing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.predict.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.predict" title="Permalink to this definition"></a></dt>
+<dd><p>Generates output predictions for the input samples.</p>
+<p>Computation is done in batches. This method is designed for performance in
+large scale inputs. For small amount of inputs that fit in one batch,
+directly using <cite>__call__()</cite> is recommended for faster execution, e.g.,
+<cite>model(x)</cite>, or <cite>model(x, training=False)</cite> if you have layers such as
+<cite>tf.keras.layers.BatchNormalization</cite> that behaves differently during
+inference. Also, note the fact that test loss is not affected by
+regularization layers like noise and dropout.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+<dt><strong>x: array</strong></dt><dd><p>Input samples.</p>
+</dd>
+<dt><strong>batch_size: int (default=`None`)</strong></dt><dd><p>Number of samples per batch.
+If unspecified, <cite>batch_size</cite> will default to 32.
+Do not specify the <cite>batch_size</cite> if your data is in the
+form of dataset, generators, or <cite>keras.utils.Sequence</cite> instances
+(since they generate batches).</p>
+</dd>
+<dt><strong>verbose: int (default=0)</strong></dt><dd><p>Verbosity mode, 0 or 1.</p>
+</dd>
+<dt><strong>steps: int (default=None)</strong></dt><dd><p>Total number of steps (batches of samples)
+before declaring the prediction round finished.
+Ignored with the default value of <cite>None</cite>. If x is a <cite>tf.data</cite>
+dataset and <cite>steps</cite> is None, <cite>predict()</cite> will
+run until the input dataset is exhausted.</p>
+</dd>
+<dt><strong>callbacks: List of `keras.callbacks.Callback` instances.</strong></dt><dd><p>List of callbacks to apply during prediction.
+See [callbacks](/api_docs/python/tf/keras/callbacks).</p>
+</dd>
+<dt><strong>max_queue_size: int (default=10)</strong></dt><dd><p>Used for generator or <cite>keras.utils.Sequence</cite>
+input only. Maximum size for the generator queue.
+If unspecified, <cite>max_queue_size</cite> will default to 10.</p>
+</dd>
+<dt><strong>workers: int (default=1)</strong></dt><dd><p>Used for generator or <cite>keras.utils.Sequence</cite> input
+only. Maximum number of processes to spin up when using
+process-based threading. If unspecified, <cite>workers</cite> will default
+to 1.</p>
+</dd>
+<dt><strong>use_multiprocessing: bool (default=False)</strong></dt><dd><p>Used for generator or <cite>keras.utils.Sequence</cite> input only.
+If <cite>True</cite>, use process-based
+threading. If unspecified, <cite>use_multiprocessing</cite> will default to
+<cite>False</cite>. Note that because this implementation relies on
+multiprocessing, you should not pass non-picklable arguments to
+the generator as they can’t be passed easily to children processes.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>predictions of task network</p>
+<dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>Numpy array(s) of predictions.</p>
 </dd>
 </dl>
 </dd>
@@ -512,8 +611,105 @@ give the corresponding Tensor.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.feature_based.WDGRL.predict_features">
-<span class="sig-name descname"><span class="pre">predict_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.predict_features.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.predict_features" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.feature_based.WDGRL.predict_task">
+<span class="sig-name descname"><span class="pre">predict_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.predict_task.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.predict_task" title="Permalink to this definition"></a></dt>
+<dd><p>Return predictions of the task on the encoded features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_task</strong><span class="classifier">array</span></dt><dd><p>predictions of task network</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.WDGRL.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.score" title="Permalink to this definition"></a></dt>
+<dd><p>Return adaptation score.</p>
+<p>For parameter-based methods, the estimator score
+on X, y is computed.</p>
+<p>For instance-based and feature-based methods,
+the normalized discrepancy distance is computed
+between the reweighted/transformed source input
+data and the target input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array (default=None)</span></dt><dd><p>Not used for instance and feature based methods.
+The training source data are used instead.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array (default=None)</span></dt><dd><p>Not used for instance and feature based methods.
+The training source data are used instead.</p>
+</dd>
+<dt><strong>sample_weight</strong><span class="classifier">array (default=None)</span></dt><dd><p>Not used for instance and feature based methods.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>score</strong><span class="classifier">float</span></dt><dd><p>Adaptation score.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.WDGRL.score_estimator">
+<span class="sig-name descname"><span class="pre">score_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.score_estimator.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.score_estimator" title="Permalink to this definition"></a></dt>
+<dd><p>Return the evaluation of the model on X, y.</p>
+<p>Call <cite>evaluate</cite> on tensorflow Model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>output data</p>
+</dd>
+<dt><strong>sample_weight</strong><span class="classifier">array (default=None)</span></dt><dd><p>Sample weights</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>score</strong><span class="classifier">float</span></dt><dd><p>Score.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.WDGRL.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.set_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.set_params" title="Permalink to this definition"></a></dt>
+<dd><p>Set the parameters of this estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>**params</strong><span class="classifier">dict</span></dt><dd><p>Estimator parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">estimator instance</span></dt><dd><p>Estimator instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.WDGRL.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_wdgrl.transform.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.WDGRL.transform" title="Permalink to this definition"></a></dt>
 <dd><p>Return the encoded features of X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -533,7 +729,21 @@ give the corresponding Tensor.</p>
 
 </dd></dl>
 
-<h2> Examples </h2></section>
+<h2> Examples </h2><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="../_images/examples_Two_moons_6_0.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="../examples/Two_moons.html">
+          <span class="std std-ref">Two Moons</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-clear"></div></section>
 
 
            </div>
