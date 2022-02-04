@@ -71,15 +71,15 @@ yt = 0.2 * Xt[:, 0]
 
 # With lambda set to zero, no adaptation is performed.
 model = DANN(lambda_=0., random_state=0)
-model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-print(model.history_["task_t"][-1]) # This gives the target score at the last training epoch.
->>> 0.0240
+model.fit(Xs, ys, Xt=Xt, epochs=100, verbose=0)
+print(model.evaluate(Xt, yt)) # This gives the target score at the last training epoch.
+>>> 0.0231
 
 # With lambda set to 0.1, the shift is corrected, the target score is then improved.
 model = DANN(lambda_=0.1, random_state=0)
-model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-print(model.history_["task_t"][-1])
->>> 0.0022
+model.fit(Xs, ys, Xt=Xt, epochs=100, verbose=0)
+model.evaluate(Xt, yt)
+>>> 0.0011
 ```
 
 ## Examples
