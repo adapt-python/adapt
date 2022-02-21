@@ -141,6 +141,9 @@ def make_insert_doc(estimators=["estimator"]):
             new_doc = doc
 
         func.__doc__ = new_doc
+        
+        if str(inspect.signature(func)) == "(*args, **kwargs)":
+            func.__signature__ = inspect.signature(func.__init__)
 
         return func
     return insert_base_doc

@@ -11,5 +11,9 @@ from ._mcd import MCD
 from ._mdd import MDD
 from ._wdgrl import WDGRL
 from ._cdan import CDAN
+from ._sa import SA
+from ._fmmd import fMMD
+from ._ccsa import CCSA
 
-__all__ = ["FE", "CORAL", "DeepCORAL", "ADDA", "DANN", "MCD", "MDD", "WDGRL", "CDAN"]
+__all__ = ["FE", "CORAL", "DeepCORAL", "ADDA", "DANN",
+           "MCD", "MDD", "WDGRL", "CDAN", "SA", "fMMD", "CCSA"]

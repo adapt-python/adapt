@@ -59,6 +59,11 @@ class FE(BaseAdaptEstimator):
 
     Attributes
     ----------
+    estimator_ : object
+        Fitted estimator.
+        
+    n_domains_ : int
+        Number of domains given in fit.
         
     See also
     --------
