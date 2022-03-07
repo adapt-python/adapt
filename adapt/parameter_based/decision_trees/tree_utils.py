@@ -1,3 +1,4 @@
+import copy
 import numpy as np
 
 def depth_tree(dt,node=0):
@@ -51,6 +52,64 @@ def find_parent_vtree(tree, i_node):
             p = p
 
     return p, b
+
+def isinrule(rule, split):
+    f,t = split
+    
+    feats, ths, bools = rule
+    for k,f2 in enumerate(feats):
+
+        if f2 == f and t == ths[k]:
+            return 1,bools[k]
+    return 0,0
+
+def isdisj_feat(ths1,bools1,ths2,bools2):
+    if np.sum(bools1 == -1) != 0:
+        max_th1 = np.amin(ths1[bools1==-1])
+    else:
+        max_th1 = np.inf
+        
+    if np.sum(bools1 == 1) != 0:
+        min_th1 = np.amax(ths1[bools1==1])
+    else:
+        min_th1 = - np.inf
+    
+    if np.sum(bools2 == -1) != 0:
+        max_th2 = np.amin(ths2[bools2==-1])
+    else: 
+        max_th2 = np.inf
+        
+    if np.sum(bools2 == 1) != 0:
+        min_th2 = np.amax(ths2[bools2==1])  
+    else:
+        min_th2 = - np.inf
+    
+    if ( min_th2> min_th1 and min_th2< max_th1 ) or ( max_th2> min_th1 and max_th2< max_th1 ) or ( max_th1> min_th2 and max_th1< max_th2 ) or ( min_th1> min_th2 and min_th1< max_th2 ) or ( min_th1 == min_th2 and max_th1 == max_th2 )   :
+        return 0
+    else:
+        return 1
+    
+def isdisj(rule1,rule2):
+    feats1, ths1, bools1 = rule1
+    feats2, ths2, bools2 = rule2
+    if np.array(rule1).size == 0 or np.array(rule2).size == 0 :
+        return 0
+    isdj = 0
+
+    for phi in feats1:
+        
+        if phi in feats2:
+            
+            ths1_f = ths1[ feats1 == phi ]
+            ths2_f = ths2[ feats2 == phi ]
+            bools1_f = bools1[ feats1 == phi ]
+            bools2_f = bools2[ feats2 == phi ]
+            
+            if isdisj_feat(ths1_f,bools1_f,ths2_f,bools2_f):
+                isdj = 1
+
+    
+    return isdj
 
 def extract_rule_vtree(tree,node):
     
@@ -370,3 +429,108 @@ def contain_leaf_to_not_prune(decisiontree,cl=1,node=0,Nkmin=1,threshold=1,coeff
         return True
     else:
         return False
+    
+# =============================================================================
+# 
+# =============================================================================    
+    
+
+def coherent_new_split(phi,th,rule):
+    #coherent_regardless_class = 0
+    #still_splitting = 1
+    inrule, sense = isinrule(rule,(phi,th))
+
+    if inrule:
+        return 0,sense
+    
+    feats, ths, bools = rule
+    
+    if phi not in feats:
+        return 1,0
+    else:
+        if np.sum((feats == phi)*(bools==-1)) != 0:
+            max_th = np.amin(ths[(feats == phi)*(bools==-1)])
+        else:
+            max_th = np.inf
+        
+        if np.sum((feats == phi)*(bools==1)) != 0:
+            min_th = np.amax(ths[(feats == phi)*(bools==1)])
+        else:
+            min_th = - np.inf
+        
+        if th >= max_th :
+            return 0,-1
+        elif th <= min_th:
+            return 0,1
+        else:
+            return 1,0
+      
+def all_coherent_splits(rule,all_splits):
+
+    inds = np.zeros(all_splits.shape[0],dtype=bool)
+    splits = copy.copy(all_splits)
+    for c,split in enumerate(all_splits):
+        phi, th = split
+        #if not isinrule(rule,split):
+        coh,sense = coherent_new_split(phi,th,rule)
+        if coh:
+            inds[c] = 1
+       
+    return splits[inds]
+
+def new_random_split(p,all_splits):
+    inds = np.arange(0,all_splits.shape[0])
+    ind = int(np.random.choice(inds,p=p))
+    return all_splits[ind]
+
+
+def filter_feature(splits,feats):
+    positive_splits = list()
+    negative_splits = list()
+    
+    for s in splits :
+        phi,th = s
+        if phi in feats:
+            positive_splits.append(s)
+        else:
+            negative_splits.append(s)
+            
+    return np.array(positive_splits), np.array(negative_splits)
+
+# =============================================================================
+# 
+# =============================================================================
+def liste_non_coherent_splits(dtree,rule,node=0):
+    
+    indexes_subtree = sub_nodes(dtree.tree_,node)
+    
+    phis = list()
+    ths = list()
+    b = list()
+    indexes = list()
+    
+    for n in indexes_subtree:
+        phi,th = dtree.tree_.feature[n],dtree.tree_.threshold[n]
+        coh,non_coherent_sense = coherent_new_split(phi,th,rule)
+        if not coh :
+            phis.append(phi)
+            ths.append(th)
+            b.append(non_coherent_sense)
+            indexes.append(n)
+            
+    return indexes,phis,ths,b
+
+def bounds_rule(rule,n_features):
+    phis,ths,bs = rule
+    bound_infs = np.repeat(-np.inf,n_features)
+    bound_sups = np.repeat(np.inf,n_features)
+    
+    for k,p in enumerate(phis) :
+        if bs[k] == -1 and bound_sups[p] > ths[k]:
+            bound_sups[p]=ths[k]
+        if bs[k] == 1 and bound_infs[p] < ths[k]:
+            bound_infs[p]=ths[k]
+            
+    return bound_infs,bound_sups
+
+
