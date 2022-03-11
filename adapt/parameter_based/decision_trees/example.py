@@ -15,17 +15,27 @@ sys.path.insert(0, '../')
 import transfer_tree as TL
 
 methods = [
+    'relab',
     'ser',
     'strut',
     'ser_nr',
+    'ser_nr_lambda',
+    'strut_nd',
+    'strut_lambda',
+    'strut_lambda_np'
 #    'strut_hi'
 ]
 labels = [
-    'SER',
-    'STRUT',
-    'SER$^{*}$',
+    'relab',
+    '$SER$',
+    '$STRUT$',
+    '$SER_{NP}$',
+    '$SER_{NP}(\lambda)$',
+    '$STRUT_{ND}$',
+    '$STRUT(\lambda)$',
+    '$STRUT_{NP}(\lambda)$'
     # 'STRUT$^{*}$',
-    'STRUT$^{*}$',
+    #'STRUT$^{*}$',
 ]
 
 np.random.seed(0)
@@ -76,16 +86,50 @@ scores = []
 #transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,Xt=Xt,yt=yt)
 
 for method in methods:
+    Nkmin = sum(yt == 0 )
+    root_source_values = clf_source.tree_.value[0].reshape(-1)
+    props_s = root_source_values
+    props_s = props_s / sum(props_s)
+    props_t = np.zeros(props_s.size)
+    for k in range(props_s.size):
+        props_t[k] = np.sum(yt == k) / yt.size
+    
+    coeffs = np.divide(props_t, props_s)          
+    
     clf_transfer = copy.deepcopy(clf_source)
+    if method == 'relab':
+        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="")
+        transferred_dt.fit(Xt,yt)
     if method == 'ser':
-        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,Xt=Xt,yt=yt,algo="ser")
-        transferred_dt._ser(Xt, yt, node=0, original_ser=True)
+        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="ser")
+        transferred_dt.fit(Xt,yt)
+        #transferred_dt._ser(Xt, yt, node=0, original_ser=True)
         #ser.SER(0, clf_transfer, Xt, yt, original_ser=True)
     if method == 'ser_nr':
-        transferred_dt._ser(Xt, yt,node=0,original_ser=False,no_red_on_cl=True,cl_no_red=[0],ext_cond=True)
+        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="ser")
+        transferred_dt._ser(Xt, yt,node=0,original_ser=False,no_red_on_cl=True,cl_no_red=[0])
+    if method == 'ser_nr_lambda':
+        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="ser")
+        transferred_dt._ser(Xt, yt,node=0,original_ser=False,no_red_on_cl=True,cl_no_red=[0],
+                            leaf_loss_quantify=True,leaf_loss_threshold=0.5,
+                            root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)
         #ser.SER(0, clf_transfer, Xt, yt,original_ser=False,no_red_on_cl=True,cl_no_red=[0],ext_cond=True)
     if method == 'strut':
-        transferred_dt._strut(Xt, yt,node=0)
+        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+        transferred_dt.fit(Xt,yt)
+        #transferred_dt._strut(Xt, yt,node=0)
+    if method == 'strut_nd':
+        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+        transferred_dt._strut(Xt, yt,node=0,use_divergence=False)
+    if method == 'strut_lambda':
+        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+        transferred_dt._strut(Xt, yt,node=0,adapt_prop=True,root_source_values=root_source_values,
+                              Nkmin=Nkmin,coeffs=coeffs)
+    if method == 'strut_lambda_np':
+        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+        transferred_dt._strut(Xt, yt,node=0,adapt_prop=False,no_prune_on_cl=True,cl_no_prune=[0],
+                            leaf_loss_quantify=False,leaf_loss_threshold=0.5,no_prune_with_translation=False,
+                            root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)
     #if method == 'strut_hi':
         #transferred_dt._strut(Xt, yt,node=0,no_prune_on_cl=False,adapt_prop=True,coeffs=[0.2, 1])
         #strut.STRUT(clf_transfer, 0, Xt, yt, Xt, yt,pruning_updated_node=True,no_prune_on_cl=False,adapt_prop=True,simple_weights=False,coeffs=[0.2, 1])
@@ -96,69 +140,69 @@ for method in methods:
     #clfs.append(clf_transfer)
     scores.append(score)
 
-## Plot decision functions
-#
-## Data on which to plot source
-#x_min, x_max = Xs[:, 0].min() - 1, Xs[:, 0].max() + 1
-#y_min, y_max = Xs[:, 1].min() - 1, Xs[:, 1].max() + 1
-#xx, yy = np.meshgrid(np.arange(x_min, x_max, plot_step),
-#                     np.arange(y_min, y_max, plot_step))
-## Plot source model
-#Z = clf_source.predict(np.c_[xx.ravel(), yy.ravel()])
-#Z = Z.reshape(xx.shape)
-#fig, ax = plt.subplots(nrows=1, ncols=len(methods) + 1, figsize=(13, 3))
-#ax[0].contourf(xx, yy, Z, cmap=plt.cm.coolwarm, alpha=0.8)
-#ax[0].scatter(Xs[0, 0], Xs[0, 1],
-#              marker='o',
-#              edgecolor='black',
-#              color='white',
-#              label='source data',
-#              )
-#ax[0].scatter(Xs[:ns_perclass, 0], Xs[:ns_perclass, 1],
-#              marker='o',
-#              edgecolor='black',
-#              color='blue',
-#              )
-#ax[0].scatter(Xs[ns_perclass:, 0], Xs[ns_perclass:, 1],
-#              marker='o',
-#              edgecolor='black',
-#              color='red',
-#              )
-#ax[0].set_title('Model: Source\nAcc on source data: {:.2f}\nAcc on target data: {:.2f}'.format(score_src_src, score_src_trgt),
-#                fontsize=11)
-#ax[0].legend()
-#
-## Data on which to plot target
-#x_min, x_max = Xt[:, 0].min() - 1, Xt[:, 0].max() + 1
-#y_min, y_max = Xt[:, 1].min() - 1, Xt[:, 1].max() + 1
-#xx, yy = np.meshgrid(np.arange(x_min, x_max, plot_step),
-#                     np.arange(y_min, y_max, plot_step))
-## Plot transfer models
-#for i, (method, label, score) in enumerate(zip(methods, labels, scores)):
-#    clf_transfer = clfs[i]
-#    Z_transfer = clf_transfer.predict(np.c_[xx.ravel(), yy.ravel()])
-#    Z_transfer = Z_transfer.reshape(xx.shape)
-#    ax[i + 1].contourf(xx, yy, Z_transfer, cmap=plt.cm.coolwarm, alpha=0.8)
-#    ax[i + 1].scatter(Xt[0, 0], Xt[0, 1],
-#                      marker='o',
-#                      edgecolor='black',
-#                      color='white',
-#                      label='target data',
-#                      )
-#    ax[i + 1].scatter(Xt[:nt_0, 0], Xt[:nt_0, 1],
-#                      marker='o',
-#                      edgecolor='black',
-#                      color='blue',
-#                      )
-#    ax[i + 1].scatter(Xt[nt_0:, 0], Xt[nt_0:, 1],
-#                      marker='o',
-#                      edgecolor='black',
-#                      color='red',
-#                      )
-#    ax[i + 1].set_title('Model: {}\nAcc on target data: {:.2f}'.format(label, score),
-#                        fontsize=11)
-#    ax[i + 1].legend()
-#
-## fig.savefig('../images/ser_strut.png')
-#plt.show()
-#
+# Plot decision functions
+
+# Data on which to plot source
+x_min, x_max = Xs[:, 0].min() - 1, Xs[:, 0].max() + 1
+y_min, y_max = Xs[:, 1].min() - 1, Xs[:, 1].max() + 1
+xx, yy = np.meshgrid(np.arange(x_min, x_max, plot_step),
+                     np.arange(y_min, y_max, plot_step))
+# Plot source model
+Z = clf_source.predict(np.c_[xx.ravel(), yy.ravel()])
+Z = Z.reshape(xx.shape)
+fig, ax = plt.subplots(nrows=1, ncols=len(methods) + 1, figsize=(30, 3))
+ax[0].contourf(xx, yy, Z, cmap=plt.cm.coolwarm, alpha=0.8)
+ax[0].scatter(Xs[0, 0], Xs[0, 1],
+              marker='o',
+              edgecolor='black',
+              color='white',
+              label='source data',
+              )
+ax[0].scatter(Xs[:ns_perclass, 0], Xs[:ns_perclass, 1],
+              marker='o',
+              edgecolor='black',
+              color='blue',
+              )
+ax[0].scatter(Xs[ns_perclass:, 0], Xs[ns_perclass:, 1],
+              marker='o',
+              edgecolor='black',
+              color='red',
+              )
+ax[0].set_title('Model: Source\nAcc on source data: {:.2f}\nAcc on target data: {:.2f}'.format(score_src_src, score_src_trgt),
+                fontsize=11)
+ax[0].legend()
+
+# Data on which to plot target
+x_min, x_max = Xt[:, 0].min() - 1, Xt[:, 0].max() + 1
+y_min, y_max = Xt[:, 1].min() - 1, Xt[:, 1].max() + 1
+xx, yy = np.meshgrid(np.arange(x_min, x_max, plot_step),
+                     np.arange(y_min, y_max, plot_step))
+# Plot transfer models
+for i, (method, label, score) in enumerate(zip(methods, labels, scores)):
+    clf_transfer = clfs[i]
+    Z_transfer = clf_transfer.predict(np.c_[xx.ravel(), yy.ravel()])
+    Z_transfer = Z_transfer.reshape(xx.shape)
+    ax[i + 1].contourf(xx, yy, Z_transfer, cmap=plt.cm.coolwarm, alpha=0.8)
+    ax[i + 1].scatter(Xt[0, 0], Xt[0, 1],
+                      marker='o',
+                      edgecolor='black',
+                      color='white',
+                      label='target data',
+                      )
+    ax[i + 1].scatter(Xt[:nt_0, 0], Xt[:nt_0, 1],
+                      marker='o',
+                      edgecolor='black',
+                      color='blue',
+                      )
+    ax[i + 1].scatter(Xt[nt_0:, 0], Xt[nt_0:, 1],
+                      marker='o',
+                      edgecolor='black',
+                      color='red',
+                      )
+    ax[i + 1].set_title('Model: {}\nAcc on target data: {:.2f}'.format(label, score),
+                        fontsize=11)
+    ax[i + 1].legend()
+
+# fig.savefig('../images/ser_strut.png')
+plt.show()
+

@@ -526,10 +526,10 @@ def bounds_rule(rule,n_features):
     bound_sups = np.repeat(np.inf,n_features)
     
     for k,p in enumerate(phis) :
-        if bs[k] == -1 and bound_sups[p] > ths[k]:
-            bound_sups[p]=ths[k]
-        if bs[k] == 1 and bound_infs[p] < ths[k]:
-            bound_infs[p]=ths[k]
+        if bs[k] == -1 and bound_sups[int(p)] > ths[k]:
+            bound_sups[int(p)]=ths[k]
+        if bs[k] == 1 and bound_infs[int(p)] < ths[k]:
+            bound_infs[int(p)]=ths[k]
             
     return bound_infs,bound_sups
 
