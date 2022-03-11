@@ -5,11 +5,18 @@ from adapt.base import BaseAdaptDeep, make_insert_doc
 @make_insert_doc(["encoder", "task"])
 class FineTuning(BaseAdaptDeep):
     """
-    FineTuning : 
+    FineTuning : finetunes pretrained networks on target data.
+    
+    A pretrained source encoder should be given. A task network,
+    pretrained or not, should be given too.
+    
+    Finetuning train both networks. The task network can be
+    fitted first using the ``pretrain`` parameter. The layers
+    to train in the encoder can be set via the parameter ``training``.
     
     Parameters
     ----------        
-    training : float or list of float, optional (default=1.0)
+    training : bool or list of bool, optional (default=True)
         Trade-off parameters.
         If a list is given, values from ``training`` are assigned
         successively to the ``trainable`` attribute of the
@@ -17,6 +24,10 @@ class FineTuning(BaseAdaptDeep):
         If the length of ``training`` is smaller than the length of
         the ``encoder`` layers list, the last value of ``training`` 
         will be asigned to the remaining layers.
+        
+    pretrain : bool (default=False)
+        If True, the task network is first trained alone on the outputs
+        of the encoder.
 
     Attributes
     ----------
@@ -36,8 +47,8 @@ class FineTuning(BaseAdaptDeep):
                  task=None,
                  Xt=None,
                  yt=None,
-                 pretrain=False,
                  training=True,
+                 pretrain=False,
                  verbose=1,
                  copy=True,
                  random_state=None,
@@ -89,7 +100,7 @@ class FineTuning(BaseAdaptDeep):
             ys_pred = tf.reshape(ys_pred, tf.shape(ys))
 
             # Compute the loss value
-            loss = self.task_loss_(ys, ys_pred)
+            loss = tf.reduce_mean(self.task_loss_(ys, ys_pred))
             task_loss = loss + sum(self.task_.losses)
             
         # Compute gradients
@@ -127,7 +138,7 @@ class FineTuning(BaseAdaptDeep):
                 ys_pred = tf.reshape(ys_pred, tf.shape(ys))
 
                 # Compute the loss value
-                loss = self.task_loss_(ys, ys_pred)
+                loss = tf.reduce_mean(self.task_loss_(ys, ys_pred))
                 task_loss = loss + sum(self.task_.losses)
                 enc_loss = loss + sum(self.encoder_.losses)
 
@@ -165,4 +176,10 @@ class FineTuning(BaseAdaptDeep):
         else:
             raise ValueError("`training` parameter should be"
                              " of type bool or list, got %s"%str(type(self.training)))
-            
+
+    
+    def predict_disc(self, X):
+        """
+        Not used.
+        """     
+        pass

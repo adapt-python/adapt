@@ -57,11 +57,16 @@ def test_fit():
     model = MCD(_get_encoder(), _get_task(),
                 loss="mse", optimizer=Adam(0.01), metrics=["mse"])
     model.fit(Xs, ys, Xt, yt,
-              epochs=50, batch_size=34, verbose=0)
+              epochs=50, batch_size=34, verbose=0)    
     assert isinstance(model, Model)
     assert np.abs(model.encoder_.get_weights()[0][1][0]) < 0.2
     assert np.sum(np.abs(model.predict(Xs).ravel() - ys)) > 5
     assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) < 11
+    
+    yp_avg = model.predict_avg(Xt)
+    ypt = model.predict(Xt)
+    ypd = model.predict_disc(Xt)
+    assert np.all(yp_avg == 0.5 * (ypt+ypd))
     
     
 def test_n_steps():

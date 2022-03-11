@@ -49,7 +49,25 @@ class SA(BaseAdaptEstimator):
         super().__init__(**kwargs)
         
     
-    def fit_transform(self, Xs, Xt, **fit_params):
+    def fit_transform(self, Xs, Xt, **kwargs):
+        """
+        Fit embeddings.
+        
+        Parameters
+        ----------
+        Xs : array
+            Input source data.
+            
+        Xt : array
+            Input target data.
+                        
+        kwargs : key, value argument
+            Not used, present here for adapt consistency.
+            
+        Returns
+        -------
+        Xs_emb : embedded source data
+        """
         Xs = check_array(Xs)
         Xt = check_array(Xt)
         set_random_seed(self.random_state)
@@ -67,6 +85,29 @@ class SA(BaseAdaptEstimator):
 
 
     def transform(self, X, domain="tgt"):
+        """
+        Project X in the target subspace.
+        
+        The paramter ``domain`` specify if X should
+        be considered as source or target data. As the
+        transformation is assymetric, the source transformation
+        should be applied on source data and the target
+        transformation on target data.
+
+        Parameters
+        ----------
+        X : array
+            Input data.
+            
+        domain : str (default="tgt")
+            Choose between ``"source", "src"`` or
+            ``"target", "tgt"`` feature embedding.
+
+        Returns
+        -------
+        X_emb : array
+            Embeddings of X.
+        """
         X = check_array(X)
         
         if domain in ["tgt", "target"]:

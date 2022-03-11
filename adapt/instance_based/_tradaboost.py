@@ -7,6 +7,7 @@ import tensorflow as tf
 from sklearn.base import BaseEstimator
 from sklearn.exceptions import NotFittedError
 from sklearn.utils import check_array
+from sklearn.metrics import r2_score, accuracy_score
 
 from adapt.base import BaseAdaptEstimator, make_insert_doc
 from adapt.utils import check_arrays, check_estimator, set_random_seed
@@ -106,6 +107,10 @@ class TrAdaBoost(BaseAdaptEstimator):
     ----------        
     n_estimators : int (default=10)
         Number of boosting iteration.
+        
+    lr : float (default=1.)
+        Learning rate. For higher ``lr``, the sample
+        weights are updating faster.
 
     Attributes
     ----------
@@ -164,6 +169,7 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
                  Xt=None,
                  yt=None,
                  n_estimators=10,
+                 lr=1.,
                  copy=True,
                  verbose=1,
                  random_state=None,
@@ -285,8 +291,9 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         sample_weight = np.concatenate((sample_weight_src,
                                         sample_weight_tgt))
         
+        # Need to rescale sample weight
         estimator = self.fit_estimator(X, y,
-                                       sample_weight=sample_weight,
+                                       sample_weight=sample_weight/sample_weight.mean(),
                                        random_state=None,
                                        warm_start=False,
                                        **fit_params)
@@ -331,10 +338,11 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
             estimator_error = ((sample_weight_tgt * error_vect_tgt).sum() /
                                sample_weight_tgt.sum())
         
-        if estimator_error > 0.5:
-            estimator_error = 0.5
+        # For multiclassification and regression error can be greater than 0.5
+        # if estimator_error > 0.5:
+        #     estimator_error = 0.5
         
-        beta_t = estimator_error / (1. - estimator_error)
+        beta_t = 2*estimator_error / (2. - estimator_error)
         
         beta_s = 1. / (1. + np.sqrt(
             2. * np.log(len(Xs)) / self.n_estimators
@@ -343,18 +351,18 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         if not iboost == self.n_estimators - 1:
             if isinstance(self, _AdaBoostR2):
                 sample_weight_tgt = (sample_weight_tgt *
-                np.power(beta_t, (1 - error_vect_tgt)))
+                np.power(beta_t, self.lr * (1 - error_vect_tgt)))
 
                 sample_weight_tgt *= ((1. - sample_weight_src.sum()) /
                                       sample_weight_tgt.sum())
             else:
                 # Source updating weights
                 sample_weight_src *= np.power(
-                    beta_s, error_vect_src)
+                    beta_s, self.lr * error_vect_src)
 
                 # Target updating weights
                 sample_weight_tgt *= np.power(
-                    beta_t, - error_vect_tgt)
+                    beta_t, - self.lr * error_vect_tgt)
 
         self.estimators_.append(estimator)
         self.estimator_errors_.append(estimator_error)
@@ -400,7 +408,10 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         """
         Return sample weights.
         
-        Return the final source importance weighting.
+        Return the final importance weighting.
+        
+        You can secify between "source" and "target" weights
+        with the domain parameter.
         
         Parameters
         ----------
@@ -424,6 +435,32 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         else:
             raise NotFittedError("Weights are not fitted yet, please "
                                  "call 'fit' first.")
+            
+    
+    def score(self, X, y):
+        """
+        Return the TrAdaboost score on X, y.
+        
+        Parameters
+        ----------
+        X : array
+            input data
+            
+        y : array
+            output data
+            
+        Returns
+        -------
+        score : float
+            estimator score.
+        """
+        X, y = check_arrays(X, y)
+        yp = self.predict(X)
+        if isinstance(self, TrAdaBoostR2):
+            score = r2_score(yp, y)
+        else:
+            score = accuracy_score(yp, y)
+        return score
 
 
 @make_insert_doc()
@@ -480,6 +517,10 @@ class TrAdaBoostR2(TrAdaBoost):
     ----------        
     n_estimators : int (default=10)
         Number of boosting iteration.
+        
+    lr : float (default=1.)
+        Learning rate. For higher ``lr``, the sample
+        weights are updating faster.
 
     Attributes
     ----------
@@ -644,6 +685,10 @@ class TwoStageTrAdaBoostR2(TrAdaBoostR2):
         
     cv: int, optional (default=5)
         Split cross-validation parameter.
+        
+    lr : float (default=1.)
+        Learning rate. For higher ``lr``, the sample
+        weights are updating faster.
 
     Attributes
     ----------
@@ -699,6 +744,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
                  n_estimators=10,
                  n_estimators_fs=10,
                  cv=5,
+                 lr=1.,
                  copy=True,
                  verbose=1,
                  random_state=None,
@@ -710,6 +756,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
                          n_estimators=n_estimators,
                          n_estimators_fs = n_estimators_fs,
                          cv=cv,
+                         lr=lr,
                          copy=copy,
                          verbose=verbose,
                          random_state=random_state,
@@ -789,6 +836,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
 
         estimator = _AdaBoostR2(estimator=self.estimator,
                                 n_estimators=self.n_estimators_fs,
+                                lr=self.lr,
                                 verbose=self.verbose-1,
                                 random_state=None)
         
@@ -828,7 +876,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         
         if not iboost == self.n_estimators - 1:
             sample_weight_src *= np.power(
-                beta, error_vect_src
+                beta, self.lr * error_vect_src
             )
 
         self.estimators_.append(estimator)
@@ -881,7 +929,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
                 )
 
             estimator = self.fit_estimator(X, y,
-                               sample_weight=sample_weight,
+                               sample_weight=sample_weight/sample_weight.mean(),
                                random_state=None,
                                warm_start=False,
                                **fit_params)
@@ -921,6 +969,9 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         
         Return the source importance weighting
         of the best estimator.
+        
+        You can secify between "source" and "target" weights
+        with the domain parameter.
         
         Parameters
         ----------

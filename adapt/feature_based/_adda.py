@@ -178,7 +178,7 @@ In CVPR, 2017.
             ys_pred = tf.reshape(ys_pred, tf.shape(ys))
 
             # Compute the loss value
-            loss = self.task_loss_(ys, ys_pred)
+            loss = tf.reduce_mean(self.task_loss_(ys, ys_pred))
             task_loss = loss + sum(self.task_.losses)
             enc_loss = loss + sum(self.encoder_src_.losses)
             

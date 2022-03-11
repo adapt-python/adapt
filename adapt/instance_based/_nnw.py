@@ -100,6 +100,24 @@ class NearestNeighborsWeighting(BaseAdaptEstimator):
         
         
     def fit_weights(self, Xs, Xt, **kwargs):
+        """
+        Fit importance weighting.
+        
+        Parameters
+        ----------
+        Xs : array
+            Input source data.
+            
+        Xt : array
+            Input target data.
+            
+        kwargs : key, value argument
+            Not used, present here for adapt consistency.
+            
+        Returns
+        -------
+        weights_ : sample weights
+        """
         Xs = check_array(Xs)
         Xt = check_array(Xt)
         set_random_seed(self.random_state)

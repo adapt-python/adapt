@@ -185,7 +185,7 @@ class CORAL(BaseAdaptEstimator):
             Input data.
 
         domain : str (default="tgt")
-            Choose between ``"source", "src"`` and
+            Choose between ``"source", "src"`` or
             ``"target", "tgt"`` feature embedding.
 
         Returns

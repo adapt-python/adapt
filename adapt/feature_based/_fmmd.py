@@ -92,7 +92,7 @@ class fMMD(BaseAdaptEstimator):
     """
     fMMD : feature Selection with MMD
     
-    LDM selects input features inorder to minimize the
+    LDM selects input features in order to minimize the
     maximum mean discrepancy (MMD) between the source and
     the target data.
     
@@ -160,7 +160,25 @@ class fMMD(BaseAdaptEstimator):
         super().__init__(**kwargs)
         
     
-    def fit_transform(self, Xs, Xt, **fit_params):
+    def fit_transform(self, Xs, Xt, **kwargs):
+        """
+        Fit embeddings.
+        
+        Parameters
+        ----------
+        Xs : array
+            Input source data.
+            
+        Xt : array
+            Input target data.
+                        
+        kwargs : key, value argument
+            Not used, present here for adapt consistency.
+            
+        Returns
+        -------
+        Xs_emb : embedded source data
+        """
         Xs = check_array(Xs)
         Xt = check_array(Xt)
         set_random_seed(self.random_state)
@@ -217,5 +235,18 @@ class fMMD(BaseAdaptEstimator):
             
     
     def transform(self, X):
+        """
+        Return the projection of X on the selected featues.
+
+        Parameters
+        ----------
+        X : array
+            Input data.
+
+        Returns
+        -------
+        X_emb : array
+            Embeddings of X.
+        """
         X = check_array(X)
         return X[:, self.selected_features_]
