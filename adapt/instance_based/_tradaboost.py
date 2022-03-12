@@ -275,10 +275,9 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
             sample_weight_src = sample_weight_src / sum_weights
             sample_weight_tgt = sample_weight_tgt / sum_weights
 
-        self.estimator_errors_ = np.array(self.estimator_errors_)
-        self.estimator_weights_ = np.array([
-            -np.log(err / (1-err) + EPS) + 2*EPS
-            for err in self.estimator_errors_])
+        self.estimator_weights_ = [
+            -np.log(err / (2.-err) + EPS) + 2*EPS
+            for err in self.estimator_errors_]
         return self
         
         
@@ -339,10 +338,10 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
                                sample_weight_tgt.sum())
         
         # For multiclassification and regression error can be greater than 0.5
-        # if estimator_error > 0.5:
-        #     estimator_error = 0.5
+        # if estimator_error > 0.49:
+        #     estimator_error = 0.49
         
-        beta_t = 2*estimator_error / (2. - estimator_error)
+        beta_t = estimator_error / (2. - estimator_error)
         
         beta_s = 1. / (1. + np.sqrt(
             2. * np.log(len(Xs)) / self.n_estimators
@@ -386,7 +385,8 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         """
         X = check_array(X)
         N = len(self.estimators_)
-        weights = self.estimator_weights_[int(N/2):]
+        weights = np.array(self.estimator_weights_)
+        weights = weights[int(N/2):]
         predictions = []
         for est in self.estimators_[int(N/2):]:
             if isinstance(est, BaseEstimator):
@@ -457,9 +457,9 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         X, y = check_arrays(X, y)
         yp = self.predict(X)
         if isinstance(self, TrAdaBoostR2):
-            score = r2_score(yp, y)
+            score = r2_score(y, yp)
         else:
-            score = accuracy_score(yp, y)
+            score = accuracy_score(y, yp)
         return score
 
 
@@ -589,7 +589,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         """
         X = check_array(X)
         N = len(self.estimators_)
-        weights = self.estimator_weights_
+        weights = np.array(self.estimator_weights_)
         weights = weights[int(N/2):]
         predictions = []
         for est in self.estimators_[int(N/2):]:
@@ -811,13 +811,13 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
                 print("Iteration %i - Cross-validation score: %.4f (%.4f)"%
                       (iboost, np.mean(cv_score), np.std(cv_score)))
             
-            self.estimator_errors_.append(cv_score.mean())
-            
             sample_weight_src, sample_weight_tgt = self._boost(
                 iboost, Xs, ys, Xt, yt,
                 sample_weight_src, sample_weight_tgt,
                 **fit_params
             )
+            
+            self.estimator_errors_.append(cv_score.mean())
 
             if sample_weight_src is None:
                 break
@@ -827,7 +827,6 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
             sample_weight_src = sample_weight_src / sum_weights
             sample_weight_tgt = sample_weight_tgt / sum_weights
 
-        self.estimator_errors_ = np.array(self.estimator_errors_)
         return self
 
 
@@ -959,7 +958,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         """
         X = check_array(X)
         best_estimator = self.estimators_[
-            self.estimator_errors_.argmin()]
+            np.argmin(self.estimator_errors_)]
         return best_estimator.predict(X)
 
 
@@ -984,7 +983,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         weights : source sample weights
         """
         if hasattr(self, "sample_weights_src_"):
-            arg = self.estimator_errors_.argmin()
+            arg = np.argmin(self.estimator_errors_)
             if domain in ["src", "source"]:
                 return self.sample_weights_src_[arg]
             elif domain in ["tgt", "target"]:
