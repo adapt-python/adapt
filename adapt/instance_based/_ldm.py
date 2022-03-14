@@ -53,7 +53,6 @@ adaptation: Learning bounds and algorithms". In COLT, 2009.
     def __init__(self,
                  estimator=None,
                  Xt=None,
-                 yt=None,
                  copy=True,
                  verbose=1,
                  random_state=None,

@@ -10,6 +10,9 @@ class SA(BaseAdaptEstimator):
     """
     SA : Subspace Alignment
     
+    Linearly align the source domain to the target domain
+    in a reduced PCA subspace of dimension ``n_components``.
+    
     Parameters
     ----------
     n_components : int (default=None)
@@ -36,7 +39,6 @@ class SA(BaseAdaptEstimator):
     def __init__(self,
                  estimator=None,
                  Xt=None,
-                 yt=None,
                  n_components=None,
                  copy=True,
                  verbose=1,

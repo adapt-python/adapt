@@ -24,8 +24,8 @@
 		~KMM.predict_estimator
 		~KMM.predict_weights
 		~KMM.score
-		~KMM.score_estimator
 		~KMM.set_params
+		~KMM.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -37,8 +37,8 @@
 	.. automethod:: predict_estimator
 	.. automethod:: predict_weights
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
+	.. automethod:: unsupervised_score
 	
     
 	

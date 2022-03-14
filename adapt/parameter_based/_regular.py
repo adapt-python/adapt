@@ -41,7 +41,7 @@ def get_zeros_network(name=None):
     return model
 
 
-@make_insert_doc()
+@make_insert_doc(supervised=True)
 class RegularTransferLR(BaseAdaptEstimator):
     """
     Regular Transfer with Linear Regression
@@ -195,7 +195,7 @@ can help a lot". In EMNLP, 2004.
 
     
 
-@make_insert_doc()
+@make_insert_doc(supervised=True)
 class RegularTransferLC(RegularTransferLR):
     """
     Regular Transfer for Linear Classification
@@ -279,7 +279,7 @@ can help a lot". In EMNLP, 2004.
         return func
 
 
-@make_insert_doc(["task"])
+@make_insert_doc(["task"], supervised=True)
 class RegularTransferNN(BaseAdaptDeep):
     """
     Regular Transfer with Neural Network

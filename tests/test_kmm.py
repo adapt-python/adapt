@@ -53,3 +53,18 @@ def test_batch():
     assert model.weights_[50:].sum() < 0.1
     assert np.abs(model.predict(Xt) - yt).sum() < 10
     assert np.all(model.weights_ == model.predict_weights())
+    
+
+def test_kernel_param():
+    model = KMM(LinearRegression(fit_intercept=False),
+                kernel="poly",
+                coef0=2,
+                gamma=0.1,
+                degree=3)
+    model.fit(Xs, ys, Xt=Xt)
+    
+    model = KMM(LinearRegression(fit_intercept=False),
+                kernel="sigmoid",
+                coef0=2.,
+                gamma=1.)
+    model.fit(Xs, ys, Xt=Xt)

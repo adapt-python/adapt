@@ -76,7 +76,6 @@ domain adaptation". In CVPR, 2018.
                  encoder=None,
                  task=None,
                  Xt=None,
-                 yt=None,
                  pretrain=True,
                  n_steps=1,
                  copy=True,

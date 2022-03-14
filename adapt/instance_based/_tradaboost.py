@@ -61,7 +61,7 @@ def _binary_search(func, verbose=1):
     return best
 
 
-@make_insert_doc()
+@make_insert_doc(supervised=True)
 class TrAdaBoost(BaseAdaptEstimator):
     """
     Transfer AdaBoost for Classification
@@ -463,7 +463,7 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         return score
 
 
-@make_insert_doc()
+@make_insert_doc(supervised=True)
 class TrAdaBoostR2(TrAdaBoost):
     """
     Transfer AdaBoost for Regression
@@ -608,7 +608,7 @@ class _AdaBoostR2(TrAdaBoostR2):
     pass
 
 
-@make_insert_doc()    
+@make_insert_doc(supervised=True)    
 class TwoStageTrAdaBoostR2(TrAdaBoostR2):
     """
     Two Stage Transfer AdaBoost for Regression

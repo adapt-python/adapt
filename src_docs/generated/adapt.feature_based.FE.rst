@@ -23,9 +23,9 @@
 		~FE.predict
 		~FE.predict_estimator
 		~FE.score
-		~FE.score_estimator
 		~FE.set_params
 		~FE.transform
+		~FE.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -36,9 +36,9 @@
 	.. automethod:: predict
 	.. automethod:: predict_estimator
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
 	.. automethod:: transform
+	.. automethod:: unsupervised_score
 	
     
 	

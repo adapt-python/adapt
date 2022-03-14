@@ -23,9 +23,9 @@
 		~MDD.predict_disc
 		~MDD.predict_task
 		~MDD.score
-		~MDD.score_estimator
 		~MDD.set_params
 		~MDD.transform
+		~MDD.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -36,9 +36,9 @@
 	.. automethod:: predict_disc
 	.. automethod:: predict_task
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
 	.. automethod:: transform
+	.. automethod:: unsupervised_score
 	
     
 	

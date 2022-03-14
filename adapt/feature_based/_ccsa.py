@@ -8,25 +8,27 @@ from adapt.utils import set_random_seed
 EPS = np.finfo(np.float32).eps
 
 def pairwise_y(X, Y):
-    batch_size = tf.shape(X)[0]
+    batch_size_x = tf.shape(X)[0]
+    batch_size_y = tf.shape(Y)[0]
     dim = tf.reduce_prod(tf.shape(X)[1:])
-    X = tf.reshape(X, (batch_size, dim))
-    Y = tf.reshape(Y, (batch_size, dim))
-    X = tf.tile(tf.expand_dims(X, -1), [1, 1, batch_size])
-    Y = tf.tile(tf.expand_dims(Y, -1), [1, 1, batch_size])
+    X = tf.reshape(X, (batch_size_x, dim))
+    Y = tf.reshape(Y, (batch_size_y, dim))
+    X = tf.tile(tf.expand_dims(X, -1), [1, 1, batch_size_y])
+    Y = tf.tile(tf.expand_dims(Y, -1), [1, 1, batch_size_x])
     return tf.reduce_sum(tf.abs(X-tf.transpose(Y)), 1)/2
 
 def pairwise_X(X, Y):
-    batch_size = tf.shape(X)[0]
+    batch_size_x = tf.shape(X)[0]
+    batch_size_y = tf.shape(Y)[0]
     dim = tf.reduce_prod(tf.shape(X)[1:])
-    X = tf.reshape(X, (batch_size, dim))
-    Y = tf.reshape(Y, (batch_size, dim))
-    X = tf.tile(tf.expand_dims(X, -1), [1, 1, batch_size])
-    Y = tf.tile(tf.expand_dims(Y, -1), [1, 1, batch_size])
+    X = tf.reshape(X, (batch_size_x, dim))
+    Y = tf.reshape(Y, (batch_size_y, dim))
+    X = tf.tile(tf.expand_dims(X, -1), [1, 1, batch_size_y])
+    Y = tf.tile(tf.expand_dims(Y, -1), [1, 1, batch_size_x])
     return tf.reduce_sum(tf.square(X-tf.transpose(Y)), 1)
 
 
-@make_insert_doc(["encoder", "task"])
+@make_insert_doc(["encoder", "task"], supervised=True)
 class CCSA(BaseAdaptDeep):
     """
     CCSA : 

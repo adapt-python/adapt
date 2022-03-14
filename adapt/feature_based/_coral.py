@@ -111,7 +111,6 @@ class CORAL(BaseAdaptEstimator):
     def __init__(self,
                  estimator=None,
                  Xt=None,
-                 yt=None,
                  lambda_=1e-5,
                  copy=True,
                  verbose=1,

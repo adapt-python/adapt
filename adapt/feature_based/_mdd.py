@@ -25,7 +25,7 @@ class MDD(BaseAdaptDeep):
     
     Parameters
     ----------
-    lambda_ : float (default=0.1)
+    lambda_ : float or tensorflow Variable (default=0.1)
         Trade-off parameter
     
     gamma : float (default=4.)
@@ -70,7 +70,6 @@ domain adaptation". ICML, 2019.
                  encoder=None,
                  task=None,
                  Xt=None,
-                 yt=None,
                  lambda_=0.1,
                  gamma=4.,
                  copy=True,

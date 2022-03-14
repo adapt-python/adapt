@@ -79,7 +79,6 @@ class NearestNeighborsWeighting(BaseAdaptEstimator):
     def __init__(self,
                  estimator=None,
                  Xt=None,
-                 yt=None,
                  n_neighbors=5,
                  radius=1.0,
                  algorithm='auto',

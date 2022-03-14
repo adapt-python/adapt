@@ -24,9 +24,9 @@
 		~ADDA.predict_task
 		~ADDA.pretrain_step
 		~ADDA.score
-		~ADDA.score_estimator
 		~ADDA.set_params
 		~ADDA.transform
+		~ADDA.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -38,9 +38,9 @@
 	.. automethod:: predict_task
 	.. automethod:: pretrain_step
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
 	.. automethod:: transform
+	.. automethod:: unsupervised_score
 	
     
 	

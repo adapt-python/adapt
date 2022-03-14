@@ -63,8 +63,10 @@ class KMM(BaseAdaptEstimator):
         
     eps: float, optional (default=None)
         Constraint parameter.
-        If ``None`` eps is set to
-        ``(np.sqrt(len(Xs)) - 1)/np.sqrt(len(Xs))``
+        If ``None``,  ``eps`` is set to::
+        
+            eps = (np.sqrt(len(Xs)) - 1)/np.sqrt(len(Xs))
+
         with ``Xs`` the source input dataset.
         
     kernel : str (default="rbf")
@@ -75,7 +77,7 @@ class KMM(BaseAdaptEstimator):
         
     max_size : int (default=1000)
         Batch computation to speed up the fitting.
-        If len(Xs) > ``max_size``, KMM is applied
+        If ``len(Xs) > max_size``, KMM is applied
         successively on seperated batch
         of size lower than ``max_size``.
         
@@ -93,6 +95,42 @@ class KMM(BaseAdaptEstimator):
     
     estimator_ : object
         Estimator.
+        
+    Yields
+    ------
+    gamma : float
+        Kernel parameter ``gamma``.
+        
+        - For kernel = chi2::
+        
+            k(x, y) = exp(-gamma Sum [(x - y)^2 / (x + y)])
+
+        - For kernel = poly or polynomial::
+        
+            K(X, Y) = (gamma <X, Y> + coef0)^degree
+            
+        - For kernel = rbf::
+        
+            K(x, y) = exp(-gamma ||x-y||^2)
+        
+        - For kernel = laplacian::
+        
+            K(x, y) = exp(-gamma ||x-y||_1)
+        
+        - For kernel = sigmoid::
+        
+            K(X, Y) = tanh(gamma <X, Y> + coef0)
+        
+    coef0 : floaf
+        Kernel parameter ``coef0``.
+        Used for ploynomial and sigmoid kernels.
+        See ``gamma`` parameter above for the 
+        kernel formulas.
+        
+    degree : int
+        Degree parameter for the polynomial
+        kernel. (see formula in the ``gamma``
+        parameter description)
         
     Examples
     --------
@@ -133,7 +171,6 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
     def __init__(self,
                  estimator=None,
                  Xt=None,
-                 yt=None,
                  B=1000,
                  eps=None,
                  kernel="rbf",

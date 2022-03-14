@@ -154,7 +154,6 @@ to covariateshift adaptation". In NIPS 2007
     def __init__(self,
                  estimator=None,
                  Xt=None,
-                 yt=None,
                  sigmas=None,
                  max_centers=100,
                  cv=5,

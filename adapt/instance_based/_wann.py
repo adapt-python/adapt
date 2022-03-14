@@ -10,7 +10,7 @@ from adapt.utils import check_network, get_default_task
 EPS = np.finfo(np.float32).eps
 
 
-@make_insert_doc(["task", "weighter"])
+@make_insert_doc(["task", "weighter"], supervised=True)
 class WANN(BaseAdaptDeep):
     """
     WANN: Weighting Adversarial Neural Network is an instance-based domain adaptation

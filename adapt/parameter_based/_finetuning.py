@@ -2,7 +2,7 @@ import tensorflow as tf
 from adapt.base import BaseAdaptDeep, make_insert_doc
 
 
-@make_insert_doc(["encoder", "task"])
+@make_insert_doc(["encoder", "task"], supervised=True)
 class FineTuning(BaseAdaptDeep):
     """
     FineTuning : finetunes pretrained networks on target data.

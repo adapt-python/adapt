@@ -13,8 +13,8 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 user = "antoinedemathelin"
 project = 'adapt'
-copyright = '2020, Antoine de Mathelin, Michelin and Centre Borelli, ENS Paris-Saclay'
-author = 'Antoine de Mathelin'
+copyright = '2020, ADAPT team, Michelin and Centre Borelli, ENS Paris-Saclay'
+author = 'ADAPT team'
 
 # The full version, including alpha/beta/rc tags
 release = '0.1.0'

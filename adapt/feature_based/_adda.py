@@ -145,7 +145,6 @@ In CVPR, 2017.
                  task=None,
                  discriminator=None,
                  Xt=None,
-                 yt=None,
                  pretrain=True,
                  tol=0.001,
                  copy=True,

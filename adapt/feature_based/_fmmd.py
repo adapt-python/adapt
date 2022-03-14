@@ -8,12 +8,13 @@ from adapt.utils import set_random_seed
 
 
 def pairwise_X(X, Y):
-    batch_size = tf.shape(X)[0]
+    batch_size_x = tf.shape(X)[0]
+    batch_size_y = tf.shape(Y)[0]
     dim = tf.reduce_prod(tf.shape(X)[1:])
-    X = tf.reshape(X, (batch_size, dim))
-    Y = tf.reshape(Y, (batch_size, dim))
-    X = tf.tile(tf.expand_dims(X, -1), [1, 1, batch_size])
-    Y = tf.tile(tf.expand_dims(Y, -1), [1, 1, batch_size])
+    X = tf.reshape(X, (batch_size_x, dim))
+    Y = tf.reshape(Y, (batch_size_y, dim))
+    X = tf.tile(tf.expand_dims(X, -1), [1, 1, batch_size_y])
+    Y = tf.tile(tf.expand_dims(Y, -1), [1, 1, batch_size_x])
     return tf.reduce_sum(tf.square(X-tf.transpose(Y)), 1)
 
 
@@ -110,8 +111,17 @@ class fMMD(BaseAdaptEstimator):
         Choose the kernel between
         ['linear', 'rbf', 'poly'].
         The kernels are computed as follows:
-        ``rbf(X, Y) = exp(gamma * ||X-Y||^2)``
-        ``poly(X, Y) = (gamma * <X, Y> + coef)^degree``
+        - kernel = linear::
+        
+            k(X, Y) = <X, Y>
+            
+        - kernel = rbf::
+        
+            k(X, Y) = exp(gamma * ||X-Y||^2)
+            
+        - kernel = poly::
+        
+            poly(X, Y) = (gamma * <X, Y> + coef)^degree
         
     gamma : float (default=1.)
         Gamma multiplier for the 'rbf' and 
@@ -143,7 +153,6 @@ class fMMD(BaseAdaptEstimator):
     def __init__(self,
                  estimator=None,
                  Xt=None,
-                 yt=None,
                  threshold="auto",
                  kernel="linear",
                  gamma=1.,

@@ -59,8 +59,12 @@ weighter="""
 """
 )
 
+base_doc_Xt = """
+    Xt : numpy array (default=None)
+        Target input data.
+"""
 
-base_doc_1 = """
+base_doc_Xt_yt = """
     Xt : numpy array (default=None)
         Target input data.
             
@@ -86,8 +90,53 @@ base_doc_2 ="""
         ``_get_legal_params(params)``.
 """
 
+base_doc_other_params="""
+    Yields
+    ------
+    optimizer : str or instance of tf.keras.optimizers (default="rmsprop")
+        Optimizer for the task. It should be an
+        instance of tf.keras.optimizers as:
+        ``tf.keras.optimizers.SGD(0.001)`` or
+        ``tf.keras.optimizers.Adam(lr=0.001, beta_1=0.5)``.
+        A string can also be given as ``"adam"``.
+        Default optimizer is ``rmsprop``.
 
-def make_insert_doc(estimators=["estimator"]):
+    loss : str or instance of tf.keras.losses (default="mse")
+        Loss for the task. It should be an
+        instance of tf.keras.losses as:
+        ``tf.keras.losses.MeanSquaredError()`` or
+        ``tf.keras.losses.CategoricalCrossentropy()``.
+        A string can also be given as ``"mse"`` or
+        ``categorical_crossentropy``.
+        Default loss is ``mse``.
+
+    metrics : list of str or list of tf.keras.metrics.Metric instance
+        List of metrics to be evaluated by the model during training
+        and testing. Typically you will use ``metrics=['accuracy']``.
+
+    optimizer_enc : str or instance of tf.keras.optimizers
+        If the Adapt Model has an ``encoder`` attribute,
+        a specific optimizer for the ``encoder`` network can
+        be given. Typically, this parameter can be used to
+        give a smaller learning rate to the encoder.
+        If not specified, ``optimizer_enc=optimizer``.
+
+    optimizer_disc : str or instance of tf.keras.optimizers
+        If the Adapt Model has a ``discriminator`` attribute,
+        a specific optimizer for the ``discriminator`` network can
+        be given. If not specified, ``optimizer_disc=optimizer``.
+
+    kwargs : key, value arguments
+        Any arguments of the ``fit`` method from the Tensorflow
+        Model can be given, as ``epochs`` and ``batch_size``.
+        Specific arguments from ``optimizer`` can also be given
+        as ``learning_rate`` or ``beta_1`` for ``Adam``.
+        This allows to perform ``GridSearchCV`` from scikit-learn
+        on these arguments.
+"""
+
+
+def make_insert_doc(estimators=["estimator"], supervised=False):
     """
     Abstract for adding common parameters
     to the docstring
@@ -101,8 +150,15 @@ def make_insert_doc(estimators=["estimator"]):
     -------
     func
     """
-
     def insert_base_doc(func):
+        # Change signature of Deep Model
+        if "BaseAdaptDeep" in func.__bases__[0].__name__:
+            sign = inspect.signature(func.__init__)
+            parameters = dict(sign.parameters)
+            parameters.pop("self", None)
+            sign = sign.replace(parameters=list(parameters.values()))
+            func.__signature__ = sign
+        
         doc = func.__doc__
         if "Parameters" in doc:
             splits = doc.split("Parameters")
@@ -129,11 +185,21 @@ def make_insert_doc(estimators=["estimator"]):
             doc_est = ""
             for est in estimators:
                 doc_est += base_doc_est[est]
+                
+            if supervised:
+                doc_1 = base_doc_Xt_yt
+            else:
+                doc_1 = base_doc_Xt
+            
+            doc_2 = base_doc_2
+            if "BaseAdaptDeep" in func.__bases__[0].__name__:
+                doc_2 += base_doc_other_params
+            
             splits[1] = (
                 splits[1][:i-1]+
-                doc_est+base_doc_1+
+                doc_est+doc_1+
                 splits[1][i-1:j+1]+
-                base_doc_2+
+                doc_2+
                 splits[1][j+1:]
             )
             new_doc = splits[0]+"Parameters"+splits[1]
@@ -362,11 +428,11 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         
         For feature-based models, the transformation of the
         input features ``Xs`` and ``Xt`` is first fitted. In a second
-        stage, the ``estimator`` is fitted on the transformed features.
+        stage, the ``estimator_`` is fitted on the transformed features.
         
         For instance-based models, source importance weights are
         first learned based on ``Xs, ys`` and ``Xt``. In a second
-        stage, the ``estimator`` is fitted on ``Xs, ys`` with the learned
+        stage, the ``estimator_`` is fitted on ``Xs, ys`` with the learned
         importance weights.
 
         Parameters
@@ -382,8 +448,9 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
             given in `init` is used.
 
         yt : array (default=None)
-            Target input data. If None, the `Xt` argument
-            given in `init` is used.
+            Target input data. Only needed for supervised
+            and semi-supervised Adapt model.
+            If None, the `yt` argument given in `init` is used.
             
         domains : array (default=None)
             Vector giving the domain for each source
@@ -851,6 +918,9 @@ class BaseAdaptDeep(Model, BaseAdapt):
         """
         Fit Model. Note that ``fit`` does not reset
         the model but extend the training.
+        
+        Notice also that the compile method will be called 
+        if the model has not been compiled yet.
 
         Parameters
         ----------
@@ -865,8 +935,9 @@ class BaseAdaptDeep(Model, BaseAdapt):
             given in `init` is used.
 
         yt : array (default=None)
-            Target input data. If None, the `Xt` argument
-            given in `init` is used.
+            Target input data. Only needed for supervised
+            and semi-supervised Adapt model.
+            If None, the `yt` argument given in `init` is used.
             
         domains : array (default=None)
             Vector giving the domain for each source
