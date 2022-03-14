@@ -63,8 +63,8 @@ class KLIEP(BaseAdaptEstimator):
     The above OP is solved through gradient ascent algorithm.
     
     Furthemore a LCV procedure can be added to select the appropriate
-    parameters of the kernel function math::`K` (typically, the paramter
-    math::`\\gamma` of the Gaussian kernel). The parameter is then selected using
+    parameters of the kernel function :math:`K` (typically, the paramter
+    :math:`\\gamma` of the Gaussian kernel). The parameter is then selected using
     cross-validation on the :math:`J` score defined as follows:
     :math:`J = \\frac{1}{|\\mathcal{X}|} \\sum_{x \\in \\mathcal{X}} \\text{log}(w(x))`
     
@@ -84,7 +84,7 @@ class KLIEP(BaseAdaptEstimator):
     
     sigmas : float or list of float (default=None)
         Deprecated, please use the ``gamma`` parameter
-        instead.
+        instead. (See below).
         
     cv : int (default=5)
         Cross-validation split parameter.

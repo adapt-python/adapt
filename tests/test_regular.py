@@ -67,6 +67,20 @@ def test_regularlr_fit():
     model = RegularTransferLR(lr, lambda_=1.)
     model.fit(Xt, yt_reg)
     assert np.abs(model.estimator_.coef_[0] - 4) < 1
+    
+    
+def test_regularlr_multioutput():
+    np.random.seed(0)
+    X = np.random.randn(100, 5)+2.
+    y = X[:, :2]
+    lr = LinearRegression()
+    lr.fit(X, y)
+    model = RegularTransferLR(lr, lambda_=1.)
+    model.fit(X, y)
+    assert np.abs(model.predict(X) - y).sum() < 2
+    assert np.all(model.coef_.shape == (2, 5))
+    assert np.all(model.intercept_.shape == (2,))
+    assert model.score(X, y) > 0.9
 
 
 def test_regularlc_fit():
@@ -85,8 +99,23 @@ def test_regularlc_fit():
     
     model = RegularTransferLC(lr, lambda_=1.2)
     model.fit(Xt, yt_classif)
-    assert np.abs(
-        (model.predict(Xt) == yt_classif.ravel()).sum() - 55) < 2
+    assert (model.predict(Xt) == yt_classif.ravel()).sum() > 95
+    
+    
+def test_regularlc_multiclass():
+    np.random.seed(0)
+    X = np.random.randn(100, 5)
+    y = np.zeros(len(X))
+    y[X[:, :2].sum(1)<0] = 1
+    y[X[:, 3:].sum(1)>0] = 2
+    lr = LogisticRegression(penalty='none', solver='lbfgs')
+    lr.fit(X, y)
+    model = RegularTransferLC(lr, lambda_=1.)
+    model.fit(X, y)
+    assert (model.predict(X) == y).sum() > 90
+    assert np.all(model.coef_.shape == (3, 5))
+    assert np.all(model.intercept_.shape == (3,))
+    assert model.score(X, y) > 0.9
 
 
 def test_regularnn_fit():
