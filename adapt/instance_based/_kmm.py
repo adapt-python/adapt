@@ -57,7 +57,13 @@ class KMM(BaseAdaptEstimator):
     target data to the training set.
 
     Parameters
-    ----------        
+    ----------
+    kernel : str (default="rbf")
+        Kernel metric.
+        Possible values: [‘additive_chi2’, ‘chi2’,
+        ‘linear’, ‘poly’, ‘polynomial’, ‘rbf’,
+        ‘laplacian’, ‘sigmoid’, ‘cosine’]
+    
     B: float (default=1000)
         Bounding weights parameter.
         
@@ -68,12 +74,6 @@ class KMM(BaseAdaptEstimator):
             eps = (np.sqrt(len(Xs)) - 1)/np.sqrt(len(Xs))
 
         with ``Xs`` the source input dataset.
-        
-    kernel : str (default="rbf")
-        Kernel metric.
-        Possible values: [‘additive_chi2’, ‘chi2’,
-        ‘linear’, ‘poly’, ‘polynomial’, ‘rbf’,
-        ‘laplacian’, ‘sigmoid’, ‘cosine’]
         
     max_size : int (default=1000)
         Batch computation to speed up the fitting.
@@ -87,14 +87,6 @@ class KMM(BaseAdaptEstimator):
         
     max_iter: int (default=100)
         Maximal iteration of the optimization.
-
-    Attributes
-    ----------  
-    weights_ : numpy array
-        Training instance weights.
-    
-    estimator_ : object
-        Estimator.
         
     Yields
     ------
@@ -131,6 +123,14 @@ class KMM(BaseAdaptEstimator):
         Degree parameter for the polynomial
         kernel. (see formula in the ``gamma``
         parameter description)
+        
+    Attributes
+    ----------  
+    weights_ : numpy array
+        Training instance weights.
+    
+    estimator_ : object
+        Estimator.
         
     Examples
     --------
@@ -171,9 +171,9 @@ and A. J. Smola. "Correcting sample selection bias by unlabeled data." In NIPS, 
     def __init__(self,
                  estimator=None,
                  Xt=None,
+                 kernel="rbf",
                  B=1000,
                  eps=None,
-                 kernel="rbf",
                  max_size=1000,
                  tol=None,
                  max_iter=100,
