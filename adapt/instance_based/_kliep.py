@@ -47,8 +47,8 @@ class KLIEP(BaseAdaptEstimator):
     
     .. math::
     
-        \max_{\\alpha_i } \sum_{x_i \in X_T} \log(
-        \sum_{x_j \in X_T} \\alpha_i K(x_j, x_i))
+        \max_{\\alpha_i } \sum_{x_j \in X_T} \log(
+        \sum_{x_i \in X_T} \\alpha_i K(x_j, x_i))
         
     Subject to:
     
