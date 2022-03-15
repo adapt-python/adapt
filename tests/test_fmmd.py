@@ -1,3 +1,4 @@
+import pytest
 import numpy as np
 import tensorflow as tf
 
@@ -30,14 +31,18 @@ def test_fmmd():
     
     
 def test_kernel_fct():
+    tf.config.experimental_run_functions_eagerly(True)
     fct = _get_optim_function(Xs, Xt, kernel="linear")
-    fct(tf.identity(np.ones(6)))
-        
+    with pytest.raises(Exception) as excinfo:
+         fct(tf.identity(np.ones(6))) 
+    
     fct = _get_optim_function(Xs, Xt, kernel="rbf")
-    fct(tf.identity(np.ones(6)))
+    with pytest.raises(Exception) as excinfo:
+         fct(tf.identity(np.ones(6)))
     
     fct = _get_optim_function(Xs, Xt, kernel="poly")
-    fct(tf.identity(np.ones(6)))
+    with pytest.raises(Exception) as excinfo:
+         fct(tf.identity(np.ones(6)))
     
     
     
