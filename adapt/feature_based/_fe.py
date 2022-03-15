@@ -11,7 +11,7 @@ from adapt.base import BaseAdaptEstimator, make_insert_doc
 from adapt.utils import check_arrays
 
 
-@make_insert_doc()
+@make_insert_doc(supervised=True)
 class FE(BaseAdaptEstimator):
     """
     FE: Frustratingly Easy Domain Adaptation.
@@ -59,6 +59,11 @@ class FE(BaseAdaptEstimator):
 
     Attributes
     ----------
+    estimator_ : object
+        Fitted estimator.
+        
+    n_domains_ : int
+        Number of domains given in fit.
         
     See also
     --------

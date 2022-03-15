@@ -7,10 +7,43 @@ from scipy import linalg
 from sklearn.metrics import pairwise
 from sklearn.base import clone
 from sklearn.model_selection import train_test_split
-from adapt.utils import get_default_discriminator
+from adapt.utils import get_default_discriminator, check_sample_weight
 from tensorflow.keras.optimizers import Adam
 
 EPS = np.finfo(float).eps
+
+
+def _estimator_predict(estimator, Xs, Xt, X):
+    
+    if hasattr(estimator, "transform"):
+        args = [
+            p.name
+            for p in inspect.signature(estimator.transform).parameters.values()
+            if p.name != "self" and p.kind != p.VAR_KEYWORD
+        ]
+        if "domain" in args:
+            Xt = estimator.transform(Xt, domain="tgt")
+            Xs = estimator.transform(Xs, domain="src")
+        else:
+            Xt = estimator.transform(Xt)
+            Xs = estimator.transform(Xs)
+    
+    elif hasattr(estimator, "predict_weights"):
+        sample_weight = estimator.predict_weights()
+        
+        if len(X) != len(sample_weight):
+            sample_weight = np.ones(len(X))
+        
+        sample_weight = check_sample_weight(sample_weight, X)
+        sample_weight /= sample_weight.sum()
+        bootstrap_index = np.random.choice(
+        len(X), size=len(X), replace=True, p=sample_weight)
+        Xs = X[bootstrap_index]
+    
+    else:
+        raise ValueError("The Adapt model should implement"
+                         " a transform or predict_weights methods")
+    return Xs, Xt
 
 
 def _fit_alpha(Xs, Xt, centers, sigma):
@@ -39,6 +72,119 @@ def _fit_alpha(Xs, Xt, centers, sigma):
         objective = np.mean(np.log(np.dot(A, alpha) + EPS))
         k += 1
     return alpha
+
+
+def make_uda_scorer(func, Xs, Xt, greater_is_better=False, **kwargs):
+    """
+    Make a scorer function from an adapt metric.
+    
+    The goal of adapt metric is to measure the closeness between
+    a source input dataset `Xs` and a target input dataset `Xt`.
+    If `Xs` is close from `Xt`, it can be expected that a good
+    model trained on source will perform well on target.
+        
+    The returned score function will apply `func` on
+    a transformation of `Xs` and `Xt` given to `make_uda_scorer`.
+    
+    If the estimator given in the score function is a
+    feature-based method, the metric will be applied
+    on the encoded `Xs` and `Xt`. If the estimator is instead an
+    instance-based method, a weighted bootstrap sample of `Xs`
+    will be compared to `Xt`.
+    
+    **IMPORTANT NOTE** : when the returned score function is used
+    with ``GridSearchCV`` from sklearn, the parameter
+    ``return_train_score`` must be set to ``True``.
+    The adapt score then corresponds to the train scores.
+    
+    Parameters
+    ----------
+    func : callable
+        Adapt metric with signature
+        ``func(Xs, Xt, **kwargs)``.
+        
+    Xs : array
+        Source input dataset
+        
+    Xt : array
+        Target input dataset
+        
+    greater_is_better : bool, default=True
+        Whether the best outputs of ``func`` are the greatest
+        ot the lowest. For all adapt metrics, the low values
+        mean closeness between Xs and Xt.
+        
+    kwargs : key, value arguments
+        Parameters given to ``func``.
+        
+    Returns
+    -------
+    scorer : callable
+        A scorer function with signature 
+        ``scorer(estimator, X, y_true=None)``.
+        The scorer function transform the parameters
+        `Xs` and `Xt` with the given ``estimator``.
+        Then it rerurns ``func(Xst, Xtt)`` with `Xst`
+        and `Xtt` the transformed data.
+        
+    Notes
+    -----
+    When the returned score function is used
+    with ``GridSearchCV`` from sklearn, the parameter
+    ``return_train_score`` must be set to ``True``.
+    The adapt score then corresponds to the train scores.
+    """
+    
+    def scorer(estimator, X, y_true=None):
+        """
+        Scorer function for unsupervised domain adaptation.
+        
+        For fearure_based method, scorer will apply the
+        ``transform`` method of the fitted ``estimator``
+        to the parameters `Xs` and `Xt` given when building scorer.
+        Then it computes a metric between the two transformed
+        datasets.
+        
+        For instance-based method a weighted bootstrap of
+        the input paramter `X` is performed with the weights return
+        by the ``predict_weights`` method of the fitted ``estimator``.
+        Then it computes a metric beteen the bootstraped `X` and `Xt`.
+        
+        **IMPORTANT NOTE** : when scorer is used
+        with ``GridSearchCV`` from sklearn, the parameter
+        ``return_train_score`` must be set to ``True``.
+        The adapt score then corresponds to the train scores.
+        
+        Parameters
+        ----------
+        estimator : Adapt estimator
+            A fitted adapt estimator which should implements
+            a ``predict_weights`` or ``transform`` method.
+            
+        X : array
+            Input source data
+            
+        y_true : array (default=None)
+            Not used. Here for compatibility with sklearn.
+        
+        Notes
+        -----
+        When scorer is used with ``GridSearchCV`` from sklearn,
+        the parameter ``return_train_score`` must be set to ``True``.
+        The adapt score then corresponds to the train scores.
+        """
+        nonlocal Xs
+        nonlocal Xt
+        nonlocal greater_is_better
+        nonlocal kwargs
+
+        Xs, Xt = _estimator_predict(estimator, Xs=Xs, Xt=Xt, X=X)
+        score = func(Xs, Xt, **kwargs)
+        if not greater_is_better:
+            score *= -1
+        return score
+    
+    return scorer
 
 
 def cov_distance(Xs, Xt):
@@ -458,4 +604,4 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
     clone_model = clone(model)
     clone_model.fit(Xt, yt, Xs, **fit_params)
     
-    return clone_model.score_estimator(Xs, ys)
+    return clone_model.score(Xs, ys)

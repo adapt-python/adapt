@@ -14,6 +14,7 @@ from sklearn.utils.estimator_checks import check_estimator
 from sklearn.base import clone
 
 from adapt.base import BaseAdaptEstimator, BaseAdaptDeep
+from adapt.metrics import normalized_linear_discrepancy
 
 Xs = np.concatenate((
     np.linspace(0, 1, 100).reshape(-1, 1),
@@ -70,25 +71,28 @@ def test_base_adapt_score():
     
     model = DummyFeatureBased(Xt=Xt, random_state=0)
     model.fit(Xs, ys)
-    s1 = model.score(Xt, yt)
-    s2 = model._score_adapt(Xs, Xt)
+    model.score(Xt, yt)
+    s1 = model.unsupervised_score(Xs, Xt)
+    s2 = normalized_linear_discrepancy(model.transform(Xs), Xt)
     assert s1 == s2
     
     model = DummyInstanceBased(Xt=Xt, random_state=0)
     model.fit(Xs, ys)
     model.score(Xt, yt)
-    s1 = model.score(Xt, yt)
-    s2 = model._score_adapt(Xs, Xt)
+    s1 = model.unsupervised_score(Xs, Xt)
+    np.random.seed(0)
+    bs_index = np.random.choice(len(Xs), len(Xs), p=np.ones(len(Xs))/len(Xs))
+    s2 = normalized_linear_discrepancy(Xs[bs_index], Xt)
     assert s1 == s2
     
     
-def test_base_adapt_val_sample_size():
-    model = DummyFeatureBased(Xt=Xt, random_state=0, val_sample_size=10)
-    model.fit(Xs, ys)
-    model.score(Xt, yt)
-    assert len(model.Xs_) == 10
-    assert len(model.Xt_) == 10
-    assert np.all(model.Xs_ == Xs[model.src_index_])
+# def test_base_adapt_val_sample_size():
+#     model = DummyFeatureBased(Xt=Xt, random_state=0, val_sample_size=10)
+#     model.fit(Xs, ys)
+#     model.score(Xt, yt)
+#     assert len(model.Xs_) == 10
+#     assert len(model.Xt_) == 10
+#     assert np.all(model.Xs_ == Xs[model.src_index_])
     
 
 def test_base_adapt_keras_estimator():
@@ -125,12 +129,12 @@ def test_base_adapt_keras_estimator():
     assert model.estimator_.optimizer.learning_rate == 0.1
     assert model.estimator_.optimizer.beta_1 == 0.5
     
-    s1 = model.score_estimator(Xt[:10], yt[:10])
+    s1 = model.score(Xt[:10], yt[:10])
     s2 = model.estimator_.evaluate(Xt[:10], yt[:10])
     assert s1 == s2
     
     copy_model = copy.deepcopy(model)
-    assert s1 == copy_model.score_estimator(Xt[:10], yt[:10])
+    assert s1 == copy_model.score(Xt[:10], yt[:10])
     assert hex(id(model)) != hex(id(copy_model))
 
 
@@ -143,7 +147,7 @@ def test_base_adapt_deep():
     model.fit(Xs, ys)
     yp = model.predict(Xt)
     score = model.score(Xt, yt)
-    score_est = model.score_estimator(Xt, yt)
+    score_adapt = model.unsupervised_score(Xs, Xt)
     X_enc = model.transform(Xs)
     ypt = model.predict_task(Xt)
     ypd = model.predict_disc(Xt)
@@ -152,7 +156,7 @@ def test_base_adapt_deep():
     new_model.fit(Xs, ys)
     yp2 = new_model.predict(Xt)
     score2 = new_model.score(Xt, yt)
-    score_est2 = new_model.score_estimator(Xt, yt)
+    score_adapt2 = new_model.unsupervised_score(Xs, Xt)
     X_enc2 = new_model.transform(Xs)
     ypt2 = new_model.predict_task(Xt)
     ypd2 = new_model.predict_disc(Xt)
@@ -170,7 +174,7 @@ def test_base_adapt_deep():
     
     assert np.all(yp == yp2)
     assert score == score2
-    assert score_est == score_est2
+    assert score_adapt == score_adapt2
     assert np.all(ypt == ypt2)
     assert np.all(ypd == ypd2)
     assert np.all(X_enc == X_enc2)

@@ -23,9 +23,9 @@
 		~CORAL.predict
 		~CORAL.predict_estimator
 		~CORAL.score
-		~CORAL.score_estimator
 		~CORAL.set_params
 		~CORAL.transform
+		~CORAL.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -36,9 +36,9 @@
 	.. automethod:: predict
 	.. automethod:: predict_estimator
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
 	.. automethod:: transform
+	.. automethod:: unsupervised_score
 	
     
 	

@@ -111,7 +111,6 @@ class CORAL(BaseAdaptEstimator):
     def __init__(self,
                  estimator=None,
                  Xt=None,
-                 yt=None,
                  lambda_=1e-5,
                  copy=True,
                  verbose=1,
@@ -185,7 +184,7 @@ class CORAL(BaseAdaptEstimator):
             Input data.
 
         domain : str (default="tgt")
-            Choose between ``"source", "src"`` and
+            Choose between ``"source", "src"`` or
             ``"target", "tgt"`` feature embedding.
 
         Returns

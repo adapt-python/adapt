@@ -59,8 +59,12 @@ weighter="""
 """
 )
 
+base_doc_Xt = """
+    Xt : numpy array (default=None)
+        Target input data.
+"""
 
-base_doc_1 = """
+base_doc_Xt_yt = """
     Xt : numpy array (default=None)
         Target input data.
             
@@ -86,8 +90,53 @@ base_doc_2 ="""
         ``_get_legal_params(params)``.
 """
 
+base_doc_other_params="""
+    Yields
+    ------
+    optimizer : str or instance of tf.keras.optimizers (default="rmsprop")
+        Optimizer for the task. It should be an
+        instance of tf.keras.optimizers as:
+        ``tf.keras.optimizers.SGD(0.001)`` or
+        ``tf.keras.optimizers.Adam(lr=0.001, beta_1=0.5)``.
+        A string can also be given as ``"adam"``.
+        Default optimizer is ``rmsprop``.
 
-def make_insert_doc(estimators=["estimator"]):
+    loss : str or instance of tf.keras.losses (default="mse")
+        Loss for the task. It should be an
+        instance of tf.keras.losses as:
+        ``tf.keras.losses.MeanSquaredError()`` or
+        ``tf.keras.losses.CategoricalCrossentropy()``.
+        A string can also be given as ``"mse"`` or
+        ``categorical_crossentropy``.
+        Default loss is ``mse``.
+
+    metrics : list of str or list of tf.keras.metrics.Metric instance
+        List of metrics to be evaluated by the model during training
+        and testing. Typically you will use ``metrics=['accuracy']``.
+
+    optimizer_enc : str or instance of tf.keras.optimizers
+        If the Adapt Model has an ``encoder`` attribute,
+        a specific optimizer for the ``encoder`` network can
+        be given. Typically, this parameter can be used to
+        give a smaller learning rate to the encoder.
+        If not specified, ``optimizer_enc=optimizer``.
+
+    optimizer_disc : str or instance of tf.keras.optimizers
+        If the Adapt Model has a ``discriminator`` attribute,
+        a specific optimizer for the ``discriminator`` network can
+        be given. If not specified, ``optimizer_disc=optimizer``.
+
+    kwargs : key, value arguments
+        Any arguments of the ``fit`` method from the Tensorflow
+        Model can be given, as ``epochs`` and ``batch_size``.
+        Specific arguments from ``optimizer`` can also be given
+        as ``learning_rate`` or ``beta_1`` for ``Adam``.
+        This allows to perform ``GridSearchCV`` from scikit-learn
+        on these arguments.
+"""
+
+
+def make_insert_doc(estimators=["estimator"], supervised=False):
     """
     Abstract for adding common parameters
     to the docstring
@@ -101,8 +150,15 @@ def make_insert_doc(estimators=["estimator"]):
     -------
     func
     """
-
     def insert_base_doc(func):
+        # Change signature of Deep Model
+        if "BaseAdaptDeep" in func.__bases__[0].__name__:
+            sign = inspect.signature(func.__init__)
+            parameters = dict(sign.parameters)
+            parameters.pop("self", None)
+            sign = sign.replace(parameters=list(parameters.values()))
+            func.__signature__ = sign
+        
         doc = func.__doc__
         if "Parameters" in doc:
             splits = doc.split("Parameters")
@@ -129,11 +185,21 @@ def make_insert_doc(estimators=["estimator"]):
             doc_est = ""
             for est in estimators:
                 doc_est += base_doc_est[est]
+                
+            if supervised:
+                doc_1 = base_doc_Xt_yt
+            else:
+                doc_1 = base_doc_Xt
+            
+            doc_2 = base_doc_2
+            if "BaseAdaptDeep" in func.__bases__[0].__name__:
+                doc_2 += base_doc_other_params
+            
             splits[1] = (
                 splits[1][:i-1]+
-                doc_est+base_doc_1+
+                doc_est+doc_1+
                 splits[1][i-1:j+1]+
-                base_doc_2+
+                doc_2+
                 splits[1][j+1:]
             )
             new_doc = splits[0]+"Parameters"+splits[1]
@@ -195,52 +261,9 @@ class BaseAdapt:
         return self
 
 
-    def score(self, X=None, y=None, sample_weight=None):
+    def unsupervised_score(self, Xs, Xt):
         """
-        Return adaptation score.
-        
-        For parameter-based methods, the estimator score
-        on X, y is computed.
-        
-        For instance-based and feature-based methods,
-        the normalized discrepancy distance is computed
-        between the reweighted/transformed source input
-        data and the target input data.
-        
-        Parameters
-        ----------
-        X : array (default=None)
-            Not used for instance and feature based methods.
-            The training source data are used instead.
-            
-        y : array (default=None)
-            Not used for instance and feature based methods.
-            The training source data are used instead.
-            
-        sample_weight : array (default=None)
-            Not used for instance and feature based methods.
-            
-        Returns
-        -------
-        score : float
-            Adaptation score.
-        """
-        if hasattr(self, "Xs_"):
-            Xs = self.Xs_
-            Xt = self.Xt_
-            src_index = self.src_index_
-            score = self._score_adapt(Xs, Xt, src_index)
-        elif hasattr(self, "score_estimator"):
-            score = self.score_estimator(X, y, sample_weight=sample_weight)
-        else:
-            raise NotFittedError("Adapt model is not fitted yet, "
-                                 "please call 'fit' first.")
-        return score
-
-
-    def _score_adapt(self, Xs, Xt, src_index=None):
-        """
-        Return adaptation score.
+        Return unsupervised score.
         
         The normalized discrepancy distance is computed
         between the reweighted/transformed source input
@@ -254,18 +277,14 @@ class BaseAdapt:
         Xt : array
             Source input data.
             
-        src_index : array
-            Index of Xs in the training data.
-            
         Returns
         -------
         score : float
-            Adaptation score.
+            Unsupervised score.
         """
-        Xs = np.array(Xs)
-        Xt = np.array(Xt)
-        if src_index is None:
-            src_index = np.arange(len(Xs))
+        Xs = check_array(np.array(Xs))
+        Xt = check_array(np.array(Xt))
+        
         if hasattr(self, "transform"):
             args = [
                 p.name
@@ -280,7 +299,7 @@ class BaseAdapt:
                 Xs = self.transform(Xs)
         elif hasattr(self, "predict_weights"):
             sample_weight = self.predict_weights()
-            sample_weight = sample_weight[src_index]
+            sample_weight = sample_weight
             
             sample_weight = check_sample_weight(sample_weight, Xs)
             sample_weight /= sample_weight.sum()
@@ -350,24 +369,6 @@ class BaseAdapt:
                 kwargs[new_key] = value
         kwargs.update(override)
         return kwargs
-
-
-    def _save_validation_data(self, Xs, Xt):
-        Xs = np.array(Xs)
-        Xt = np.array(Xt)
-        if hasattr(self, "val_sample_size"):
-            set_random_seed(self.random_state)
-            size = min(self.val_sample_size, len(Xs))
-            src_index = np.random.choice(len(Xs), size, replace=False)
-            self.Xs_ = Xs[src_index]
-            size = min(self.val_sample_size, len(Xt))
-            tgt_index = np.random.choice(len(Xt), size, replace=False)
-            self.Xt_ = Xt[tgt_index]
-            self.src_index_ = src_index
-        else:
-            self.Xs_ = Xs
-            self.Xt_ = Xt
-            self.src_index_ = None
     
     
     def _get_target_data(self, X, y):
@@ -424,6 +425,15 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
     def fit(self, X, y, Xt=None, yt=None, domains=None, **fit_params):
         """
         Fit Adapt Model.
+        
+        For feature-based models, the transformation of the
+        input features ``Xs`` and ``Xt`` is first fitted. In a second
+        stage, the ``estimator_`` is fitted on the transformed features.
+        
+        For instance-based models, source importance weights are
+        first learned based on ``Xs, ys`` and ``Xt``. In a second
+        stage, the ``estimator_`` is fitted on ``Xs, ys`` with the learned
+        importance weights.
 
         Parameters
         ----------
@@ -438,8 +448,9 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
             given in `init` is used.
 
         yt : array (default=None)
-            Target input data. If None, the `Xt` argument
-            given in `init` is used.
+            Target input data. Only needed for supervised
+            and semi-supervised Adapt model.
+            If None, the `yt` argument given in `init` is used.
             
         domains : array (default=None)
             Vector giving the domain for each source
@@ -460,8 +471,6 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         else:
             Xt = check_array(Xt, ensure_2d=True, allow_nd=True)
         set_random_seed(self.random_state)
-
-        self._save_validation_data(X, Xt)
  
         if hasattr(self, "fit_weights"):
             if self.verbose:
@@ -494,7 +503,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
                       random_state=None, warm_start=True,
                       **fit_params):
         """
-        Fit estimator.
+        Fit estimator on X, y.
         
         Parameters
         ----------
@@ -592,7 +601,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
 
     def predict_estimator(self, X, **predict_params):
         """
-        Return estimator predictions.
+        Return estimator predictions for X.
         
         Parameters
         ----------
@@ -610,16 +619,30 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         return self.estimator_.predict(X, **predict_params)
 
 
-    def predict(self, X, **predict_params):
+    def predict(self, X, domain=None, **predict_params):
         """
         Return estimator predictions after
         adaptation.
+        
+        For feature-based method (object which implements
+        a ``transform`` method), the input feature ``X``
+        are first transformed. Then the ``predict`` method
+        of the fitted estimator ``estimator_`` is applied
+        on the transformed ``X``.
         
         Parameters
         ----------
         X : array
             input data
-            
+        
+        domain : str (default=None)
+            For antisymetric feature-based method,
+            different transformation of the input X
+            are applied for different domains. The domain
+            should then be specified between "src" and "tgt".
+            If ``None`` the default transformation is the
+            target one.
+        
         Returns
         -------
         y_pred : array
@@ -627,17 +650,29 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         """
         X = check_array(X, ensure_2d=True, allow_nd=True)
         if hasattr(self, "transform"):
-            if "domain" in predict_params:
-                domain = predict_params.pop("domain")
+            if domain is None:
+                domain = "tgt"
+            args = [
+                p.name
+                for p in inspect.signature(self.transform).parameters.values()
+                if p.name != "self" and p.kind != p.VAR_KEYWORD
+            ]
+            if "domain" in args:
                 X = self.transform(X, domain=domain)
             else:
                 X = self.transform(X)
         return self.predict_estimator(X, **predict_params)
 
 
-    def score_estimator(self, X, y, sample_weight=None):
+    def score(self, X, y, sample_weight=None, domain=None):
         """
         Return the estimator score.
+        
+        If the object has a ``transform`` method, the
+        estimator is applied on the transformed
+        features X. For antisymetric transformation,
+        a parameter domain can be set to specified
+        between source and target transformation.
         
         Call `score` on sklearn estimator and 
         `evaluate` on tensorflow Model.
@@ -652,6 +687,13 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
             
         sample_weight : array (default=None)
             Sample weights
+             
+        domain : str (default=None)
+            This parameter specifies for antisymetric
+            feature-based method which transformation
+            will be applied between "source" and "target".
+            If ``None`` the transformation by default is
+            the target one.
             
         Returns
         -------
@@ -659,6 +701,21 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
             estimator score.
         """
         X, y = check_arrays(X, y)
+        
+        if domain is None:
+            domain = "target"
+        
+        if hasattr(self, "transform"):
+            args = [
+                p.name
+                for p in inspect.signature(self.transform).parameters.values()
+                if p.name != "self" and p.kind != p.VAR_KEYWORD
+            ]
+            if "domain" in args:
+                X = self.transform(X, domain=domain)
+            else:
+                X = self.transform(X)
+        
         if hasattr(self.estimator_, "score"):
             score = self.estimator_.score(X, y, sample_weight)
         elif hasattr(self.estimator_, "evaluate"):
@@ -707,7 +764,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
             if (optimizer is not None) and (not isinstance(optimizer, str)):
                 legal_params_fct.append(optimizer.__init__)
                 
-        legal_params = ["domain", "val_sample_size"]
+        legal_params = ["domain"]
         for func in legal_params_fct:
             args = [
                 p.name
@@ -861,6 +918,9 @@ class BaseAdaptDeep(Model, BaseAdapt):
         """
         Fit Model. Note that ``fit`` does not reset
         the model but extend the training.
+        
+        Notice also that the compile method will be called 
+        if the model has not been compiled yet.
 
         Parameters
         ----------
@@ -875,8 +935,9 @@ class BaseAdaptDeep(Model, BaseAdapt):
             given in `init` is used.
 
         yt : array (default=None)
-            Target input data. If None, the `Xt` argument
-            given in `init` is used.
+            Target input data. Only needed for supervised
+            and semi-supervised Adapt model.
+            If None, the `yt` argument given in `init` is used.
             
         domains : array (default=None)
             Vector giving the domain for each source
@@ -891,24 +952,8 @@ class BaseAdaptDeep(Model, BaseAdapt):
         self : returns an instance of self
         """
         set_random_seed(self.random_state)
-        
-        # 1. Initialize networks
-        if not hasattr(self, "_is_fitted"):
-            self._is_fitted = True
-            self._initialize_networks()
-            if isinstance(X, tf.data.Dataset):
-                first_elem = next(iter(X))
-                if (not isinstance(first_elem, tuple) or
-                not len(first_elem)==2):
-                    raise ValueError("When first argument is a dataset. "
-                                     "It should return (x, y) tuples.")
-                else:
-                    shape = first_elem[0].shape
-            else:
-                shape = X.shape[1:]
-            self._initialize_weights(shape)
             
-        # 2. Get Fit params
+        # 1. Get Fit params
         fit_params = self._filter_params(super().fit, fit_params)
         
         verbose = fit_params.get("verbose", 1)
@@ -919,9 +964,9 @@ class BaseAdaptDeep(Model, BaseAdapt):
         validation_split = fit_params.pop("validation_split", 0.)
         validation_batch_size = fit_params.pop("validation_batch_size", batch_size)
         
-        # 3. Prepare datasets
+        # 2. Prepare datasets
         
-        ### 3.1 Source
+        ### 2.1 Source
         if not isinstance(X, tf.data.Dataset):
             check_arrays(X, y)
             if len(y.shape) <= 1:
@@ -960,7 +1005,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
         else:
             dataset_src = X
             
-        ### 3.2 Target
+        ### 2.2 Target
         Xt, yt = self._get_target_data(Xt, yt)
         if not isinstance(Xt, tf.data.Dataset):
             if yt is None:
@@ -980,13 +1025,27 @@ class BaseAdaptDeep(Model, BaseAdapt):
         else:
             dataset_tgt = Xt
             
-        self._save_validation_data(X, Xt)
-        
-        # 4. Get validation data
+        # 3. Initialize networks
+        if not hasattr(self, "_is_fitted"):
+            self._is_fitted = True
+            self._initialize_networks()
+            if isinstance(Xt, tf.data.Dataset):
+                first_elem = next(iter(Xt))
+                if (not isinstance(first_elem, tuple) or
+                not len(first_elem)==2):
+                    raise ValueError("When first argument is a dataset. "
+                                     "It should return (x, y) tuples.")
+                else:
+                    shape = first_elem[0].shape
+            else:
+                shape = Xt.shape[1:]
+            self._initialize_weights(shape)
+            
 #         validation_data = self._check_validation_data(validation_data,
 #                                                       validation_batch_size,
 #                                                       shuffle)
         
+        # 4. Prepare validation dataset
         if validation_data is None and validation_split>0.:
             if shuffle:
                 dataset_src = dataset_src.shuffle(buffer_size=1024)
@@ -996,8 +1055,10 @@ class BaseAdaptDeep(Model, BaseAdapt):
             validation_data = validation_data.batch(batch_size)
             
         # 5. Set datasets
+        # Same length for src and tgt + complete last batch + shuffle
         try:
             max_size = max(len(dataset_src), len(dataset_tgt))
+            max_size = np.ceil(max_size / batch_size) * batch_size
             repeat_src = np.ceil(max_size/len(dataset_src))
             repeat_tgt = np.ceil(max_size/len(dataset_tgt))
 
@@ -1007,6 +1068,10 @@ class BaseAdaptDeep(Model, BaseAdapt):
             self.total_steps_ = float(np.ceil(max_size/batch_size)*epochs)
         except:
             pass
+        
+        if shuffle:
+            dataset_src = dataset_src.shuffle(buffer_size=1024)
+            dataset_tgt = dataset_tgt.shuffle(buffer_size=1024)
         
         # 5. Pretraining
         if not hasattr(self, "pretrain_"):
@@ -1039,10 +1104,8 @@ class BaseAdaptDeep(Model, BaseAdapt):
             prefit_params.pop("validation_split", None)
             prefit_params.pop("validation_batch_size", None)
             
-            if pre_shuffle:
-                dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt)).shuffle(buffer_size=1024).batch(pre_batch_size)
-            else:
-                dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt)).batch(pre_batch_size)
+            # !!! shuffle is already done
+            dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt)).batch(pre_batch_size)
                 
             hist = super().fit(dataset, validation_data=validation_data,
                                epochs=pre_epochs, verbose=pre_verbose, **prefit_params)
@@ -1060,10 +1123,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
             self.history_ = {}
 
         # .7 Training
-        if shuffle:
-            dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt)).shuffle(buffer_size=1024).batch(batch_size)
-        else:
-            dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt)).batch(batch_size)
+        dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt)).batch(batch_size)
 
         self.pretrain_ = False
         
@@ -1268,6 +1328,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
             y_pred = self(Xs, training=True)
             loss = self.compiled_loss(
               ys, y_pred, regularization_losses=self.losses)
+            loss = tf.reduce_mean(loss)
 
         # Run backwards pass.
         self.optimizer.minimize(loss, self.trainable_variables, tape=tape)
@@ -1414,7 +1475,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
         return self.task_.predict(self.transform(X))
     
     
-    def score_estimator(self, X, y, sample_weight=None):
+    def score(self, X, y, sample_weight=None):
         """
         Return the evaluation of the model on X, y.
         

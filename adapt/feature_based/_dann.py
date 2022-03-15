@@ -58,13 +58,8 @@ class DANN(BaseAdaptDeep):
     
     Parameters
     ----------        
-    lambda_ : float (default=0.1)
+    lambda_ : float or tensorflow Variable (default=0.1)
         Trade-off parameter.
-        
-    gamma : float (default=10.0)
-        Increase rate parameter.
-        Give the increase rate of the trade-off parameter if
-        ``lambda_`` is set to ``None``.
     
     Attributes
     ----------

@@ -22,8 +22,8 @@
 		~RegularTransferLR.predict
 		~RegularTransferLR.predict_estimator
 		~RegularTransferLR.score
-		~RegularTransferLR.score_estimator
 		~RegularTransferLR.set_params
+		~RegularTransferLR.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -33,8 +33,8 @@
 	.. automethod:: predict
 	.. automethod:: predict_estimator
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
+	.. automethod:: unsupervised_score
 	
     
 	

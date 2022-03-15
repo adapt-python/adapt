@@ -4,7 +4,8 @@ Regular Transfer
 
 import numpy as np
 from sklearn.exceptions import NotFittedError
-from scipy.optimize import minimize
+from sklearn.preprocessing import LabelBinarizer
+from scipy.sparse.linalg import lsqr
 import tensorflow as tf
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Flatten, Dense
@@ -41,7 +42,7 @@ def get_zeros_network(name=None):
     return model
 
 
-@make_insert_doc()
+@make_insert_doc(supervised=True)
 class RegularTransferLR(BaseAdaptEstimator):
     """
     Regular Transfer with Linear Regression
@@ -161,66 +162,89 @@ can help a lot". In EMNLP, 2004.
         self.estimator_ = check_estimator(self.estimator,
                                           copy=self.copy,
                                           force_copy=True)
-        
+                
         if self.estimator_.fit_intercept:
+            intercept_ = np.reshape(
+                self.estimator_.intercept_,
+                np.ones(self.estimator_.coef_.shape).mean(-1, keepdims=True).shape)
             beta_src = np.concatenate((
-                self.estimator_.intercept_ * np.ones(yt.shape).mean(0, keepdims=True),
-                self.estimator_.coef_.transpose()
-            ))
+                intercept_,
+                self.estimator_.coef_
+            ), axis=-1)
             Xt = np.concatenate(
                 (np.ones((len(Xt), 1)), Xt),
                 axis=-1)
         else:
-            beta_src = self.estimator_.coef_.transpose()
+            beta_src = self.estimator_.coef_
         
-        func = self._get_func(Xt, yt, beta_src)
+        yt_ndim_below_one_ = False
+        if yt.ndim <= 1:
+            yt = yt.reshape(-1, 1)
+            yt_ndim_below_one_ = True
         
-        beta_tgt = minimize(func, beta_src)['x']
-        beta_tgt = beta_tgt.reshape(beta_src.shape)
-
+        if beta_src.ndim <= 1:
+            beta_src.reshape(1, -1)
+            
+        if beta_src.shape[0] != yt.shape[1]:
+            raise ValueError("The number of features of `yt`"
+                             " does not match the number of coefs in 'estimator', "
+                             "expected %i, got %i"(beta_src.shape[0], yt.shape[1]))
+        
+        if beta_src.shape[1] != Xt.shape[1]:            
+            beta_shape = beta_src.shape[1]; Xt_shape = Xt.shape[1]
+            if self.estimator_.fit_intercept:
+                beta_shape -= 1; Xt_shape -= 1
+            raise ValueError("The number of features of `Xt`"
+                             " does not match the number of coefs in 'estimator', "
+                             "expected %i, got %i"(beta_shape, Xt_shape))
+            
+        beta_tgt = []
+        for i in range(yt.shape[1]):
+            sol = lsqr(A=Xt, b=yt[:, i], damp=self.lambda_, x0=beta_src[i, :])
+            beta_tgt.append(sol[0])
+            
+        beta_tgt = np.stack(beta_tgt, axis=0)
+        
         if self.estimator_.fit_intercept:
-            self.estimator_.intercept_ = beta_tgt[0]
-            self.estimator_.coef_ = beta_tgt[1:].transpose()
+            self.coef_ = beta_tgt[:, 1:]
+            self.intercept_ = beta_tgt[:, 0]
         else:
-            self.estimator_.coef_ = beta_tgt.transpose()
+            self.coef_ = beta_tgt
+            
+        if yt_ndim_below_one_:
+            self.coef_ = self.coef_.reshape(-1)
+            self.intercept_ = self.intercept_[0]
+            
+        self.estimator_.coef_ = self.coef_
+        if self.estimator_.fit_intercept:
+            self.estimator_.intercept_ = self.intercept_
         return self
-    
-    
-    def _get_func(self, Xt, yt, beta_src):
-        def func(beta):
-            beta = beta.reshape(beta_src.shape)
-            return (np.linalg.norm(Xt.dot(beta) - yt) ** 2 +
-                    self.lambda_ * np.linalg.norm(beta - beta_src) ** 2)
-        return func
 
     
 
-@make_insert_doc()
+@make_insert_doc(supervised=True)
 class RegularTransferLC(RegularTransferLR):
     """
     Regular Transfer for Linear Classification
     
     RegularTransferLC is a parameter-based domain adaptation method.
-    
-    The method is based on the assumption that a good target estimator
-    can be obtained by adapting the parameters of a pre-trained source
-    estimator using a few labeled target data.
-    
-    The approach consist in fitting a linear estimator on target data
-    according to an objective function regularized by the euclidean
-    distance between source and target parameters:
+        
+    This classifier first converts the target values into ``{-1, 1}``
+    and then treats the problem as a regression task
+    (multi-output regression in the multiclass case). It then fits
+    the target data as a ``RegularTransferLR`` regressor, i.e it
+    performs the following optimization:
     
     .. math::
     
-        \\beta_T = \\underset{\\beta \\in \\mathbb{R}^p}{\\text{argmin}}
-        \\, \\ell(\\beta, X_T, y_T) + \\lambda ||\\beta - \\beta_S||^2
+        \\beta_T = \\underset{\\beta \in \\mathbb{R}^p}{\\text{argmin}}
+        \\, ||X_T\\beta - y_T||^2 + \\lambda ||\\beta - \\beta_S||^2
         
     Where:
     
-    - :math:`\\ell` is the log-likelihood function.
     - :math:`\\beta_T` are the target model parameters.
     - :math:`\\beta_S = \\underset{\\beta \\in \\mathbb{R}^p}{\\text{argmin}}
-      \\, \\ell(\\beta, X_S, y_S)` are the source model parameters.
+      \\, ||X_S\\beta - y_S||^2` are the source model parameters.
     - :math:`(X_S, y_S), (X_T, y_T)` are respectively the source and
       the target labeled data.
     - :math:`p` is the number of features in :math:`X_T`
@@ -270,16 +294,16 @@ can help a lot". In EMNLP, 2004.
     """
     ### TODO reshape yt for multiclass.
     
-    def _get_func(self, Xt, yt, beta_src):
-        def func(beta):
-            beta = beta.reshape(beta_src.shape)
-            return (np.sum(np.log(1 + np.exp(
-                -(2*yt-1) * Xt.dot(beta)))) +
-                self.lambda_ * np.linalg.norm(beta - beta_src) ** 2)
-        return func
+    def fit(self, Xt=None, yt=None, **fit_params):       
+        Xt, yt = self._get_target_data(Xt, yt)
+        Xt, yt = check_arrays(Xt, yt)
+        
+        _label_binarizer = LabelBinarizer(pos_label=1, neg_label=-1)
+        yt = _label_binarizer.fit_transform(yt)
+        return super().fit(Xt, yt, **fit_params)
 
 
-@make_insert_doc(["task"])
+@make_insert_doc(["task"], supervised=True)
 class RegularTransferNN(BaseAdaptDeep):
     """
     Regular Transfer with Neural Network

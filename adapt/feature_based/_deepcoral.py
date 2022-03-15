@@ -57,7 +57,7 @@ class DeepCORAL(BaseAdaptDeep):
     
     Parameters
     ----------
-    lambda_ : float (default=1.)
+    lambda_ : float or tensorflow Variable (default=1.)
         Trade-off parameter.
         
     match_mean : bool (default=False)
@@ -116,7 +116,6 @@ class DeepCORAL(BaseAdaptDeep):
                  encoder=None,
                  task=None,
                  Xt=None,
-                 yt=None,
                  lambda_=1.,
                  match_mean=False,
                  copy=True,

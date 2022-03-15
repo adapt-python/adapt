@@ -23,9 +23,9 @@
 		~DeepCORAL.predict_disc
 		~DeepCORAL.predict_task
 		~DeepCORAL.score
-		~DeepCORAL.score_estimator
 		~DeepCORAL.set_params
 		~DeepCORAL.transform
+		~DeepCORAL.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -36,9 +36,9 @@
 	.. automethod:: predict_disc
 	.. automethod:: predict_task
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
 	.. automethod:: transform
+	.. automethod:: unsupervised_score
 	
     
 	

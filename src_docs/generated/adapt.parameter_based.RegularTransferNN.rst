@@ -23,9 +23,9 @@
 		~RegularTransferNN.predict_disc
 		~RegularTransferNN.predict_task
 		~RegularTransferNN.score
-		~RegularTransferNN.score_estimator
 		~RegularTransferNN.set_params
 		~RegularTransferNN.transform
+		~RegularTransferNN.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -36,9 +36,9 @@
 	.. automethod:: predict_disc
 	.. automethod:: predict_task
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
 	.. automethod:: transform
+	.. automethod:: unsupervised_score
 	
     
 	

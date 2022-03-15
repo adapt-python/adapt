@@ -25,9 +25,9 @@
 		~WANN.predict_weights
 		~WANN.pretrain_step
 		~WANN.score
-		~WANN.score_estimator
 		~WANN.set_params
 		~WANN.transform
+		~WANN.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -40,9 +40,9 @@
 	.. automethod:: predict_weights
 	.. automethod:: pretrain_step
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
 	.. automethod:: transform
+	.. automethod:: unsupervised_score
 	
     
 	

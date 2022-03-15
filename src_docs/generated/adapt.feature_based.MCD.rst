@@ -20,13 +20,14 @@
 		~MCD.fit
 		~MCD.get_params
 		~MCD.predict
+		~MCD.predict_avg
 		~MCD.predict_disc
 		~MCD.predict_task
 		~MCD.pretrain_step
 		~MCD.score
-		~MCD.score_estimator
 		~MCD.set_params
 		~MCD.transform
+		~MCD.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -34,13 +35,14 @@
 	.. automethod:: fit
 	.. automethod:: get_params
 	.. automethod:: predict
+	.. automethod:: predict_avg
 	.. automethod:: predict_disc
 	.. automethod:: predict_task
 	.. automethod:: pretrain_step
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
 	.. automethod:: transform
+	.. automethod:: unsupervised_score
 	
     
 	

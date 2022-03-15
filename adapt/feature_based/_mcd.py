@@ -76,7 +76,6 @@ domain adaptation". In CVPR, 2018.
                  encoder=None,
                  task=None,
                  Xt=None,
-                 yt=None,
                  pretrain=True,
                  n_steps=1,
                  copy=True,
@@ -223,6 +222,27 @@ domain adaptation". In CVPR, 2018.
             return logs
     
     
+    def predict_avg(self, X):
+        """
+        Return the average predictions between
+        task_ and discriminator_ networks.
+        
+        Parameters
+        ----------
+        X : array
+            Input data
+            
+        Returns
+        -------
+        y_avg : array
+            Average predictions
+        """
+        ypt = self.task_.predict(self.transform(X))
+        ypd = self.discriminator_.predict(self.transform(X))
+        yp_avg = 0.5 * (ypt+ypd)
+        return yp_avg
+        
+
     def _initialize_networks(self):
         if self.encoder is None:
             self.encoder_ = get_default_encoder(name="encoder")
