@@ -2,6 +2,7 @@
 Test functions for regular module.
 """
 
+import pytest
 import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
 import tensorflow as tf
@@ -67,6 +68,40 @@ def test_regularlr_fit():
     model = RegularTransferLR(lr, lambda_=1.)
     model.fit(Xt, yt_reg)
     assert np.abs(model.estimator_.coef_[0] - 4) < 1
+    
+    
+def test_regularlr_multioutput():
+    np.random.seed(0)
+    X = np.random.randn(100, 5)+2.
+    y = X[:, :2]
+    lr = LinearRegression()
+    lr.fit(X, y)
+    model = RegularTransferLR(lr, lambda_=1.)
+    model.fit(X, y)
+    assert np.abs(model.predict(X) - y).sum() < 2
+    assert np.all(model.coef_.shape == (2, 5))
+    assert np.all(model.intercept_.shape == (2,))
+    assert model.score(X, y) > 0.9
+    
+    
+def test_regularlr_error():
+    np.random.seed(0)
+    Xs = np.random.randn(100, 5)
+    Xt = np.random.randn(100, 5)
+    ys = np.random.randn(100)
+    yt = np.random.randn(100)
+    lr = LinearRegression()
+    lr.fit(Xs, ys)
+    model = RegularTransferLR(lr, lambda_=1.)
+    model.fit(Xt, yt)
+    
+    with pytest.raises(ValueError) as excinfo:
+         model.fit(np.random.randn(100, 4), yt)
+    assert "expected 5, got 4" in str(excinfo.value)
+    
+    with pytest.raises(ValueError) as excinfo:
+         model.fit(Xt, np.random.randn(100, 2))
+    assert "expected 1, got 2" in str(excinfo.value)
 
 
 def test_regularlc_fit():
@@ -85,8 +120,23 @@ def test_regularlc_fit():
     
     model = RegularTransferLC(lr, lambda_=1.2)
     model.fit(Xt, yt_classif)
-    assert np.abs(
-        (model.predict(Xt) == yt_classif.ravel()).sum() - 55) < 2
+    assert (model.predict(Xt) == yt_classif.ravel()).sum() > 95
+    
+    
+def test_regularlc_multiclass():
+    np.random.seed(0)
+    X = np.random.randn(100, 5)
+    y = np.zeros(len(X))
+    y[X[:, :2].sum(1)<0] = 1
+    y[X[:, 3:].sum(1)>0] = 2
+    lr = LogisticRegression(penalty='none', solver='lbfgs')
+    lr.fit(X, y)
+    model = RegularTransferLC(lr, lambda_=1.)
+    model.fit(X, y)
+    assert (model.predict(X) == y).sum() > 90
+    assert np.all(model.coef_.shape == (3, 5))
+    assert np.all(model.intercept_.shape == (3,))
+    assert model.score(X, y) > 0.9
 
 
 def test_regularnn_fit():
@@ -106,3 +156,15 @@ def test_regularnn_fit():
     assert np.sum(np.abs(network.get_weights()[0] - model.get_weights()[0])) < 0.001
     assert np.abs(model.predict(Xt) - yt_reg).sum() > 10
     
+    
+def test_regularnn_reg():
+    tf.random.set_seed(0)
+    np.random.seed(0)
+    network = _get_network()
+    network.fit(Xs, ys_reg, epochs=100, batch_size=100, verbose=0)
+    model = RegularTransferNN(network, regularizer="l1")
+    model.fit(Xt, yt_reg, epochs=100, batch_size=100, verbose=0)
+    
+    with pytest.raises(ValueError) as excinfo:
+         model = RegularTransferNN(network, regularizer="l3")
+    assert "l1' or 'l2', got, l3" in str(excinfo.value)

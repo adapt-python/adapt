@@ -24,8 +24,8 @@
 		~KLIEP.predict_estimator
 		~KLIEP.predict_weights
 		~KLIEP.score
-		~KLIEP.score_estimator
 		~KLIEP.set_params
+		~KLIEP.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -37,8 +37,8 @@
 	.. automethod:: predict_estimator
 	.. automethod:: predict_weights
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
+	.. automethod:: unsupervised_score
 	
     
 	

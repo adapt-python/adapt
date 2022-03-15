@@ -44,7 +44,7 @@ class WDGRL(BaseAdaptDeep):
     
     Parameters
     ----------        
-    lambda_ : float or None (default=1)
+    lambda_ : float or tensorflow Variable (default=1)
         Trade-off parameter. This parameter gives the trade-off
         for the encoder between learning the task and matching
         the source and target distribution. If `lambda_`is small
@@ -114,7 +114,6 @@ In AAAI, 2018.
                  task=None,
                  discriminator=None,
                  Xt=None,
-                 yt=None,
                  lambda_=0.1,
                  gamma=10.,
                  verbose=1,

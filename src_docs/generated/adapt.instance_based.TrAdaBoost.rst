@@ -23,8 +23,8 @@
 		~TrAdaBoost.predict_estimator
 		~TrAdaBoost.predict_weights
 		~TrAdaBoost.score
-		~TrAdaBoost.score_estimator
 		~TrAdaBoost.set_params
+		~TrAdaBoost.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -35,8 +35,8 @@
 	.. automethod:: predict_estimator
 	.. automethod:: predict_weights
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
+	.. automethod:: unsupervised_score
 	
     
 	

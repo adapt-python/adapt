@@ -18,3 +18,5 @@ var/
 .installed.cfg
 *.egg
 docs_build/
+docs/html/
+docs/doctrees/

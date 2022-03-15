@@ -1,11 +1,14 @@
 """
 Kullback-Leibler Importance Estimation Procedure
 """
+import itertools
+import warnings
 
 import numpy as np
 from sklearn.metrics import pairwise
 from sklearn.exceptions import NotFittedError
 from sklearn.utils import check_array
+from sklearn.metrics.pairwise import KERNEL_PARAMS
 
 from adapt.base import BaseAdaptEstimator, make_insert_doc
 from adapt.utils import set_random_seed
@@ -29,15 +32,15 @@ class KLIEP(BaseAdaptEstimator):
     
     .. math::
     
-        w(x) = \sum_{x_i \in X_T} \\alpha_i K_{\sigma}(x, x_i)
+        w(x) = \sum_{x_i \in X_T} \\alpha_i K(x, x_i)
         
     Where:
     
     - :math:`x, x_i` are input instances.
     - :math:`X_T` is the target input data.
     - :math:`\\alpha_i` are the basis functions coefficients.
-    - :math:`K_{\sigma}(x, x_i) = \\text{exp}(-\\frac{||x - x_i||^2}{2\sigma^2})`
-      are kernel functions of bandwidth :math:`\sigma`.
+    - :math:`K(x, x_i) = \\text{exp}(-\\gamma ||x - x_i||^2)`
+      for instance if ``kernel="rbf"``.
       
     KLIEP algorithm consists in finding the optimal :math:`\\alpha_i` according to
     the following optimization problem:
@@ -45,13 +48,13 @@ class KLIEP(BaseAdaptEstimator):
     .. math::
     
         \max_{\\alpha_i } \sum_{x_j \in X_T} \log(
-        \sum_{x_i \in X_T} \\alpha_i K_{\sigma}(x_j, x_i))
+        \sum_{x_i \in X_T} \\alpha_i K(x_j, x_i))
         
     Subject to:
     
     .. math::
     
-        \sum_{x_k \in X_S} \sum_{x_j \in X_T} \\alpha_i K_{\sigma}(x_j, x_k)) = n_S
+        \sum_{x_k \in X_S} \sum_{x_j \in X_T} \\alpha_i K(x_j, x_k)) = n_S
         
     Where:
     
@@ -60,8 +63,9 @@ class KLIEP(BaseAdaptEstimator):
     The above OP is solved through gradient ascent algorithm.
     
     Furthemore a LCV procedure can be added to select the appropriate
-    bandwidth :math:`\sigma`. The parameter is then selected using
-    cross-validation on the :math:`J` score defined as follow:
+    parameters of the kernel function :math:`K` (typically, the paramter
+    :math:`\\gamma` of the Gaussian kernel). The parameter is then selected using
+    cross-validation on the :math:`J` score defined as follows:
     :math:`J = \\frac{1}{|\\mathcal{X}|} \\sum_{x \\in \\mathcal{X}} \\text{log}(w(x))`
     
     Finally, an estimator is fitted using the reweighted labeled source instances.
@@ -71,11 +75,16 @@ class KLIEP(BaseAdaptEstimator):
     target data to the training set.
     
     Parameters
-    ----------        
-    sigmas : float or list of float (default=1/nb_features)
-        Kernel bandwidths.
-        If ``sigmas`` is a list of multiple values, the
-        kernel bandwidth is selected with the LCV procedure.
+    ----------
+    kernel : str (default="rbf")
+        Kernel metric.
+        Possible values: [‘additive_chi2’, ‘chi2’,
+        ‘linear’, ‘poly’, ‘polynomial’, ‘rbf’,
+        ‘laplacian’, ‘sigmoid’, ‘cosine’]
+    
+    sigmas : float or list of float (default=None)
+        Deprecated, please use the ``gamma`` parameter
+        instead. (See below).
         
     cv : int (default=5)
         Cross-validation split parameter.
@@ -94,14 +103,58 @@ class KLIEP(BaseAdaptEstimator):
     max_iter : int (default=5000)
         Maximal iteration of the gradient ascent
         optimization.
+        
+    Yields
+    ------
+    gamma : float or list of float
+        Kernel parameter ``gamma``.
+        
+        - For kernel = chi2::
+        
+            k(x, y) = exp(-gamma Sum [(x - y)^2 / (x + y)])
+
+        - For kernel = poly or polynomial::
+        
+            K(X, Y) = (gamma <X, Y> + coef0)^degree
+            
+        - For kernel = rbf::
+        
+            K(x, y) = exp(-gamma ||x-y||^2)
+        
+        - For kernel = laplacian::
+        
+            K(x, y) = exp(-gamma ||x-y||_1)
+        
+        - For kernel = sigmoid::
+        
+            K(X, Y) = tanh(gamma <X, Y> + coef0)
+            
+        If a list is given, the LCV process is performed to
+        select the best parameter ``gamma``.
+        
+    coef0 : floaf or list of float
+        Kernel parameter ``coef0``.
+        Used for ploynomial and sigmoid kernels.
+        See ``gamma`` parameter above for the 
+        kernel formulas.
+        If a list is given, the LCV process is performed to
+        select the best parameter ``coef0``.
+        
+    degree : int or list of int
+        Degree parameter for the polynomial
+        kernel. (see formula in the ``gamma``
+        parameter description).
+        If a list is given, the LCV process is performed to
+        select the best parameter ``degree``.
 
     Attributes
     ----------
     weights_ : numpy array
         Training instance weights.
         
-    sigma_ : float
-        Sigma selected for the kernel
+    best_params_ : float
+        Best kernel params combination
+        deduced from the LCV procedure.
         
     alphas_ : numpy array
         Basis functions coefficients.
@@ -109,8 +162,10 @@ class KLIEP(BaseAdaptEstimator):
     centers_ : numpy array
         Center points for kernels.
         
-    j_scores_ : list of float
-        List of J scores.
+    j_scores_ : dict
+        dict of J scores with the
+        kernel params combination as
+        keys and the J scores as values.
         
     estimator_ : object
         Fitted estimator.
@@ -154,7 +209,7 @@ to covariateshift adaptation". In NIPS 2007
     def __init__(self,
                  estimator=None,
                  Xt=None,
-                 yt=None,
+                 kernel="rbf",
                  sigmas=None,
                  max_centers=100,
                  cv=5,
@@ -165,6 +220,11 @@ to covariateshift adaptation". In NIPS 2007
                  verbose=1,
                  random_state=None,
                  **params):
+        
+        if sigmas is not None:
+            warnings.warn("The `sigmas` argument is deprecated, "
+              "please use the `gamma` argument instead.",
+              DeprecationWarning)
         
         names = self._get_param_names()
         kwargs = {k: v for k, v in locals().items() if k in names}
@@ -195,9 +255,23 @@ to covariateshift adaptation". In NIPS 2007
         Xt = check_array(Xt)
         set_random_seed(self.random_state)
         
-        self.j_scores_ = []
+        self.j_scores_ = {}
+        
+        # LCV GridSearch
+        kernel_params = {k: v for k, v in self.__dict__.items()
+                         if k in KERNEL_PARAMS[self.kernel]}
+        
+        # Handle deprecated sigmas (will be removed)
+        if (self.sigmas is not None) and (not "gamma" in kernel_params):
+            kernel_params["gamma"] = self.sigmas
+        
+        params_dict = {k: (v if hasattr(v, "__iter__") else [v]) for k, v in kernel_params.items()}
+        options = params_dict
+        keys = options.keys()
+        values = (options[key] for key in keys)
+        params_comb = [dict(zip(keys, combination)) for combination in itertools.product(*values)]
 
-        if hasattr(self.sigmas, "__iter__"):
+        if len(params_comb) > 1:
             # Cross-validation process   
             if len(Xt) < self.cv:
                 raise ValueError("Length of Xt is smaller than cv value")
@@ -207,23 +281,28 @@ to covariateshift adaptation". In NIPS 2007
 
             shuffled_index = np.arange(len(Xt))
             np.random.shuffle(shuffled_index)
-
-            for sigma in self.sigmas:
-                cv_scores = self._cross_val_jscore(Xs, Xt[shuffled_index], sigma, self.cv)
-                self.j_scores_.append(np.mean(cv_scores))
+            
+            max_ = -np.inf
+            for params in params_comb:
+                cv_scores = self._cross_val_jscore(Xs, Xt[shuffled_index], params, self.cv)
+                self.j_scores_[str(params)] = np.mean(cv_scores)
 
                 if self.verbose:
-                    print("Parameter sigma = %.4f -- J-score = %.3f (%.3f)"%
-                          (sigma, np.mean(cv_scores), np.std(cv_scores)))
+                    print("Parameters %s -- J-score = %.3f (%.3f)"%
+                          (str(params), np.mean(cv_scores), np.std(cv_scores)))
 
-            self.sigma_ = self.sigmas[np.argmax(self.j_scores_)]                
+                if self.j_scores_[str(params)] > max_:
+                    self.best_params_ = params
+                    max_ = self.j_scores_[str(params)]
         else:
-            self.sigma_ = self.sigmas
+            self.best_params_ = params_comb[0]
 
-        self.alphas_, self.centers_ = self._fit(Xs, Xt, self.sigma_)
+        self.alphas_, self.centers_ = self._fit(Xs, Xt, self.best_params_)
 
         self.weights_ = np.dot(
-            pairwise.rbf_kernel(Xs, self.centers_, self.sigma_),
+            pairwise.pairwise_kernels(Xs, self.centers_,
+                                     metric=self.kernel,
+                                     **self.best_params_),
             self.alphas_
             ).ravel()
         return self.weights_
@@ -252,7 +331,9 @@ to covariateshift adaptation". In NIPS 2007
             else:
                 X = check_array(X)
                 weights = np.dot(
-                pairwise.rbf_kernel(X, self.centers_, self.sigma_),
+                pairwise.pairwise_kernels(X, self.centers_,
+                                         metric=self.kernel,
+                                         **self.best_params_),
                 self.alphas_
                 ).ravel()
                 return weights
@@ -261,15 +342,18 @@ to covariateshift adaptation". In NIPS 2007
                                  "call 'fit_weights' or 'fit' first.")
 
 
-    def _fit(self, Xs, Xt, sigma):
+    def _fit(self, Xs, Xt, kernel_params):
         index_centers = np.random.choice(
                         len(Xt),
                         min(len(Xt), self.max_centers),
                         replace=False)
         centers = Xt[index_centers]
-
-        A = pairwise.rbf_kernel(Xt, centers, sigma)
-        b = np.mean(pairwise.rbf_kernel(centers, Xs, sigma), axis=1)
+        
+        A = pairwise.pairwise_kernels(Xt, centers, metric=self.kernel,
+                                      **kernel_params)
+        B = pairwise.pairwise_kernels(centers, Xs, metric=self.kernel,
+                                      **kernel_params)
+        b = np.mean(B, axis=1)
         b = b.reshape(-1, 1)
 
         alpha = np.ones((len(centers), 1)) / len(centers)
@@ -298,7 +382,7 @@ to covariateshift adaptation". In NIPS 2007
         return alpha, centers
 
 
-    def _cross_val_jscore(self, Xs, Xt, sigma, cv):
+    def _cross_val_jscore(self, Xs, Xt, kernel_params, cv):        
         split = int(len(Xt) / cv)
         cv_scores = []
         for i in range(cv):
@@ -309,13 +393,14 @@ to covariateshift adaptation". In NIPS 2007
 
             alphas, centers = self._fit(Xs,
                                         Xt[train_index],
-                                        sigma)
+                                        kernel_params)
 
             j_score = np.mean(np.log(
                 np.dot(
-                    pairwise.rbf_kernel(Xt[test_index],
-                                        centers,
-                                        sigma),
+                    pairwise.pairwise_kernels(Xt[test_index],
+                                             centers,
+                                             metric=self.kernel,
+                                             **kernel_params),
                     alphas
                 ) + EPS
             ))

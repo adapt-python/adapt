@@ -23,8 +23,8 @@
 		~TwoStageTrAdaBoostR2.predict_estimator
 		~TwoStageTrAdaBoostR2.predict_weights
 		~TwoStageTrAdaBoostR2.score
-		~TwoStageTrAdaBoostR2.score_estimator
 		~TwoStageTrAdaBoostR2.set_params
+		~TwoStageTrAdaBoostR2.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -35,8 +35,8 @@
 	.. automethod:: predict_estimator
 	.. automethod:: predict_weights
 	.. automethod:: score
-	.. automethod:: score_estimator
 	.. automethod:: set_params
+	.. automethod:: unsupervised_score
 	
     
 	
