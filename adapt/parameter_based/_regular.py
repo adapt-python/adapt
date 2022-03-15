@@ -17,31 +17,6 @@ from adapt.utils import (check_arrays,
                          check_network)
 
 
-def get_zeros_network(name=None):
-    """
-    Return a tensorflow Model of two hidden layers
-    with 10 neurons each and relu activations. The
-    last layer is composed of one neuron with linear
-    activation.
-
-    Returns
-    -------
-    tensorflow Model
-    """
-    model = Sequential(name=name)
-    model.add(Flatten())
-    model.add(Dense(10, activation="relu",
-                    kernel_initializer="zeros",
-                    bias_initializer="zeros"))
-    model.add(Dense(10, activation="relu",
-                    kernel_initializer="zeros",
-                    bias_initializer="zeros"))
-    model.add(Dense(1, activation=None,
-                    kernel_initializer="zeros",
-                    bias_initializer="zeros"))
-    return model
-
-
 @make_insert_doc(supervised=True)
 class RegularTransferLR(BaseAdaptEstimator):
     """
@@ -183,12 +158,12 @@ can help a lot". In EMNLP, 2004.
             yt_ndim_below_one_ = True
         
         if beta_src.ndim <= 1:
-            beta_src.reshape(1, -1)
+            beta_src = beta_src.reshape(1, -1)
             
         if beta_src.shape[0] != yt.shape[1]:
             raise ValueError("The number of features of `yt`"
                              " does not match the number of coefs in 'estimator', "
-                             "expected %i, got %i"(beta_src.shape[0], yt.shape[1]))
+                             "expected %i, got %i"%(beta_src.shape[0], yt.shape[1]))
         
         if beta_src.shape[1] != Xt.shape[1]:            
             beta_shape = beta_src.shape[1]; Xt_shape = Xt.shape[1]
@@ -196,7 +171,7 @@ can help a lot". In EMNLP, 2004.
                 beta_shape -= 1; Xt_shape -= 1
             raise ValueError("The number of features of `Xt`"
                              " does not match the number of coefs in 'estimator', "
-                             "expected %i, got %i"(beta_shape, Xt_shape))
+                             "expected %i, got %i"%(beta_shape, Xt_shape))
             
         beta_tgt = []
         for i in range(yt.shape[1]):

@@ -56,3 +56,9 @@ def test_finetune():
 
     assert np.abs(fine_tuned.encoder_.get_weights()[0] - model.encoder_.get_weights()[0]).sum() == 0.
     assert np.abs(fine_tuned.encoder_.get_weights()[-1] - model.encoder_.get_weights()[-1]).sum() == 0
+    
+    
+def test_finetune_pretrain():
+    model = FineTuning(encoder=encoder, task=task, pretrain=True, pretrain__epochs=2,
+                       loss="bce", optimizer="adam", random_state=0)
+    model.fit(Xs, ys, epochs=1, verbose=0)

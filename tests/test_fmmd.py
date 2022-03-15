@@ -1,6 +1,8 @@
 import numpy as np
+import tensorflow as tf
 
 from adapt.feature_based import fMMD
+from adapt.feature_based._fmmd import _get_optim_function
 
 np.random.seed(0)
 n = 50
@@ -25,3 +27,17 @@ def test_fmmd():
     fmmd.set_params(kernel="poly", degree=2, gamma=0.1)
     fmmd.fit_transform(Xs, Xt);
     assert fmmd.features_scores_[-2:].sum() > 10 * fmmd.features_scores_[:-2].sum()
+    
+    
+def test_kernel_fct():
+    fct = _get_optim_function(Xs, Xt, kernel="linear")
+    fct(tf.identity(np.ones(6)))
+        
+    fct = _get_optim_function(Xs, Xt, kernel="rbf")
+    fct(tf.identity(np.ones(6)))
+    
+    fct = _get_optim_function(Xs, Xt, kernel="poly")
+    fct(tf.identity(np.ones(6)))
+    
+    
+    
