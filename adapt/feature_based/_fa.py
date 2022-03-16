@@ -12,11 +12,11 @@ from adapt.utils import check_arrays
 
 
 @make_insert_doc(supervised=True)
-class FE(BaseAdaptEstimator):
+class FA(BaseAdaptEstimator):
     """
-    FE: Frustratingly Easy Domain Adaptation.
+    FA: Feature Augmentation.
 
-    FE consists in a feature augmentation method
+    FA consists in a feature augmentation method
     where each input feature vector is augmented as follow:
 
     - Source input feature vectors Xs are transformed into (Xs, **0**, Xs).
@@ -37,7 +37,7 @@ class FE(BaseAdaptEstimator):
     This feature-based method uses a few labeled target data and belongs to
     "supervised" domain adaptation methods.
 
-    As FE consists only in a preprocessing step, any kind of estimator
+    As FA consists only in a preprocessing step, any kind of estimator
     can be used to learn the task. This method handles both regression
     and classification tasks.
 
@@ -73,13 +73,13 @@ class FE(BaseAdaptEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from adapt.feature_based import FE
+    >>> from adapt.feature_based import FA
     >>> np.random.seed(0)
     >>> Xs = 0.1 * np.random.randn(100, 1) + 1.
     >>> Xt = 0.1 * np.random.randn(100, 1) + 1.
     >>> ys = 0.1 * np.random.randn(100, 1) + 0.
     >>> yt = 0.1 * np.random.randn(100, 1) + 1.
-    >>> model = FE()
+    >>> model = FA()
     >>> model.fit(Xs, ys, Xt[:10], yt[:10]);
     Augmenting feature space...
     Previous shape: (100, 1)
@@ -97,7 +97,7 @@ class FE(BaseAdaptEstimator):
 
     Notes
     -----
-    FE can be used for multi-source DA by giving list of source data
+    FA can be used for multi-source DA by giving list of source data
     for arguments Xs, ys of fit method : Xs = [Xs1, Xs2, ...],
     ys = [ys1, ys2, ...]
     """
@@ -218,7 +218,7 @@ class FE(BaseAdaptEstimator):
 
         Notes
         -----
-        As FE is an anti-symetric feature-based method, one should indicates the
+        As FA is an anti-symetric feature-based method, one should indicates the
         domain of ``X`` in order to apply the appropriate feature transformation.
         """
         X = check_array(X, allow_nd=True)

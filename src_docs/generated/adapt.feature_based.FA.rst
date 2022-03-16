@@ -1,9 +1,9 @@
-﻿:ref:`adapt.feature_based <adapt.feature_based>`.FE
+﻿:ref:`adapt.feature_based <adapt.feature_based>`.FA
 ==========================================================
 
 .. currentmodule:: adapt.feature_based
 
-.. autoclass:: FE
+.. autoclass:: FA
 	:no-members:
 	:no-inherited-members:
 	:no-special-members:
@@ -15,17 +15,17 @@
 	
 	.. autosummary::
 	    
-		~FE.__init__
-		~FE.fit
-		~FE.fit_estimator
-		~FE.fit_transform
-		~FE.get_params
-		~FE.predict
-		~FE.predict_estimator
-		~FE.score
-		~FE.set_params
-		~FE.transform
-		~FE.unsupervised_score
+		~FA.__init__
+		~FA.fit
+		~FA.fit_estimator
+		~FA.fit_transform
+		~FA.get_params
+		~FA.predict
+		~FA.predict_estimator
+		~FA.score
+		~FA.set_params
+		~FA.transform
+		~FA.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -47,5 +47,5 @@
 
    <h2> Examples </h2>
 	
-.. include:: ../gallery/FE.rst
+.. include:: ../gallery/FA.rst
 	

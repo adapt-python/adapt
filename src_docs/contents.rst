@@ -55,7 +55,7 @@ and **target** distributions. The **task** is then learned in this **encoded fea
    :toctree: generated/
    :template: class.rst
 
-   feature_based.FE
+   feature_based.FA
    feature_based.CORAL
    feature_based.SA
    feature_based.fMMD
