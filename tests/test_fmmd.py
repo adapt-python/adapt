@@ -30,6 +30,22 @@ def test_fmmd():
     assert fmmd.features_scores_[-2:].sum() > 10 * fmmd.features_scores_[:-2].sum()
     
     
+def test_fmmd_diff_size():
+    fmmd = fMMD()
+    fmmd.fit_transform(Xs, Xt[:40]);
+    assert fmmd.features_scores_[-2:].sum() > 10 * fmmd.features_scores_[:-2].sum()
+    assert np.all(fmmd.selected_features_ == [True]*4 + [False]*2)
+    assert np.abs(fmmd.transform(Xs) - Xs[:, :4]).sum() == 0.
+
+    fmmd.set_params(kernel="rbf")
+    fmmd.fit_transform(Xs, Xt[:40]);
+    assert fmmd.features_scores_[-2:].sum() > 10 * fmmd.features_scores_[:-2].sum()
+
+    fmmd.set_params(kernel="poly", degree=2, gamma=0.1)
+    fmmd.fit_transform(Xs, Xt[:40]);
+    assert fmmd.features_scores_[-2:].sum() > 10 * fmmd.features_scores_[:-2].sum()
+    
+    
 def test_kernel_fct():
     tf.config.experimental_run_functions_eagerly(True)
     fct = _get_optim_function(Xs, Xt, kernel="linear")
@@ -43,6 +59,5 @@ def test_kernel_fct():
     fct = _get_optim_function(Xs, Xt, kernel="poly")
     with pytest.raises(Exception) as excinfo:
          fct(tf.identity(np.ones(6)))
-    
     
     

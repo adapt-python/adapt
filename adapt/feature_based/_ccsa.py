@@ -31,7 +31,38 @@ def pairwise_X(X, Y):
 @make_insert_doc(["encoder", "task"], supervised=True)
 class CCSA(BaseAdaptDeep):
     """
-    CCSA : 
+    CCSA : Classification and Contrastive Semantic Alignment
+    
+    CCSA is a supervised feature based method for classification.
+    
+    It aims at producing an encoded space where the distances between
+    source and target pairs from the same label are minized, whereas
+    the distances between pairs from different labels are maximized.
+    
+    The optimization can be written as follows:
+    
+    .. math::
+    
+        \mathcal{L}_{CCSA} = \\gamma \mathcal{L}_{task}(h \circ g) +
+        (1-\\gamma) (\mathcal{L}_{SA}(g) + \mathcal{L}_{S}(g))
+
+    Where:
+    
+    .. math::
+    
+        \mathcal{L}_{SA}(g) = \sum_{i, j; \; y^s_i = y^t_j} || g(x^s_i) - g(x^t_j) ||^2
+        
+    .. math::
+    
+        \mathcal{L}_{S}(g) = \sum_{i, j; \; y^s_i \\neq y^t_j} \max(0, m - || g(x^s_i) - g(x^t_j) ||^2)
+    
+    With:
+    
+    - :math:`(x^s_i, y^s_i)` the labeled source data (:math:`y^s_i` gives the label)
+    - :math:`(x^t_i, y^t_i)` the labeled target data
+    - :math:`g, h` are respectively the **encoder** and the **task** networks
+    - :math:`\\gamma` is the trade-off parameter.
+    - :math:`m` is the margin parameter.
     
     Parameters
     ----------
@@ -59,6 +90,12 @@ class CCSA(BaseAdaptDeep):
         history of the losses and metrics across the epochs.
         If ``yt`` is given in ``fit`` method, target metrics
         and losses are recorded too.
+        
+    References
+    ----------
+    .. [1] `[1] <https://arxiv.org/abs/1709.10190>`_ S. Motiian, M. Piccirilli, \
+D. A Adjeroh, and G. Doretto. "Unified deep supervised domain adaptation and \
+generalization". In ICCV 2017.
     """
     
     def __init__(self,

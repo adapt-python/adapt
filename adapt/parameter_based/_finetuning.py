@@ -14,6 +14,12 @@ class FineTuning(BaseAdaptDeep):
     fitted first using the ``pretrain`` parameter. The layers
     to train in the encoder can be set via the parameter ``training``.
     
+    .. figure:: ../_static/images/regulartransfer.png
+        :align: center
+        
+        Transferring parameters of a CNN pretrained on Imagenet
+        (source: [1])
+    
     Parameters
     ----------        
     training : bool or list of bool, optional (default=True)
@@ -40,6 +46,13 @@ class FineTuning(BaseAdaptDeep):
     history_ : dict
         history of the losses and metrics across the epochs
         of the network training.
+    
+    References
+    ----------
+    .. [1] `[1] <https://hal.inria.fr/hal-00911179v1/document>`_ \
+Oquab M., Bottou L., Laptev I., Sivic J. "Learning and \
+transferring mid-level image representations using convolutional \
+neural networks". In CVPR, 2014.
     """
     
     def __init__(self,

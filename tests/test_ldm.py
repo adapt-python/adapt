@@ -16,3 +16,9 @@ def test_ldm():
     ldm = LDM()
     weights = ldm.fit_weights(Xs, Xt)
     assert weights[:25].mean() > 10 * weights[25:].mean()
+    
+    
+def test_ldm_diff_size():
+    ldm = LDM()
+    weights = ldm.fit_weights(Xs, Xt[:40])
+    assert weights[:25].mean() > 10 * weights[25:].mean()

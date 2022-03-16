@@ -111,6 +111,7 @@ class fMMD(BaseAdaptEstimator):
         Choose the kernel between
         ['linear', 'rbf', 'poly'].
         The kernels are computed as follows:
+        
         - kernel = linear::
         
             k(X, Y) = <X, Y>
@@ -148,6 +149,12 @@ class fMMD(BaseAdaptEstimator):
     --------
     CORAL
     FE
+    
+    References
+    ----------
+    .. [1] `[1] <https://www.cs.cmu.edu/afs/cs/Web/People/jgc/publication\
+/Feature%20Selection%20for%20Transfer%20Learning.pdf>`_ S. Uguroglu and J. Carbonell. \
+"Feature selection for transfer learning." In ECML PKDD. 2011.
     """
 
     def __init__(self,
