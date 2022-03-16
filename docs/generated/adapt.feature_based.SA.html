@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>adapt.parameter_based.RegularTransferLC &mdash; adapt 0.1.0 documentation</title>
+  <title>adapt.feature_based.SA &mdash; adapt 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
@@ -18,8 +18,6 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script src="../_static/js/custom.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -51,7 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.FE.html">FE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CORAL.html">CORAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">SA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.fMMD.html">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DANN.html">DANN</a></li>
@@ -76,7 +74,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#">RegularTransferLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 </ul>
@@ -188,7 +186,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="xref std std-ref">adapt.parameter_based</span>.RegularTransferLC</li>
+      <li><span class="xref std std-ref">adapt.feature_based</span>.SA</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -221,32 +219,14 @@
     text-align: unset;
 }
 </style>
-<section id="adapt-parameter-based-regulartransferlc">
-<h1><a class="reference internal" href="../contents.html#adapt-parameter-based"><span class="std std-ref">adapt.parameter_based</span></a>.RegularTransferLC<a class="headerlink" href="#adapt-parameter-based-regulartransferlc" title="Permalink to this headline"></a></h1>
+<section id="adapt-feature-based-sa">
+<h1><a class="reference internal" href="../contents.html#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>.SA<a class="headerlink" href="#adapt-feature-based-sa" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferLC">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.parameter_based.</span></span><span class="sig-name descname"><span class="pre">RegularTransferLC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferLC" title="Permalink to this definition"></a></dt>
-<dd><p>Regular Transfer for Linear Classification</p>
-<p>RegularTransferLC is a parameter-based domain adaptation method.</p>
-<p>This classifier first converts the target values into <code class="docutils literal notranslate"><span class="pre">{-1,</span> <span class="pre">1}</span></code>
-and then treats the problem as a regression task
-(multi-output regression in the multiclass case). It then fits
-the target data as a <code class="docutils literal notranslate"><span class="pre">RegularTransferLR</span></code> regressor, i.e it
-performs the following optimization:</p>
-<div class="math notranslate nohighlight">
-\[\beta_T = \underset{\beta \in \mathbb{R}^p}{\text{argmin}}
-\, ||X_T\beta - y_T||^2 + \lambda ||\beta - \beta_S||^2\]</div>
-<p>Where:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\beta_T\)</span> are the target model parameters.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\beta_S = \underset{\beta \in \mathbb{R}^p}{\text{argmin}}
-\, ||X_S\beta - y_S||^2\)</span> are the source model parameters.</p></li>
-<li><p><span class="math notranslate nohighlight">\((X_S, y_S), (X_T, y_T)\)</span> are respectively the source and
-the target labeled data.</p></li>
-<li><p><span class="math notranslate nohighlight">\(p\)</span> is the number of features in <span class="math notranslate nohighlight">\(X_T\)</span>
-(<span class="math notranslate nohighlight">\(+1\)</span> if <code class="docutils literal notranslate"><span class="pre">intercept</span></code> is True).</p></li>
-<li><p><span class="math notranslate nohighlight">\(\lambda\)</span> is a trade-off parameter.</p></li>
-</ul>
+<dt class="sig sig-object py" id="adapt.feature_based.SA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.feature_based.</span></span><span class="sig-name descname"><span class="pre">SA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA" title="Permalink to this definition"></a></dt>
+<dd><p>SA : Subspace Alignment</p>
+<p>Linearly align the source domain to the target domain
+in a reduced PCA subspace of dimension <code class="docutils literal notranslate"><span class="pre">n_components</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -256,9 +236,10 @@ instance is used as estimator.</p>
 </dd>
 <dt><strong>Xt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target input data.</p>
 </dd>
-<dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data.</p>
-</dd>
-<dt><strong>lambda_</strong><span class="classifier">float (default=1.0)</span></dt><dd><p>Trade-Off parameter.</p>
+<dt><strong>n_components</strong><span class="classifier">int (default=None)</span></dt><dd><p>Number of components of the PCA
+transformation. If <code class="docutils literal notranslate"><span class="pre">None</span></code> the
+number of components is equal
+to the input dimension of <code class="docutils literal notranslate"><span class="pre">X</span></code></p>
 </dd>
 <dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">estimator</span></code> or not.</p>
 </dd>
@@ -275,42 +256,22 @@ Accepted parameters can be found by calling the method
 </dl>
 </dd>
 </dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR" title="adapt.parameter_based.RegularTransferLR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularTransferLR</span></code></a>, <a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN" title="adapt.parameter_based.RegularTransferNN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularTransferNN</span></code></a></dt><dd></dd>
-</dl>
-</div>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="r5d83b71399b8-1"><span class="brackets">1</span></dt>
-<dd><p><a class="reference external" href="https://www.microsoft.com/en-us/research/wp-content/uploads/2004/07/2004-chelba-emnlp.pdf">[1]</a> C. Chelba and A. Acero. “Adaptation of maximum entropy classifier: Little data can help a lot”. In EMNLP, 2004.</p>
+<dt class="label" id="r09812ffff09f-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://arxiv.org/abs/1409.5241">[1]</a> B. Fernando, A. Habrard, M. Sebban, and T. Tuytelaars. “Unsupervised visual domain adaptation using subspace alignment”. In ICCV, 2013.</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.parameter_based</span> <span class="kn">import</span> <span class="n">RegularTransferLC</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Xs</span><span class="p">,</span> <span class="n">Xs</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="p">(</span><span class="n">Xs</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">yt</span> <span class="o">=</span> <span class="p">(</span><span class="n">Xt</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lc</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ys</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lc</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">yt</span><span class="p">)</span>
-<span class="go">0.67</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rt</span> <span class="o">=</span> <span class="n">RegularTransferLC</span><span class="p">(</span><span class="n">lc</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">yt</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rt</span><span class="o">.</span><span class="n">estimator_</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">yt</span><span class="p">)</span>
-<span class="go">0.67</span>
-</pre></div>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>estimator_</strong><span class="classifier">Same class as estimator</span></dt><dd><p>Fitted Estimator.</p>
+<dt><strong>estimator_</strong><span class="classifier">object</span></dt><dd><p>Fitted estimator.</p>
+</dd>
+<dt><strong>pca_src_</strong><span class="classifier">sklearn PCA</span></dt><dd><p>Source PCA</p>
+</dd>
+<dt><strong>pca_tgt_</strong><span class="classifier">sklearn PCA</span></dt><dd><p>Target PCA</p>
+</dd>
+<dt><strong>M_</strong><span class="classifier">numpy array</span></dt><dd><p>Alignment matrix</p>
 </dd>
 </dl>
 </dd>
@@ -322,52 +283,76 @@ Accepted parameters can be found by calling the method
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferLC.__init__" title="adapt.parameter_based.RegularTransferLC.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([estimator, Xt, yt, lambda_, copy, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.SA.__init__" title="adapt.feature_based.SA.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([estimator, Xt, n_components, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferLC.fit" title="adapt.parameter_based.RegularTransferLC.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>([Xt, yt])</p></td>
-<td><p>Fit RegularTransferLR.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.SA.fit" title="adapt.feature_based.SA.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X, y[, Xt, yt, domains])</p></td>
+<td><p>Fit Adapt Model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferLC.fit_estimator" title="adapt.parameter_based.RegularTransferLC.fit_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_estimator</span></code></a>(X, y[, sample_weight, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.SA.fit_estimator" title="adapt.feature_based.SA.fit_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_estimator</span></code></a>(X, y[, sample_weight, ...])</p></td>
 <td><p>Fit estimator on X, y.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferLC.get_params" title="adapt.parameter_based.RegularTransferLC.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.SA.fit_transform" title="adapt.feature_based.SA.fit_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_transform</span></code></a>(Xs, Xt, **kwargs)</p></td>
+<td><p>Fit embeddings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.SA.get_params" title="adapt.feature_based.SA.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
 <td><p>Get parameters for this estimator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferLC.predict" title="adapt.parameter_based.RegularTransferLC.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X[, domain])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.SA.predict" title="adapt.feature_based.SA.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X[, domain])</p></td>
 <td><p>Return estimator predictions after adaptation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferLC.predict_estimator" title="adapt.parameter_based.RegularTransferLC.predict_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_estimator</span></code></a>(X, **predict_params)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.SA.predict_estimator" title="adapt.feature_based.SA.predict_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_estimator</span></code></a>(X, **predict_params)</p></td>
 <td><p>Return estimator predictions for X.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferLC.score" title="adapt.parameter_based.RegularTransferLC.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y[, sample_weight, domain])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.SA.score" title="adapt.feature_based.SA.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y[, sample_weight, domain])</p></td>
 <td><p>Return the estimator score.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferLC.set_params" title="adapt.parameter_based.RegularTransferLC.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.SA.set_params" title="adapt.feature_based.SA.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
 <td><p>Set the parameters of this estimator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferLC.unsupervised_score" title="adapt.parameter_based.RegularTransferLC.unsupervised_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unsupervised_score</span></code></a>(Xs, Xt)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.SA.transform" title="adapt.feature_based.SA.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(X[, domain])</p></td>
+<td><p>Project X in the target subspace.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.SA.unsupervised_score" title="adapt.feature_based.SA.unsupervised_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unsupervised_score</span></code></a>(Xs, Xt)</p></td>
 <td><p>Return unsupervised score.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferLC.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferLC.__init__" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.feature_based.SA.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.__init__.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferLC.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferLC.fit" title="Permalink to this definition"></a></dt>
-<dd><p>Fit RegularTransferLR.</p>
+<dt class="sig sig-object py" id="adapt.feature_based.SA.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domains</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.fit.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit Adapt Model.</p>
+<p>For feature-based models, the transformation of the
+input features <code class="docutils literal notranslate"><span class="pre">Xs</span></code> and <code class="docutils literal notranslate"><span class="pre">Xt</span></code> is first fitted. In a second
+stage, the <code class="docutils literal notranslate"><span class="pre">estimator_</span></code> is fitted on the transformed features.</p>
+<p>For instance-based models, source importance weights are
+first learned based on <code class="docutils literal notranslate"><span class="pre">Xs,</span> <span class="pre">ys</span></code> and <code class="docutils literal notranslate"><span class="pre">Xt</span></code>. In a second
+stage, the <code class="docutils literal notranslate"><span class="pre">estimator_</span></code> is fitted on <code class="docutils literal notranslate"><span class="pre">Xs,</span> <span class="pre">ys</span></code> with the learned
+importance weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>Xt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target input data.</p>
+<dt><strong>X</strong><span class="classifier">numpy array</span></dt><dd><p>Source input data.</p>
 </dd>
-<dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data.</p>
+<dt><strong>y</strong><span class="classifier">numpy array</span></dt><dd><p>Source output data.</p>
 </dd>
-<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Not used. Here for sklearn compatibility.</p>
+<dt><strong>Xt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. If None, the <cite>Xt</cite> argument
+given in <cite>init</cite> is used.</p>
+</dd>
+<dt><strong>yt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. Only needed for supervised
+and semi-supervised Adapt model.
+If None, the <cite>yt</cite> argument given in <cite>init</cite> is used.</p>
+</dd>
+<dt><strong>domains</strong><span class="classifier">array (default=None)</span></dt><dd><p>Vector giving the domain for each source
+data. Can be used for multisource purpose.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of
+the estimator.</p>
 </dd>
 </dl>
 </dd>
@@ -380,8 +365,8 @@ Accepted parameters can be found by calling the method
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferLC.fit_estimator">
-<span class="sig-name descname"><span class="pre">fit_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warm_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferLC.fit_estimator" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.feature_based.SA.fit_estimator">
+<span class="sig-name descname"><span class="pre">fit_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warm_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.fit_estimator.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA.fit_estimator" title="Permalink to this definition"></a></dt>
 <dd><p>Fit estimator on X, y.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -414,8 +399,31 @@ for tensorflow estimator.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferLC.get_params">
-<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferLC.get_params" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.feature_based.SA.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.fit_transform.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA.fit_transform" title="Permalink to this definition"></a></dt>
+<dd><p>Fit embeddings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">array</span></dt><dd><p>Input source data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">array</span></dt><dd><p>Input target data.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">key, value argument</span></dt><dd><p>Not used, present here for adapt consistency.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Xs_emb</strong><span class="classifier">embedded source data</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.SA.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.get_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA.get_params" title="Permalink to this definition"></a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -434,8 +442,8 @@ for tensorflow estimator.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferLC.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferLC.predict" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.feature_based.SA.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.predict.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA.predict" title="Permalink to this definition"></a></dt>
 <dd><p>Return estimator predictions after
 adaptation.</p>
 <p>For feature-based method (object which implements
@@ -467,8 +475,8 @@ target one.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferLC.predict_estimator">
-<span class="sig-name descname"><span class="pre">predict_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferLC.predict_estimator" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.feature_based.SA.predict_estimator">
+<span class="sig-name descname"><span class="pre">predict_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.predict_estimator.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA.predict_estimator" title="Permalink to this definition"></a></dt>
 <dd><p>Return estimator predictions for X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -487,8 +495,8 @@ target one.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferLC.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferLC.score" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.feature_based.SA.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA.score" title="Permalink to this definition"></a></dt>
 <dd><p>Return the estimator score.</p>
 <p>If the object has a <code class="docutils literal notranslate"><span class="pre">transform</span></code> method, the
 estimator is applied on the transformed
@@ -524,8 +532,8 @@ the target one.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferLC.set_params">
-<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferLC.set_params" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.feature_based.SA.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.set_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA.set_params" title="Permalink to this definition"></a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -544,8 +552,36 @@ the target one.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferLC.unsupervised_score">
-<span class="sig-name descname"><span class="pre">unsupervised_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferLC.unsupervised_score" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.feature_based.SA.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tgt'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.transform.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA.transform" title="Permalink to this definition"></a></dt>
+<dd><p>Project X in the target subspace.</p>
+<p>The paramter <code class="docutils literal notranslate"><span class="pre">domain</span></code> specify if X should
+be considered as source or target data. As the
+transformation is assymetric, the source transformation
+should be applied on source data and the target
+transformation on target data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>domain</strong><span class="classifier">str (default=”tgt”)</span></dt><dd><p>Choose between <code class="docutils literal notranslate"><span class="pre">&quot;source&quot;,</span> <span class="pre">&quot;src&quot;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">&quot;target&quot;,</span> <span class="pre">&quot;tgt&quot;</span></code> feature embedding.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>X_emb</strong><span class="classifier">array</span></dt><dd><p>Embeddings of X.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.SA.unsupervised_score">
+<span class="sig-name descname"><span class="pre">unsupervised_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_sa.unsupervised_score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.SA.unsupervised_score" title="Permalink to this definition"></a></dt>
 <dd><p>Return unsupervised score.</p>
 <p>The normalized discrepancy distance is computed
 between the reweighted/transformed source input

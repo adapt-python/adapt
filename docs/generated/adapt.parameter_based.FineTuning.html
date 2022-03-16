@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>adapt.parameter_based.RegularTransferNN &mdash; adapt 0.1.0 documentation</title>
+  <title>adapt.parameter_based.FineTuning &mdash; adapt 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
@@ -18,8 +18,6 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script src="../_static/js/custom.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -77,8 +75,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#">RegularTransferNN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.FineTuning.html">FineTuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">FineTuning</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
@@ -188,7 +186,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="xref std std-ref">adapt.parameter_based</span>.RegularTransferNN</li>
+      <li><span class="xref std std-ref">adapt.parameter_based</span>.FineTuning</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -221,38 +219,30 @@
     text-align: unset;
 }
 </style>
-<section id="adapt-parameter-based-regulartransfernn">
-<h1><a class="reference internal" href="../contents.html#adapt-parameter-based"><span class="std std-ref">adapt.parameter_based</span></a>.RegularTransferNN<a class="headerlink" href="#adapt-parameter-based-regulartransfernn" title="Permalink to this headline"></a></h1>
+<section id="adapt-parameter-based-finetuning">
+<h1><a class="reference internal" href="../contents.html#adapt-parameter-based"><span class="std std-ref">adapt.parameter_based</span></a>.FineTuning<a class="headerlink" href="#adapt-parameter-based-finetuning" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.parameter_based.</span></span><span class="sig-name descname"><span class="pre">RegularTransferNN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambdas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regularizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN" title="Permalink to this definition"></a></dt>
-<dd><p>Regular Transfer with Neural Network</p>
-<p>RegularTransferNN is a parameter-based domain adaptation method.</p>
-<p>The method is based on the assumption that a good target estimator
-can be obtained by adapting the parameters of a pre-trained source
-estimator using a few labeled target data.</p>
-<p>The approach consist in fitting a neural network on target data
-according to an objective function regularized by the euclidean
-distance between source and target parameters:</p>
-<div class="math notranslate nohighlight">
-\[\beta_T = \underset{\beta=(\beta_1, ... , \beta_D)}{\text{argmin}}
-\, ||f(X_T, \beta) - y_T||^2 + \sum_{i=1}^{D}
-\lambda_i ||\beta_i - {\beta_S}_i||^2\]</div>
-<p>Where:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(f\)</span> is a neural network with <span class="math notranslate nohighlight">\(D\)</span> layers.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\beta_T\)</span> are the parameters of the target neural network.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\beta_S = \underset{\beta}{\text{argmin}}
-\, ||f(X_S,\beta) - y_S||^2\)</span> are the source neural network parameters.</p></li>
-<li><p><span class="math notranslate nohighlight">\((X_S, y_S), (X_T, y_T)\)</span> are respectively the source and
-the target labeled data.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\lambda_i\)</span> is the trade-off parameter of layer <span class="math notranslate nohighlight">\(i\)</span>.</p></li>
-</ul>
-<p>Different trade-off can be given to the layer of the 
-neural network through the <code class="docutils literal notranslate"><span class="pre">lambdas</span></code> parameter.</p>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.parameter_based.</span></span><span class="sig-name descname"><span class="pre">FineTuning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning" title="Permalink to this definition"></a></dt>
+<dd><p>FineTuning : finetunes pretrained networks on target data.</p>
+<p>A pretrained source encoder should be given. A task network,
+pretrained or not, should be given too.</p>
+<p>Finetuning train both networks. The task network can be
+fitted first using the <code class="docutils literal notranslate"><span class="pre">pretrain</span></code> parameter. The layers
+to train in the encoder can be set via the parameter <code class="docutils literal notranslate"><span class="pre">training</span></code>.</p>
+<figure class="align-center" id="id3">
+<img alt="../_images/regulartransfer.png" src="../_images/regulartransfer.png" />
+<figcaption>
+<p><span class="caption-text">Transferring parameters of a CNN pretrained on Imagenet
+(source: [1])</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
+<dt><strong>encoder</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Encoder netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a shallow network with 10
+neurons and ReLU activation is used as encoder network.</p>
+</dd>
 <dt><strong>task</strong><span class="classifier">tensorflow Model (default=None)</span></dt><dd><p>Task netwok. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a two layers network with 10
 neurons per layer and ReLU activation is used as task network.</p>
 </dd>
@@ -260,13 +250,16 @@ neurons per layer and ReLU activation is used as task network.</p>
 </dd>
 <dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data.</p>
 </dd>
-<dt><strong>lambdas</strong><span class="classifier">float or list of float, optional (default=1.0)</span></dt><dd><p>Trade-off parameters.
-If a list is given, values from <code class="docutils literal notranslate"><span class="pre">lambdas</span></code> are assigned
-successively to the list of <code class="docutils literal notranslate"><span class="pre">network</span></code> layers with 
-weights parameters going from the last layer to the first one.
-If the length of <code class="docutils literal notranslate"><span class="pre">lambdas</span></code> is smaller than the length of
-<code class="docutils literal notranslate"><span class="pre">network</span></code> layers list, the last trade-off value will be
-asigned to the remaining layers.</p>
+<dt><strong>training</strong><span class="classifier">bool or list of bool, optional (default=True)</span></dt><dd><p>Trade-off parameters.
+If a list is given, values from <code class="docutils literal notranslate"><span class="pre">training</span></code> are assigned
+successively to the <code class="docutils literal notranslate"><span class="pre">trainable</span></code> attribute of the
+<code class="docutils literal notranslate"><span class="pre">encoder</span></code> layers going from the last layer to the first one.
+If the length of <code class="docutils literal notranslate"><span class="pre">training</span></code> is smaller than the length of
+the <code class="docutils literal notranslate"><span class="pre">encoder</span></code> layers list, the last value of <code class="docutils literal notranslate"><span class="pre">training</span></code> 
+will be asigned to the remaining layers.</p>
+</dd>
+<dt><strong>pretrain</strong><span class="classifier">bool (default=False)</span></dt><dd><p>If True, the task network is first trained alone on the outputs
+of the encoder.</p>
 </dd>
 <dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">estimator</span></code> or not.</p>
 </dd>
@@ -322,46 +315,17 @@ on these arguments.</p>
 </dl>
 </dd>
 </dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR" title="adapt.parameter_based.RegularTransferLR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularTransferLR</span></code></a>, <a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC" title="adapt.parameter_based.RegularTransferLC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularTransferLC</span></code></a></dt><dd></dd>
-</dl>
-</div>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="rd7f3766d2f75-1"><span class="brackets">1</span></dt>
-<dd><p><a class="reference external" href="https://www.microsoft.com/en-us/research/wp-content/uploads/2004/07/2004-chelba-emnlp.pdf">[1]</a> C. Chelba and A. Acero. “Adaptation of maximum entropy classifier: Little data can help a lot”. In EMNLP, 2004.</p>
+<dt class="label" id="r8f631e03c5d8-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://hal.inria.fr/hal-00911179v1/document">[1]</a> Oquab M., Bottou L., Laptev I., Sivic J. “Learning and transferring mid-level image representations using convolutional neural networks”. In CVPR, 2014.</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.parameter_based</span> <span class="kn">import</span> <span class="n">RegularTransferNN</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Xs</span><span class="p">,</span> <span class="n">Xs</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span><span class="o">&lt;</span><span class="mf">0.5</span> <span class="k">else</span> <span class="mf">1.</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xs</span><span class="p">])</span>
-<span class="gp">... </span>      <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">yt</span> <span class="o">=</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">Xt</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;mse&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ys</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="go">0.48265...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rt</span> <span class="o">=</span> <span class="n">RegularTransferNN</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">lambdas</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">yt</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="go">0.1900...</span>
-</pre></div>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes</dt>
 <dd class="field-odd"><dl class="simple">
+<dt><strong>encoder_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>encoder network.</p>
+</dd>
 <dt><strong>task_</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Network.</p>
 </dd>
 <dt><strong>history_</strong><span class="classifier">dict</span></dt><dd><p>history of the losses and metrics across the epochs
@@ -377,49 +341,52 @@ of the network training.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.__init__" title="adapt.parameter_based.RegularTransferNN.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([task, Xt, yt, lambdas, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.__init__" title="adapt.parameter_based.FineTuning.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([encoder, task, Xt, yt, training, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.compile" title="adapt.parameter_based.RegularTransferNN.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a>([optimizer, loss, metrics, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.compile" title="adapt.parameter_based.FineTuning.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a>([optimizer, loss, metrics, ...])</p></td>
 <td><p>Configures the model for training.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.fit" title="adapt.parameter_based.RegularTransferNN.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>([Xt, yt])</p></td>
-<td><p>Fit RegularTransferNN.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.fit" title="adapt.parameter_based.FineTuning.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>([Xt, yt])</p></td>
+<td><p>Fit FineTuning.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.get_params" title="adapt.parameter_based.RegularTransferNN.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.get_params" title="adapt.parameter_based.FineTuning.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
 <td><p>Get parameters for this estimator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.predict" title="adapt.parameter_based.RegularTransferNN.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, batch_size, verbose, steps, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.predict" title="adapt.parameter_based.FineTuning.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, batch_size, verbose, steps, ...])</p></td>
 <td><p>Generates output predictions for the input samples.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.predict_disc" title="adapt.parameter_based.RegularTransferNN.predict_disc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_disc</span></code></a>(X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.predict_disc" title="adapt.parameter_based.FineTuning.predict_disc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_disc</span></code></a>(X)</p></td>
 <td><p>Not used.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.predict_task" title="adapt.parameter_based.RegularTransferNN.predict_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_task</span></code></a>(X)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.predict_task" title="adapt.parameter_based.FineTuning.predict_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_task</span></code></a>(X)</p></td>
 <td><p>Return predictions of the task on the encoded features.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.score" title="adapt.parameter_based.RegularTransferNN.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y[, sample_weight])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.pretrain_step" title="adapt.parameter_based.FineTuning.pretrain_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pretrain_step</span></code></a>(data)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.score" title="adapt.parameter_based.FineTuning.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y[, sample_weight])</p></td>
 <td><p>Return the evaluation of the model on X, y.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.set_params" title="adapt.parameter_based.RegularTransferNN.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.set_params" title="adapt.parameter_based.FineTuning.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
 <td><p>Set the parameters of this estimator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.transform" title="adapt.parameter_based.RegularTransferNN.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(X)</p></td>
-<td><p>Return X</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.transform" title="adapt.parameter_based.FineTuning.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(X)</p></td>
+<td><p>Return the encoded features of X.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.RegularTransferNN.unsupervised_score" title="adapt.parameter_based.RegularTransferNN.unsupervised_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unsupervised_score</span></code></a>(Xs, Xt)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.unsupervised_score" title="adapt.parameter_based.FineTuning.unsupervised_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unsupervised_score</span></code></a>(Xs, Xt)</p></td>
 <td><p>Return unsupervised score.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambdas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regularizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'l2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.__init__" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.__init__.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN.compile">
-<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighted_metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_eagerly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps_per_execution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.compile" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighted_metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_eagerly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps_per_execution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.compile.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.compile" title="Permalink to this definition"></a></dt>
 <dd><p>Configures the model for training.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -504,9 +471,9 @@ will only be called every <cite>N</cite> batches
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.fit" title="Permalink to this definition"></a></dt>
-<dd><p>Fit RegularTransferNN.</p>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.fit.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit FineTuning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -528,8 +495,8 @@ will only be called every <cite>N</cite> batches
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN.get_params">
-<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.get_params" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.get_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.get_params" title="Permalink to this definition"></a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -548,8 +515,8 @@ will only be called every <cite>N</cite> batches
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_queue_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_multiprocessing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.predict" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_queue_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_multiprocessing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.predict.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.predict" title="Permalink to this definition"></a></dt>
 <dd><p>Generates output predictions for the input samples.</p>
 <p>Computation is done in batches. This method is designed for performance in
 large scale inputs. For small amount of inputs that fit in one batch,
@@ -608,14 +575,14 @@ the generator as they can’t be passed easily to children processes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN.predict_disc">
-<span class="sig-name descname"><span class="pre">predict_disc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.predict_disc" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.predict_disc">
+<span class="sig-name descname"><span class="pre">predict_disc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.predict_disc.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.predict_disc" title="Permalink to this definition"></a></dt>
 <dd><p>Not used.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN.predict_task">
-<span class="sig-name descname"><span class="pre">predict_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.predict_task" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.predict_task">
+<span class="sig-name descname"><span class="pre">predict_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.predict_task.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.predict_task" title="Permalink to this definition"></a></dt>
 <dd><p>Return predictions of the task on the encoded features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -634,8 +601,13 @@ the generator as they can’t be passed easily to children processes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.score" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.pretrain_step">
+<span class="sig-name descname"><span class="pre">pretrain_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.pretrain_step.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.pretrain_step" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.score" title="Permalink to this definition"></a></dt>
 <dd><p>Return the evaluation of the model on X, y.</p>
 <p>Call <cite>evaluate</cite> on tensorflow Model.</p>
 <dl class="field-list simple">
@@ -659,8 +631,8 @@ the generator as they can’t be passed easily to children processes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN.set_params">
-<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.set_params" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.set_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.set_params" title="Permalink to this definition"></a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -679,9 +651,9 @@ the generator as they can’t be passed easily to children processes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN.transform">
-<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.transform" title="Permalink to this definition"></a></dt>
-<dd><p>Return X</p>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.transform.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.transform" title="Permalink to this definition"></a></dt>
+<dd><p>Return the encoded features of X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -699,8 +671,8 @@ the generator as they can’t be passed easily to children processes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.parameter_based.RegularTransferNN.unsupervised_score">
-<span class="sig-name descname"><span class="pre">unsupervised_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_regular.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.RegularTransferNN.unsupervised_score" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.unsupervised_score">
+<span class="sig-name descname"><span class="pre">unsupervised_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.unsupervised_score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.unsupervised_score" title="Permalink to this definition"></a></dt>
 <dd><p>Return unsupervised score.</p>
 <p>The normalized discrepancy distance is computed
 between the reweighted/transformed source input
@@ -725,33 +697,7 @@ data and the target input data.</p>
 
 </dd></dl>
 
-<h2> Examples </h2><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-thumbcontainer">
-  <div class="figure align-center">
-    <img alt="thumbnail" src="../_images/examples_Multi_fidelity_6_0.png" />
-    <p class="caption">
-      <span class="caption-text">
-        <a class="reference internal" href="../examples/Multi_fidelity.html">
-          <span class="std std-ref">Multi-Fidelity</span>
-        </a>
-      </span>
-    </p>
-  </div>
-</div>
-<div class="sphx-glr-thumbcontainer">
-  <div class="figure align-center">
-    <img alt="thumbnail" src="../_images/examples_Regression_9_0.png" />
-    <p class="caption">
-      <span class="caption-text">
-        <a class="reference internal" href="../examples/Regression.html">
-          <span class="std std-ref">Toy Regression</span>
-        </a>
-      </span>
-    </p>
-  </div>
-</div>
-<div class="sphx-glr-clear"></div></section>
+<h2> Examples </h2></section>
 
 
            </div>

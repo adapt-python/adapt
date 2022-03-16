@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adapt.instance_based.NearestNeighborsWeighting &mdash; adapt 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="../_static/js/custom.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> adapt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu"> 
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.FE.html">FE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CORAL.html">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.fMMD.html">fMMD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DANN.html">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.ADDA.html">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.WDGRL.html">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CDAN.html">CDAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MCD.html">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MDD.html">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CCSA.html">CCSA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.LDM.html">LDM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KLIEP.html">KLIEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">NearestNeighborsWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.WANN.html">WANN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.FineTuning.html">FineTuning</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.make_uda_scorer.html">make_uda_scorer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.cov_distance.html">cov_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.j_score.html">j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.frechet_distance.html">frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.normalized_frechet_distance.html">normalized_frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.domain_classifier.html">domain_classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.reverse_validation.html">reverse_validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.accuracy.html">accuracy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_arrays.html">check_arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_estimator.html">check_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_network.html">check_network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.get_default_encoder.html">get_default_encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.get_default_task.html">get_default_task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.get_default_discriminator.html">get_default_discriminator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.GradientHandler.html">GradientHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.make_classification_da.html">make_classification_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.make_regression_da.html">make_regression_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.set_random_seed.html">set_random_seed</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Instance-Based">Instance Based</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Two_moons.html">Two Moons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Two_moons.html#CDAN">CDAN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Rotation.html">Rotation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Rotation.html#ADDA">ADDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Regression.html">Toy Regression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#TGT-Only">TGT Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#All">All</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Regression.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/sample_bias.html">Sample Bias 1D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/sample_bias_2d.html">Sample Bias 2D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Estimator">Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/sample_bias_2d.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Multi_fidelity.html">Multi-Fidelity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#Low-fidelity-only">Low fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#High-fidelity-only">High fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+ 
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><span class="xref std std-ref">adapt.instance_based</span>.NearestNeighborsWeighting</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="adapt-instance-based-nearestneighborsweighting">
+<h1><a class="reference internal" href="../contents.html#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>.NearestNeighborsWeighting<a class="headerlink" href="#adapt-instance-based-nearestneighborsweighting" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.instance_based.</span></span><span class="sig-name descname"><span class="pre">NearestNeighborsWeighting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'minkowski'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting" title="Permalink to this definition"></a></dt>
+<dd><p>NNW : Nearest Neighbors Weighting</p>
+<p>NNW reweights the source instances in order according to
+their number of neighbors in the target dataset.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>estimator</strong><span class="classifier">sklearn estimator or tensorflow Model (default=None)</span></dt><dd><p>Estimator used to learn the task. 
+If estimator is <code class="docutils literal notranslate"><span class="pre">None</span></code>, a <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code>
+instance is used as estimator.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target input data.</p>
+</dd>
+<dt><strong>n_neighbors</strong><span class="classifier">int, (default=5)</span></dt><dd><p>Number of neighbors to use by default for <cite>kneighbors</cite> queries.</p>
+</dd>
+<dt><strong>radius</strong><span class="classifier">float, (default=1.0)</span></dt><dd><p>Range of parameter space to use by default for <cite>radius_neighbors</cite>
+queries.</p>
+</dd>
+<dt><strong>algorithm</strong><span class="classifier">{‘auto’, ‘ball_tree’, ‘kd_tree’, ‘brute’}, (default=’auto’)</span></dt><dd><p>Algorithm used to compute the nearest neighbors:</p>
+<ul class="simple">
+<li><p>‘ball_tree’ will use <code class="docutils literal notranslate"><span class="pre">BallTree</span></code></p></li>
+<li><p>‘kd_tree’ will use <code class="docutils literal notranslate"><span class="pre">KDTree</span></code></p></li>
+<li><p>‘brute’ will use a brute-force search.</p></li>
+<li><p>‘auto’ will attempt to decide the most appropriate algorithm
+based on the values passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p></li>
+</ul>
+<p>Note: fitting on sparse input will override the setting of
+this parameter, using brute force.</p>
+</dd>
+<dt><strong>leaf_size</strong><span class="classifier">int, (default=30)</span></dt><dd><p>Leaf size passed to BallTree or KDTree.  This can affect the
+speed of the construction and query, as well as the memory
+required to store the tree.  The optimal value depends on the
+nature of the problem.</p>
+</dd>
+<dt><strong>metric</strong><span class="classifier">str or callable, (default=’minkowski’)</span></dt><dd><p>The distance metric to use for the tree.  The default metric is
+minkowski, and with p=2 is equivalent to the standard Euclidean
+metric. For a list of available metrics, see the documentation of
+<cite>sklearn.metrics.DistanceMetric</cite>.
+If metric is “precomputed”, X is assumed to be a distance matrix and
+must be square during fit. X may be a <span class="xref std std-term">sparse graph</span>,
+in which case only “nonzero” elements may be considered neighbors.</p>
+</dd>
+<dt><strong>p</strong><span class="classifier">int, (default=2)</span></dt><dd><p>Parameter for the Minkowski metric from
+sklearn.metrics.pairwise.pairwise_distances. When p = 1, this is
+equivalent to using manhattan_distance (l1), and euclidean_distance
+(l2) for p = 2. For arbitrary p, minkowski_distance (l_p) is used.</p>
+</dd>
+<dt><strong>metric_params</strong><span class="classifier">dict, (default=None)</span></dt><dd><p>Additional keyword arguments for the metric function.</p>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier">int, (default=None)</span></dt><dd><p>The number of parallel jobs to run for neighbors search.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <cite>joblib.parallel_backend</cite> context.
+<code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors.</p>
+</dd>
+<dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">estimator</span></code> or not.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">int (default=1)</span></dt><dd><p>Verbosity level.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int (default=None)</span></dt><dd><p>Seed of random generator.</p>
+</dd>
+<dt><strong>params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given at the different level of the adapt object.
+It can be, for instance, compile or fit parameters of the
+estimator or kernel parameters etc…
+Accepted parameters can be found by calling the method
+<code class="docutils literal notranslate"><span class="pre">_get_legal_params(params)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="adapt.instance_based.KMM.html#adapt.instance_based.KMM" title="adapt.instance_based.KMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KMM</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP" title="adapt.instance_based.KLIEP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KLIEP</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r2caef3fc958d-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://arxiv.org/pdf/2102.02291.pdf">[1]</a> M. Loog. “Nearest neighbor-based importance weighting”. In MLSP 2012.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>weights_</strong><span class="classifier">numpy array</span></dt><dd><p>Training instance weights.</p>
+</dd>
+<dt><strong>estimator_</strong><span class="classifier">object</span></dt><dd><p>Estimator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.NearestNeighborsWeighting.__init__" title="adapt.instance_based.NearestNeighborsWeighting.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([estimator, Xt, n_neighbors, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.NearestNeighborsWeighting.fit" title="adapt.instance_based.NearestNeighborsWeighting.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X, y[, Xt, yt, domains])</p></td>
+<td><p>Fit Adapt Model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.NearestNeighborsWeighting.fit_estimator" title="adapt.instance_based.NearestNeighborsWeighting.fit_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_estimator</span></code></a>(X, y[, sample_weight, ...])</p></td>
+<td><p>Fit estimator on X, y.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.NearestNeighborsWeighting.fit_weights" title="adapt.instance_based.NearestNeighborsWeighting.fit_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_weights</span></code></a>(Xs, Xt, **kwargs)</p></td>
+<td><p>Fit importance weighting.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.NearestNeighborsWeighting.get_params" title="adapt.instance_based.NearestNeighborsWeighting.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<td><p>Get parameters for this estimator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.NearestNeighborsWeighting.predict" title="adapt.instance_based.NearestNeighborsWeighting.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X[, domain])</p></td>
+<td><p>Return estimator predictions after adaptation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.NearestNeighborsWeighting.predict_estimator" title="adapt.instance_based.NearestNeighborsWeighting.predict_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_estimator</span></code></a>(X, **predict_params)</p></td>
+<td><p>Return estimator predictions for X.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.NearestNeighborsWeighting.predict_weights" title="adapt.instance_based.NearestNeighborsWeighting.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>()</p></td>
+<td><p>Return fitted source weights</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.NearestNeighborsWeighting.score" title="adapt.instance_based.NearestNeighborsWeighting.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y[, sample_weight, domain])</p></td>
+<td><p>Return the estimator score.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.NearestNeighborsWeighting.set_params" title="adapt.instance_based.NearestNeighborsWeighting.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
+<td><p>Set the parameters of this estimator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.NearestNeighborsWeighting.unsupervised_score" title="adapt.instance_based.NearestNeighborsWeighting.unsupervised_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unsupervised_score</span></code></a>(Xs, Xt)</p></td>
+<td><p>Return unsupervised score.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'minkowski'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.__init__.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domains</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.fit.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit Adapt Model.</p>
+<p>For feature-based models, the transformation of the
+input features <code class="docutils literal notranslate"><span class="pre">Xs</span></code> and <code class="docutils literal notranslate"><span class="pre">Xt</span></code> is first fitted. In a second
+stage, the <code class="docutils literal notranslate"><span class="pre">estimator_</span></code> is fitted on the transformed features.</p>
+<p>For instance-based models, source importance weights are
+first learned based on <code class="docutils literal notranslate"><span class="pre">Xs,</span> <span class="pre">ys</span></code> and <code class="docutils literal notranslate"><span class="pre">Xt</span></code>. In a second
+stage, the <code class="docutils literal notranslate"><span class="pre">estimator_</span></code> is fitted on <code class="docutils literal notranslate"><span class="pre">Xs,</span> <span class="pre">ys</span></code> with the learned
+importance weights.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">numpy array</span></dt><dd><p>Source input data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">numpy array</span></dt><dd><p>Source output data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. If None, the <cite>Xt</cite> argument
+given in <cite>init</cite> is used.</p>
+</dd>
+<dt><strong>yt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. Only needed for supervised
+and semi-supervised Adapt model.
+If None, the <cite>yt</cite> argument given in <cite>init</cite> is used.</p>
+</dd>
+<dt><strong>domains</strong><span class="classifier">array (default=None)</span></dt><dd><p>Vector giving the domain for each source
+data. Can be used for multisource purpose.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of
+the estimator.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">returns an instance of self</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting.fit_estimator">
+<span class="sig-name descname"><span class="pre">fit_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warm_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.fit_estimator.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting.fit_estimator" title="Permalink to this definition"></a></dt>
+<dd><p>Fit estimator on X, y.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>Input data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>Output data.</p>
+</dd>
+<dt><strong>sample_weight</strong><span class="classifier">array</span></dt><dd><p>Importance weighting.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">int (default=None)</span></dt><dd><p>Seed of the random generator</p>
+</dd>
+<dt><strong>warm_start</strong><span class="classifier">bool (default=True)</span></dt><dd><p>If True, continue to fit <code class="docutils literal notranslate"><span class="pre">estimator_</span></code>,
+else, a new estimator is fitted based on
+a copy of <code class="docutils literal notranslate"><span class="pre">estimator</span></code>. (Be sure to set
+<code class="docutils literal notranslate"><span class="pre">copy=True</span></code> to use <code class="docutils literal notranslate"><span class="pre">warm_start=False</span></code>)</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of
+the estimator and to the compile method
+for tensorflow estimator.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>estimator_</strong><span class="classifier">fitted estimator</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting.fit_weights">
+<span class="sig-name descname"><span class="pre">fit_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.fit_weights.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting.fit_weights" title="Permalink to this definition"></a></dt>
+<dd><p>Fit importance weighting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">array</span></dt><dd><p>Input source data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">array</span></dt><dd><p>Input target data.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">key, value argument</span></dt><dd><p>Not used, present here for adapt consistency.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>weights_</strong><span class="classifier">sample weights</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.get_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting.get_params" title="Permalink to this definition"></a></dt>
+<dd><p>Get parameters for this estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>deep</strong><span class="classifier">bool, default=True</span></dt><dd><p>Not used, here for scikit-learn compatibility.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>Parameter names mapped to their values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.predict.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting.predict" title="Permalink to this definition"></a></dt>
+<dd><p>Return estimator predictions after
+adaptation.</p>
+<p>For feature-based method (object which implements
+a <code class="docutils literal notranslate"><span class="pre">transform</span></code> method), the input feature <code class="docutils literal notranslate"><span class="pre">X</span></code>
+are first transformed. Then the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method
+of the fitted estimator <code class="docutils literal notranslate"><span class="pre">estimator_</span></code> is applied
+on the transformed <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+<dt><strong>domain</strong><span class="classifier">str (default=None)</span></dt><dd><p>For antisymetric feature-based method,
+different transformation of the input X
+are applied for different domains. The domain
+should then be specified between “src” and “tgt”.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code> the default transformation is the
+target one.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>prediction of the Adapt Model.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting.predict_estimator">
+<span class="sig-name descname"><span class="pre">predict_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.predict_estimator.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting.predict_estimator" title="Permalink to this definition"></a></dt>
+<dd><p>Return estimator predictions for X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_pred</strong><span class="classifier">array</span></dt><dd><p>prediction of estimator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting.predict_weights">
+<span class="sig-name descname"><span class="pre">predict_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.predict_weights.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting.predict_weights" title="Permalink to this definition"></a></dt>
+<dd><p>Return fitted source weights</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>weights_</strong><span class="classifier">sample weights</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting.score" title="Permalink to this definition"></a></dt>
+<dd><p>Return the estimator score.</p>
+<p>If the object has a <code class="docutils literal notranslate"><span class="pre">transform</span></code> method, the
+estimator is applied on the transformed
+features X. For antisymetric transformation,
+a parameter domain can be set to specified
+between source and target transformation.</p>
+<p>Call <cite>score</cite> on sklearn estimator and 
+<cite>evaluate</cite> on tensorflow Model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array</span></dt><dd><p>input data</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array</span></dt><dd><p>output data</p>
+</dd>
+<dt><strong>sample_weight</strong><span class="classifier">array (default=None)</span></dt><dd><p>Sample weights</p>
+</dd>
+<dt><strong>domain</strong><span class="classifier">str (default=None)</span></dt><dd><p>This parameter specifies for antisymetric
+feature-based method which transformation
+will be applied between “source” and “target”.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code> the transformation by default is
+the target one.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>score</strong><span class="classifier">float</span></dt><dd><p>estimator score.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.set_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting.set_params" title="Permalink to this definition"></a></dt>
+<dd><p>Set the parameters of this estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>**params</strong><span class="classifier">dict</span></dt><dd><p>Estimator parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">estimator instance</span></dt><dd><p>Estimator instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.NearestNeighborsWeighting.unsupervised_score">
+<span class="sig-name descname"><span class="pre">unsupervised_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_nearestneighborsweighting.unsupervised_score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.NearestNeighborsWeighting.unsupervised_score" title="Permalink to this definition"></a></dt>
+<dd><p>Return unsupervised score.</p>
+<p>The normalized discrepancy distance is computed
+between the reweighted/transformed source input
+data and the target input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">array</span></dt><dd><p>Source input data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">array</span></dt><dd><p>Source input data.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>score</strong><span class="classifier">float</span></dt><dd><p>Unsupervised score.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<h2> Examples </h2></section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, ADAPT team, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
