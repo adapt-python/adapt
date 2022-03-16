@@ -12,6 +12,8 @@
 	{% block methods %}
 	
 	{%- set excludedmethods = [
+		'compute_metrics',
+		'compute_loss',
 		'add_loss',
 		'add_metric',
 		'add_update',
