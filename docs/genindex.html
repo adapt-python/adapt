@@ -48,6 +48,8 @@
 <li class="toctree-l1"><a class="reference internal" href="contents.html#adapt-feature-based">Feature-based</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.FE.html">FE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.CORAL.html">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.fMMD.html">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.DANN.html">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.ADDA.html">ADDA</a></li>
@@ -55,11 +57,14 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.CDAN.html">CDAN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.MCD.html">MCD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.MDD.html">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.CCSA.html">CCSA</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contents.html#adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.LDM.html">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.KLIEP.html">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
@@ -70,9 +75,11 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contents.html#adapt-metrics">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.make_uda_scorer.html">make_uda_scorer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.cov_distance.html">cov_distance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.j_score.html">j_score</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
@@ -206,6 +213,7 @@
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
 </div>
@@ -215,6 +223,8 @@
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.__init__">__init__() (adapt.feature_based.ADDA method)</a>
 
       <ul>
+        <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA.__init__">(adapt.feature_based.CCSA method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.__init__">(adapt.feature_based.CDAN method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL.__init__">(adapt.feature_based.CORAL method)</a>
@@ -225,15 +235,23 @@
 </li>
         <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.__init__">(adapt.feature_based.FE method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD.__init__">(adapt.feature_based.fMMD method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.__init__">(adapt.feature_based.MCD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.__init__">(adapt.feature_based.MDD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA.__init__">(adapt.feature_based.SA method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.__init__">(adapt.feature_based.WDGRL method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.__init__">(adapt.instance_based.KLIEP method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.__init__">(adapt.instance_based.KMM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM.__init__">(adapt.instance_based.LDM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting.__init__">(adapt.instance_based.NearestNeighborsWeighting method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost.__init__">(adapt.instance_based.TrAdaBoost method)</a>
 </li>
@@ -242,6 +260,8 @@
         <li><a href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2.__init__">(adapt.instance_based.TwoStageTrAdaBoostR2 method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.__init__">(adapt.instance_based.WANN method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.__init__">(adapt.parameter_based.FineTuning method)</a>
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC.__init__">(adapt.parameter_based.RegularTransferLC method)</a>
 </li>
@@ -268,6 +288,8 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA">CCSA (class in adapt.feature_based)</a>
+</li>
       <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN">CDAN (class in adapt.feature_based)</a>
 </li>
       <li><a href="generated/adapt.utils.check_arrays.html#adapt.utils.check_arrays">check_arrays() (in module adapt.utils)</a>
@@ -281,6 +303,8 @@
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.compile">compile() (adapt.feature_based.ADDA method)</a>
 
       <ul>
+        <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA.compile">(adapt.feature_based.CCSA method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.compile">(adapt.feature_based.CDAN method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.DANN.html#adapt.feature_based.DANN.compile">(adapt.feature_based.DANN method)</a>
@@ -294,6 +318,8 @@
         <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.compile">(adapt.feature_based.WDGRL method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.compile">(adapt.instance_based.WANN method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.compile">(adapt.parameter_based.FineTuning method)</a>
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.compile">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
@@ -326,9 +352,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE">FE (class in adapt.feature_based)</a>
 </li>
+      <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning">FineTuning (class in adapt.parameter_based)</a>
+</li>
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.fit">fit() (adapt.feature_based.ADDA method)</a>
 
       <ul>
+        <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA.fit">(adapt.feature_based.CCSA method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.fit">(adapt.feature_based.CDAN method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL.fit">(adapt.feature_based.CORAL method)</a>
@@ -339,15 +369,23 @@
 </li>
         <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.fit">(adapt.feature_based.FE method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD.fit">(adapt.feature_based.fMMD method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.fit">(adapt.feature_based.MCD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.fit">(adapt.feature_based.MDD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA.fit">(adapt.feature_based.SA method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.fit">(adapt.feature_based.WDGRL method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.fit">(adapt.instance_based.KLIEP method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.fit">(adapt.instance_based.KMM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM.fit">(adapt.instance_based.LDM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting.fit">(adapt.instance_based.NearestNeighborsWeighting method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost.fit">(adapt.instance_based.TrAdaBoost method)</a>
 </li>
@@ -356,6 +394,8 @@
         <li><a href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2.fit">(adapt.instance_based.TwoStageTrAdaBoostR2 method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.fit">(adapt.instance_based.WANN method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.fit">(adapt.parameter_based.FineTuning method)</a>
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC.fit">(adapt.parameter_based.RegularTransferLC method)</a>
 </li>
@@ -371,9 +411,17 @@
       <ul>
         <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.fit_estimator">(adapt.feature_based.FE method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD.fit_estimator">(adapt.feature_based.fMMD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA.fit_estimator">(adapt.feature_based.SA method)</a>
+</li>
         <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.fit_estimator">(adapt.instance_based.KLIEP method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.fit_estimator">(adapt.instance_based.KMM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM.fit_estimator">(adapt.instance_based.LDM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting.fit_estimator">(adapt.instance_based.NearestNeighborsWeighting method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost.fit_estimator">(adapt.instance_based.TrAdaBoost method)</a>
 </li>
@@ -391,13 +439,23 @@
       <ul>
         <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.fit_transform">(adapt.feature_based.FE method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD.fit_transform">(adapt.feature_based.fMMD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA.fit_transform">(adapt.feature_based.SA method)</a>
+</li>
       </ul></li>
       <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.fit_weights">fit_weights() (adapt.instance_based.KLIEP method)</a>
 
       <ul>
         <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.fit_weights">(adapt.instance_based.KMM method)</a>
 </li>
+        <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM.fit_weights">(adapt.instance_based.LDM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting.fit_weights">(adapt.instance_based.NearestNeighborsWeighting method)</a>
+</li>
       </ul></li>
+      <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD">fMMD (class in adapt.feature_based)</a>
+</li>
       <li><a href="generated/adapt.metrics.frechet_distance.html#adapt.metrics.frechet_distance">frechet_distance() (in module adapt.metrics)</a>
 </li>
   </ul></td>
@@ -415,6 +473,8 @@
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.get_params">get_params() (adapt.feature_based.ADDA method)</a>
 
       <ul>
+        <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA.get_params">(adapt.feature_based.CCSA method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.get_params">(adapt.feature_based.CDAN method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL.get_params">(adapt.feature_based.CORAL method)</a>
@@ -425,15 +485,23 @@
 </li>
         <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.get_params">(adapt.feature_based.FE method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD.get_params">(adapt.feature_based.fMMD method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.get_params">(adapt.feature_based.MCD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.get_params">(adapt.feature_based.MDD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA.get_params">(adapt.feature_based.SA method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.get_params">(adapt.feature_based.WDGRL method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.get_params">(adapt.instance_based.KLIEP method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.get_params">(adapt.instance_based.KMM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM.get_params">(adapt.instance_based.LDM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting.get_params">(adapt.instance_based.NearestNeighborsWeighting method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost.get_params">(adapt.instance_based.TrAdaBoost method)</a>
 </li>
@@ -442,6 +510,8 @@
         <li><a href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2.get_params">(adapt.instance_based.TwoStageTrAdaBoostR2 method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.get_params">(adapt.instance_based.WANN method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.get_params">(adapt.parameter_based.FineTuning method)</a>
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC.get_params">(adapt.parameter_based.RegularTransferLC method)</a>
 </li>
@@ -480,6 +550,10 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM">LDM (class in adapt.instance_based)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/adapt.metrics.linear_discrepancy.html#adapt.metrics.linear_discrepancy">linear_discrepancy() (in module adapt.metrics)</a>
 </li>
   </ul></td>
@@ -494,6 +568,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/adapt.metrics.make_uda_scorer.html#adapt.metrics.make_uda_scorer">make_uda_scorer() (in module adapt.metrics)</a>
+</li>
       <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD">MCD (class in adapt.feature_based)</a>
 </li>
       <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD">MDD (class in adapt.feature_based)</a>
@@ -504,10 +580,12 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="generated/adapt.metrics.normalized_frechet_distance.html#adapt.metrics.normalized_frechet_distance">normalized_frechet_distance() (in module adapt.metrics)</a>
+      <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting">NearestNeighborsWeighting (class in adapt.instance_based)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/adapt.metrics.normalized_frechet_distance.html#adapt.metrics.normalized_frechet_distance">normalized_frechet_distance() (in module adapt.metrics)</a>
+</li>
       <li><a href="generated/adapt.metrics.normalized_linear_discrepancy.html#adapt.metrics.normalized_linear_discrepancy">normalized_linear_discrepancy() (in module adapt.metrics)</a>
 </li>
   </ul></td>
@@ -519,6 +597,8 @@
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.predict">predict() (adapt.feature_based.ADDA method)</a>
 
       <ul>
+        <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA.predict">(adapt.feature_based.CCSA method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.predict">(adapt.feature_based.CDAN method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL.predict">(adapt.feature_based.CORAL method)</a>
@@ -529,15 +609,23 @@
 </li>
         <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.predict">(adapt.feature_based.FE method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD.predict">(adapt.feature_based.fMMD method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.predict">(adapt.feature_based.MCD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.predict">(adapt.feature_based.MDD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA.predict">(adapt.feature_based.SA method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.predict">(adapt.feature_based.WDGRL method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.predict">(adapt.instance_based.KLIEP method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.predict">(adapt.instance_based.KMM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM.predict">(adapt.instance_based.LDM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting.predict">(adapt.instance_based.NearestNeighborsWeighting method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost.predict">(adapt.instance_based.TrAdaBoost method)</a>
 </li>
@@ -547,6 +635,8 @@
 </li>
         <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.predict">(adapt.instance_based.WANN method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.predict">(adapt.parameter_based.FineTuning method)</a>
+</li>
         <li><a href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC.predict">(adapt.parameter_based.RegularTransferLC method)</a>
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR.predict">(adapt.parameter_based.RegularTransferLR method)</a>
@@ -554,9 +644,13 @@
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.predict">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
       </ul></li>
+      <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.predict_avg">predict_avg() (adapt.feature_based.MCD method)</a>
+</li>
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.predict_disc">predict_disc() (adapt.feature_based.ADDA method)</a>
 
       <ul>
+        <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA.predict_disc">(adapt.feature_based.CCSA method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.predict_disc">(adapt.feature_based.CDAN method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.DANN.html#adapt.feature_based.DANN.predict_disc">(adapt.feature_based.DANN method)</a>
@@ -571,6 +665,8 @@
 </li>
         <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.predict_disc">(adapt.instance_based.WANN method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.predict_disc">(adapt.parameter_based.FineTuning method)</a>
+</li>
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.predict_disc">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
       </ul></li>
@@ -581,9 +677,17 @@
       <ul>
         <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.predict_estimator">(adapt.feature_based.FE method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD.predict_estimator">(adapt.feature_based.fMMD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA.predict_estimator">(adapt.feature_based.SA method)</a>
+</li>
         <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.predict_estimator">(adapt.instance_based.KLIEP method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.predict_estimator">(adapt.instance_based.KMM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM.predict_estimator">(adapt.instance_based.LDM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting.predict_estimator">(adapt.instance_based.NearestNeighborsWeighting method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost.predict_estimator">(adapt.instance_based.TrAdaBoost method)</a>
 </li>
@@ -599,6 +703,8 @@
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.predict_task">predict_task() (adapt.feature_based.ADDA method)</a>
 
       <ul>
+        <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA.predict_task">(adapt.feature_based.CCSA method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.predict_task">(adapt.feature_based.CDAN method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.DANN.html#adapt.feature_based.DANN.predict_task">(adapt.feature_based.DANN method)</a>
@@ -613,6 +719,8 @@
 </li>
         <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.predict_task">(adapt.instance_based.WANN method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.predict_task">(adapt.parameter_based.FineTuning method)</a>
+</li>
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.predict_task">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
       </ul></li>
@@ -620,6 +728,10 @@
 
       <ul>
         <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.predict_weights">(adapt.instance_based.KMM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM.predict_weights">(adapt.instance_based.LDM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting.predict_weights">(adapt.instance_based.NearestNeighborsWeighting method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost.predict_weights">(adapt.instance_based.TrAdaBoost method)</a>
 </li>
@@ -636,6 +748,8 @@
         <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.pretrain_step">(adapt.feature_based.MCD method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.pretrain_step">(adapt.instance_based.WANN method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.pretrain_step">(adapt.parameter_based.FineTuning method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -660,9 +774,13 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA">SA (class in adapt.feature_based)</a>
+</li>
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.score">score() (adapt.feature_based.ADDA method)</a>
 
       <ul>
+        <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA.score">(adapt.feature_based.CCSA method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.score">(adapt.feature_based.CDAN method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL.score">(adapt.feature_based.CORAL method)</a>
@@ -673,15 +791,23 @@
 </li>
         <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.score">(adapt.feature_based.FE method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD.score">(adapt.feature_based.fMMD method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.score">(adapt.feature_based.MCD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.score">(adapt.feature_based.MDD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA.score">(adapt.feature_based.SA method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.score">(adapt.feature_based.WDGRL method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.score">(adapt.instance_based.KLIEP method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.score">(adapt.instance_based.KMM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM.score">(adapt.instance_based.LDM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting.score">(adapt.instance_based.NearestNeighborsWeighting method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost.score">(adapt.instance_based.TrAdaBoost method)</a>
 </li>
@@ -691,6 +817,8 @@
 </li>
         <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.score">(adapt.instance_based.WANN method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.score">(adapt.parameter_based.FineTuning method)</a>
+</li>
         <li><a href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC.score">(adapt.parameter_based.RegularTransferLC method)</a>
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR.score">(adapt.parameter_based.RegularTransferLR method)</a>
@@ -698,49 +826,13 @@
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.score">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
       </ul></li>
-      <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.score_estimator">score_estimator() (adapt.feature_based.ADDA method)</a>
-
-      <ul>
-        <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.score_estimator">(adapt.feature_based.CDAN method)</a>
-</li>
-        <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL.score_estimator">(adapt.feature_based.CORAL method)</a>
-</li>
-        <li><a href="generated/adapt.feature_based.DANN.html#adapt.feature_based.DANN.score_estimator">(adapt.feature_based.DANN method)</a>
-</li>
-        <li><a href="generated/adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL.score_estimator">(adapt.feature_based.DeepCORAL method)</a>
-</li>
-        <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.score_estimator">(adapt.feature_based.FE method)</a>
-</li>
-        <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.score_estimator">(adapt.feature_based.MCD method)</a>
-</li>
-        <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.score_estimator">(adapt.feature_based.MDD method)</a>
-</li>
-        <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.score_estimator">(adapt.feature_based.WDGRL method)</a>
-</li>
-        <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.score_estimator">(adapt.instance_based.KLIEP method)</a>
-</li>
-        <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.score_estimator">(adapt.instance_based.KMM method)</a>
-</li>
-        <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost.score_estimator">(adapt.instance_based.TrAdaBoost method)</a>
-</li>
-        <li><a href="generated/adapt.instance_based.TrAdaBoostR2.html#adapt.instance_based.TrAdaBoostR2.score_estimator">(adapt.instance_based.TrAdaBoostR2 method)</a>
-</li>
-        <li><a href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2.score_estimator">(adapt.instance_based.TwoStageTrAdaBoostR2 method)</a>
-</li>
-        <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.score_estimator">(adapt.instance_based.WANN method)</a>
-</li>
-        <li><a href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC.score_estimator">(adapt.parameter_based.RegularTransferLC method)</a>
-</li>
-        <li><a href="generated/adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR.score_estimator">(adapt.parameter_based.RegularTransferLR method)</a>
-</li>
-        <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.score_estimator">(adapt.parameter_based.RegularTransferNN method)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.set_params">set_params() (adapt.feature_based.ADDA method)</a>
 
       <ul>
+        <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA.set_params">(adapt.feature_based.CCSA method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.set_params">(adapt.feature_based.CDAN method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL.set_params">(adapt.feature_based.CORAL method)</a>
@@ -751,15 +843,23 @@
 </li>
         <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.set_params">(adapt.feature_based.FE method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD.set_params">(adapt.feature_based.fMMD method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.set_params">(adapt.feature_based.MCD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.set_params">(adapt.feature_based.MDD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA.set_params">(adapt.feature_based.SA method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.set_params">(adapt.feature_based.WDGRL method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.set_params">(adapt.instance_based.KLIEP method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.set_params">(adapt.instance_based.KMM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM.set_params">(adapt.instance_based.LDM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting.set_params">(adapt.instance_based.NearestNeighborsWeighting method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost.set_params">(adapt.instance_based.TrAdaBoost method)</a>
 </li>
@@ -768,6 +868,8 @@
         <li><a href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2.set_params">(adapt.instance_based.TwoStageTrAdaBoostR2 method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.set_params">(adapt.instance_based.WANN method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.set_params">(adapt.parameter_based.FineTuning method)</a>
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC.set_params">(adapt.parameter_based.RegularTransferLC method)</a>
 </li>
@@ -791,6 +893,8 @@
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.transform">transform() (adapt.feature_based.ADDA method)</a>
 
       <ul>
+        <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA.transform">(adapt.feature_based.CCSA method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.transform">(adapt.feature_based.CDAN method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL.transform">(adapt.feature_based.CORAL method)</a>
@@ -801,13 +905,19 @@
 </li>
         <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.transform">(adapt.feature_based.FE method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD.transform">(adapt.feature_based.fMMD method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.transform">(adapt.feature_based.MCD method)</a>
 </li>
         <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.transform">(adapt.feature_based.MDD method)</a>
 </li>
+        <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA.transform">(adapt.feature_based.SA method)</a>
+</li>
         <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.transform">(adapt.feature_based.WDGRL method)</a>
 </li>
         <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.transform">(adapt.instance_based.WANN method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.transform">(adapt.parameter_based.FineTuning method)</a>
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.transform">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
@@ -816,6 +926,62 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2">TwoStageTrAdaBoostR2 (class in adapt.instance_based)</a>
 </li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.unsupervised_score">unsupervised_score() (adapt.feature_based.ADDA method)</a>
+
+      <ul>
+        <li><a href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA.unsupervised_score">(adapt.feature_based.CCSA method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN.unsupervised_score">(adapt.feature_based.CDAN method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL.unsupervised_score">(adapt.feature_based.CORAL method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.DANN.html#adapt.feature_based.DANN.unsupervised_score">(adapt.feature_based.DANN method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL.unsupervised_score">(adapt.feature_based.DeepCORAL method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.FE.html#adapt.feature_based.FE.unsupervised_score">(adapt.feature_based.FE method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD.unsupervised_score">(adapt.feature_based.fMMD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.unsupervised_score">(adapt.feature_based.MCD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD.unsupervised_score">(adapt.feature_based.MDD method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA.unsupervised_score">(adapt.feature_based.SA method)</a>
+</li>
+        <li><a href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL.unsupervised_score">(adapt.feature_based.WDGRL method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP.unsupervised_score">(adapt.instance_based.KLIEP method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM.unsupervised_score">(adapt.instance_based.KMM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.LDM.html#adapt.instance_based.LDM.unsupervised_score">(adapt.instance_based.LDM method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting.unsupervised_score">(adapt.instance_based.NearestNeighborsWeighting method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost.unsupervised_score">(adapt.instance_based.TrAdaBoost method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.TrAdaBoostR2.html#adapt.instance_based.TrAdaBoostR2.unsupervised_score">(adapt.instance_based.TrAdaBoostR2 method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2.unsupervised_score">(adapt.instance_based.TwoStageTrAdaBoostR2 method)</a>
+</li>
+        <li><a href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN.unsupervised_score">(adapt.instance_based.WANN method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.unsupervised_score">(adapt.parameter_based.FineTuning method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC.unsupervised_score">(adapt.parameter_based.RegularTransferLC method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR.unsupervised_score">(adapt.parameter_based.RegularTransferLR method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.unsupervised_score">(adapt.parameter_based.RegularTransferNN method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -840,7 +1006,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Antoine de Mathelin, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
+    <p>&#169; Copyright 2020, ADAPT team, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -51,6 +51,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.FE.html">FE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CORAL.html">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.fMMD.html">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DANN.html">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.ADDA.html">ADDA</a></li>
@@ -58,11 +60,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CDAN.html">CDAN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MCD.html">MCD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MDD.html">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CCSA.html">CCSA</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.LDM.html">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KLIEP.html">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
@@ -73,9 +78,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.make_uda_scorer.html">make_uda_scorer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.cov_distance.html">cov_distance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.j_score.html">j_score</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
@@ -462,8 +469,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Sample-Bias-1D">
 <h1>Sample Bias 1D<a class="headerlink" href="#Sample-Bias-1D" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="926124f0a0154f0897838c4f20717a56" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Hbg2kDXKjKzeQKJSwxzaV7pwbmORhyA3?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="b13d7f5ec2134f64889a80591a94c35f" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/sample_bias.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="6baae0c12c204004aec1448cc77266dd" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Hbg2kDXKjKzeQKJSwxzaV7pwbmORhyA3?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="0cce7d11b39a46f6a307a0621c65c826" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/sample_bias.ipynb">View on GitHub</a></p>
 </div><p>The following example is a 1D regression domain adaptation issue. The goal is to learn the regression task on the target data (orange points) knowing only the labels on the source data (blue points).</p>
 <p>In this example, there is a sample bias between the source and target datasets. The sources are drawn according to a gaussian distribution whereas the targets are uniformly distributed.</p>
 <p>The following methods are being tested:</p>
@@ -765,7 +772,7 @@ Fit Estimator...
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Antoine de Mathelin, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
+    <p>&#169; Copyright 2020, ADAPT team, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

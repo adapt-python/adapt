@@ -1,4 +1,4 @@
-var docs = document.getElementsByClassName("field-list simple");
+var docs = document.getElementsByClassName("field-list");
 var code = document.getElementsByClassName("highlight");
 var links = document.getElementsByClassName("wy-menu wy-menu-vertical");
 
@@ -8,15 +8,38 @@ const ponctList = [",", ".", ";", ":"]
 //var tables = document.getElementsByClassName("longtable docutils align-default");
 //var className = document.getElementsByClassName("py class");
 
+
+function otherParams() {
+	
+	if (docs.length == 0) {
+        docs = document.getElementsByClassName("field-list");
+		setTimeout(attributes, 50);
+        return;
+    } else {
+		for (var i = 0; i < docs[0].children.length; i++) {
+			console.log(docs[0].children[i].innerHTML);
+			if (docs[0].children[i].innerHTML == "Yields") {
+				docs[0].children[i].innerHTML = "Other Parameters";
+			};
+		};
+	};
+};
+
+
 function attributes() {
 	
 	if (docs.length == 0) {
-        docs = document.getElementsByClassName("field-list simple");
+        docs = document.getElementsByClassName("field-list");
 		setTimeout(attributes, 50);
         return;
     } else {
 		docs[0].appendChild(docs[1].children[0]);
 		docs[0].appendChild(docs[1].children[0]);
+		if (docs[0].children.length>2) {
+			if (docs[0].children[2].innerHTML == "Yields") {
+				docs[0].children[2].innerHTML = "Other Parameters";
+			};
+		};
 	};
 };
 
@@ -89,6 +112,7 @@ function changeColor() {
 
 changeColor();
 attributes();
+//otherParams();
 //changeLinks();
 //addLinks();
 

@@ -44,6 +44,23 @@ dl.field-list > dd {
 	padding-bottom: 0 !important;
 }
 
+.field-even > dl > dt {
+	background-color: transparent !important;
+	border-left: 0px !important;
+	color: black !important;
+	margin-bottom: 0 !important;
+	padding-bottom: 0 !important;
+}
+
+.field-odd > dl > dt {
+	background-color: transparent !important;
+	border-left: 0px !important;
+	color: black !important;
+	margin-bottom: 0 !important;
+	padding-bottom: 0 !important;
+}
+
+
 dt.field-odd, dt.field-even {
   background-color: #F0F7FA !important;
   padding-left: 0.5rem !important;
@@ -210,3 +227,14 @@ dd {
 .btn-notebook img {
 	margin: 0px -50px 0px 0px;
 }
+
+
+.rst-content code.literal, .rst-content tt.literal {
+	color: #212529;
+    background-color: #ecf0f3;
+    border-radius: 0.2rem;
+    padding: 0.15rem;
+    word-break: normal;
+	font-size: 87.5%;
+}
+

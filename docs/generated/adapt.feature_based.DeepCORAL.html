@@ -51,6 +51,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.FE.html">FE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CORAL.html">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.fMMD.html">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DANN.html">DANN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.ADDA.html">ADDA</a></li>
@@ -58,11 +60,14 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CDAN.html">CDAN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MCD.html">MCD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.MDD.html">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CCSA.html">CCSA</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.LDM.html">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KLIEP.html">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
@@ -73,9 +78,11 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.metrics.make_uda_scorer.html">make_uda_scorer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.metrics.cov_distance.html">cov_distance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.metrics.j_score.html">j_score</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
@@ -218,7 +225,7 @@
 <h1><a class="reference internal" href="../contents.html#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>.DeepCORAL<a class="headerlink" href="#adapt-feature-based-deepcoral" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="adapt.feature_based.DeepCORAL">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.feature_based.</span></span><span class="sig-name descname"><span class="pre">DeepCORAL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_deepcoral.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.DeepCORAL" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.feature_based.</span></span><span class="sig-name descname"><span class="pre">DeepCORAL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_deepcoral.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.DeepCORAL" title="Permalink to this definition"></a></dt>
 <dd><p>DeepCORAL: Deep CORrelation ALignment</p>
 <p>DeepCORAL is an extension of CORAL method. It learns a nonlinear
 transformation which aligns correlations of layer activations in
@@ -264,9 +271,7 @@ neurons per layer and ReLU activation is used as task network.</p>
 </dd>
 <dt><strong>Xt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target input data.</p>
 </dd>
-<dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data.</p>
-</dd>
-<dt><strong>lambda_</strong><span class="classifier">float (default=1.)</span></dt><dd><p>Trade-off parameter.</p>
+<dt><strong>lambda_</strong><span class="classifier">float or tensorflow Variable (default=1.)</span></dt><dd><p>Trade-off parameter.</p>
 </dd>
 <dt><strong>match_mean</strong><span class="classifier">bool (default=False)</span></dt><dd><p>Weither to match the means of source
 and target or not. If <code class="docutils literal notranslate"><span class="pre">False</span></code> only
@@ -284,6 +289,45 @@ It can be, for instance, compile or fit parameters of the
 estimator or kernel parameters etc…
 Accepted parameters can be found by calling the method
 <code class="docutils literal notranslate"><span class="pre">_get_legal_params(params)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>optimizer</strong><span class="classifier">str or instance of tf.keras.optimizers (default=”rmsprop”)</span></dt><dd><p>Optimizer for the task. It should be an
+instance of tf.keras.optimizers as:
+<code class="docutils literal notranslate"><span class="pre">tf.keras.optimizers.SGD(0.001)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">tf.keras.optimizers.Adam(lr=0.001,</span> <span class="pre">beta_1=0.5)</span></code>.
+A string can also be given as <code class="docutils literal notranslate"><span class="pre">&quot;adam&quot;</span></code>.
+Default optimizer is <code class="docutils literal notranslate"><span class="pre">rmsprop</span></code>.</p>
+</dd>
+<dt><strong>loss</strong><span class="classifier">str or instance of tf.keras.losses (default=”mse”)</span></dt><dd><p>Loss for the task. It should be an
+instance of tf.keras.losses as:
+<code class="docutils literal notranslate"><span class="pre">tf.keras.losses.MeanSquaredError()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">tf.keras.losses.CategoricalCrossentropy()</span></code>.
+A string can also be given as <code class="docutils literal notranslate"><span class="pre">&quot;mse&quot;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">categorical_crossentropy</span></code>.
+Default loss is <code class="docutils literal notranslate"><span class="pre">mse</span></code>.</p>
+</dd>
+<dt><strong>metrics</strong><span class="classifier">list of str or list of tf.keras.metrics.Metric instance</span></dt><dd><p>List of metrics to be evaluated by the model during training
+and testing. Typically you will use <code class="docutils literal notranslate"><span class="pre">metrics=['accuracy']</span></code>.</p>
+</dd>
+<dt><strong>optimizer_enc</strong><span class="classifier">str or instance of tf.keras.optimizers</span></dt><dd><p>If the Adapt Model has an <code class="docutils literal notranslate"><span class="pre">encoder</span></code> attribute,
+a specific optimizer for the <code class="docutils literal notranslate"><span class="pre">encoder</span></code> network can
+be given. Typically, this parameter can be used to
+give a smaller learning rate to the encoder.
+If not specified, <code class="docutils literal notranslate"><span class="pre">optimizer_enc=optimizer</span></code>.</p>
+</dd>
+<dt><strong>optimizer_disc</strong><span class="classifier">str or instance of tf.keras.optimizers</span></dt><dd><p>If the Adapt Model has a <code class="docutils literal notranslate"><span class="pre">discriminator</span></code> attribute,
+a specific optimizer for the <code class="docutils literal notranslate"><span class="pre">discriminator</span></code> network can
+be given. If not specified, <code class="docutils literal notranslate"><span class="pre">optimizer_disc=optimizer</span></code>.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">key, value arguments</span></dt><dd><p>Any arguments of the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method from the Tensorflow
+Model can be given, as <code class="docutils literal notranslate"><span class="pre">epochs</span></code> and <code class="docutils literal notranslate"><span class="pre">batch_size</span></code>.
+Specific arguments from <code class="docutils literal notranslate"><span class="pre">optimizer</span></code> can also be given
+as <code class="docutils literal notranslate"><span class="pre">learning_rate</span></code> or <code class="docutils literal notranslate"><span class="pre">beta_1</span></code> for <code class="docutils literal notranslate"><span class="pre">Adam</span></code>.
+This allows to perform <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> from scikit-learn
+on these arguments.</p>
 </dd>
 </dl>
 </dd>
@@ -345,7 +389,7 @@ and losses are recorded too.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.__init__" title="adapt.feature_based.DeepCORAL.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([encoder, task, Xt, yt, lambda_, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.__init__" title="adapt.feature_based.DeepCORAL.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([encoder, task, Xt, lambda_, ...])</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.compile" title="adapt.feature_based.DeepCORAL.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a>([optimizer, loss, metrics, ...])</p></td>
@@ -366,23 +410,23 @@ and losses are recorded too.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.predict_task" title="adapt.feature_based.DeepCORAL.predict_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_task</span></code></a>(X)</p></td>
 <td><p>Return predictions of the task on the encoded features.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.score" title="adapt.feature_based.DeepCORAL.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>([X, y, sample_weight])</p></td>
-<td><p>Return adaptation score.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.score_estimator" title="adapt.feature_based.DeepCORAL.score_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score_estimator</span></code></a>(X, y[, sample_weight])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.score" title="adapt.feature_based.DeepCORAL.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y[, sample_weight])</p></td>
 <td><p>Return the evaluation of the model on X, y.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.set_params" title="adapt.feature_based.DeepCORAL.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.set_params" title="adapt.feature_based.DeepCORAL.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
 <td><p>Set the parameters of this estimator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.transform" title="adapt.feature_based.DeepCORAL.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.transform" title="adapt.feature_based.DeepCORAL.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(X)</p></td>
 <td><p>Return the encoded features of X.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.feature_based.DeepCORAL.unsupervised_score" title="adapt.feature_based.DeepCORAL.unsupervised_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unsupervised_score</span></code></a>(Xs, Xt)</p></td>
+<td><p>Return unsupervised score.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.feature_based.DeepCORAL.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_deepcoral.__init__.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.DeepCORAL.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_deepcoral.__init__.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.DeepCORAL.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -476,6 +520,8 @@ will only be called every <cite>N</cite> batches
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domains</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_deepcoral.fit.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.DeepCORAL.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Fit Model. Note that <code class="docutils literal notranslate"><span class="pre">fit</span></code> does not reset
 the model but extend the training.</p>
+<p>Notice also that the compile method will be called 
+if the model has not been compiled yet.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -486,8 +532,9 @@ the model but extend the training.</p>
 <dt><strong>Xt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. If None, the <cite>Xt</cite> argument
 given in <cite>init</cite> is used.</p>
 </dd>
-<dt><strong>yt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. If None, the <cite>Xt</cite> argument
-given in <cite>init</cite> is used.</p>
+<dt><strong>yt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. Only needed for supervised
+and semi-supervised Adapt model.
+If None, the <cite>yt</cite> argument given in <cite>init</cite> is used.</p>
 </dd>
 <dt><strong>domains</strong><span class="classifier">array (default=None)</span></dt><dd><p>Vector giving the domain for each source
 data. Can be used for multisource purpose.</p>
@@ -627,39 +674,7 @@ the generator as they can’t be passed easily to children processes.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.feature_based.DeepCORAL.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_deepcoral.score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.DeepCORAL.score" title="Permalink to this definition"></a></dt>
-<dd><p>Return adaptation score.</p>
-<p>For parameter-based methods, the estimator score
-on X, y is computed.</p>
-<p>For instance-based and feature-based methods,
-the normalized discrepancy distance is computed
-between the reweighted/transformed source input
-data and the target input data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array (default=None)</span></dt><dd><p>Not used for instance and feature based methods.
-The training source data are used instead.</p>
-</dd>
-<dt><strong>y</strong><span class="classifier">array (default=None)</span></dt><dd><p>Not used for instance and feature based methods.
-The training source data are used instead.</p>
-</dd>
-<dt><strong>sample_weight</strong><span class="classifier">array (default=None)</span></dt><dd><p>Not used for instance and feature based methods.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>score</strong><span class="classifier">float</span></dt><dd><p>Adaptation score.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adapt.feature_based.DeepCORAL.score_estimator">
-<span class="sig-name descname"><span class="pre">score_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_deepcoral.score_estimator.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.DeepCORAL.score_estimator" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_deepcoral.score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.DeepCORAL.score" title="Permalink to this definition"></a></dt>
 <dd><p>Return the evaluation of the model on X, y.</p>
 <p>Call <cite>evaluate</cite> on tensorflow Model.</p>
 <dl class="field-list simple">
@@ -722,6 +737,31 @@ The training source data are used instead.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.feature_based.DeepCORAL.unsupervised_score">
+<span class="sig-name descname"><span class="pre">unsupervised_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/feature_based/_deepcoral.unsupervised_score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.feature_based.DeepCORAL.unsupervised_score" title="Permalink to this definition"></a></dt>
+<dd><p>Return unsupervised score.</p>
+<p>The normalized discrepancy distance is computed
+between the reweighted/transformed source input
+data and the target input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Xs</strong><span class="classifier">array</span></dt><dd><p>Source input data.</p>
+</dd>
+<dt><strong>Xt</strong><span class="classifier">array</span></dt><dd><p>Source input data.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>score</strong><span class="classifier">float</span></dt><dd><p>Unsupervised score.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <h2> Examples </h2><div class="toctree-wrapper compound">
@@ -748,7 +788,7 @@ The training source data are used instead.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Antoine de Mathelin, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
+    <p>&#169; Copyright 2020, ADAPT team, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
