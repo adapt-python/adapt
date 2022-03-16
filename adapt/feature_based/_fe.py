@@ -188,6 +188,19 @@ class FE(BaseAdaptEstimator):
         """
         Return augmented features for X.
         
+        In single source:
+        
+        - If ``domain="src"``, the method returns the array (X, **0**, X).
+        - If ``domain="tgt"``, the method returns the array (**0**, X, X).
+        
+        With **0** the array of same shape as X with zeros everywhere.
+        
+        In single Multi-source:
+        
+        - If ``domain="src_%i"%i``, the method returns the array
+          (X, [X]*i, **0**, [X]*(n_sources-i)).
+        - If ``domain="tgt"``, the method returns the array (**0**, [X]*(n_sources+1)).
+        
         Parameters
         ----------
         X : array

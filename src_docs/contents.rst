@@ -57,6 +57,8 @@ and **target** distributions. The **task** is then learned in this **encoded fea
 
    feature_based.FE
    feature_based.CORAL
+   feature_based.SA
+   feature_based.fMMD
    feature_based.DeepCORAL
    feature_based.DANN
    feature_based.ADDA
@@ -64,6 +66,7 @@ and **target** distributions. The **task** is then learned in this **encoded fea
    feature_based.CDAN
    feature_based.MCD
    feature_based.MDD
+   feature_based.CCSA
 
    
 .. _adapt.instance_based:
@@ -96,8 +99,10 @@ The **reweighted** training instances are then directly used to learn the task.
    :toctree: generated/
    :template: class.rst
 
+   instance_based.LDM
    instance_based.KLIEP
    instance_based.KMM
+   instance_based.NearestNeighborsWeighting
    instance_based.TrAdaBoost
    instance_based.TrAdaBoostR2
    instance_based.TwoStageTrAdaBoostR2
@@ -132,6 +137,7 @@ the **source** data are adapted to build a suited model for the **task** on the 
    parameter_based.RegularTransferLR
    parameter_based.RegularTransferLC
    parameter_based.RegularTransferNN
+   parameter_based.FineTuning
 
 
 .. _adapt.metrics:
@@ -151,6 +157,7 @@ This module contains functions to compute adaptation metrics.
    :toctree: generated/
    :template: function.rst
 
+   metrics.make_uda_scorer
    metrics.cov_distance
    metrics.j_score
    metrics.linear_discrepancy

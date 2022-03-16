@@ -22,7 +22,7 @@ class SA(BaseAdaptEstimator):
         to the input dimension of ``X``
     
     Attributes
-    ----------    
+    ----------
     estimator_ : object
         Fitted estimator.
         
@@ -34,6 +34,12 @@ class SA(BaseAdaptEstimator):
         
     M_ : numpy array
         Alignment matrix
+        
+    References
+    ----------
+    .. [1] `[1] <https://arxiv.org/abs/1409.5241>`_ B. Fernando, A. Habrard, \
+M. Sebban, and T. Tuytelaars. "Unsupervised visual domain adaptation using \
+subspace alignment". In ICCV, 2013.
     """
     
     def __init__(self,

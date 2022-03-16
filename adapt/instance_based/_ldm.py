@@ -20,12 +20,13 @@ class LDM(BaseAdaptEstimator):
     
     .. math::
     
-        \min_{||w||_1 = 1, w>0} \max{||u||=1} |u^T M(w) u|
+        \min_{||w||_1 = 1, w>0} \max_{||u||=1} |u^T M(w) u|
         
     Where:
+    
     - :math:`M(w) = (1/n) X_T^T X_T - X^T_S diag(w) X_S`
     - :math:`X_S, X_T` are respectively the source dataset
-      and the target dataset of size :math:`n`
+      and the target dataset of size :math:`m` and :math:`n`
     
     Parameters
     ----------

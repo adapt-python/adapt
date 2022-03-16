@@ -25,11 +25,13 @@ class NearestNeighborsWeighting(BaseAdaptEstimator):
     
     algorithm : {'auto', 'ball_tree', 'kd_tree', 'brute'}, (default='auto')
         Algorithm used to compute the nearest neighbors:
+        
         - 'ball_tree' will use ``BallTree``
         - 'kd_tree' will use ``KDTree``
         - 'brute' will use a brute-force search.
         - 'auto' will attempt to decide the most appropriate algorithm
           based on the values passed to ``fit`` method.
+
         Note: fitting on sparse input will override the setting of
         this parameter, using brute force.
     
@@ -74,6 +76,11 @@ class NearestNeighborsWeighting(BaseAdaptEstimator):
     --------
     KMM
     KLIEP
+    
+    References
+    ----------
+    .. [1] `[1] <https://arxiv.org/pdf/2102.02291.pdf>`_ \
+M. Loog. "Nearest neighbor-based importance weighting". In MLSP 2012.
     """
     
     def __init__(self,

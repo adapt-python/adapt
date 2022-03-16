@@ -225,7 +225,7 @@ domain adaptation". In CVPR, 2018.
     def predict_avg(self, X):
         """
         Return the average predictions between
-        task_ and discriminator_ networks.
+        ``task_`` and ``discriminator_`` networks.
         
         Parameters
         ----------
