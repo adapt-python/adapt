@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 from sklearn.linear_model import Ridge, LinearRegression
 
-from adapt.feature_based import FE
+from adapt.feature_based import FA
 
 
 Xs = np.ones((75, 10))
@@ -18,7 +18,7 @@ domains = np.concatenate((np.ones(25)*0, np.ones(25), np.ones(25)*2))
 
 
 def test_fit():
-    model = FE(Ridge(fit_intercept=False))
+    model = FA(Ridge(fit_intercept=False))
     model.fit(Xs, ys, Xt, yt)
     assert isinstance(model.estimator_, Ridge)
     assert len(model.estimator_.coef_) == 30
@@ -29,19 +29,19 @@ def test_fit():
     
     
 def test_fit_default():
-    model = FE()
+    model = FA()
     model.fit(Xs, ys, Xt, yt)
     assert isinstance(model.estimator_, LinearRegression)
 
 
 def test_fit_params():
-    model = FE(Ridge(alpha=123))
+    model = FA(Ridge(alpha=123))
     model.fit(Xs, ys, Xt, yt)
     assert model.estimator_.alpha == 123
 
 
 def test_predict():
-    model = FE(Ridge())
+    model = FA(Ridge())
     model.fit(Xs, ys, Xt, yt)
     y_pred = model.predict(Xt)
     assert np.all(y_pred < 0.01)
@@ -54,7 +54,7 @@ def test_predict():
         
         
 def test_multisource():
-    model = FE(Ridge(fit_intercept=False))
+    model = FA(Ridge(fit_intercept=False))
     model.fit(Xs, ys, Xt, yt, domains=domains)
     assert isinstance(model.estimator_, Ridge)
     assert len(model.estimator_.coef_) == 50

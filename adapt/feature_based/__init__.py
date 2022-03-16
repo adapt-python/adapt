@@ -2,7 +2,7 @@
 Feature-Based Methods Module
 """
 
-from ._fe import FE
+from ._fa import FA
 from ._coral import CORAL
 from ._dann import DANN
 from ._adda import ADDA
@@ -15,5 +15,5 @@ from ._sa import SA
 from ._fmmd import fMMD
 from ._ccsa import CCSA
 
-__all__ = ["FE", "CORAL", "DeepCORAL", "ADDA", "DANN",
+__all__ = ["FA", "CORAL", "DeepCORAL", "ADDA", "DANN",
            "MCD", "MDD", "WDGRL", "CDAN", "SA", "fMMD", "CCSA"]
