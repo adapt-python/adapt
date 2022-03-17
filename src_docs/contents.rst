@@ -159,7 +159,7 @@ This module contains functions to compute adaptation metrics.
 
    metrics.make_uda_scorer
    metrics.cov_distance
-   metrics.j_score
+   metrics.neg_j_score
    metrics.linear_discrepancy
    metrics.normalized_linear_discrepancy
    metrics.frechet_distance

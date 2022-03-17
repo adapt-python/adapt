@@ -27,7 +27,7 @@ def test_all_metrics():
     linear_discrepancy(Xs, Xt)
     normalized_linear_discrepancy(Xs, Xt)
     normalized_frechet_distance(Xs, Xt)
-    j_score(Xs, Xt)
+    neg_j_score(Xs, Xt)
     domain_classifier(Xs, Xt)
     domain_classifier(Xs, Xt, LogisticRegression())
     reverse_validation(base_est, Xs, ys, Xt)
