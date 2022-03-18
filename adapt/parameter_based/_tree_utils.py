@@ -464,7 +464,8 @@ def coherent_new_split(phi,th,rule):
             return 0,1
         else:
             return 1,0
-      
+
+
 def all_coherent_splits(rule,all_splits):
 
     inds = np.zeros(all_splits.shape[0],dtype=bool)

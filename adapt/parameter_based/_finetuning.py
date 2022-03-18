@@ -1,5 +1,6 @@
 import tensorflow as tf
 from adapt.base import BaseAdaptDeep, make_insert_doc
+from adapt.utils import check_fitted_network
 
 
 @make_insert_doc(["encoder", "task"], supervised=True)
@@ -66,6 +67,9 @@ neural networks". In CVPR, 2014.
                  copy=True,
                  random_state=None,
                  **params):
+        
+        encoder = check_fitted_network(encoder)
+        task = check_fitted_network(task)
         
         names = self._get_param_names()
         kwargs = {k: v for k, v in locals().items() if k in names}

@@ -6,13 +6,13 @@ Created on Thu Mar  3 11:23:55 2022
 @author: mounir
 """
 
-import sys
 import copy
+
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeClassifier
-sys.path.insert(0, '../')
-import transfer_tree as TL
+
+from adapt.parameter_based import TransferTreeClassifier
 
 methods = [
     'relab',
@@ -83,7 +83,7 @@ clfs = []
 scores = []
 # Transfer with SER
 #clf_transfer = copy.deepcopy(clf_source)
-#transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,Xt=Xt,yt=yt)
+#transferred_dt = TransferTreeClassifier(estimator=clf_transfer,Xt=Xt,yt=yt)
 
 for method in methods:
     Nkmin = sum(yt == 0 )
@@ -98,35 +98,35 @@ for method in methods:
     
     clf_transfer = copy.deepcopy(clf_source)
     if method == 'relab':
-        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="")
+        transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="")
         transferred_dt.fit(Xt,yt)
     if method == 'ser':
-        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="ser")
+        transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="ser")
         transferred_dt.fit(Xt,yt)
         #transferred_dt._ser(Xt, yt, node=0, original_ser=True)
         #ser.SER(0, clf_transfer, Xt, yt, original_ser=True)
     if method == 'ser_nr':
-        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="ser")
+        transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="ser")
         transferred_dt._ser(Xt, yt,node=0,original_ser=False,no_red_on_cl=True,cl_no_red=[0])
     if method == 'ser_nr_lambda':
-        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="ser")
+        transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="ser")
         transferred_dt._ser(Xt, yt,node=0,original_ser=False,no_red_on_cl=True,cl_no_red=[0],
                             leaf_loss_quantify=True,leaf_loss_threshold=0.5,
                             root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)
         #ser.SER(0, clf_transfer, Xt, yt,original_ser=False,no_red_on_cl=True,cl_no_red=[0],ext_cond=True)
     if method == 'strut':
-        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+        transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="strut")
         transferred_dt.fit(Xt,yt)
         #transferred_dt._strut(Xt, yt,node=0)
     if method == 'strut_nd':
-        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+        transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="strut")
         transferred_dt._strut(Xt, yt,node=0,use_divergence=False)
     if method == 'strut_lambda':
-        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+        transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="strut")
         transferred_dt._strut(Xt, yt,node=0,adapt_prop=True,root_source_values=root_source_values,
                               Nkmin=Nkmin,coeffs=coeffs)
     if method == 'strut_lambda_np':
-        transferred_dt = TL.TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+        transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="strut")
         transferred_dt._strut(Xt, yt,node=0,adapt_prop=False,no_prune_on_cl=True,cl_no_prune=[0],
                             leaf_loss_quantify=False,leaf_loss_threshold=0.5,no_prune_with_translation=False,
                             root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)

@@ -36,7 +36,7 @@ def test_all_metrics():
     
 def test_adapt_scorer():
     if os.name != 'nt':
-        scorer = make_uda_scorer(j_score, Xs, Xt)
+        scorer = make_uda_scorer(neg_j_score, Xs, Xt)
         adapt_model = KMM(LinearRegression(), Xt=Xt, kernel="rbf", gamma=0.)
         gs = GridSearchCV(adapt_model, {"gamma": [1000, 1e-5]},
                           scoring=scorer, return_train_score=True,

@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+from sklearn.base import clone
 
 from adapt.utils import make_classification_da
 from adapt.parameter_based import FineTuning
@@ -62,3 +63,15 @@ def test_finetune_pretrain():
     model = FineTuning(encoder=encoder, task=task, pretrain=True, pretrain__epochs=2,
                        loss="bce", optimizer="adam", random_state=0)
     model.fit(Xs, ys, epochs=1, verbose=0)
+    
+    
+def test_clone():
+    model = FineTuning(encoder=encoder, task=task,
+                       loss="bce", optimizer="adam", random_state=0)
+    model.fit(Xs, ys, epochs=1, verbose=0)
+    
+    new_model = clone(model)
+    new_model.fit(Xs, ys, epochs=1, verbose=0)
+    new_model.predict(Xs);
+    assert model is not new_model
+    

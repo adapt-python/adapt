@@ -3,7 +3,6 @@ Regular Transfer
 """
 
 import numpy as np
-from sklearn.exceptions import NotFittedError
 from sklearn.preprocessing import LabelBinarizer
 from scipy.sparse.linalg import lsqr
 import tensorflow as tf
@@ -14,7 +13,8 @@ from adapt.base import BaseAdaptEstimator, BaseAdaptDeep, make_insert_doc
 from adapt.utils import (check_arrays,
                          set_random_seed,
                          check_estimator,
-                         check_network)
+                         check_network,
+                         check_fitted_estimator)
 
 
 @make_insert_doc(supervised=True)
@@ -101,9 +101,12 @@ can help a lot". In EMNLP, 2004.
                  **params):
                 
         if not hasattr(estimator, "coef_"):
-            raise NotFittedError("`estimator` argument has no ``coef_`` attribute, "
-                                 "please call `fit` on `estimator` or use "
-                                 "another estimator.")
+            raise ValueError("`estimator` argument has no ``coef_`` attribute, "
+                             "please call `fit` on `estimator` or use "
+                             "another estimator as `LinearRegression` or "
+                             "`RidgeClassifier`.")
+            
+        estimator = check_fitted_estimator(estimator)
 
         names = self._get_param_names()
         kwargs = {k: v for k, v in locals().items() if k in names}
@@ -137,7 +140,7 @@ can help a lot". In EMNLP, 2004.
         self.estimator_ = check_estimator(self.estimator,
                                           copy=self.copy,
                                           force_copy=True)
-                
+
         if self.estimator_.fit_intercept:
             intercept_ = np.reshape(
                 self.estimator_.intercept_,

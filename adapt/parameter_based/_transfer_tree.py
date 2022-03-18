@@ -17,23 +17,23 @@ import copy
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 
-import tree_utils as ut
+from adapt.base import BaseAdaptEstimator, make_insert_doc
+from adapt.utils import check_arrays, set_random_seed, check_estimator, check_fitted_estimator
 
-class TransferTreeClassifier:
+import adapt.parameter_based._tree_utils as ut
+
+
+@make_insert_doc(supervised=True)
+class TransferTreeClassifier(BaseAdaptEstimator):
     """
     TransferTreeClassifier
     
-    TTC do that and that ...
+    TBA
     
     Parameters
-    ----------    
-    estimator : sklearn DecsionTreeClassifier (default=None)
-        ...
-        
+    ----------
     algo : str or callable (default="ser")
-        ...
-        
-    (pas la peine de commenter Xt, yt, copy, verbose et random_state)
+        Algo. Choose between ['ser', 'strut', 'relabel'].
         
     Attributes
     ----------
@@ -42,64 +42,63 @@ class TransferTreeClassifier:
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from adapt.utils import make_classification_da
+    >>> from sklearn.tree import DecisionTreeClassifier
     >>> from adapt.parameter_based import TransferTreeClassifier
-    >>> from sklearn.tree import DecsionTreeClassifier
-    >>> np.random.seed(0)
-    >>> Xs = np.random.randn(50) * 0.1
-    >>> Xs = np.concatenate((Xs, Xs + 1.))
-    >>> Xt = np.random.randn(100) * 0.1
-    >>> ys = (Xs < 0.1).astype(int)
-    >>> yt = (Xt < 0.05).astype(int)
-    >>> lc = DecsionTreeClassifier()
-    >>> lc.fit(Xs.reshape(-1, 1), ys)
-    >>> lc.score(Xt.reshape(-1, 1), yt)
-    0.67
-    >>> rt = TransferTreeClassifier(lc, random_state=0)
-    >>> rt.fit(Xt[:10].reshape(-1, 1), yt[:10].reshape(-1, 1))
-    >>> rt.estimator_.score(Xt.reshape(-1, 1), yt)
-    0.67
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> src_model = DecisionTreeClassifier().fit(Xs, ys)
+    >>> src_model.score(Xt, yt)
+    0.62
+    >>> tgt_model = TransferTreeClassifier(src_model)
+    >>> tgt_model.fit(Xt[[1, -1]], yt[[1, -1]])
+    >>> tgt_model.score(Xt, yt)
+    0.92
 
     References
     ----------
     .. [1] `[1] < le lien vers l'article >`_ le nom \
 des auteurs. " Le titre de l'article ". In conference, année.
     """
-    
-    
     def __init__(self,
                  estimator=None,
                  Xt=None,
                  yt=None,
                  algo="ser",
-                 cpy=True,
+                 copy=True,
                  verbose=1,
                  random_state=None,
                  **params):
+               
+        if not hasattr(estimator, "tree_"):
+            raise ValueError("`estimator` argument has no ``tree_`` attribute, "
+                                "please call `fit` on `estimator` or use "
+                                "another estimator as `DecisionTreeClassifier`.")
         
-#        if not hasattr(estimator, "tree_"):
-#            raise NotFittedError("`estimator` argument has no ``tree_`` attribute, "
-#                                 "please call `fit` on `estimator` or use "
-#                                 "another estimator.")
+        estimator = check_fitted_estimator(estimator)
         
-        self.parents = np.zeros(estimator.tree_.node_count,dtype=int)
-        self.bool_parents_lr = np.zeros(estimator.tree_.node_count,dtype=int)
-        self.rules = np.zeros(estimator.tree_.node_count,dtype=object)
-        self.paths = np.zeros(estimator.tree_.node_count,dtype=object)
-        self.depths = np.zeros(estimator.tree_.node_count,dtype=int)
+        super().__init__(estimator=estimator,
+                         Xt=Xt,
+                         yt=yt,
+                         copy=copy,
+                         verbose=verbose,
+                         random_state=random_state,
+                         algo=algo,
+                         **params)
         
-        self.estimator = estimator
-        self.Xt = Xt
-        self.yt = yt
-        self.algo = algo
-        self.copy = copy
-        self.verbose = verbose
-        self.random_state = random_state
-        self.params = params
-
+        self.estimator_ = check_estimator(self.estimator,
+                                          copy=self.copy,
+                                          force_copy=True)
+        
+        self.parents = np.zeros(self.estimator_.tree_.node_count,dtype=int)
+        self.bool_parents_lr = np.zeros(self.estimator_.tree_.node_count,dtype=int)
+        self.rules = np.zeros(self.estimator_.tree_.node_count,dtype=object)
+        self.paths = np.zeros(self.estimator_.tree_.node_count,dtype=object)
+        self.depths = np.zeros(self.estimator_.tree_.node_count,dtype=int)
+        
         #Init. meta params
         self._compute_params()
         
+    
     def fit(self, Xt=None, yt=None, **fit_params):
         """
         Fit TransferTreeClassifier.
@@ -113,49 +112,21 @@ des auteurs. " Le titre de l'article ". In conference, année.
             Target output data.
             
         fit_params : key, value arguments
-            Arguments for the estimator.
+            Not used. Here for sklearn compatibility.
 
         Returns
         -------
         self : returns an instance of self
         """
+        Xt, yt = self._get_target_data(Xt, yt)
+        Xt, yt = check_arrays(Xt, yt)
+        set_random_seed(self.random_state)
         
-        #if self.estimator is None:
-        #Pas d'arbre source
-        
-        #if self.estimator.node_count == 0:
-        #Arbre vide
-        
-        #set_random_seed(self.random_state)
-        #Xt, yt = check_arrays(Xt, yt)
-        
-        #self.estimator_ = check_estimator(self.estimator,copy=self.copy,force_copy=True)
-        
-        #Tree_ = self.estimator.tree_
-        
-        self._modify_tree(self.estimator.tree_, Xt, yt)
+        self._modify_tree(self.estimator_.tree_, Xt, yt)
         
         return self
-        
-    """
-        def _build_tree(self, X, y):
-        # Construit un arbre et le fit sur X, y
-        pass
-        
-        
-        def _prune(self, tree):
-        # Prune tree à sa racine
-        pass
-    """
 
-    """
-    def _check_coherence_values(self):
-    
-    def _get_(self):
-        #    extract_rule,find_parent,contain_leaf_not_prune,compute_class_distr,
-        #    get_children_distr, get_node_distr
-    """
-    
+
     def _modify_tree(self, tree, X, y):
         
         # Aiguillage
@@ -173,8 +144,8 @@ des auteurs. " Le titre de l'article ". In conference, année.
     ### @@@ ###
 
     ###########
-    def _compute_params(self,node=0):
-        Tree_ = self.estimator.tree_
+    def _compute_params(self,node=0):        
+        Tree_ = self.estimator_.tree_
         
         if node == 0 :
             #default values
@@ -182,7 +153,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
             self.rules[0] = (np.array([]),np.array([]),np.array([]))
             self.paths[0] = np.array([])
         else:
-            parent,b = ut.find_parent(self.estimator, node)
+            parent,b = ut.find_parent(self.estimator_, node)
             self.parents[node] = parent
             self.bool_parents_lr[node] = b
             self.depths[node] = self.depths[parent]+1
@@ -196,24 +167,24 @@ des auteurs. " Le titre de l'article ". In conference, année.
             new_f[:-1] = features
             new_t[:-1] = thresholds
             new_b[:-1] = bs
-            new_f[-1] = self.estimator.tree_.feature[parent]
-            new_t[-1] = self.estimator.tree_.threshold[parent]
+            new_f[-1] = self.estimator_.tree_.feature[parent]
+            new_t[-1] = self.estimator_.tree_.threshold[parent]
             new_b[-1] = b
             self.rules[node] = (new_f,new_t,new_b)
 
-        if self.estimator.tree_.feature[node] != -2:
-            child_l = self.estimator.tree_.children_left[node]
-            child_r = self.estimator.tree_.children_right[node]
+        if self.estimator_.tree_.feature[node] != -2:
+            child_l = self.estimator_.tree_.children_left[node]
+            child_r = self.estimator_.tree_.children_right[node]
             self._compute_params(node=child_l)
             self._compute_params(node=child_r)
             
     def _update_split(self,node,feature,threshold):
         # Juste changer la liste des rules concernées
-        Tree_ = self.estimator.tree_
-        self.estimator.tree_.feature[node] = feature
-        self.estimator.tree_.threshold[node] = threshold
+        Tree_ = self.estimator_.tree_
+        self.estimator_.tree_.feature[node] = feature
+        self.estimator_.tree_.threshold[node] = threshold
 
-        for k in ut.sub_nodes(self.estimator.tree_, node)[1:]:
+        for k in ut.sub_nodes(self.estimator_.tree_, node)[1:]:
             ind_ = list(self.paths[k]).index(node)
             (p,t,b) = self.rules[k]
             (p[ind_],t[ind_]) =  (feature,threshold)
@@ -228,17 +199,17 @@ des auteurs. " Le titre de l'article ". In conference, année.
     def _cut_leaf(self,node,leaf_value=None):
         # Changer array parents + rules + depths
 
-        dTree = self.estimator
-        dic = self.estimator.tree_.__getstate__().copy()
+        dTree = self.estimator_
+        dic = self.estimator_.tree_.__getstate__().copy()
         dic_old = dic.copy()
-        size_init = self.estimator.tree_.node_count
+        size_init = self.estimator_.tree_.node_count
 
-        node_to_rem = ut.sub_nodes(self.estimator.tree_, node)[1:]
+        node_to_rem = ut.sub_nodes(self.estimator_.tree_, node)[1:]
 
         inds = list(set(np.arange(size_init)) - set(node_to_rem))
         
-        dic['capacity'] = self.estimator.tree_.capacity - len(node_to_rem)
-        dic['node_count'] = self.estimator.tree_.node_count - len(node_to_rem)
+        dic['capacity'] = self.estimator_.tree_.capacity - len(node_to_rem)
+        dic['node_count'] = self.estimator_.tree_.node_count - len(node_to_rem)
         
         dic['nodes']['feature'][node] = -2
         dic['nodes']['left_child'][node] = -1
@@ -279,41 +250,41 @@ des auteurs. " Le titre de l'article ". In conference, année.
             else:
                 dic['nodes']['right_child'][i] = -1
 
-        (Tree, (n_f, n_c, n_o), b) = self.estimator.tree_.__reduce__()
+        (Tree, (n_f, n_c, n_o), b) = self.estimator_.tree_.__reduce__()
         del dic_old
-        del self.estimator.tree_
+        del self.estimator_.tree_
 
-        self.estimator.tree_ = Tree(n_f, n_c, n_o)
-        self.estimator.tree_.__setstate__(dic)
+        self.estimator_.tree_ = Tree(n_f, n_c, n_o)
+        self.estimator_.tree_.__setstate__(dic)
         
-        self.estimator.tree_.max_depth = max_d
+        self.estimator_.tree_.max_depth = max_d
         return inds.index(node)
     
     def _cut_left_right(self,node,lr):
 
-        dTree = self.estimator
+        dTree = self.estimator_
 
         if lr == 1:
-            cut_leaf = self._cut_leaf(self.estimator.tree_.children_right[node])
+            cut_leaf = self._cut_leaf(self.estimator_.tree_.children_right[node])
             node = self.parents[cut_leaf]
-            repl_node = self.estimator.tree_.children_left[node]
+            repl_node = self.estimator_.tree_.children_left[node]
             #node_to_rem = [node, dTree.tree_.children_right[node]]
         elif lr == -1:
-            cut_leaf = self._cut_leaf(self.estimator.tree_.children_left[node])
+            cut_leaf = self._cut_leaf(self.estimator_.tree_.children_left[node])
             node = self.parents[cut_leaf]
-            repl_node = self.estimator.tree_.children_right[node]
+            repl_node = self.estimator_.tree_.children_right[node]
             #node_to_rem = [node, dTree.tree_.children_left[node]]
         
-        dic = self.estimator.tree_.__getstate__().copy()
-        size_init = self.estimator.tree_.node_count
+        dic = self.estimator_.tree_.__getstate__().copy()
+        size_init = self.estimator_.tree_.node_count
 
         node_to_rem = [node,cut_leaf]
         p, b = self.parents[node],self.bool_parents_lr[node]
         
         inds = list(set(np.arange(size_init)) - set(node_to_rem))
 
-        dic['capacity'] = self.estimator.tree_.capacity - len(node_to_rem)
-        dic['node_count'] = self.estimator.tree_.node_count - len(node_to_rem)
+        dic['capacity'] = self.estimator_.tree_.capacity - len(node_to_rem)
+        dic['node_count'] = self.estimator_.tree_.node_count - len(node_to_rem)
 
         if b == 1:
             dic['nodes']['right_child'][p] = repl_node
@@ -323,7 +294,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
         self.parents[repl_node] = p
         self.bool_parents_lr[repl_node] = b
         
-        for k in ut.sub_nodes(self.estimator.tree_, repl_node):
+        for k in ut.sub_nodes(self.estimator_.tree_, repl_node):
             ind_ = list(self.paths[k]).index(node)
             self.paths[k] = np.delete(self.paths[k],ind_) 
             (f,t,b) = self.rules[k]
@@ -362,15 +333,15 @@ des auteurs. " Le titre de l'article ". In conference, année.
             else:
                 dic['nodes']['right_child'][i] = -1
 
-        (Tree, (n_f, n_c, n_o), b) = self.estimator.tree_.__reduce__()
-        del self.estimator.tree_
+        (Tree, (n_f, n_c, n_o), b) = self.estimator_.tree_.__reduce__()
+        del self.estimator_.tree_
         del dic_old
     
-        self.estimator.tree_ = Tree(n_f, n_c, n_o)
-        self.estimator.tree_.__setstate__(dic)
+        self.estimator_.tree_ = Tree(n_f, n_c, n_o)
+        self.estimator_.tree_.__setstate__(dic)
         #depths = depth_array(dTree, np.linspace(0, dTree.tree_.node_count - 1, dTree.tree_.node_count).astype(int))
 
-        self.estimator.tree_.max_depth = max_d
+        self.estimator_.tree_.max_depth = max_d
         
         return inds.index(repl_node)
 
@@ -378,23 +349,23 @@ des auteurs. " Le titre de l'article ". In conference, année.
         # Changer array parents + rules + depths
         """adding tree tree2 to leaf f of tree tree1"""
         
-        tree1 = self.estimator.tree_
+        tree1 = self.estimator_.tree_
         tree2 = subtree.tree_
-        size_init = self.estimator.tree_.node_count
+        size_init = self.estimator_.tree_.node_count
         
-        dic = self.estimator.tree_.__getstate__().copy()
+        dic = self.estimator_.tree_.__getstate__().copy()
         dic2 = tree2.__getstate__().copy()
         size2 = tree2.node_count
         
-        size_init = self.estimator.tree_.node_count
+        size_init = self.estimator_.tree_.node_count
         
         #if depth_vtree(tree1, node) + dic2['max_depth'] > dic['max_depth']:
         if self.depths[node] + dic2['max_depth'] > dic['max_depth']:
             #dic['max_depth'] = depth_vtree(tree1, f) + tree2.max_depth
             dic['max_depth'] = self.depths[node] + tree2.max_depth
         
-        dic['capacity'] = self.estimator.tree_.capacity + tree2.capacity - 1
-        dic['node_count'] = self.estimator.tree_.node_count + tree2.node_count - 1
+        dic['capacity'] = self.estimator_.tree_.capacity + tree2.capacity - 1
+        dic['node_count'] = self.estimator_.tree_.node_count + tree2.node_count - 1
         
         dic['nodes'][node] = dic2['nodes'][0]
         
@@ -417,17 +388,17 @@ des auteurs. " Le titre de l'article ". In conference, année.
 
         dic['values'] = values
 
-        (Tree, (n_f, n_c, n_o), b) = self.estimator.tree_.__reduce__()
+        (Tree, (n_f, n_c, n_o), b) = self.estimator_.tree_.__reduce__()
 
-        self.estimator.tree_ = Tree(n_f, n_c, n_o)
-        self.estimator.tree_.__setstate__(dic)
+        self.estimator_.tree_ = Tree(n_f, n_c, n_o)
+        self.estimator_.tree_.__setstate__(dic)
         del dic2
         del tree2
         
         """ """
 
         try:
-            self.estimator.tree_.value[size_init:, :, subtree.classes_.astype(int)] = subtree.tree_.value[1:, :, :]
+            self.estimator_.tree_.value[size_init:, :, subtree.classes_.astype(int)] = subtree.tree_.value[1:, :, :]
         except IndexError as e:
             print("IndexError : size init : ", size_init,
                   "\ndTree2.classes_ : ", subtree.classes_)
@@ -440,13 +411,13 @@ des auteurs. " Le titre de l'article ". In conference, année.
         self.depths = np.concatenate((self.depths, np.zeros(size2 - 1,dtype=int) ))
         
         self._compute_params(node=node)
-        self.estimator.max_depth = self.estimator.tree_.max_depth
+        self.estimator_.max_depth = self.estimator_.tree_.max_depth
 
         return node
 
     def _force_coherence(self,rule,node=0,Translate=False,indexes_nodes=list(),drifts=list(),auto_drift=True):
         
-        dtree = self.estimator
+        dtree = self.estimator_
         D_MARGIN = 1
         if Translate and not auto_drift:
             if len(indexes_nodes) != len(drifts):
@@ -454,12 +425,12 @@ des auteurs. " Le titre de l'article ". In conference, année.
                 return node
             else:
                 for k,n in enumerate(indexes_nodes):
-                    self.estimator.tree_.tree_.threshold[n] += drifts[k]
+                    self.estimator_.tree_.tree_.threshold[n] += drifts[k]
         
         phis,ths,bs = rule
         non_coherent_sense = 0
         
-        phi,th = self.estimator.tree_.feature[node],self.estimator.tree_.threshold[node]
+        phi,th = self.estimator_.tree_.feature[node],self.estimator_.tree_.threshold[node]
         
         if phi != -2:
         #if it is not a leaf
@@ -468,27 +439,27 @@ des auteurs. " Le titre de l'article ". In conference, année.
             if not coh:
                 if Translate :
                     if auto_drift:
-                        b_infs,b_sups = ut.bounds_rule(rule,self.estimator.n_features_)
+                        b_infs,b_sups = ut.bounds_rule(rule,self.estimator_.n_features_)
                         if non_coherent_sense == -1:
                             if b_sups[phi] == np.inf:
-                                self.estimator.tree_.threshold[node] += D_MARGIN
+                                self.estimator_.tree_.threshold[node] += D_MARGIN
                             else:
-                                self.estimator.tree_.threshold[node] = ( b_infs[phi] + b_sups[phi] )/2
+                                self.estimator_.tree_.threshold[node] = ( b_infs[phi] + b_sups[phi] )/2
                         if non_coherent_sense == 1:
                             if b_infs[phi] == -np.inf:
-                                self.estimator.tree_.threshold[node] += - D_MARGIN
+                                self.estimator_.tree_.threshold[node] += - D_MARGIN
                             else:
-                                self.estimator.tree_.threshold[node] = ( b_infs[phi] + b_sups[phi] )/2
+                                self.estimator_.tree_.threshold[node] = ( b_infs[phi] + b_sups[phi] )/2
                     else:                
                         print('Warning:this translation made incoherent subtree')
     
                 node = self._cut_left_right(node,non_coherent_sense)
         
-            phi,th = self.estimator.tree_.feature[node],self.estimator.tree_.threshold[node]
+            phi,th = self.estimator_.tree_.feature[node],self.estimator_.tree_.threshold[node]
             
-            phis_l = np.array(list(phis) + [self.estimator.tree_.feature[node]])
+            phis_l = np.array(list(phis) + [self.estimator_.tree_.feature[node]])
             phis_r = phis_l
-            ths_l = np.array(list(ths) + [self.estimator.tree_.threshold[node]])
+            ths_l = np.array(list(ths) + [self.estimator_.tree_.threshold[node]])
             ths_r = ths_l
             bs_l = np.array(list(bs) + [-1])
             bs_r = np.array(list(bs) + [1])  
@@ -496,14 +467,14 @@ des auteurs. " Le titre de l'article ". In conference, année.
             rule_l = phis_l,ths_l,bs_l
             rule_r = phis_r,ths_r,bs_r
     
-            node_l = self.estimator.tree_.children_left[node]
+            node_l = self.estimator_.tree_.children_left[node]
     
-            if self.estimator.tree_.feature[node_l] != -2 :
+            if self.estimator_.tree_.feature[node_l] != -2 :
                 node = self._force_coherence(rule_l,node=node_l)
             
-            node_r = self.estimator.tree_.children_right[node]
+            node_r = self.estimator_.tree_.children_right[node]
             
-            if self.estimator.tree_.feature[node_r] != -2 :
+            if self.estimator_.tree_.feature[node_r] != -2 :
                 node = self._force_coherence(rule_r,node=node_r)
                 
             return node
@@ -516,11 +487,11 @@ des auteurs. " Le titre de l'article ". In conference, année.
         return self._update_split(node,feature,threshold)
     
     def updateValue(self,node,values):
-        #Tree_ = self.estimator.tree_
-        self.estimator.tree_.value[node] = values
-        self.estimator.tree_.impurity[node] = ut.GINI(values)
-        self.estimator.tree_.n_node_samples[node] = np.sum(values)
-        self.estimator.tree_.weighted_n_node_samples[node] = np.sum(values)
+        #Tree_ = self.estimator_.tree_
+        self.estimator_.tree_.value[node] = values
+        self.estimator_.tree_.impurity[node] = ut.GINI(values)
+        self.estimator_.tree_.n_node_samples[node] = np.sum(values)
+        self.estimator_.tree_.weighted_n_node_samples[node] = np.sum(values)
         return node
     
     def prune(self,node,include_node=False,lr=0,leaf_value=None):
@@ -539,7 +510,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
     def _tree_operator(self,node,mode=0,**args):
         #fusion_DT, add_to_parents, ForceCoherence,cut_,build_tree, etc...
         
-        Tree_ = self.estimator.tree_
+        Tree_ = self.estimator_.tree_
 
         if mode == 0 :
             #Change_node or  Update_value, test sur les **args
@@ -562,14 +533,14 @@ des auteurs. " Le titre de l'article ". In conference, année.
 
     def _relab(self, X_target_node, Y_target_node, node=0):
         
-        Tree_ = self.estimator.tree_
-        classes_ = self.estimator.classes_
+        Tree_ = self.estimator_.tree_
+        classes_ = self.estimator_.classes_
         
         current_class_distribution = ut.compute_class_distribution(classes_, Y_target_node)
         self.updateValue(node,current_class_distribution)
         
-        bool_test = X_target_node[:, self.estimator.tree_.feature[node]] <= self.estimator.tree_.threshold[node]
-        not_bool_test = X_target_node[:, self.estimator.tree_.feature[node]] > self.estimator.tree_.threshold[node]
+        bool_test = X_target_node[:, self.estimator_.tree_.feature[node]] <= self.estimator_.tree_.threshold[node]
+        not_bool_test = X_target_node[:, self.estimator_.tree_.feature[node]] > self.estimator_.tree_.threshold[node]
 
         ind_left = np.where(bool_test)[0]
         ind_right = np.where(not_bool_test)[0]
@@ -580,8 +551,8 @@ des auteurs. " Le titre de l'article ". In conference, année.
         X_target_node_right = X_target_node[ind_right]
         Y_target_node_right = Y_target_node[ind_right]
         
-        self._relab(X_target_node_left,Y_target_node_left,node=self.estimator.tree_.children_left[node])
-        self._relab(X_target_node_right,Y_target_node_right,node=self.estimator.tree_.children_right[node])
+        self._relab(X_target_node_left,Y_target_node_left,node=self.estimator_.tree_.children_left[node])
+        self._relab(X_target_node_right,Y_target_node_right,node=self.estimator_.tree_.children_right[node])
 
         return node
         #return self
@@ -590,16 +561,16 @@ des auteurs. " Le titre de l'article ". In conference, année.
              no_red_on_cl=False,cl_no_red=None, no_ext_on_cl=False, cl_no_ext=None,ext_cond=None,
              leaf_loss_quantify=False,leaf_loss_threshold=None,coeffs=[1,1],root_source_values=None,Nkmin=None,max_depth=None):
         
-        Tree_ = self.estimator.tree_
+        Tree_ = self.estimator_.tree_
 
-        source_values = self.estimator.tree_.value[node].copy()
+        source_values = self.estimator_.tree_.value[node].copy()
         node_source_label = np.argmax(source_values)
-        maj_class = np.argmax(self.estimator.tree_.value[node, :].copy())
+        maj_class = np.argmax(self.estimator_.tree_.value[node, :].copy())
 
         if cl_no_red is None:
             old_size_cl_no_red = 0
         else:
-            old_size_cl_no_red = np.sum(self.estimator.tree_.value[node][:, cl_no_red])
+            old_size_cl_no_red = np.sum(self.estimator_.tree_.value[node][:, cl_no_red])
             
         # Situation où il y a des restrictions sur plusieurs classes ?
         if no_red_on_cl is not None or no_ext_on_cl is not None :
@@ -608,18 +579,18 @@ des auteurs. " Le titre de l'article ". In conference, année.
             if no_red_on_cl:
                 cl = cl_no_red[0]
 
-        if leaf_loss_quantify and ((no_red_on_cl  or  no_ext_on_cl) and maj_class == cl) and  self.estimator.tree_.feature[node] == -2 :
+        if leaf_loss_quantify and ((no_red_on_cl  or  no_ext_on_cl) and maj_class == cl) and  self.estimator_.tree_.feature[node] == -2 :
             
-            ps_rf = self.estimator.tree_.value[node,0,:]/sum(self.estimator.tree_.value[node,0,:])
-            p1_in_l = self.estimator.tree_.value[node,0,cl]/root_source_values[cl]
+            ps_rf = self.estimator_.tree_.value[node,0,:]/sum(self.estimator_.tree_.value[node,0,:])
+            p1_in_l = self.estimator_.tree_.value[node,0,cl]/root_source_values[cl]
             
             cond_homog_unreached = np.power(1 - p1_in_l,Nkmin) > leaf_loss_threshold
             cond_homog_min_label = np.argmax(np.multiply(coeffs,ps_rf)) == cl
             
         ### VALUES UPDATE ###
-        val = np.zeros((self.estimator.n_outputs_, self.estimator.n_classes_))
+        val = np.zeros((self.estimator_.n_outputs_, self.estimator_.n_classes_))
 
-        for i in range(self.estimator.n_classes_):
+        for i in range(self.estimator_.n_classes_):
             val[:, i] = list(y_target_node).count(i)
         
         #UpdateValues:
@@ -628,14 +599,14 @@ des auteurs. " Le titre de l'article ". In conference, année.
         #Tree_.weighted_n_node_samples[node] = np.sum(val)
         self.updateValue(node,val)
         
-        if self.estimator.tree_.feature[node]== -2:
+        if self.estimator_.tree_.feature[node]== -2:
             # Extension phase :
             if original_ser:
                 if y_target_node.size > 0 and len(set(list(y_target_node))) > 1:
                     
                     if max_depth is not None:
                         d = self.depths[node]
-                        #d = ut.depth(self.estimator,node)
+                        #d = ut.depth(self.estimator_,node)
                         DT_to_add = DecisionTreeClassifier(max_depth = max_depth - d + 1)
                         
                     else:
@@ -660,7 +631,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
                     if not no_ext_on_cl:
                         if max_depth is not None:
                             d = self.depths[node]
-                            #d = depth(self.estimator,node)
+                            #d = depth(self.estimator_,node)
                             DT_to_add = DecisionTreeClassifier(max_depth = max_depth - d + 1)
                         else:
                             DT_to_add = DecisionTreeClassifier()
@@ -672,7 +643,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
 
                         DT_to_add.fit(X_target_node, y_target_node)
                         self.extend(node, DT_to_add) 
-                        #fusionDecisionTree(self.estimator, node, DT_to_add)
+                        #fusionDecisionTree(self.estimator_, node, DT_to_add)
                     
                     else:
                         cond_maj = (maj_class not in cl_no_ext)
@@ -684,7 +655,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
                         if cond_extension:
                             if max_depth is not None:
                                 d = self.depths[node]
-                                #d = depth(self.estimator,node)
+                                #d = depth(self.estimator_,node)
                                 DT_to_add = DecisionTreeClassifier(max_depth = max_depth - d + 1)
                             else:
                                 DT_to_add = DecisionTreeClassifier()
@@ -696,7 +667,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
 
                             DT_to_add.fit(X_target_node, y_target_node)
                             self.extend(node, DT_to_add) 
-                            #fusionDecisionTree(self.estimator, node, DT_to_add)
+                            #fusionDecisionTree(self.estimator_, node, DT_to_add)
                         
                         else:
                             ## Compliqué de ne pas induire d'incohérence au niveau des values
@@ -707,7 +678,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
                             #Tree_.n_node_samples[node] = np.sum(old_values)
                             #Tree_.weighted_n_node_samples[node] = np.sum(old_values)
                             
-                            ut.add_to_parents(self.estimator, node, source_values) 
+                            ut.add_to_parents(self.estimator_, node, source_values) 
                             if no_red_on_cl:
                                 bool_no_red = True
                                         
@@ -719,20 +690,20 @@ des auteurs. " Le titre de l'article ". In conference, année.
                         if cond_homog_unreached and cond_homog_min_label :
                             self.updateValue(node,source_values)
                             
-                            ut.add_to_parents(self.estimator, node, source_values) 
+                            ut.add_to_parents(self.estimator_, node, source_values) 
                             bool_no_red = True
                     else:
                         self.updateValue(node,source_values)
 
-                        ut.add_to_parents(self.estimator, node, source_values) 
+                        ut.add_to_parents(self.estimator_, node, source_values) 
                         bool_no_red = True
 
                 return node,bool_no_red
         
         """ From here it cannot be a leaf """
         ### Left / right target computation ###
-        bool_test = X_target_node[:, self.estimator.tree_.feature[node]] <= self.estimator.tree_.threshold[node]
-        not_bool_test = X_target_node[:, self.estimator.tree_.feature[node]] > self.estimator.tree_.threshold[node]
+        bool_test = X_target_node[:, self.estimator_.tree_.feature[node]] <= self.estimator_.tree_.threshold[node]
+        not_bool_test = X_target_node[:, self.estimator_.tree_.feature[node]] > self.estimator_.tree_.threshold[node]
 
         ind_left = np.where(bool_test)[0]
         ind_right = np.where(not_bool_test)[0]
@@ -745,40 +716,40 @@ des auteurs. " Le titre de l'article ". In conference, année.
 
         if original_ser:
 
-            new_node_left,bool_no_red_l = self._ser(X_target_node_left,y_target_node_left,node=self.estimator.tree_.children_left[node],original_ser=True,max_depth=max_depth)
+            new_node_left,bool_no_red_l = self._ser(X_target_node_left,y_target_node_left,node=self.estimator_.tree_.children_left[node],original_ser=True,max_depth=max_depth)
             node, b = self.parents[new_node_left], self.bool_parents_lr[new_node_left]
 
-            #node, b = find_parent(self.estimator, new_node_left)
+            #node, b = find_parent(self.estimator_, new_node_left)
 
-            new_node_right,bool_no_red_r = self._ser(X_target_node_right,y_target_node_right,node=self.estimator.tree_.children_right[node],original_ser=True,max_depth=max_depth)
+            new_node_right,bool_no_red_r = self._ser(X_target_node_right,y_target_node_right,node=self.estimator_.tree_.children_right[node],original_ser=True,max_depth=max_depth)
             node, b = self.parents[new_node_right], self.bool_parents_lr[new_node_right]
-            #node, b = find_parent(self.estimator, new_node_right)
+            #node, b = find_parent(self.estimator_, new_node_right)
                                   
         else:
-            new_node_left,bool_no_red_l = self._ser(X_target_node_left,y_target_node_left,node=self.estimator.tree_.children_left[node],original_ser=False,
+            new_node_left,bool_no_red_l = self._ser(X_target_node_left,y_target_node_left,node=self.estimator_.tree_.children_left[node],original_ser=False,
                                                no_red_on_cl=no_red_on_cl,cl_no_red=cl_no_red,no_ext_on_cl=no_ext_on_cl,cl_no_ext=cl_no_ext,ext_cond=ext_cond,
                                                leaf_loss_quantify=leaf_loss_quantify,leaf_loss_threshold=leaf_loss_threshold,coeffs=coeffs,root_source_values=root_source_values,
                                                Nkmin=Nkmin,max_depth=max_depth)
 
 
             node, b = self.parents[new_node_left], self.bool_parents_lr[new_node_left]
-            #node, b = find_parent(self.estimator, new_node_left)
+            #node, b = find_parent(self.estimator_, new_node_left)
 
-            new_node_right,bool_no_red_r = self._ser(X_target_node_right,y_target_node_right,node=self.estimator.tree_.children_right[node],original_ser=False,
+            new_node_right,bool_no_red_r = self._ser(X_target_node_right,y_target_node_right,node=self.estimator_.tree_.children_right[node],original_ser=False,
                                                no_red_on_cl=no_red_on_cl,cl_no_red=cl_no_red,no_ext_on_cl=no_ext_on_cl,cl_no_ext=cl_no_ext,ext_cond=ext_cond,
                                                leaf_loss_quantify=leaf_loss_quantify,leaf_loss_threshold=leaf_loss_threshold,coeffs=coeffs,root_source_values=root_source_values,
                                                Nkmin=Nkmin,max_depth=max_depth)
 
             node, b = self.parents[new_node_right], self.bool_parents_lr[new_node_right]
-            #node, b = find_parent(self.estimator, new_node_right)
+            #node, b = find_parent(self.estimator_, new_node_right)
 
         if original_ser:
             bool_no_red = False
         else:
             bool_no_red = bool_no_red_l or bool_no_red_r
 
-        le = ut.leaf_error(self.estimator.tree_, node)
-        e = ut.error(self.estimator.tree_, node)
+        le = ut.leaf_error(self.estimator_.tree_, node)
+        e = ut.error(self.estimator_.tree_, node)
 
         if le <= e:
             if original_ser:
@@ -797,7 +768,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
                     #new_node_leaf = cut_into_leaf2(dTree, node)
                     node = new_node_leaf
 
-        if self.estimator.tree_.feature[node] != -2:
+        if self.estimator_.tree_.feature[node] != -2:
 
             if original_ser:
                 if ind_left.size == 0:
@@ -809,11 +780,11 @@ des auteurs. " Le titre de l'article ". In conference, année.
                     #node = cut_from_left_right(dTree, node, 1)
             else:
                 if no_red_on_cl:
-                    if ind_left.size == 0 and np.sum(self.estimator.tree_.value[self.estimator.tree_.children_left[node]]) == 0:
+                    if ind_left.size == 0 and np.sum(self.estimator_.tree_.value[self.estimator_.tree_.children_left[node]]) == 0:
                         node = self.prune(node,include_node=True,lr=-1) 
                         #node = cut_from_left_right(dTree, node, -1)
                         
-                    if ind_right.size == 0 and np.sum(self.estimator.tree_.value[self.estimator.tree_.children_right[node]]) == 0:
+                    if ind_right.size == 0 and np.sum(self.estimator_.tree_.value[self.estimator_.tree_.children_right[node]]) == 0:
                         node = self.prune(node,include_node=True,lr=1) 
                         #node = cut_from_left_right(dTree, node, 1)
                 else:
@@ -830,20 +801,19 @@ des auteurs. " Le titre de l'article ". In conference, année.
 
     def _strut(self,X_target_node,Y_target_node,node=0,no_prune_on_cl=False,cl_no_prune=None,adapt_prop=False,
           coeffs=[1, 1],use_divergence=True,measure_default_IG=True,min_drift=None,max_drift=None,no_prune_with_translation=True,
-          leaf_loss_quantify=False,leaf_loss_threshold=None,root_source_values=None,Nkmin=None):
-        
-        Tree_ = self.estimator.tree_
+          leaf_loss_quantify=False,leaf_loss_threshold=None,root_source_values=None,Nkmin=None):        
+        Tree_ = self.estimator_.tree_
 
-        feature_ = self.estimator.tree_.feature[node]
-        classes_ = self.estimator.classes_
-        threshold_ = self.estimator.tree_.threshold[node]
+        feature_ = self.estimator_.tree_.feature[node]
+        classes_ = self.estimator_.classes_
+        threshold_ = self.estimator_.tree_.threshold[node]
             
         old_threshold = threshold_.copy()
-        maj_class = np.argmax(self.estimator.tree_.value[node, :].copy())
+        maj_class = np.argmax(self.estimator_.tree_.value[node, :].copy())
         
         if min_drift is None or max_drift is None:
-            min_drift = np.zeros(self.estimator.n_features_)
-            max_drift = np.zeros(self.estimator.n_features_)
+            min_drift = np.zeros(self.estimator_.n_features_)
+            max_drift = np.zeros(self.estimator_.n_features_)
 
         current_class_distribution = ut.compute_class_distribution(classes_, Y_target_node)
         is_reached = (Y_target_node.size > 0)
@@ -851,15 +821,15 @@ des auteurs. " Le titre de l'article ". In conference, année.
         
         if no_prune_on_cl:
             no_min_instance_targ = (sum(current_class_distribution[cl_no_prune]) == 0 )
-            is_instance_cl_no_prune = np.sum(self.estimator.tree_.value[node, :,cl_no_prune].astype(int))
+            is_instance_cl_no_prune = np.sum(self.estimator_.tree_.value[node, :,cl_no_prune].astype(int))
 
         # If it is a leaf :
-        if self.estimator.tree_.feature[node] == -2:
+        if self.estimator_.tree_.feature[node] == -2:
             """ When to apply UpdateValue """
             if leaf_loss_quantify and (no_prune_on_cl and maj_class == cl_no_prune) :
                 
-                ps_rf = self.estimator.tree_.value[node,0,:]/sum(self.estimator.tree_.value[node,0,:])
-                p1_in_l = self.estimator.tree_.value[node,0,cl_no_prune]/root_source_values[cl_no_prune]
+                ps_rf = self.estimator_.tree_.value[node,0,:]/sum(self.estimator_.tree_.value[node,0,:])
+                p1_in_l = self.estimator_.tree_.value[node,0,cl_no_prune]/root_source_values[cl_no_prune]
                 cond1 = np.power(1 - p1_in_l,Nkmin) > leaf_loss_threshold
                 cond2 = np.argmax(np.multiply(coeffs,ps_rf)) == cl_no_prune
                 
@@ -871,7 +841,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
                 else:
                     return node
             else:
-                self.estimator.tree_.value[node] = current_class_distribution
+                self.estimator_.tree_.value[node] = current_class_distribution
                 return node
 
         # Only one class remaining in target :
@@ -880,11 +850,11 @@ des auteurs. " Le titre de l'article ". In conference, année.
             if no_min_instance_targ and no_prune_on_cl and is_instance_cl_no_prune :
                 bool_subleaf_noprune = True
                 if leaf_loss_quantify:
-                    bool_subleaf_noprune = ut.contain_leaf_to_not_prune(self.estimator,cl=cl_no_prune,node=node,Nkmin=Nkmin,
+                    bool_subleaf_noprune = ut.contain_leaf_to_not_prune(self.estimator_,cl=cl_no_prune,node=node,Nkmin=Nkmin,
                                                                         threshold=leaf_loss_threshold,coeffs=coeffs,root_source_values=root_source_values)
                 
                 if bool_subleaf_noprune :
-                    #rule = lib_tree.extract_rule(self.estimator,node)
+                    #rule = lib_tree.extract_rule(self.estimator_,node)
                     rule = self.rules[node]
                     if no_prune_with_translation :
                         node = self._force_coherence(rule,node=node,Translate=True,auto_drift=True)
@@ -895,12 +865,12 @@ des auteurs. " Le titre de l'article ". In conference, année.
                             
                 else:
                     node = self.prune(node,include_node=False) 
-                    #node = cut_into_leaf2(self.estimator, node)
+                    #node = cut_into_leaf2(self.estimator_, node)
                     return node
 
             else:
                 node = self.prune(node,include_node=False)
-                #node = cut_into_leaf2(self.estimator, node)
+                #node = cut_into_leaf2(self.estimator_, node)
                 return node
 
         # Node unreached by target :
@@ -909,11 +879,11 @@ des auteurs. " Le titre de l'article ". In conference, année.
             if no_min_instance_targ and no_prune_on_cl and is_instance_cl_no_prune :
                 bool_subleaf_noprune = True
                 if leaf_loss_quantify:
-                    bool_subleaf_noprune = ut.contain_leaf_to_not_prune(self.estimator,cl=cl_no_prune,node=node,
+                    bool_subleaf_noprune = ut.contain_leaf_to_not_prune(self.estimator_,cl=cl_no_prune,node=node,
                                                                      Nkmin=Nkmin,threshold=leaf_loss_threshold,coeffs=coeffs,
                                                                      root_source_values=root_source_values)
                 if bool_subleaf_noprune:
-                    #rule = lib_tree.extract_rule(self.estimator,node)
+                    #rule = lib_tree.extract_rule(self.estimator_,node)
                     rule = self.rules[node]
                     
                     if no_prune_with_translation :
@@ -921,14 +891,14 @@ des auteurs. " Le titre de l'article ". In conference, année.
                     else:
                         node = self._force_coherence(rule,node=node)
                 else:
-                    #p,b = find_parent(self.estimator,node)
+                    #p,b = find_parent(self.estimator_,node)
                     p,b = self.parents[node], self.bool_parents_lr[node]
                     node = self.prune(p,include_node=True,lr=b) 
-                    #node = cut_from_left_right(self.estimator,p,b)
+                    #node = cut_from_left_right(self.estimator_,p,b)
 
             else:
-                #p,b = find_parent(self.estimator,node)
-                #node = cut_from_left_right(self.estimator,p,b)
+                #p,b = find_parent(self.estimator_,node)
+                #node = cut_from_left_right(self.estimator_,p,b)
                 p,b = self.parents[node], self.bool_parents_lr[node]
                 node = self.prune(p,include_node=True,lr=b) 
 
@@ -945,7 +915,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
             
         # update threshold
         if type(threshold_) is np.float64:
-            Q_source_l, Q_source_r = ut.get_children_distributions(self.estimator,node)
+            Q_source_l, Q_source_r = ut.get_children_distributions(self.estimator_,node)
 
         Sl = np.sum(Q_source_l)
         Sr = np.sum(Q_source_r)
@@ -964,7 +934,7 @@ des auteurs. " Le titre de l'article ". In conference, année.
             Q_source_r = (Srt/Sr)*np.multiply(coeffs,np.divide(Q_source_r,D))
     
     
-        Q_source_parent = ut.get_node_distribution(self.estimator,node)
+        Q_source_parent = ut.get_node_distribution(self.estimator_,node)
             
                                                 
         t1 = ut.threshold_selection(Q_source_parent,
@@ -1014,59 +984,59 @@ des auteurs. " Le titre de l'article ". In conference, année.
             self.updateSplit(node,feature_,t2)
             #Tree_.threshold[node] = t2
             # swap children
-            old_child_r_id = self.estimator.tree_.children_right[node]
-            self.estimator.tree_.children_right[node] = self.estimator.tree_.children_left[node]
-            self.estimator.tree_.children_left[node] = old_child_r_id
+            old_child_r_id = self.estimator_.tree_.children_right[node]
+            self.estimator_.tree_.children_right[node] = self.estimator_.tree_.children_left[node]
+            self.estimator_.tree_.children_left[node] = old_child_r_id
 
         # For No Prune coherence
-        ecart = self.estimator.tree_.threshold[node] - old_threshold
+        ecart = self.estimator_.tree_.threshold[node] - old_threshold
         
-        if self.estimator.tree_.threshold[node] > old_threshold:
-            if ecart > max_drift[self.estimator.tree_.feature[node]] :
-                max_drift[self.estimator.tree_.feature[node]] = ecart
-        if self.estimator.tree_.threshold[node] < old_threshold:
-            if ecart < min_drift[self.estimator.tree_.feature[node]] :
-                min_drift[self.estimator.tree_.feature[node]] = ecart
+        if self.estimator_.tree_.threshold[node] > old_threshold:
+            if ecart > max_drift[self.estimator_.tree_.feature[node]] :
+                max_drift[self.estimator_.tree_.feature[node]] = ecart
+        if self.estimator_.tree_.threshold[node] < old_threshold:
+            if ecart < min_drift[self.estimator_.tree_.feature[node]] :
+                min_drift[self.estimator_.tree_.feature[node]] = ecart
 
-        if self.estimator.tree_.children_left[node] != -1:
+        if self.estimator_.tree_.children_left[node] != -1:
             # Computing target data passing through node NOT updated
             #index_X_child_l = X_target_node_noupdate[:, phi] <= old_threshold
             #X_target_node_noupdate_l = X_target_node_noupdate[index_X_child_l, :]
             #Y_target_node_noupdate_l = Y_target_node_noupdate[index_X_child_l]
             # Computing target data passing through node updated
-            threshold = self.estimator.tree_.threshold[node]
+            threshold = self.estimator_.tree_.threshold[node]
             index_X_child_l = X_target_node[:, feature_] <= threshold
             X_target_child_l = X_target_node[index_X_child_l, :]
             Y_target_child_l = Y_target_node[index_X_child_l]
 
             node = self._strut(X_target_child_l,Y_target_child_l,
-                          node=self.estimator.tree_.children_left[node],no_prune_on_cl=no_prune_on_cl,cl_no_prune=cl_no_prune,
+                          node=self.estimator_.tree_.children_left[node],no_prune_on_cl=no_prune_on_cl,cl_no_prune=cl_no_prune,
                           adapt_prop=adapt_prop,coeffs=coeffs,use_divergence=use_divergence,measure_default_IG=measure_default_IG,
                           min_drift=min_drift.copy(),max_drift=max_drift.copy(),no_prune_with_translation=no_prune_with_translation,
                           leaf_loss_quantify=leaf_loss_quantify,leaf_loss_threshold=leaf_loss_threshold,root_source_values=root_source_values,Nkmin=Nkmin)
         
             node,b = self.parents[node], self.bool_parents_lr[node]
-            #node,b = find_parent(self.estimator, node)
+            #node,b = find_parent(self.estimator_, node)
 
-        if self.estimator.tree_.children_right[node] != -1:
+        if self.estimator_.tree_.children_right[node] != -1:
             # Computing target data passing through node NOT updated
             #index_X_child_r = X_target_node_noupdate[:, phi] > old_threshold
             #X_target_node_noupdate_r = X_target_node_noupdate[index_X_child_r, :]
             #Y_target_node_noupdate_r = Y_target_node_noupdate[index_X_child_r]
             # Computing target data passing through node updated
-            threshold = self.estimator.tree_.threshold[node]
+            threshold = self.estimator_.tree_.threshold[node]
             index_X_child_r = X_target_node[:, feature_] > threshold
             X_target_child_r = X_target_node[index_X_child_r, :]
             Y_target_child_r = Y_target_node[index_X_child_r]
             
             node = self._strut(X_target_child_r,Y_target_child_r,
-                          node=self.estimator.tree_.children_right[node],no_prune_on_cl=no_prune_on_cl,cl_no_prune=cl_no_prune,
+                          node=self.estimator_.tree_.children_right[node],no_prune_on_cl=no_prune_on_cl,cl_no_prune=cl_no_prune,
                           adapt_prop=adapt_prop,coeffs=coeffs,use_divergence=use_divergence,measure_default_IG=measure_default_IG,
                           min_drift=min_drift.copy(),max_drift=max_drift.copy(),no_prune_with_translation=no_prune_with_translation,
                           leaf_loss_quantify=leaf_loss_quantify,leaf_loss_threshold=leaf_loss_threshold,root_source_values=root_source_values,Nkmin=Nkmin)
 
             node,b = self.parents[node], self.bool_parents_lr[node]
-            #node,b = find_parent(self.estimator, node)
+            #node,b = find_parent(self.estimator_, node)
 
         return node
 

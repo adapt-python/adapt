@@ -5,6 +5,7 @@ Test functions for regular module.
 import pytest
 import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.base import clone
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense
@@ -168,3 +169,27 @@ def test_regularnn_reg():
     with pytest.raises(ValueError) as excinfo:
          model = RegularTransferNN(network, regularizer="l3")
     assert "l1' or 'l2', got, l3" in str(excinfo.value)
+    
+    
+def test_clone():
+    Xs = np.random.randn(100, 5)
+    ys = np.random.choice(2, 100)
+    lr = LinearRegression()
+    lr.fit(Xs, ys)
+    model = RegularTransferLR(lr, lambda_=1.)
+    model.fit(Xs, ys)
+    
+    new_model = clone(model)
+    new_model.fit(Xs, ys)
+    new_model.predict(Xs);
+    assert model is not new_model
+    
+    lr = LogisticRegression(penalty='none', solver='lbfgs')
+    lr.fit(Xs, ys)
+    model = RegularTransferLC(lr, lambda_=1.)
+    model.fit(Xs, ys)
+    
+    new_model = clone(model)
+    new_model.fit(Xs, ys)
+    new_model.predict(Xs);
+    assert model is not new_model

@@ -556,6 +556,65 @@ def set_random_seed(random_state):
         np.random.seed(random_state)
         tf.random.set_seed(random_state)
         
+
+def new_init(self, **kwargs):
+    for k, v in self.__frozen_dict__.items():
+        setattr(self, k, v)
+
+
+def __deepcopy__(self, memo):
+    return self     
+        
+        
+def check_fitted_estimator(estimator):
+    """
+    Check Fitted Estimator
+    
+    This function is used to create a custom embedding
+    on fitted estimator object in order to be able to
+    clone them and keep its fitted arguments.
+    
+    Parameters
+    ----------
+    estimator : sklearn estimator
+        Fitted estimator
+    
+    Returns
+    -------
+    estimator : instance of "Fitted" + estimator class name
+        Embedded fitted estimator
+    """
+    if "Fitted" == estimator.__class__.__name__[:6]:
+        return estimator
+    else:
+        new_class = type("Fitted"+estimator.__class__.__name__,
+                         (estimator.__class__,),
+                         {"__init__": new_init,
+                          "__frozen_dict__": {k: v for k, v in estimator.__dict__.items()}})
+        return new_class()
+    
+    
+def check_fitted_network(estimator):
+    """
+    Check Fitted Network
+    
+    Overwrite the ``__deepcopy__`` method from network
+    such that deepcopy returns the same estimator.
+    
+    Parameters
+    ----------
+    estimator : tensorflow Model
+        Fitted network
+    
+    Returns
+    -------
+    estimator : tensorflow Model
+        Modified fitted network
+    """
+    if hasattr(estimator, "__deepcopy__"):
+        estimator.__deepcopy__ = __deepcopy__.__get__(estimator)
+    return estimator
+        
         
         
 # Try to save the initial estimator if it is a Keras Model
