@@ -20,7 +20,7 @@ from sklearn.tree import DecisionTreeClassifier
 from adapt.base import BaseAdaptEstimator, make_insert_doc
 from adapt.utils import check_arrays, set_random_seed, check_estimator, check_fitted_estimator
 
-import adapt.parameter_based._tree_utils as ut
+import adapt._tree_utils as ut
 
 
 @make_insert_doc(supervised=True)
