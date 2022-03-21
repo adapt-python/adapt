@@ -611,7 +611,7 @@ def check_fitted_network(estimator):
     estimator : tensorflow Model
         Modified fitted network
     """
-    if hasattr(estimator, "__deepcopy__"):
+    if isinstance(estimator, Model):
         estimator.__deepcopy__ = __deepcopy__.__get__(estimator)
     return estimator
         
