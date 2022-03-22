@@ -413,7 +413,7 @@ distance between multivariate normal distributions". JMVA. 1982
     return x_max / Xs.shape[1]
 
 
-def j_score(Xs, Xt, max_centers=100, sigma=None):
+def neg_j_score(Xs, Xt, max_centers=100, sigma=None):
     """
     Compute the negative J-score between Xs and Xt.
     

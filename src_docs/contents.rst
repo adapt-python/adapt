@@ -138,6 +138,7 @@ the **source** data are adapted to build a suited model for the **task** on the 
    parameter_based.RegularTransferLC
    parameter_based.RegularTransferNN
    parameter_based.FineTuning
+   parameter_based.TransferTreeClassifier
 
 
 .. _adapt.metrics:
@@ -159,7 +160,7 @@ This module contains functions to compute adaptation metrics.
 
    metrics.make_uda_scorer
    metrics.cov_distance
-   metrics.j_score
+   metrics.neg_j_score
    metrics.linear_discrepancy
    metrics.normalized_linear_discrepancy
    metrics.frechet_distance
@@ -185,6 +186,7 @@ This module contains utility functions used in the previous modules.
    :toctree: generated/
    :template: function.rst
 
+   utils.UpdateLambda
    utils.accuracy
    utils.check_arrays
    utils.check_estimator
@@ -197,6 +199,8 @@ This module contains utility functions used in the previous modules.
    utils.make_regression_da
    utils.check_sample_weight
    utils.set_random_seed
+   utils.check_fitted_estimator
+   utils.check_fitted_network
    
    
 .. include:: examples_gallery.rst

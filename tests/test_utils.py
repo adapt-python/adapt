@@ -2,7 +2,7 @@
 Test functions for utils module.
 """
 
-
+import copy
 import numpy as np
 import pytest
 import tensorflow as tf
@@ -420,3 +420,35 @@ def test_updatelambda():
         up.on_batch_end(0, None)
     assert dummy.lambda_.numpy() == 1.
     
+    
+def test_check_fitted_estimator():
+    X = np.random.randn(10, 3)
+    y = np.random.randn(10)
+    model = LinearRegression()
+    model.fit(X, y)
+    new_model = check_fitted_estimator(model)
+    assert new_model is not model
+    assert new_model.__class__.__name__ == "FittedLinearRegression"
+    
+    new_model2 = check_fitted_estimator(new_model)
+    assert new_model2 is new_model
+    
+    new_model3 = new_model.__class__(fit_intercept=False)
+    assert new_model3 is not new_model
+    assert np.all(new_model3.coef_ == model.coef_)
+    assert new_model3.fit_intercept
+    
+    
+def test_check_fitted_network():
+    X = np.random.randn(10, 3)
+    y = np.random.randn(10)
+    model = _get_model_Sequential()
+    model.fit(X, y)
+    new_model = check_fitted_network(model)
+    assert new_model is model
+        
+    new_model2 = copy.deepcopy(model)
+    assert new_model2 is model
+    
+    new_model = check_fitted_network(None)
+    assert new_model is None

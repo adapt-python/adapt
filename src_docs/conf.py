@@ -111,12 +111,12 @@ def linkcode_resolve(domain, info):
     
     object_name = info['fullname'].lower()
     
+    if "transfertree" in object_name:
+        object_name = "transfer_tree"
     if "tradaboost" in object_name:
         object_name = "tradaboost"
     if "regular" in object_name:
         object_name = "regular"
-    if object_name == "updatelambda" or object_name == "basedeepfeature":
-        object_name = "deep"
     
     object_name = "_" + object_name
     
