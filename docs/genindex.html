@@ -80,12 +80,13 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contents.html#adapt-metrics">Metrics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.make_uda_scorer.html">make_uda_scorer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.cov_distance.html">cov_distance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.j_score.html">j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.neg_j_score.html">neg_j_score</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.frechet_distance.html">frechet_distance</a></li>
@@ -95,6 +96,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.UpdateLambda.html">UpdateLambda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.accuracy.html">accuracy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_arrays.html">check_arrays</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_estimator.html">check_estimator</a></li>
@@ -107,6 +109,8 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.make_regression_da.html">make_regression_da</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.set_random_seed.html">set_random_seed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_fitted_estimator.html">check_fitted_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_fitted_network.html">check_fitted_network</a></li>
 </ul>
 </li>
 </ul>
@@ -206,9 +210,9 @@
  | <a href="#A"><strong>A</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
- | <a href="#J"><strong>J</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -273,6 +277,8 @@
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.__init__">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.__init__">(adapt.parameter_based.TransferTreeClassifier method)</a>
+</li>
       </ul></li>
   </ul></td>
 </tr></table>
@@ -299,6 +305,10 @@
       <li><a href="generated/adapt.utils.check_arrays.html#adapt.utils.check_arrays">check_arrays() (in module adapt.utils)</a>
 </li>
       <li><a href="generated/adapt.utils.check_estimator.html#adapt.utils.check_estimator">check_estimator() (in module adapt.utils)</a>
+</li>
+      <li><a href="generated/adapt.utils.check_fitted_estimator.html#adapt.utils.check_fitted_estimator">check_fitted_estimator() (in module adapt.utils)</a>
+</li>
+      <li><a href="generated/adapt.utils.check_fitted_network.html#adapt.utils.check_fitted_network">check_fitted_network() (in module adapt.utils)</a>
 </li>
       <li><a href="generated/adapt.utils.check_network.html#adapt.utils.check_network">check_network() (in module adapt.utils)</a>
 </li>
@@ -347,6 +357,14 @@
       <li><a href="generated/adapt.feature_based.DeepCORAL.html#adapt.feature_based.DeepCORAL">DeepCORAL (class in adapt.feature_based)</a>
 </li>
       <li><a href="generated/adapt.metrics.domain_classifier.html#adapt.metrics.domain_classifier">domain_classifier() (in module adapt.metrics)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.extend">extend() (adapt.parameter_based.TransferTreeClassifier method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -407,6 +425,8 @@
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.fit">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.fit">(adapt.parameter_based.TransferTreeClassifier method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -436,6 +456,8 @@
         <li><a href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC.fit_estimator">(adapt.parameter_based.RegularTransferLC method)</a>
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR.fit_estimator">(adapt.parameter_based.RegularTransferLR method)</a>
+</li>
+        <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.fit_estimator">(adapt.parameter_based.TransferTreeClassifier method)</a>
 </li>
       </ul></li>
       <li><a href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL.fit_transform">fit_transform() (adapt.feature_based.CORAL method)</a>
@@ -523,18 +545,12 @@
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.get_params">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.get_params">(adapt.parameter_based.TransferTreeClassifier method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/adapt.utils.GradientHandler.html#adapt.utils.GradientHandler">GradientHandler() (in module adapt.utils)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="J">J</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="generated/adapt.metrics.j_score.html#adapt.metrics.j_score">j_score() (in module adapt.metrics)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -585,6 +601,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting">NearestNeighborsWeighting (class in adapt.instance_based)</a>
+</li>
+      <li><a href="generated/adapt.metrics.neg_j_score.html#adapt.metrics.neg_j_score">neg_j_score() (in module adapt.metrics)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -647,6 +665,8 @@
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.predict">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.predict">(adapt.parameter_based.TransferTreeClassifier method)</a>
+</li>
       </ul></li>
       <li><a href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD.predict_avg">predict_avg() (adapt.feature_based.MCD method)</a>
 </li>
@@ -703,6 +723,8 @@
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR.predict_estimator">(adapt.parameter_based.RegularTransferLR method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.predict_estimator">(adapt.parameter_based.TransferTreeClassifier method)</a>
+</li>
       </ul></li>
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.predict_task">predict_task() (adapt.feature_based.ADDA method)</a>
 
@@ -756,6 +778,8 @@
         <li><a href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning.pretrain_step">(adapt.parameter_based.FineTuning method)</a>
 </li>
       </ul></li>
+      <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.prune">prune() (adapt.parameter_based.TransferTreeClassifier method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -829,6 +853,8 @@
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.score">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.score">(adapt.parameter_based.TransferTreeClassifier method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -881,6 +907,8 @@
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.set_params">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.set_params">(adapt.parameter_based.TransferTreeClassifier method)</a>
+</li>
       </ul></li>
       <li><a href="generated/adapt.utils.set_random_seed.html#adapt.utils.set_random_seed">set_random_seed() (in module adapt.utils)</a>
 </li>
@@ -893,6 +921,8 @@
       <li><a href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost">TrAdaBoost (class in adapt.instance_based)</a>
 </li>
       <li><a href="generated/adapt.instance_based.TrAdaBoostR2.html#adapt.instance_based.TrAdaBoostR2">TrAdaBoostR2 (class in adapt.instance_based)</a>
+</li>
+      <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier">TransferTreeClassifier (class in adapt.parameter_based)</a>
 </li>
       <li><a href="generated/adapt.feature_based.ADDA.html#adapt.feature_based.ADDA.transform">transform() (adapt.feature_based.ADDA method)</a>
 
@@ -985,7 +1015,17 @@
 </li>
         <li><a href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN.unsupervised_score">(adapt.parameter_based.RegularTransferNN method)</a>
 </li>
+        <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.unsupervised_score">(adapt.parameter_based.TransferTreeClassifier method)</a>
+</li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/adapt.utils.UpdateLambda.html#adapt.utils.UpdateLambda">UpdateLambda() (in module adapt.utils)</a>
+</li>
+      <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.updateSplit">updateSplit() (adapt.parameter_based.TransferTreeClassifier method)</a>
+</li>
+      <li><a href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier.updateValue">updateValue() (adapt.parameter_based.TransferTreeClassifier method)</a>
+</li>
   </ul></td>
 </tr></table>
 

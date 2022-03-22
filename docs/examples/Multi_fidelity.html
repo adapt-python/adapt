@@ -83,12 +83,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.make_uda_scorer.html">make_uda_scorer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.cov_distance.html">cov_distance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.j_score.html">j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.neg_j_score.html">neg_j_score</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.frechet_distance.html">frechet_distance</a></li>
@@ -98,6 +99,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.UpdateLambda.html">UpdateLambda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.accuracy.html">accuracy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_arrays.html">check_arrays</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_estimator.html">check_estimator</a></li>
@@ -110,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_regression_da.html">make_regression_da</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.set_random_seed.html">set_random_seed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_fitted_estimator.html">check_fitted_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_fitted_network.html">check_fitted_network</a></li>
 </ul>
 </li>
 </ul>
@@ -473,8 +477,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Multi-Fidelity">
 <h1>Multi-Fidelity<a class="headerlink" href="#Multi-Fidelity" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="0cac1e6eb3184ea0834d19952882e711" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Cc9TVY_Tl_boVzZDNisQnqe6Qx78svqe?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="73a8c4f9a862449486537bb06f07fc54" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Multi_fidelity.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="30ffe81bd05f45ea916075bb1f6386f1" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Cc9TVY_Tl_boVzZDNisQnqe6Qx78svqe?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="d04db52ebb1f471a93a750710c96c5a7" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Multi_fidelity.ipynb">View on GitHub</a></p>
 </div><p>The following example is a 1D regression multi-fidelity issue. Blue points are low fidelity observations and orange points are high fidelity observations. The goal is to use both datasets to learn the task on the [0, 1] interval.</p>
 <p>To tackle this challenge, we use here the parameter-based method: <a class="reference external" href="#RegularTransferNN">RegularTransferNN</a></p>
 <div class="nbinput nblast docutils container">

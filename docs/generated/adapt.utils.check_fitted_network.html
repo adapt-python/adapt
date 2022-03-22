@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>adapt.utils.check_arrays &mdash; adapt 0.1.0 documentation</title>
+  <title>adapt.utils.check_fitted_network &mdash; adapt 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
@@ -99,7 +99,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.UpdateLambda.html">UpdateLambda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.accuracy.html">accuracy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#">check_arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_arrays.html">check_arrays</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_estimator.html">check_estimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_network.html">check_network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.get_default_encoder.html">get_default_encoder</a></li>
@@ -111,7 +111,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.set_random_seed.html">set_random_seed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_fitted_estimator.html">check_fitted_estimator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapt.utils.check_fitted_network.html">check_fitted_network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">check_fitted_network</a></li>
 </ul>
 </li>
 </ul>
@@ -194,7 +194,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="xref std std-ref">adapt.utils</span>.check_arrays</li>
+      <li><span class="xref std std-ref">adapt.utils</span>.check_fitted_network</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -227,26 +227,25 @@
     text-align: unset;
 }
 </style>
-<section id="adapt-utils-check-arrays">
-<h1><a class="reference internal" href="../contents.html#adapt-utils"><span class="std std-ref">adapt.utils</span></a>.check_arrays<a class="headerlink" href="#adapt-utils-check-arrays" title="Permalink to this headline"></a></h1>
+<section id="adapt-utils-check-fitted-network">
+<h1><a class="reference internal" href="../contents.html#adapt-utils"><span class="std std-ref">adapt.utils</span></a>.check_fitted_network<a class="headerlink" href="#adapt-utils-check-fitted-network" title="Permalink to this headline"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="adapt.utils.check_arrays">
-<span class="sig-prename descclassname"><span class="pre">adapt.utils.</span></span><span class="sig-name descname"><span class="pre">check_arrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/utils.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.utils.check_arrays" title="Permalink to this definition"></a></dt>
-<dd><p>Check arrays and reshape 1D array in 2D array
-of shape (-1, 1). Check if the length of X
-match the length of y.</p>
+<dt class="sig sig-object py" id="adapt.utils.check_fitted_network">
+<span class="sig-prename descclassname"><span class="pre">adapt.utils.</span></span><span class="sig-name descname"><span class="pre">check_fitted_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/utils.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.utils.check_fitted_network" title="Permalink to this definition"></a></dt>
+<dd><p>Check Fitted Network</p>
+<p>Overwrite the <code class="docutils literal notranslate"><span class="pre">__deepcopy__</span></code> method from network
+such that deepcopy returns the same estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">numpy array</span></dt><dd><p>Input data.</p>
-</dd>
-<dt><strong>y</strong><span class="classifier">numpy array</span></dt><dd><p>Output data.</p>
+<dt><strong>estimator</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Fitted network</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>X, y</dt><dd></dd>
+<dt><strong>estimator</strong><span class="classifier">tensorflow Model</span></dt><dd><p>Modified fitted network</p>
+</dd>
 </dl>
 </dd>
 </dl>

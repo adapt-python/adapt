@@ -83,12 +83,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.make_uda_scorer.html">make_uda_scorer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.cov_distance.html">cov_distance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.j_score.html">j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.neg_j_score.html">neg_j_score</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.frechet_distance.html">frechet_distance</a></li>
@@ -98,6 +99,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.UpdateLambda.html">UpdateLambda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.accuracy.html">accuracy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_arrays.html">check_arrays</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_estimator.html">check_estimator</a></li>
@@ -110,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_regression_da.html">make_regression_da</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.set_random_seed.html">set_random_seed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_fitted_estimator.html">check_fitted_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_fitted_network.html">check_fitted_network</a></li>
 </ul>
 </li>
 </ul>
@@ -473,8 +477,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Rotation">
 <h1>Rotation<a class="headerlink" href="#Rotation" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="778e3c0c5937414bbd4ee58cd674bf13" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1XePW12UF80PKzvLu9cyRJKWQoZIxk_J2?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="f48813438b444a7889577f48bc23cc30" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Rotation.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="3f548eeb62484142857cf0d514cc73f7" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1XePW12UF80PKzvLu9cyRJKWQoZIxk_J2?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="51599fe3c6584045a915b0fe378ac67b" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Rotation.ipynb">View on GitHub</a></p>
 </div><div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>

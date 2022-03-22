@@ -83,12 +83,13 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#adapt-metrics">Metrics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.make_uda_scorer.html">make_uda_scorer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.cov_distance.html">cov_distance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.j_score.html">j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.neg_j_score.html">neg_j_score</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.metrics.frechet_distance.html">frechet_distance</a></li>
@@ -98,6 +99,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.UpdateLambda.html">UpdateLambda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.accuracy.html">accuracy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_arrays.html">check_arrays</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_estimator.html">check_estimator</a></li>
@@ -110,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.make_regression_da.html">make_regression_da</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.set_random_seed.html">set_random_seed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_fitted_estimator.html">check_fitted_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.utils.check_fitted_network.html">check_fitted_network</a></li>
 </ul>
 </li>
 </ul>
@@ -372,6 +376,9 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 <tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning" title="adapt.parameter_based.FineTuning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.FineTuning</span></code></a>([encoder, task, ...])</p></td>
 <td><p>FineTuning : finetunes pretrained networks on target data.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier" title="adapt.parameter_based.TransferTreeClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferTreeClassifier</span></code></a>([...])</p></td>
+<td><p>TBA</p></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -390,7 +397,7 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 <tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.metrics.cov_distance.html#adapt.metrics.cov_distance" title="adapt.metrics.cov_distance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics.cov_distance</span></code></a>(Xs, Xt)</p></td>
 <td><p>Compute the mean absolute difference between the covariance matrixes of Xs and Xt</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.metrics.j_score.html#adapt.metrics.j_score" title="adapt.metrics.j_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics.j_score</span></code></a>(Xs, Xt[, max_centers, sigma])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.metrics.neg_j_score.html#adapt.metrics.neg_j_score" title="adapt.metrics.neg_j_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics.neg_j_score</span></code></a>(Xs, Xt[, max_centers, sigma])</p></td>
 <td><p>Compute the negative J-score between Xs and Xt.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.metrics.linear_discrepancy.html#adapt.metrics.linear_discrepancy" title="adapt.metrics.linear_discrepancy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metrics.linear_discrepancy</span></code></a>(Xs, Xt[, ...])</p></td>
@@ -423,41 +430,50 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.accuracy.html#adapt.utils.accuracy" title="adapt.utils.accuracy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.accuracy</span></code></a>(y_true, y_pred)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.UpdateLambda.html#adapt.utils.UpdateLambda" title="adapt.utils.UpdateLambda"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.UpdateLambda</span></code></a>([lambda_init, ...])</p></td>
+<td><p>Update Lambda trade-off</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.accuracy.html#adapt.utils.accuracy" title="adapt.utils.accuracy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.accuracy</span></code></a>(y_true, y_pred)</p></td>
 <td><p>Custom accuracy function which can handle probas vector in both binary and multi classification</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.check_arrays.html#adapt.utils.check_arrays" title="adapt.utils.check_arrays"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_arrays</span></code></a>(X, y)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.check_arrays.html#adapt.utils.check_arrays" title="adapt.utils.check_arrays"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_arrays</span></code></a>(X, y)</p></td>
 <td><p>Check arrays and reshape 1D array in 2D array of shape (-1, 1).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.check_estimator.html#adapt.utils.check_estimator" title="adapt.utils.check_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_estimator</span></code></a>([estimator, copy, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.check_estimator.html#adapt.utils.check_estimator" title="adapt.utils.check_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_estimator</span></code></a>([estimator, copy, ...])</p></td>
 <td><p>Check estimator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.check_network.html#adapt.utils.check_network" title="adapt.utils.check_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_network</span></code></a>(network[, copy, name, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.check_network.html#adapt.utils.check_network" title="adapt.utils.check_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_network</span></code></a>(network[, copy, name, ...])</p></td>
 <td><p>Check if the given network is a tensorflow Model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_encoder.html#adapt.utils.get_default_encoder" title="adapt.utils.get_default_encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_encoder</span></code></a>([name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_encoder.html#adapt.utils.get_default_encoder" title="adapt.utils.get_default_encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_encoder</span></code></a>([name])</p></td>
 <td><p>Return a tensorflow Model of one layer with 10 neurons and a relu activation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_task.html#adapt.utils.get_default_task" title="adapt.utils.get_default_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_task</span></code></a>([activation, name])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_task.html#adapt.utils.get_default_task" title="adapt.utils.get_default_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_task</span></code></a>([activation, name])</p></td>
 <td><p>Return a tensorflow Model of two hidden layers with 10 neurons each and relu activations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_discriminator.html#adapt.utils.get_default_discriminator" title="adapt.utils.get_default_discriminator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_discriminator</span></code></a>([name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_discriminator.html#adapt.utils.get_default_discriminator" title="adapt.utils.get_default_discriminator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_discriminator</span></code></a>([name])</p></td>
 <td><p>Return a tensorflow Model of two hidden layers with 10 neurons each and relu activations.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.GradientHandler.html#adapt.utils.GradientHandler" title="adapt.utils.GradientHandler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.GradientHandler</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.GradientHandler.html#adapt.utils.GradientHandler" title="adapt.utils.GradientHandler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.GradientHandler</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Multiply gradients with a scalar during backpropagation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.make_classification_da.html#adapt.utils.make_classification_da" title="adapt.utils.make_classification_da"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.make_classification_da</span></code></a>([n_samples, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.make_classification_da.html#adapt.utils.make_classification_da" title="adapt.utils.make_classification_da"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.make_classification_da</span></code></a>([n_samples, ...])</p></td>
 <td><p>Generate a classification dataset for DA.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.make_regression_da.html#adapt.utils.make_regression_da" title="adapt.utils.make_regression_da"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.make_regression_da</span></code></a>([n_samples, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.make_regression_da.html#adapt.utils.make_regression_da" title="adapt.utils.make_regression_da"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.make_regression_da</span></code></a>([n_samples, ...])</p></td>
 <td><p>Generate a regression dataset for DA.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.check_sample_weight.html#adapt.utils.check_sample_weight" title="adapt.utils.check_sample_weight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_sample_weight</span></code></a>(sample_weight, X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.check_sample_weight.html#adapt.utils.check_sample_weight" title="adapt.utils.check_sample_weight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_sample_weight</span></code></a>(sample_weight, X)</p></td>
 <td><p>Check sample weights.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.set_random_seed.html#adapt.utils.set_random_seed" title="adapt.utils.set_random_seed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.set_random_seed</span></code></a>(random_state)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.set_random_seed.html#adapt.utils.set_random_seed" title="adapt.utils.set_random_seed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.set_random_seed</span></code></a>(random_state)</p></td>
 <td><p>Set random seed for numpy and  Tensorflow</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.check_fitted_estimator.html#adapt.utils.check_fitted_estimator" title="adapt.utils.check_fitted_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_fitted_estimator</span></code></a>(estimator)</p></td>
+<td><p>Check Fitted Estimator</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.check_fitted_network.html#adapt.utils.check_fitted_network" title="adapt.utils.check_fitted_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_fitted_network</span></code></a>(estimator)</p></td>
+<td><p>Check Fitted Network</p></td>
 </tr>
 </tbody>
 </table>

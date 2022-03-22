@@ -83,12 +83,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.make_uda_scorer.html">make_uda_scorer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.cov_distance.html">cov_distance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.j_score.html">j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.neg_j_score.html">neg_j_score</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.frechet_distance.html">frechet_distance</a></li>
@@ -98,6 +99,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.UpdateLambda.html">UpdateLambda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.accuracy.html">accuracy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_arrays.html">check_arrays</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_estimator.html">check_estimator</a></li>
@@ -110,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_regression_da.html">make_regression_da</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.set_random_seed.html">set_random_seed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_fitted_estimator.html">check_fitted_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_fitted_network.html">check_fitted_network</a></li>
 </ul>
 </li>
 </ul>
@@ -473,8 +477,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Toy-Regression">
 <h1>Toy Regression<a class="headerlink" href="#Toy-Regression" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="9d9b4f0cec3a41f69a5435ed1499ab44" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1adhqoV6b0uEavLDmMfkiwtRjam0DrXux?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="c188e65dbb27424ba7c48578f576faea" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Regression.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="b653644c0aeb42a582c3f958545c1ad0" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1adhqoV6b0uEavLDmMfkiwtRjam0DrXux?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="0048eac286214a80b6c3a06c47700b07" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Regression.ipynb">View on GitHub</a></p>
 </div><p>You will find here the application of DA methods from the ADAPT package on a simple one dimensional DA regression problem.</p>
 <p>First we import packages needed in the following. We will use <code class="docutils literal notranslate"><span class="pre">matplotlib</span> <span class="pre">Animation</span></code> tools in order to get a visual understanding of the selected methods:</p>
 <div class="nbinput nblast docutils container">
