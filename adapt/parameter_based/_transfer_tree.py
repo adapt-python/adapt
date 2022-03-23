@@ -36,6 +36,22 @@ class TransferTreeClassifier(BaseAdaptEstimator):
     ----------
     estimator_ : Same class as estimator
         Fitted Estimator.
+    estimator : sklearn DecsionTreeClassifier
+        Transferred decision tree classifier using target data.
+        
+    source_model:
+        Source decision tree classifier.
+        
+    parents : numpy array of int.
+        
+    bool_parents_lr : numpy array of {-1,0,1} values.
+        
+    paths : numpy array of int arrays.
+        
+    rules : numpy array of 3-tuple arrays.
+        
+    depths : numpy array of int.
+        
         
     Examples
     --------
