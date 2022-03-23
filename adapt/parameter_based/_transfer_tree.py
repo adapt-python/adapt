@@ -19,28 +19,16 @@ class TransferTreeClassifier(BaseAdaptEstimator):
     ----------    
     estimator : sklearn DecsionTreeClassifier (default=None)
         Source decision tree classifier.
-        
-    Xt : numpy array (default=None)
-        Target input data.
-        
-    yt : numpy array (default=None)
-        Target output data.
-        
+                
     algo : str or callable (default="")
         Leaves relabeling if "" or "relab". 
         "ser" and "strut" for SER and STRUT algorithms
-        
-    (pas la peine de commenter Xt, yt, copy, verbose et random_state)
+     
         
     Attributes
     ----------
-    estimator_ : Same class as estimator
-        Fitted Estimator.
-    estimator : sklearn DecsionTreeClassifier
+    estimator_ : sklearn DecsionTreeClassifier
         Transferred decision tree classifier using target data.
-        
-    source_model:
-        Source decision tree classifier.
         
     parents : numpy array of int.
         
@@ -108,39 +96,16 @@ Peignier, Sergio and Mougeot, Mathilde \
                                           copy=self.copy,
                                           force_copy=True)
         
-        
-#        if not hasattr(estimator, "tree_"):
-#            raise NotFittedError("`estimator` argument has no ``tree_`` attribute, "
-#                                 "please call `fit` on `estimator` or use "
-#                                 "another estimator.")
+
         
         self.parents = np.zeros(estimator.tree_.node_count,dtype=int)
         self.bool_parents_lr = np.zeros(estimator.tree_.node_count,dtype=int)
         self.rules = np.zeros(estimator.tree_.node_count,dtype=object)
         self.paths = np.zeros(estimator.tree_.node_count,dtype=object)
         self.depths = np.zeros(estimator.tree_.node_count,dtype=int)
-        
-        self.estimator = estimator
-        self.source_model = copy.deepcopy(self.estimator)
-        
-        self.Xt = Xt
-        self.yt = yt
-        self.algo = algo
-        self.copy = copy
-        self.verbose = verbose
-        self.random_state = random_state
-        self.params = params
 
         #Init. meta params
         self._compute_params()
-  
-        #Target model
-        if Xt is not None and yt is not None:
-            self._relab(Xt,yt)
-            self.target_model = self.estimator
-            self.estimator = copy.deepcopy(self.source_model)
-        else:
-            self.target_model = None
         
     def fit(self, Xt=None, yt=None, **fit_params):
         """
@@ -164,26 +129,6 @@ Peignier, Sergio and Mougeot, Mathilde \
         Xt, yt = self._get_target_data(Xt, yt)
         Xt, yt = check_arrays(Xt, yt)
         set_random_seed(self.random_state)
-        
-        #if self.estimator is None:
-        #Pas d'arbre source
-        
-        #if self.estimator.node_count == 0:
-        #Arbre vide
-        
-        #set_random_seed(self.random_state)
-        #Xt, yt = check_arrays(Xt, yt)
-        
-        #self.estimator_ = check_estimator(self.estimator,copy=self.copy,force_copy=True)
-        
-        #Tree_ = self.estimator.tree_
-        
-        #Target model :
-        if self.target_model is None :
-            if Xt is not None and yt is not None:
-                self._relab(Xt,yt)
-                self.target_model = self.estimator
-                self.estimator = copy.deepcopy(self.source_model)
 
         self._modify_tree(self.estimator, Xt, yt)
         
