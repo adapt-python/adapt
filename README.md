@@ -97,7 +97,7 @@ model.evaluate(Xt, yt)
 
 ADAPT package is divided in three sub-modules containing the following domain adaptation methods:
 
-### Feature-based methods : 
+### Feature-based methods 
 
 <img src="https://raw.githubusercontent.com/adapt-python/adapt/a490a5c4cefb80d6222bc831a8cc25b2f65221ce/docs/_static/images/feature_based.png">
 
