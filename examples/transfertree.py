@@ -194,67 +194,67 @@ for method in methods:
 
 # Plot decision functions
 
-# Data on which to plot source
-x_min, x_max = Xs[:, 0].min() - 1, Xs[:, 0].max() + 1
-y_min, y_max = Xs[:, 1].min() - 1, Xs[:, 1].max() + 1
-xx, yy = np.meshgrid(np.arange(x_min, x_max, plot_step),
-                     np.arange(y_min, y_max, plot_step))
-# Plot source model
-Z = clf_source.predict(np.c_[xx.ravel(), yy.ravel()])
-Z = Z.reshape(xx.shape)
-fig, ax = plt.subplots(nrows=1, ncols=len(methods) + 1, figsize=(30, 3))
-ax[0].contourf(xx, yy, Z, cmap=plt.cm.coolwarm, alpha=0.8)
-ax[0].scatter(Xs[0, 0], Xs[0, 1],
-              marker='o',
-              edgecolor='black',
-              color='white',
-              label='source data',
-              )
-ax[0].scatter(Xs[:ns_perclass, 0], Xs[:ns_perclass, 1],
-              marker='o',
-              edgecolor='black',
-              color='blue',
-              )
-ax[0].scatter(Xs[ns_perclass:, 0], Xs[ns_perclass:, 1],
-              marker='o',
-              edgecolor='black',
-              color='red',
-              )
-ax[0].set_title('Model: Source\nAcc on source data: {:.2f}\nAcc on target data: {:.2f}'.format(score_src_src, score_src_trgt),
-                fontsize=11)
-ax[0].legend()
+# # Data on which to plot source
+# x_min, x_max = Xs[:, 0].min() - 1, Xs[:, 0].max() + 1
+# y_min, y_max = Xs[:, 1].min() - 1, Xs[:, 1].max() + 1
+# xx, yy = np.meshgrid(np.arange(x_min, x_max, plot_step),
+                     # np.arange(y_min, y_max, plot_step))
+# # Plot source model
+# Z = clf_source.predict(np.c_[xx.ravel(), yy.ravel()])
+# Z = Z.reshape(xx.shape)
+# fig, ax = plt.subplots(nrows=1, ncols=len(methods) + 1, figsize=(30, 3))
+# ax[0].contourf(xx, yy, Z, cmap=plt.cm.coolwarm, alpha=0.8)
+# ax[0].scatter(Xs[0, 0], Xs[0, 1],
+              # marker='o',
+              # edgecolor='black',
+              # color='white',
+              # label='source data',
+              # )
+# ax[0].scatter(Xs[:ns_perclass, 0], Xs[:ns_perclass, 1],
+              # marker='o',
+              # edgecolor='black',
+              # color='blue',
+              # )
+# ax[0].scatter(Xs[ns_perclass:, 0], Xs[ns_perclass:, 1],
+              # marker='o',
+              # edgecolor='black',
+              # color='red',
+              # )
+# ax[0].set_title('Model: Source\nAcc on source data: {:.2f}\nAcc on target data: {:.2f}'.format(score_src_src, score_src_trgt),
+                # fontsize=11)
+# ax[0].legend()
 
-# Data on which to plot target
-x_min, x_max = Xt[:, 0].min() - 1, Xt[:, 0].max() + 1
-y_min, y_max = Xt[:, 1].min() - 1, Xt[:, 1].max() + 1
-xx, yy = np.meshgrid(np.arange(x_min, x_max, plot_step),
-                     np.arange(y_min, y_max, plot_step))
-# Plot transfer models
-for i, (method, label, score) in enumerate(zip(methods, labels, scores)):
-    clf_transfer = clfs[i]
-    Z_transfer = clf_transfer.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z_transfer = Z_transfer.reshape(xx.shape)
-    ax[i + 1].contourf(xx, yy, Z_transfer, cmap=plt.cm.coolwarm, alpha=0.8)
-    ax[i + 1].scatter(Xt[0, 0], Xt[0, 1],
-                      marker='o',
-                      edgecolor='black',
-                      color='white',
-                      label='target data',
-                      )
-    ax[i + 1].scatter(Xt[:nt_0, 0], Xt[:nt_0, 1],
-                      marker='o',
-                      edgecolor='black',
-                      color='blue',
-                      )
-    ax[i + 1].scatter(Xt[nt_0:, 0], Xt[nt_0:, 1],
-                      marker='o',
-                      edgecolor='black',
-                      color='red',
-                      )
-    ax[i + 1].set_title('Model: {}\nAcc on target data: {:.2f}'.format(label, score),
-                        fontsize=11)
-    ax[i + 1].legend()
+# # Data on which to plot target
+# x_min, x_max = Xt[:, 0].min() - 1, Xt[:, 0].max() + 1
+# y_min, y_max = Xt[:, 1].min() - 1, Xt[:, 1].max() + 1
+# xx, yy = np.meshgrid(np.arange(x_min, x_max, plot_step),
+                     # np.arange(y_min, y_max, plot_step))
+# # Plot transfer models
+# for i, (method, label, score) in enumerate(zip(methods, labels, scores)):
+    # clf_transfer = clfs[i]
+    # Z_transfer = clf_transfer.predict(np.c_[xx.ravel(), yy.ravel()])
+    # Z_transfer = Z_transfer.reshape(xx.shape)
+    # ax[i + 1].contourf(xx, yy, Z_transfer, cmap=plt.cm.coolwarm, alpha=0.8)
+    # ax[i + 1].scatter(Xt[0, 0], Xt[0, 1],
+                      # marker='o',
+                      # edgecolor='black',
+                      # color='white',
+                      # label='target data',
+                      # )
+    # ax[i + 1].scatter(Xt[:nt_0, 0], Xt[:nt_0, 1],
+                      # marker='o',
+                      # edgecolor='black',
+                      # color='blue',
+                      # )
+    # ax[i + 1].scatter(Xt[nt_0:, 0], Xt[nt_0:, 1],
+                      # marker='o',
+                      # edgecolor='black',
+                      # color='red',
+                      # )
+    # ax[i + 1].set_title('Model: {}\nAcc on target data: {:.2f}'.format(label, score),
+                        # fontsize=11)
+    # ax[i + 1].legend()
 
-# fig.savefig('../images/ser_strut.png')
-plt.show()
+# # fig.savefig('../images/ser_strut.png')
+# plt.show()
 
