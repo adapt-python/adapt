@@ -1062,7 +1062,7 @@ Peignier, Sergio and Mougeot, Mathilde \
         if not isinstance(estimator, RandomForestClassifier):
             raise ValueError("`estimator` argument must be a ``RandomForestClassifier`` instance, got %s."%str(type(estimator)))
 
-        if not hasattr(estimator, ".estimators_"):
+        if not hasattr(estimator, "estimators_"):
             raise ValueError("`estimator` argument has no ``estimators_`` attribute, "
                                 "please call `fit` on `estimator`.")
         

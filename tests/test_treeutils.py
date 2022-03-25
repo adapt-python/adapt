@@ -50,11 +50,21 @@ clf_source_rf = RandomForestClassifier(n_estimators=RF_SIZE)
 clf_source_dt.fit(Xs, ys)
 clf_source_rf.fit(Xs, ys)
 
+Nkmin = sum(yt == 0 )
+root_source_values = clf_source_dt.tree_.value[0].reshape(-1)
+props_s = root_source_values
+props_s = props_s / sum(props_s)
+props_t = np.zeros(props_s.size)
+for k in range(props_s.size):
+    props_t[k] = np.sum(yt == k) / yt.size
+
+coeffs = np.divide(props_t, props_s)   
+
 def test_depth():
     ut.depth_tree(clf_source_dt)
     ut.depth_rf(clf_source_rf)
     ut.depth(clf_source_dt,node_test)
-    ut.depth_array(clf_source_dt,np.arange(clf_source_dt.tree_.node_counte_count))
+    ut.depth_array(clf_source_dt,np.arange(clf_source_dt.tree_.node_count))
 
 def test_rules():
     
@@ -96,8 +106,8 @@ def test_splits():
     ut.new_random_split(np.ones(s)/s,coh_splits)
     
 def test_error():
-    e = ut.error(clf_source_dt,node_test)
-    le = ut.leaf_error(clf_source_dt,node_test)
+    e = ut.error(clf_source_dt.tree_,node_test)
+    le = ut.leaf_error(clf_source_dt.tree_,node_test)
     return e,le
 
 def test_distribution():
@@ -110,8 +120,8 @@ def test_distribution():
     ut.compute_Q_children_target(Xs,ys,phi,threshold,classes_test)
 
 def test_pruning_risk():
-    ut.compute_LLR_estimates_homog(clf_source_dt)
-    ut.contain_leaf_to_not_prune(clf_source_dt)
+    ut.compute_LLR_estimates_homog(clf_source_dt,Nkmin=Nkmin)
+    ut.contain_leaf_to_not_prune(clf_source_dt,Nkmin=Nkmin,coeffs=coeffs)
     
 def test_divergence_computation():
     phi = clf_source_dt.tree_.feature[0]
