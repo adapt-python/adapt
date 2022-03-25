@@ -1,38 +1,30 @@
 import copy
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 
-from adapt.parameter_based import TransferTreeClassifier
+from adapt.parameter_based import TransferTreeClassifier, TransferForestClassifier
 
 methods = [
     'relab',
     'ser',
     'strut',
     'ser_nr',
+    'ser_no_ext',
     'ser_nr_lambda',
     'strut_nd',
     'strut_lambda',
-    'strut_lambda_np'
+    'strut_np'
+    'strut_lambda_np',
+    'strut_lambda_np2'
 #    'strut_hi'
 ]
-labels = [
-    'relab',
-    '$SER$',
-    '$STRUT$',
-    '$SER_{NP}$',
-    '$SER_{NP}(\lambda)$',
-    '$STRUT_{ND}$',
-    '$STRUT(\lambda)$',
-    '$STRUT_{NP}(\lambda)$'
-    # 'STRUT$^{*}$',
-    #'STRUT$^{*}$',
-]
+
 
 def test_transfer_tree():
 
     np.random.seed(0)
 
-    plot_step = 0.01
     # Generate training source data
     ns = 200
     ns_perclass = ns // 2
@@ -65,12 +57,15 @@ def test_transfer_tree():
     yt_test[nt_test_perclass:] = 1
 
     # Source classifier
-    clf_source = DecisionTreeClassifier(max_depth=None)
-    clf_source.fit(Xs, ys)
-    score_src_src = clf_source.score(Xs, ys)
-    score_src_trgt = clf_source.score(Xt_test, yt_test)
-    print('Training score Source model: {:.3f}'.format(score_src_src))
-    print('Testing score Source model: {:.3f}'.format(score_src_trgt))
+    RF_SIZE = 10
+    clf_source_dt = DecisionTreeClassifier(max_depth=None)
+    clf_source_rf = RandomForestClassifier(n_estimators=RF_SIZE)
+    clf_source_dt.fit(Xs, ys)
+    clf_source_rf.fit(Xs, ys)
+    #score_src_src = clf_source.score(Xs, ys)
+    #score_src_trgt = clf_source.score(Xt_test, yt_test)
+    #print('Training score Source model: {:.3f}'.format(score_src_src))
+    #print('Testing score Source model: {:.3f}'.format(score_src_trgt))
     clfs = []
     scores = []
     # Transfer with SER
@@ -79,7 +74,7 @@ def test_transfer_tree():
 
     for method in methods:
         Nkmin = sum(yt == 0 )
-        root_source_values = clf_source.tree_.value[0].reshape(-1)
+        root_source_values = clf_source_dt.tree_.value[0].reshape(-1)
         props_s = root_source_values
         props_s = props_s / sum(props_s)
         props_t = np.zeros(props_s.size)
@@ -88,43 +83,105 @@ def test_transfer_tree():
 
         coeffs = np.divide(props_t, props_s)          
 
-        clf_transfer = copy.deepcopy(clf_source)
+        clf_transfer_dt = copy.deepcopy(clf_source_dt)
+        clf_transfer_rf = copy.deepcopy(clf_source_rf)
+        
         if method == 'relab':
-            transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="")
+            #decision tree
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="")
             transferred_dt.fit(Xt,yt)
+            #random forest
+            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="",bootstrap=True)
+            transferred_rf.fit(Xt,yt)
         if method == 'ser':
-            transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="ser")
+            #decision tree
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="ser",max_depth=10)
             transferred_dt.fit(Xt,yt)
-            #transferred_dt._ser(Xt, yt, node=0, original_ser=True)
-            #ser.SER(0, clf_transfer, Xt, yt, original_ser=True)
+            #random forest
+            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="ser")
+            transferred_rf.fit(Xt,yt)
         if method == 'ser_nr':
-            transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="ser")
+            #decision tree
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="ser")
             transferred_dt._ser(Xt, yt,node=0,original_ser=False,no_red_on_cl=True,cl_no_red=[0])
+            #random forest
+            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="ser")
+            transferred_rf._ser_rf(Xt, yt,original_ser=False,no_red_on_cl=True,cl_no_red=[0])
+        if method == 'ser_no_ext':
+            #decision tree
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="ser")
+            transferred_dt._ser(Xt, yt,node=0,original_ser=False,no_ext_on_cl=True,cl_no_red=[0],ext_cond=True)
+            #random forest
+            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="ser")
+            transferred_rf._ser_rf(Xt, yt,original_ser=False,no_ext_on_cl=True,cl_no_ext=[0],ext_cond=True)
         if method == 'ser_nr_lambda':
-            transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="ser")
+            #decision tree
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="ser")
             transferred_dt._ser(Xt, yt,node=0,original_ser=False,no_red_on_cl=True,cl_no_red=[0],
                                 leaf_loss_quantify=True,leaf_loss_threshold=0.5,
                                 root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)
-            #ser.SER(0, clf_transfer, Xt, yt,original_ser=False,no_red_on_cl=True,cl_no_red=[0],ext_cond=True)
+            #random forest
+            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="ser")
+            transferred_rf._ser_rf(Xt, yt,original_ser=False,no_red_on_cl=True,cl_no_red=[0],
+                                leaf_loss_quantify=True,leaf_loss_threshold=0.5,
+                                root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)
         if method == 'strut':
-            transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+            #decision tree
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="strut")
             transferred_dt.fit(Xt,yt)
-            #transferred_dt._strut(Xt, yt,node=0)
+            #random forest
+            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="strut")
+            transferred_rf.fit(Xt,yt)
         if method == 'strut_nd':
-            transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+            #decision tree
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_rf,algo="strut")
             transferred_dt._strut(Xt, yt,node=0,use_divergence=False)
+            #random forest
+            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="strut")
+            transferred_rf._strut_rf(Xt, yt,use_divergence=False)
         if method == 'strut_lambda':
-            transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+            #decision tree
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="strut")
             transferred_dt._strut(Xt, yt,node=0,adapt_prop=True,root_source_values=root_source_values,
                                   Nkmin=Nkmin,coeffs=coeffs)
-        if method == 'strut_lambda_np':
-            transferred_dt = TransferTreeClassifier(estimator=clf_transfer,algo="strut")
+            #random forest
+            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="strut")
+            transferred_rf._strut_rf(Xt, yt,adapt_prop=True,root_source_values=root_source_values,
+                                  Nkmin=Nkmin,coeffs=coeffs)
+        if method == 'strut_np':
+            #decision tree
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="strut")
             transferred_dt._strut(Xt, yt,node=0,adapt_prop=False,no_prune_on_cl=True,cl_no_prune=[0],
                                 leaf_loss_quantify=False,leaf_loss_threshold=0.5,no_prune_with_translation=False,
                                 root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)
-        #if method == 'strut_hi':
-            #transferred_dt._strut(Xt, yt,node=0,no_prune_on_cl=False,adapt_prop=True,coeffs=[0.2, 1])
-            #strut.STRUT(clf_transfer, 0, Xt, yt, Xt, yt,pruning_updated_node=True,no_prune_on_cl=False,adapt_prop=True,simple_weights=False,coeffs=[0.2, 1])
+            #random forest
+            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="strut")
+            transferred_rf._strut(Xt, yt,adapt_prop=False,no_prune_on_cl=True,cl_no_prune=[0],
+                                leaf_loss_quantify=False,leaf_loss_threshold=0.5,no_prune_with_translation=False,
+                                root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)
+        if method == 'strut_lambda_np':
+            #decision tree
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="strut")
+            transferred_dt._strut(Xt, yt,node=0,adapt_prop=False,no_prune_on_cl=True,cl_no_prune=[0],
+                                leaf_loss_quantify=False,leaf_loss_threshold=0.5,no_prune_with_translation=False,
+                                root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)
+            #random forest
+            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="strut")
+            transferred_rf._strut(Xt, yt,adapt_prop=True,no_prune_on_cl=True,cl_no_prune=[0],
+                                leaf_loss_quantify=True,leaf_loss_threshold=0.5,no_prune_with_translation=False,
+                                root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)
+        if method == 'strut_lambda_np2':
+            #decision tree
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="strut")
+            transferred_dt._strut(Xt, yt,node=0,adapt_prop=False,no_prune_on_cl=True,cl_no_prune=[0],
+                                leaf_loss_quantify=False,leaf_loss_threshold=0.5,no_prune_with_translation=False,
+                                root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)
+            #random forest
+            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="strut")
+            transferred_rf._strut(Xt, yt,adapt_prop=True,no_prune_on_cl=True,cl_no_prune=[0],
+                                leaf_loss_quantify=True,leaf_loss_threshold=0.5,no_prune_with_translation=True,
+                                root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs) 
+            
         score = transferred_dt.estimator.score(Xt_test, yt_test)
         #score = clf_transfer.score(Xt_test, yt_test)
         print('Testing score transferred model ({}) : {:.3f}'.format(method, score))
