@@ -1009,7 +1009,7 @@ Peignier, Sergio and Mougeot, Mathilde \
 
 
 
-class TransferForestClassifier:
+class TransferForestClassifier(BaseAdaptEstimator):
     """
     TransferForestClassifier
     
