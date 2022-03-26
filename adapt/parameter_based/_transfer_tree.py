@@ -72,7 +72,7 @@ Peignier, Sergio and Mougeot, Mathilde \
                  Xt=None,
                  yt=None,
                  algo="",
-                 cpy=True,
+                 copy=True,
                  verbose=1,
                  random_state=None,
                  **params):
@@ -1074,7 +1074,8 @@ Peignier, Sergio and Mougeot, Mathilde \
                          copy=copy,
                          verbose=verbose,
                          random_state=random_state,
-                         algo=algo,
+                         algo=algo,                         
+                         bootstrap=bootstrap,
                          **params)
         
         self.estimator_ = check_estimator(self.estimator,
@@ -1136,7 +1137,7 @@ Peignier, Sergio and Mougeot, Mathilde \
 
     def _relab_rf(self, X_target_node, Y_target_node,bootstrap=False):
         
-        rf_out = copy.deepcopy(self.source_model)
+        rf_out = copy.deepcopy(self.estimator)
         
         if bootstrap :             
             inds,oob_inds = ut._bootstrap_(Y_target_node.size,class_wise=True,y=Y_target_node)
@@ -1159,7 +1160,7 @@ Peignier, Sergio and Mougeot, Mathilde \
              no_red_on_cl=False,cl_no_red=None, no_ext_on_cl=False, cl_no_ext=None,ext_cond=None,
              leaf_loss_quantify=False,leaf_loss_threshold=None,coeffs=[1,1],root_source_values=None,Nkmin=None,max_depth=None):
         
-        rf_out = copy.deepcopy(self.source_model)
+        rf_out = copy.deepcopy(self.estimator)
         
         for i in range(self.rf_size):
             root_source_values = None
@@ -1198,7 +1199,7 @@ Peignier, Sergio and Mougeot, Mathilde \
           coeffs=[1, 1],use_divergence=True,measure_default_IG=True,min_drift=None,max_drift=None,no_prune_with_translation=True,
           leaf_loss_quantify=False,leaf_loss_threshold=None,root_source_values=None,Nkmin=None):
                     
-        rf_out = copy.deepcopy(self.source_model)
+        rf_out = copy.deepcopy(self.estimator)
         
         for i in range(self.rf_size):
     

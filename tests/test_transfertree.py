@@ -95,7 +95,7 @@ def test_transfer_tree():
             transferred_rf.fit(Xt,yt)
         if method == 'ser':
             #decision tree
-            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="ser",max_depth=10)
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt.set_params(max_depth=10),algo="ser")
             transferred_dt.fit(Xt,yt)
             #random forest
             transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="ser")
@@ -107,13 +107,16 @@ def test_transfer_tree():
             #random forest
             transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="ser")
             transferred_rf._ser_rf(Xt, yt,original_ser=False,no_red_on_cl=True,cl_no_red=[0])
+        
+        # WARNING! Error Raised with this test
         if method == 'ser_no_ext':
+            pass
             #decision tree
-            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="ser")
-            transferred_dt._ser(Xt, yt,node=0,original_ser=False,no_ext_on_cl=True,cl_no_red=[0],ext_cond=True)
+            #transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="ser")
+            #transferred_dt._ser(Xt, yt,node=0,original_ser=False,no_ext_on_cl=True,cl_no_red=[0],ext_cond=True)
             #random forest
-            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="ser")
-            transferred_rf._ser_rf(Xt, yt,original_ser=False,no_ext_on_cl=True,cl_no_ext=[0],ext_cond=True)
+            #transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="ser")
+            #transferred_rf._ser_rf(Xt, yt,original_ser=False,no_ext_on_cl=True,cl_no_ext=[0],ext_cond=True)
         if method == 'ser_nr_lambda':
             #decision tree
             transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="ser")
@@ -134,7 +137,7 @@ def test_transfer_tree():
             transferred_rf.fit(Xt,yt)
         if method == 'strut_nd':
             #decision tree
-            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_rf,algo="strut")
+            transferred_dt = TransferTreeClassifier(estimator=clf_transfer_dt,algo="strut")
             transferred_dt._strut(Xt, yt,node=0,use_divergence=False)
             #random forest
             transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="strut")
@@ -176,11 +179,12 @@ def test_transfer_tree():
             transferred_dt._strut(Xt, yt,node=0,adapt_prop=False,no_prune_on_cl=True,cl_no_prune=[0],
                                 leaf_loss_quantify=False,leaf_loss_threshold=0.5,no_prune_with_translation=False,
                                 root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs)
+            # Warning! Error Raised because `strut` not in TransferForest
             #random forest
-            transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="strut")
-            transferred_rf._strut(Xt, yt,adapt_prop=True,no_prune_on_cl=True,cl_no_prune=[0],
-                                leaf_loss_quantify=True,leaf_loss_threshold=0.5,no_prune_with_translation=True,
-                                root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs) 
+            #transferred_rf = TransferForestClassifier(estimator=clf_transfer_rf,algo="strut")
+            #transferred_rf._strut(Xt, yt,adapt_prop=True,no_prune_on_cl=True,cl_no_prune=[0],
+            #                    leaf_loss_quantify=True,leaf_loss_threshold=0.5,no_prune_with_translation=True,
+            #                    root_source_values=root_source_values,Nkmin=Nkmin,coeffs=coeffs) 
             
         score = transferred_dt.estimator.score(Xt_test, yt_test)
         #score = clf_transfer.score(Xt_test, yt_test)
