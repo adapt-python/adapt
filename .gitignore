@@ -20,3 +20,5 @@ var/
 docs_build/
 docs/html/
 docs/doctrees/
+adapt/datasets.py
+datasets/
