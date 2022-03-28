@@ -10,21 +10,34 @@ from adapt.utils import check_arrays, set_random_seed, check_estimator, check_fi
 import adapt._tree_utils as ut
 
 
-@make_insert_doc(supervised=True)
+# @make_insert_doc(supervised=True)
 class TransferTreeClassifier(BaseAdaptEstimator):
     """
-    TransferTreeClassifier
-    
+    TransferTreeClassifier: Modify a source Decision tree on a target dataset.
 
     Parameters
     ----------    
     estimator : sklearn DecsionTreeClassifier (default=None)
         Source decision tree classifier.
+        
+    Xt : numpy array (default=None)
+        Target input data.
+            
+    yt : numpy array (default=None)
+        Target output data.
                 
     algo : str or callable (default="")
         Leaves relabeling if "" or "relab". 
         "ser" and "strut" for SER and STRUT algorithms
-     
+        
+    copy : boolean (default=True)
+        Whether to make a copy of ``estimator`` or not.
+        
+    verbose : int (default=1)
+        Verbosity level.
+        
+    random_state : int (default=None)
+        Seed of random generator.
         
     Attributes
     ----------
@@ -1011,19 +1024,33 @@ Peignier, Sergio and Mougeot, Mathilde \
 
 class TransferForestClassifier(BaseAdaptEstimator):
     """
-    TransferForestClassifier
+    TransferForestClassifier: Modify a source Random Forest on a target dataset.
     
     Parameters
     ----------    
     estimator : sklearn RandomForestClassifier (default=None)
         Source random forest classifier.
         
+    Xt : numpy array (default=None)
+        Target input data.
+            
+    yt : numpy array (default=None)
+        Target output data.
+                
     algo : str or callable (default="")
         Leaves relabeling if "" or "relab". 
         "ser" and "strut" for SER and STRUT algorithms
         
     bootstrap : boolean (default=True).
-
+        
+    copy : boolean (default=True)
+        Whether to make a copy of ``estimator`` or not.
+        
+    verbose : int (default=1)
+        Verbosity level.
+        
+    random_state : int (default=None)
+        Seed of random generator.
         
     Attributes
     ----------

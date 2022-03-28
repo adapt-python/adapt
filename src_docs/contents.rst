@@ -139,6 +139,7 @@ the **source** data are adapted to build a suited model for the **task** on the 
    parameter_based.RegularTransferNN
    parameter_based.FineTuning
    parameter_based.TransferTreeClassifier
+   parameter_based.TransferForestClassifier
 
 
 .. _adapt.metrics:
