@@ -25,6 +25,7 @@
 		~TransferTreeClassifier.prune
 		~TransferTreeClassifier.score
 		~TransferTreeClassifier.set_params
+		~TransferTreeClassifier.swap_subtrees
 		~TransferTreeClassifier.unsupervised_score
 		~TransferTreeClassifier.updateSplit
 		~TransferTreeClassifier.updateValue
@@ -40,6 +41,7 @@
 	.. automethod:: prune
 	.. automethod:: score
 	.. automethod:: set_params
+	.. automethod:: swap_subtrees
 	.. automethod:: unsupervised_score
 	.. automethod:: updateSplit
 	.. automethod:: updateValue
