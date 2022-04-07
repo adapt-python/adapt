@@ -20,10 +20,10 @@ class KMM(BaseAdaptEstimator):
     KMM: Kernel Mean Matching
     
     KMM is a sample bias correction method for domain adaptation based on the
-    minimization of the **Maximum Mean Discreapancy** (MMD) between source
+    minimization of the **Maximum Mean Discrepancy** (MMD) between source
     and target domains.
     
-    The algorithm corrects input source and taregt distributions differences by
+    The algorithm corrects the difference between the input source and target distributions by
     **reweighting** the source instances such that the means of the source and target
     instances in a **reproducing kernel Hilbert space** (RKHS) are "close".
     
