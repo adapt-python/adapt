@@ -54,7 +54,7 @@ class KLIEP(BaseAdaptEstimator):
     
     .. math::
     
-        \sum_{x_k \in X_S} \sum_{x_j \in X_T} \\alpha_i K(x_j, x_k)) = n_S
+        \sum_{x_j \in X_S} \sum_{x_i \in X_T} \\alpha_i K(x_j, x_i)) = n_S
         
     Where:
     
