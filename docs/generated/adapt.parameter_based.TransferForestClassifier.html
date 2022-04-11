@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>adapt.instance_based.LDM &mdash; adapt 0.1.0 documentation</title>
+  <title>adapt.parameter_based.TransferForestClassifier &mdash; adapt 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
@@ -18,8 +18,6 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script src="../_static/js/custom.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -68,7 +66,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#">LDM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.LDM.html">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KLIEP.html">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KMM.html">KMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
@@ -84,7 +82,7 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">TransferForestClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
@@ -197,7 +195,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="xref std std-ref">adapt.instance_based</span>.LDM</li>
+      <li><span class="xref std std-ref">adapt.parameter_based</span>.TransferForestClassifier</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -230,68 +228,50 @@
     text-align: unset;
 }
 </style>
-<section id="adapt-instance-based-ldm">
-<h1><a class="reference internal" href="../contents.html#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>.LDM<a class="headerlink" href="#adapt-instance-based-ldm" title="Permalink to this headline"></a></h1>
+<section id="adapt-parameter-based-transferforestclassifier">
+<h1><a class="reference internal" href="../contents.html#adapt-parameter-based"><span class="std std-ref">adapt.parameter_based</span></a>.TransferForestClassifier<a class="headerlink" href="#adapt-parameter-based-transferforestclassifier" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.instance_based.</span></span><span class="sig-name descname"><span class="pre">LDM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM" title="Permalink to this definition"></a></dt>
-<dd><p>LDM : Linear Discrepancy Minimization</p>
-<p>LDM reweights the source instances in order to minimize
-the linear discrepancy between the reweighted source and
-the target data.</p>
-<p>The objective function is the following:</p>
-<div class="math notranslate nohighlight">
-\[\min_{||w||_1 = 1, w&gt;0} \max_{||u||=1} |u^T M(w) u|\]</div>
-<p>Where:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(M(w) = (1/n) X_T^T X_T - X^T_S diag(w) X_S\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(X_S, X_T\)</span> are respectively the source dataset
-and the target dataset of size <span class="math notranslate nohighlight">\(m\)</span> and <span class="math notranslate nohighlight">\(n\)</span></p></li>
-</ul>
+<dt class="sig sig-object py" id="adapt.parameter_based.TransferForestClassifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.parameter_based.</span></span><span class="sig-name descname"><span class="pre">TransferForestClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transferforestclassifier.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferForestClassifier" title="Permalink to this definition"></a></dt>
+<dd><p>TransferForestClassifier: Modify a source Random Forest on a target dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>estimator</strong><span class="classifier">sklearn estimator or tensorflow Model (default=None)</span></dt><dd><p>Estimator used to learn the task. 
-If estimator is <code class="docutils literal notranslate"><span class="pre">None</span></code>, a <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code>
-instance is used as estimator.</p>
+<dt><strong>estimator</strong><span class="classifier">sklearn RandomForestClassifier (default=None)</span></dt><dd><p>Source random forest classifier.</p>
 </dd>
 <dt><strong>Xt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target input data.</p>
 </dd>
+<dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data.</p>
+</dd>
+<dt><strong>algo</strong><span class="classifier">str or callable (default=””)</span></dt><dd><p>Leaves relabeling if “” or “relab”. 
+“ser” and “strut” for SER and STRUT algorithms</p>
+</dd>
+<dt><strong>bootstrap</strong><span class="classifier">boolean (default=True).</span></dt><dd></dd>
 <dt><strong>copy</strong><span class="classifier">boolean (default=True)</span></dt><dd><p>Whether to make a copy of <code class="docutils literal notranslate"><span class="pre">estimator</span></code> or not.</p>
 </dd>
 <dt><strong>verbose</strong><span class="classifier">int (default=1)</span></dt><dd><p>Verbosity level.</p>
 </dd>
 <dt><strong>random_state</strong><span class="classifier">int (default=None)</span></dt><dd><p>Seed of random generator.</p>
 </dd>
-<dt><strong>params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given at the different level of the adapt object.
-It can be, for instance, compile or fit parameters of the
-estimator or kernel parameters etc…
-Accepted parameters can be found by calling the method
-<code class="docutils literal notranslate"><span class="pre">_get_legal_params(params)</span></code>.</p>
-</dd>
 </dl>
 </dd>
 </dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference internal" href="adapt.instance_based.KMM.html#adapt.instance_based.KMM" title="adapt.instance_based.KMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KMM</span></code></a></dt><dd></dd>
-<dt><a class="reference internal" href="adapt.instance_based.KLIEP.html#adapt.instance_based.KLIEP" title="adapt.instance_based.KLIEP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KLIEP</span></code></a></dt><dd></dd>
-</dl>
-</div>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="rfb26b76750cd-1"><span class="brackets">1</span></dt>
-<dd><p><a class="reference external" href="https://arxiv.org/pdf/0902.3430.pdf">[1]</a> Y. Mansour, M. Mohri, and A. Rostamizadeh. “Domain adaptation: Learning bounds and algorithms”. In COLT, 2009.</p>
+<dt class="label" id="r0525b000ade1-1"><span class="brackets">1</span></dt>
+<dd><p><a class="reference external" href="https://ieeexplore.ieee.org/document/7592407">[1]</a> Segev, Noam and Harel, Maayan Mannor, Shie and Crammer, Koby and El-Yaniv, Ran “Learn on Source, Refine on Target: A Model Transfer Learning Framework with Random Forests”. In IEEE TPAMI, 2017.</p>
+</dd>
+<dt class="label" id="r0525b000ade1-2"><span class="brackets">2</span></dt>
+<dd><p><a class="reference external" href="https://ieeexplore.ieee.org/document/8995296">[2]</a> Minvielle, Ludovic and Atiq, Mounir Peignier, Sergio and Mougeot, Mathilde “Transfer Learning on Decision Tree with Class Imbalance”. In IEEE ICTAI, 2019.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>weights_</strong><span class="classifier">numpy array</span></dt><dd><p>Training instance weights.</p>
+<dt><strong>estimator_</strong><span class="classifier">sklearn RandomForestClassifier</span></dt><dd><p>Transferred random forest classifier using target data.</p>
 </dd>
-<dt><strong>estimator_</strong><span class="classifier">object</span></dt><dd><p>Estimator.</p>
-</dd>
+<dt><strong>rf_size</strong><span class="classifier">int.</span></dt><dd></dd>
+<dt><strong>estimators_</strong><span class="classifier">numpy array of TransferTreeClassifier.</span></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -302,76 +282,52 @@ Accepted parameters can be found by calling the method
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.LDM.__init__" title="adapt.instance_based.LDM.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([estimator, Xt, copy, verbose, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferForestClassifier.__init__" title="adapt.parameter_based.TransferForestClassifier.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([estimator, Xt, yt, algo, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.LDM.fit" title="adapt.instance_based.LDM.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X, y[, Xt, yt, domains])</p></td>
-<td><p>Fit Adapt Model.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferForestClassifier.fit" title="adapt.parameter_based.TransferForestClassifier.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>([Xt, yt])</p></td>
+<td><p>Fit TransferTreeClassifier.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.LDM.fit_estimator" title="adapt.instance_based.LDM.fit_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_estimator</span></code></a>(X, y[, sample_weight, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferForestClassifier.fit_estimator" title="adapt.parameter_based.TransferForestClassifier.fit_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_estimator</span></code></a>(X, y[, sample_weight, ...])</p></td>
 <td><p>Fit estimator on X, y.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.LDM.fit_weights" title="adapt.instance_based.LDM.fit_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_weights</span></code></a>(Xs, Xt, **kwargs)</p></td>
-<td><p>Fit importance weighting.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.LDM.get_params" title="adapt.instance_based.LDM.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferForestClassifier.get_params" title="adapt.parameter_based.TransferForestClassifier.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
 <td><p>Get parameters for this estimator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.LDM.predict" title="adapt.instance_based.LDM.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X[, domain])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferForestClassifier.predict" title="adapt.parameter_based.TransferForestClassifier.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X[, domain])</p></td>
 <td><p>Return estimator predictions after adaptation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.LDM.predict_estimator" title="adapt.instance_based.LDM.predict_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_estimator</span></code></a>(X, **predict_params)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferForestClassifier.predict_estimator" title="adapt.parameter_based.TransferForestClassifier.predict_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_estimator</span></code></a>(X, **predict_params)</p></td>
 <td><p>Return estimator predictions for X.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.LDM.predict_weights" title="adapt.instance_based.LDM.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>()</p></td>
-<td><p>Return fitted source weights</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.LDM.score" title="adapt.instance_based.LDM.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y[, sample_weight, domain])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferForestClassifier.score" title="adapt.parameter_based.TransferForestClassifier.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y[, sample_weight, domain])</p></td>
 <td><p>Return the estimator score.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.LDM.set_params" title="adapt.instance_based.LDM.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferForestClassifier.set_params" title="adapt.parameter_based.TransferForestClassifier.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
 <td><p>Set the parameters of this estimator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.LDM.unsupervised_score" title="adapt.instance_based.LDM.unsupervised_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unsupervised_score</span></code></a>(Xs, Xt)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferForestClassifier.unsupervised_score" title="adapt.parameter_based.TransferForestClassifier.unsupervised_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unsupervised_score</span></code></a>(Xs, Xt)</p></td>
 <td><p>Return unsupervised score.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.__init__.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM.__init__" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.TransferForestClassifier.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transferforestclassifier.__init__.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferForestClassifier.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domains</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.fit.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM.fit" title="Permalink to this definition"></a></dt>
-<dd><p>Fit Adapt Model.</p>
-<p>For feature-based models, the transformation of the
-input features <code class="docutils literal notranslate"><span class="pre">Xs</span></code> and <code class="docutils literal notranslate"><span class="pre">Xt</span></code> is first fitted. In a second
-stage, the <code class="docutils literal notranslate"><span class="pre">estimator_</span></code> is fitted on the transformed features.</p>
-<p>For instance-based models, source importance weights are
-first learned based on <code class="docutils literal notranslate"><span class="pre">Xs,</span> <span class="pre">ys</span></code> and <code class="docutils literal notranslate"><span class="pre">Xt</span></code>. In a second
-stage, the <code class="docutils literal notranslate"><span class="pre">estimator_</span></code> is fitted on <code class="docutils literal notranslate"><span class="pre">Xs,</span> <span class="pre">ys</span></code> with the learned
-importance weights.</p>
+<dt class="sig sig-object py" id="adapt.parameter_based.TransferForestClassifier.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transferforestclassifier.fit.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferForestClassifier.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit TransferTreeClassifier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">numpy array</span></dt><dd><p>Source input data.</p>
+<dt><strong>Xt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target input data.</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">numpy array</span></dt><dd><p>Source output data.</p>
+<dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data.</p>
 </dd>
-<dt><strong>Xt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. If None, the <cite>Xt</cite> argument
-given in <cite>init</cite> is used.</p>
-</dd>
-<dt><strong>yt</strong><span class="classifier">array (default=None)</span></dt><dd><p>Target input data. Only needed for supervised
-and semi-supervised Adapt model.
-If None, the <cite>yt</cite> argument given in <cite>init</cite> is used.</p>
-</dd>
-<dt><strong>domains</strong><span class="classifier">array (default=None)</span></dt><dd><p>Vector giving the domain for each source
-data. Can be used for multisource purpose.</p>
-</dd>
-<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments given to the fit method of
-the estimator.</p>
+<dt><strong>fit_params</strong><span class="classifier">key, value arguments</span></dt><dd><p>Arguments for the estimator.</p>
 </dd>
 </dl>
 </dd>
@@ -384,8 +340,8 @@ the estimator.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM.fit_estimator">
-<span class="sig-name descname"><span class="pre">fit_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warm_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.fit_estimator.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM.fit_estimator" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.TransferForestClassifier.fit_estimator">
+<span class="sig-name descname"><span class="pre">fit_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warm_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transferforestclassifier.fit_estimator.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferForestClassifier.fit_estimator" title="Permalink to this definition"></a></dt>
 <dd><p>Fit estimator on X, y.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -418,31 +374,8 @@ for tensorflow estimator.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM.fit_weights">
-<span class="sig-name descname"><span class="pre">fit_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.fit_weights.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM.fit_weights" title="Permalink to this definition"></a></dt>
-<dd><p>Fit importance weighting.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>Xs</strong><span class="classifier">array</span></dt><dd><p>Input source data.</p>
-</dd>
-<dt><strong>Xt</strong><span class="classifier">array</span></dt><dd><p>Input target data.</p>
-</dd>
-<dt><strong>kwargs</strong><span class="classifier">key, value argument</span></dt><dd><p>Not used, present here for adapt consistency.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>weights_</strong><span class="classifier">sample weights</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM.get_params">
-<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.get_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM.get_params" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.TransferForestClassifier.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transferforestclassifier.get_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferForestClassifier.get_params" title="Permalink to this definition"></a></dt>
 <dd><p>Get parameters for this estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -461,8 +394,8 @@ for tensorflow estimator.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.predict.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM.predict" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.TransferForestClassifier.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transferforestclassifier.predict.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferForestClassifier.predict" title="Permalink to this definition"></a></dt>
 <dd><p>Return estimator predictions after
 adaptation.</p>
 <p>For feature-based method (object which implements
@@ -494,8 +427,8 @@ target one.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM.predict_estimator">
-<span class="sig-name descname"><span class="pre">predict_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.predict_estimator.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM.predict_estimator" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.TransferForestClassifier.predict_estimator">
+<span class="sig-name descname"><span class="pre">predict_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">predict_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transferforestclassifier.predict_estimator.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferForestClassifier.predict_estimator" title="Permalink to this definition"></a></dt>
 <dd><p>Return estimator predictions for X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -514,21 +447,8 @@ target one.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM.predict_weights">
-<span class="sig-name descname"><span class="pre">predict_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.predict_weights.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM.predict_weights" title="Permalink to this definition"></a></dt>
-<dd><p>Return fitted source weights</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>weights_</strong><span class="classifier">sample weights</span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM.score" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.TransferForestClassifier.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transferforestclassifier.score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferForestClassifier.score" title="Permalink to this definition"></a></dt>
 <dd><p>Return the estimator score.</p>
 <p>If the object has a <code class="docutils literal notranslate"><span class="pre">transform</span></code> method, the
 estimator is applied on the transformed
@@ -564,8 +484,8 @@ the target one.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM.set_params">
-<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.set_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM.set_params" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.TransferForestClassifier.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transferforestclassifier.set_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferForestClassifier.set_params" title="Permalink to this definition"></a></dt>
 <dd><p>Set the parameters of this estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -584,8 +504,8 @@ the target one.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.LDM.unsupervised_score">
-<span class="sig-name descname"><span class="pre">unsupervised_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_ldm.unsupervised_score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.LDM.unsupervised_score" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="adapt.parameter_based.TransferForestClassifier.unsupervised_score">
+<span class="sig-name descname"><span class="pre">unsupervised_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transferforestclassifier.unsupervised_score.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferForestClassifier.unsupervised_score" title="Permalink to this definition"></a></dt>
 <dd><p>Return unsupervised score.</p>
 <p>The normalized discrepancy distance is computed
 between the reweighted/transformed source input

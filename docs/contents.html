@@ -84,6 +84,7 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#adapt-metrics">Metrics</a><ul>
@@ -262,7 +263,7 @@ and <strong>target</strong> distributions. The <strong>task</strong> is then lea
 <img alt="alternate text" src="_images/feature_based.png" />
 </figure>
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -317,7 +318,7 @@ This <strong>reweighting</strong> consists in multiplying, during the training p
 <img alt="alternate text" src="_images/instance_based.png" />
 </figure>
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -358,7 +359,7 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 <img alt="alternate text" src="_images/parameter_based.png" />
 </figure>
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -377,7 +378,10 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 <td><p>FineTuning : finetunes pretrained networks on target data.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier" title="adapt.parameter_based.TransferTreeClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferTreeClassifier</span></code></a>([...])</p></td>
-<td><p>TBA</p></td>
+<td><p>TransferTreeClassifier: Modify a source Decision tree on a target dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferForestClassifier.html#adapt.parameter_based.TransferForestClassifier" title="adapt.parameter_based.TransferForestClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferForestClassifier</span></code></a>([...])</p></td>
+<td><p>TransferForestClassifier: Modify a source Random Forest on a target dataset.</p></td>
 </tr>
 </tbody>
 </table>
@@ -385,7 +389,7 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 <section id="adapt-metrics-metrics">
 <span id="adapt-metrics"></span><h2><a class="reference internal" href="#adapt-metrics"><span class="std std-ref">adapt.metrics</span></a>: Metrics<a class="headerlink" href="#adapt-metrics-metrics" title="Permalink to this headline"></a></h2>
 <p>This module contains functions to compute adaptation metrics.</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -424,7 +428,7 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 <section id="adapt-utils-utility-functions">
 <span id="adapt-utils"></span><h2><a class="reference internal" href="#adapt-utils"><span class="std std-ref">adapt.utils</span></a>: Utility Functions<a class="headerlink" href="#adapt-utils-utility-functions" title="Permalink to this headline"></a></h2>
 <p>This module contains utility functions used in the previous modules.</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />

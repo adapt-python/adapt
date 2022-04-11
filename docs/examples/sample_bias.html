@@ -84,6 +84,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
@@ -477,8 +478,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Sample-Bias-1D">
 <h1>Sample Bias 1D<a class="headerlink" href="#Sample-Bias-1D" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="5795839f287340daae8315a86f750818" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Hbg2kDXKjKzeQKJSwxzaV7pwbmORhyA3?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="b8270bd566b749e69d4ea31406a93b86" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/sample_bias.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="d6b41bf45f3a4efdb8d2b0f2fe9b123e" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Hbg2kDXKjKzeQKJSwxzaV7pwbmORhyA3?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="8e3f89eba87346439ee0dcaae75b85cd" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/sample_bias.ipynb">View on GitHub</a></p>
 </div><p>The following example is a 1D regression domain adaptation issue. The goal is to learn the regression task on the target data (orange points) knowing only the labels on the source data (blue points).</p>
 <p>In this example, there is a sample bias between the source and target datasets. The sources are drawn according to a gaussian distribution whereas the targets are uniformly distributed.</p>
 <p>The following methods are being tested:</p>
