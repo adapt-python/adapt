@@ -142,6 +142,8 @@ adaptation: Learning bounds and algorithms". In COLT, 2009.
             print("Final Discrepancy : %f"%sol['primal objective'])
         
         self.weights_ = np.array(sol["x"]).ravel()
+        self.lambda_ = self.weights_[0]
+        self.weights_ = np.clip(self.weights_[1:], 0., np.inf)
         return self.weights_
     
     

@@ -13,3 +13,4 @@ Examples Gallery
    examples/sample_bias
    examples/sample_bias_2d
    examples/Multi_fidelity
+   examples/tradaboost_experiments

@@ -112,7 +112,7 @@ def predict(self, x, **kwargs):
     return pred
 
       
-def check_arrays(X, y):
+def check_arrays(X, y, **kwargs):
     """
     Check arrays and reshape 1D array in 2D array
     of shape (-1, 1). Check if the length of X
@@ -130,11 +130,11 @@ def check_arrays(X, y):
     -------
     X, y
     """    
-    X = check_array(X, ensure_2d=True, allow_nd=True)
-    y = check_array(y, ensure_2d=False, allow_nd=True)
-    if len(X) != len(y):
+    X = check_array(X, ensure_2d=True, allow_nd=True, **kwargs)
+    y = check_array(y, ensure_2d=False, allow_nd=True, dtype=None, **kwargs)
+    if X.shape[0] != y.shape[0]:
         raise ValueError("Length of X and y mismatch: %i != %i"%
-                         (len(X), len(y)))
+                         (X.shape[0],y.shape[0]))
     return X, y
 
 
@@ -526,15 +526,15 @@ def check_sample_weight(sample_weight, X):
             accept_sparse=False,
             ensure_2d=False,
         )
-        if len(sample_weight) != len(X):
+        if len(sample_weight) != X.shape[0]:
             raise ValueError("`sample_weight` and X should have"
                              " same length, got %i, %i"%
-                             (len(sample_weight), len(X)))
+                             (len(sample_weight), X.shape[0]))
         if np.any(sample_weight<0):
             raise ValueError("All weights from `sample_weight`"
                              " should be positive.")
         if sample_weight.sum() <= 0:
-            sample_weight = np.ones(len(X))
+            sample_weight = np.ones(X.shape[0])
     return sample_weight
 
 
