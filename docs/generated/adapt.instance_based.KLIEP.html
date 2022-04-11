@@ -181,6 +181,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tradaboost_experiments.html">TrAdaBoost Experiments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/tradaboost_experiments.html#Mushrooms">Mushrooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/tradaboost_experiments.html#20-NewsGroup">20-NewsGroup</a></li>
+</ul>
+</li>
+    
+    
 </ul>
  
         </div>
@@ -259,7 +266,7 @@ the following optimization problem:</p>
 \sum_{x_i \in X_T} \alpha_i K(x_j, x_i))\]</div>
 <p>Subject to:</p>
 <div class="math notranslate nohighlight">
-\[\sum_{x_k \in X_S} \sum_{x_j \in X_T} \alpha_i K(x_j, x_k)) = n_S\]</div>
+\[\sum_{x_j \in X_S} \sum_{x_i \in X_T} \alpha_i K(x_j, x_i)) = n_S\]</div>
 <p>Where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(X_T\)</span> is the source input data of size <span class="math notranslate nohighlight">\(n_S\)</span>.</p></li>
