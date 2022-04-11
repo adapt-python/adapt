@@ -235,7 +235,7 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         Xt, yt = self._get_target_data(Xt, yt)
         Xt, yt = check_arrays(Xt, yt, accept_sparse=True)
         
-        if isinstance(self, TrAdaBoost):
+        if not isinstance(self, TrAdaBoostR2) and isinstance(self.estimator, BaseEstimator):
             self.label_encoder_ = LabelEncoder()
             ys = self.label_encoder_.fit_transform(ys)
             yt = self.label_encoder_.transform(yt)
@@ -454,7 +454,10 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
             predictions.append(y_pred)
         predictions = np.stack(predictions, -1)
         weighted_vote = predictions.dot(weights).argmax(1)
-        return self.label_encoder_.inverse_transform(weighted_vote)
+        if hasattr(self, "label_encoder_"):
+            return self.label_encoder_.inverse_transform(weighted_vote)
+        else:
+            return weighted_vote
 
 
     def predict_weights(self, domain="src"):
@@ -951,7 +954,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
     def _cross_val_score(self, Xs, ys, Xt, yt,
                          sample_weight_src, sample_weight_tgt,
                          **fit_params):
-        if len(Xt) >= self.cv:
+        if Xt.shape[0] >= self.cv:
             cv = self.cv
         else:
             cv = Xt.shape[0]

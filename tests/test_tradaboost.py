@@ -4,7 +4,8 @@ Test functions for tradaboost module.
 
 import copy
 import numpy as np
-from sklearn.linear_model import LinearRegression, LogisticRegression, Ridge
+import scipy
+from sklearn.linear_model import LinearRegression, LogisticRegression, Ridge, RidgeClassifier
 from sklearn.metrics import r2_score, accuracy_score
 import tensorflow as tf
 
@@ -184,4 +185,27 @@ def test_tradaboost_lr():
     model.fit(Xs, ys_classif)
     err2 = model.estimator_errors_
     
-    assert np.sum(err1) > 10 * np.sum(err2)
+    assert np.sum(err1) > 5 * np.sum(err2)
+    
+    
+def test_tradaboost_sparse_matrix():
+    X = scipy.sparse.csr_matrix(np.eye(200))
+    y = np.random.randn(100)
+    yc = np.random.choice(["e", "p"], 100)
+    Xt = X[:100]
+    Xs = X[100:]
+    
+    model = TrAdaBoost(RidgeClassifier(), Xt=Xt[:10], yt=yc[:10])
+    model.fit(Xs, yc)
+    model.score(Xt, yc)
+    model.predict(Xs)
+    
+    model = TrAdaBoostR2(Ridge(), Xt=Xt[:10], yt=y[:10])
+    model.fit(Xs, y)
+    model.score(Xt, y)
+    model.predict(Xs)
+    
+    model = TwoStageTrAdaBoostR2(Ridge(), Xt=Xt[:10], yt=y[:10], n_estimators=3)
+    model.fit(Xs, y)
+    model.score(Xt, y)
+    model.predict(Xs)
