@@ -7,7 +7,8 @@
 {%- if pathto("examples/Regression") == "#" %}{% set Regression = "" %}{% else %}{% set Regression = "#" %}{% endif %} 
 {%- if pathto("examples/sample_bias") == "#" %}{% set sample_bias = "" %}{% else %}{% set sample_bias = "#" %}{% endif %} 
 {%- if pathto("examples/Multi_fidelity") == "#" %}{% set Multi_fidelity = "" %}{% else %}{% set Multi_fidelity = "#" %}{% endif %} 
-{%- if pathto("examples/Rotation") == "#" %}{% set Rotation = "" %}{% else %}{% set Rotation = "#" %}{% endif %} 
+{%- if pathto("examples/Rotation") == "#" %}{% set Rotation = "" %}{% else %}{% set Rotation = "#" %}{% endif %}
+{%- if pathto("examples/tradaboost_experiments") == "#" %}{% set tradaboost_experiments = "" %}{% else %}{% set tradaboost_experiments = "#" %}{% endif %} 
 
  {% block menu %} 
 <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
@@ -150,5 +151,12 @@
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Multi_fidelity") }}{{ Multi_fidelity }}{{ "RegularTransferNN" }}">RegularTransferNN</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/tradaboost_experiments") }}">TrAdaBoost Experiments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/tradaboost_experiments") }}{{ tradaboost_experiments }}{{ "Mushrooms" }}">Mushrooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/tradaboost_experiments") }}{{ tradaboost_experiments }}{{ "20-NewsGroup" }}">20-NewsGroup</a></li>
+</ul>
+</li>
+    
+    
 </ul>
  {% endblock %}

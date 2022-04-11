@@ -251,3 +251,19 @@ img.map-adapt {
 #selecting-the-right-domain-adaptation-model {
     padding-bottom: 600px;
 }
+
+
+blockquote {
+    border-left: 5px solid #D3D3D3;
+    padding: 0 1em;
+}
+
+
+div.alert.alert-block.alert-info {
+    background: #e7f2fa;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-top-color: #6ab0de;
+    border-top-width: 12px;
+    border-top-style: solid;
+}

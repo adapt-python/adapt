@@ -282,8 +282,8 @@ class BaseAdapt:
         score : float
             Unsupervised score.
         """
-        Xs = check_array(np.array(Xs))
-        Xt = check_array(np.array(Xt))
+        Xs = check_array(Xs, accept_sparse=True)
+        Xt = check_array(Xt, accept_sparse=True)
         
         if hasattr(self, "transform"):
             args = [
@@ -306,13 +306,11 @@ class BaseAdapt:
             
             set_random_seed(self.random_state)
             bootstrap_index = np.random.choice(
-            len(Xs), size=len(Xs), replace=True, p=sample_weight)
+            Xs.shape[0], size=Xs.shape[0], replace=True, p=sample_weight)
             Xs = Xs[bootstrap_index]
         else:
             raise ValueError("The Adapt model should implement"
                              " a transform or predict_weights methods")
-        Xs = np.array(Xs)
-        Xt = np.array(Xt)
         return normalized_linear_discrepancy(Xs, Xt)
     
     
@@ -534,7 +532,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         -------
         estimator_ : fitted estimator
         """
-        X, y = check_arrays(X, y)
+        X, y = check_arrays(X, y, accept_sparse=True)
         set_random_seed(random_state)
 
         if (not warm_start) or (not hasattr(self, "estimator_")):
@@ -613,7 +611,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         y_pred : array
             prediction of estimator.
         """      
-        X = check_array(X, ensure_2d=True, allow_nd=True)
+        X = check_array(X, ensure_2d=True, allow_nd=True, accept_sparse=True)
         predict_params = self._filter_params(self.estimator_.predict,
                                             predict_params)
         return self.estimator_.predict(X, **predict_params)
@@ -648,7 +646,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         y_pred : array
             prediction of the Adapt Model.
         """
-        X = check_array(X, ensure_2d=True, allow_nd=True)
+        X = check_array(X, ensure_2d=True, allow_nd=True, accept_sparse=True)
         if hasattr(self, "transform"):
             if domain is None:
                 domain = "tgt"
@@ -700,7 +698,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         score : float
             estimator score.
         """
-        X, y = check_arrays(X, y)
+        X, y = check_arrays(X, y, accept_sparse=True)
         
         if domain is None:
             domain = "target"
