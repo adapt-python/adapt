@@ -140,6 +140,20 @@ class CDAN(BaseAdaptDeep):
     ADDA
     WDGRL
     
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from adapt.utils import make_classification_da
+    >>> from adapt.feature_based import CDAN
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> ys = np.stack([ys, np.abs(1-ys)], 1)
+    >>> yt = np.stack([yt, np.abs(1-yt)], 1)
+    >>> model = CDAN(lambda_=0.1, Xt=Xt, metrics=["acc"], random_state=0)
+    >>> model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
+    1/1 [==============================] - 0s 106ms/step - loss: 0.1081 - acc: 0.8400
+    0.10809497535228729
+    
     References
     ----------
     .. [1] `[1] <https://arxiv.org/pdf/1705.10667.pdf>`_ Long, M., Cao, \

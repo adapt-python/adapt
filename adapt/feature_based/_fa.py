@@ -72,23 +72,18 @@ class FA(BaseAdaptEstimator):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.feature_based import FA
-    >>> np.random.seed(0)
-    >>> Xs = 0.1 * np.random.randn(100, 1) + 1.
-    >>> Xt = 0.1 * np.random.randn(100, 1) + 1.
-    >>> ys = 0.1 * np.random.randn(100, 1) + 0.
-    >>> yt = 0.1 * np.random.randn(100, 1) + 1.
-    >>> model = FA()
-    >>> model.fit(Xs, ys, Xt[:10], yt[:10]);
-    Augmenting feature space...
-    Previous shape: (100, 1)
-    New shape: (100, 3)
-    Fit estimator...
-    >>> np.abs(model.predict(Xt, domain="src") - yt).mean()
-    0.9846...
-    >>> np.abs(model.predict(Xt, domain="tgt") - yt).mean()
-    0.1010...
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = FA(RidgeClassifier(), Xt=Xt[:10], yt=yt[:10], random_state=0)
+    >>> model.fit(Xs, ys)
+    Fit transform...
+    Previous shape: (100, 2)
+    New shape: (110, 6)
+    Fit Estimator...
+    >>> model.score(Xt, yt)
+    0.92
 
     References
     ----------
@@ -145,6 +140,10 @@ class FA(BaseAdaptEstimator):
         -------
         X_emb, y : embedded input and output data
         """
+        if yt is None:
+            raise ValueError("The target labels `yt` is `None`, FA is a supervised"
+                             " domain adaptation method and need `yt` to be specified.")
+        
         Xs, ys = check_arrays(Xs, ys)
         Xt, yt = check_arrays(Xt, yt)
         

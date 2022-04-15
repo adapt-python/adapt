@@ -44,6 +44,21 @@ class LDM(BaseAdaptEstimator):
     KMM
     KLIEP
     
+    Examples
+    --------
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
+    >>> from adapt.instance_based import LDM
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = LDM(RidgeClassifier(), Xt=Xt, random_state=0)
+    >>> model.fit(Xs, ys)
+    Fit weights...
+    Initial Discrepancy : 0.328483
+    Final Discrepancy : -0.000000
+    Fit Estimator...
+    >>> model.score(Xt, yt)
+    0.5
+    
     References
     ----------
     .. [1] `[1] <https://arxiv.org/pdf/0902.3430.pdf>`_ \

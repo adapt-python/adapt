@@ -172,27 +172,19 @@ class KLIEP(BaseAdaptEstimator):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.instance_based import KLIEP
-    >>> np.random.seed(0)
-    >>> Xs = np.random.randn(50) * 0.1
-    >>> Xs = np.concatenate((Xs, Xs + 1.))
-    >>> Xt = np.random.randn(100) * 0.1
-    >>> ys = np.array([-0.2 * x if x<0.5 else 1. for x in Xs])
-    >>> yt = -0.2 * Xt
-    >>> kliep = KLIEP(sigmas=[0.1, 1, 10], random_state=0)
-    >>> kliep.fit_estimator(Xs.reshape(-1,1), ys)
-    >>> np.abs(kliep.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
-    0.09388...
-    >>> kliep.fit(Xs.reshape(-1,1), ys, Xt.reshape(-1,1))
-    Fitting weights...
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = KLIEP(RidgeClassifier(), Xt=Xt, kernel="rbf", gamma=[0.1, 1.], random_state=0)
+    >>> model.fit(Xs, ys)
+    Fit weights...
     Cross Validation process...
-    Parameter sigma = 0.1000 -- J-score = 0.059 (0.001)
-    Parameter sigma = 1.0000 -- J-score = 0.427 (0.003)
-    Parameter sigma = 10.0000 -- J-score = 0.704 (0.017)
-    Fitting estimator...
-    >>> np.abs(kliep.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
-    0.00302...
+    Parameters {'gamma': 0.1} -- J-score = 0.013 (0.003)
+    Parameters {'gamma': 1.0} -- J-score = 0.120 (0.026)
+    Fit Estimator...
+    >>> model.score(Xt, yt)
+    0.85
 
     See also
     --------

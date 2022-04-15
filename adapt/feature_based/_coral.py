@@ -70,32 +70,18 @@ class CORAL(BaseAdaptEstimator):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.feature_based import CORAL
-    >>> Xs = np.random.multivariate_normal(
-    ...      np.array([0, 0]), np.array([[0.001, 0], [0, 1]]), 100)
-    >>> Xt = np.random.multivariate_normal(
-    ...      np.array([0, 0]), np.array([[0.1, 0.2], [0.2, 0.5]]), 100)
-    >>> ys = np.zeros(100)
-    >>> yt = np.zeros(100)
-    >>> ys[Xs[:, 1]>0] = 1
-    >>> yt[(Xt[:, 1]-0.5*Xt[:, 0])>0] = 1
-    >>> model = CORAL(lambda_=1000.)
-    >>> model.fit(Xs, ys, Xt);
-    Covariance Matrix alignement...
-    Previous covariance difference: 0.258273
-    New covariance difference: 0.258072
-    Fit estimator...
-    >>> model.estimator_.score(Xt, yt)
-    0.5750...
-    >>> model = CORAL(lambda_=0.)
-    >>> model.fit(Xs, ys, Xt);
-    Covariance Matrix alignement...
-    Previous covariance difference: 0.258273
-    New covariance difference: 0.000000
-    Fit estimator...
-    >>> model.estimator_.score(Xt, yt)
-    0.5717...
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = CORAL(RidgeClassifier(), Xt=Xt, random_state=0)
+    >>> model.fit(Xs, ys)
+    Fit transform...
+    Previous covariance difference: 0.013181
+    New covariance difference: 0.000004
+    Fit Estimator...
+    >>> model.score(Xt, yt)
+    0.86
         
     See also
     --------

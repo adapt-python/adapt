@@ -77,6 +77,19 @@ class NearestNeighborsWeighting(BaseAdaptEstimator):
     KMM
     KLIEP
     
+    Examples
+    --------
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
+    >>> from adapt.instance_based import NearestNeighborsWeighting
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = NearestNeighborsWeighting(RidgeClassifier(), n_neighbors=5, Xt=Xt, random_state=0)
+    >>> model.fit(Xs, ys)
+    Fit weights...
+    Fit Estimator...
+    >>> model.score(Xt, yt)
+    0.66
+    
     References
     ----------
     .. [1] `[1] <https://arxiv.org/pdf/2102.02291.pdf>`_ \

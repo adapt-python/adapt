@@ -77,23 +77,14 @@ class DANN(BaseAdaptDeep):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.feature_based import DANN
-    >>> np.random.seed(0)
-    >>> Xs = np.concatenate((np.random.random((100, 1)),
-    ...                      np.zeros((100, 1))), 1)
-    >>> Xt = np.concatenate((np.random.random((100, 1)),
-    ...                      np.ones((100, 1))), 1)
-    >>> ys = 0.2 * Xs[:, 0]
-    >>> yt = 0.2 * Xt[:, 0]
-    >>> model = DANN(lambda_=0., random_state=0)
-    >>> model.fit(Xs, ys, Xt, epochs=100, verbose=0)
-    >>> model.score_estimator(Xt, yt)
-    0.0231...
-    >>> model = DANN(lambda_=0.1, random_state=0)
-    >>> model.fit(Xs, ys, Xt, epochs=100, verbose=0)
-    >>> model.score_estimator(Xt, yt)
-    0.0010...
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = DANN(lambda_=0.1, Xt=Xt, metrics=["acc"], random_state=0)
+    >>> model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
+    1/1 [==============================] - 0s 108ms/step - loss: 0.1732 - acc: 0.8100
+    0.17324252426624298
     
     See also
     --------

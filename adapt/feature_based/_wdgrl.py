@@ -79,23 +79,14 @@ class WDGRL(BaseAdaptDeep):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.feature_based import WDGRL
-    >>> np.random.seed(0)
-    >>> Xs = np.concatenate((np.random.random((100, 1)),
-    ...                      np.zeros((100, 1))), 1)
-    >>> Xt = np.concatenate((np.random.random((100, 1)),
-    ...                      np.ones((100, 1))), 1)
-    >>> ys = 0.2 * Xs[:, 0]
-    >>> yt = 0.2 * Xt[:, 0]
-    >>> model = WDGRL(lambda_=0., random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.score_estimator(Xt, yt)
-    0.0231...
-    >>> model = WDGRL(lambda_=1, random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.score_estimator(Xt, yt)
-    0.0014...
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = WDGRL(lambda_=1., gamma=1., Xt=Xt, metrics=["acc"], random_state=0)
+    >>> model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
+    1/1 [==============================] - 0s 100ms/step - loss: 0.2112 - acc: 0.7500
+    0.21115829050540924
         
     See also
     --------
