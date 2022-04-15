@@ -13,7 +13,7 @@ EPS = np.finfo(np.float32).eps
 @make_insert_doc(["task", "weighter"], supervised=True)
 class WANN(BaseAdaptDeep):
     """
-    WANN: Weighting Adversarial Neural Network is an instance-based domain adaptation
+    WANN : Weighting Adversarial Neural Network is an instance-based domain adaptation
     method suited for regression tasks. It supposes the supervised setting where some
     labeled target data are available.
     
@@ -22,10 +22,11 @@ class WANN(BaseAdaptDeep):
     Y-discrepancy distance between source and target distributions
     
     WANN involves three networks:
-        - the weighting network which learns the source weights.
-        - the task network which learns the task.
-        - the discrepancy network which is used to estimate a distance 
-          between the reweighted source and target distributions: the Y-discrepancy
+    
+    - the weighting network which learns the source weights.
+    - the task network which learns the task.
+    - the discrepancy network which is used to estimate a distance 
+      between the reweighted source and target distributions: the Y-discrepancy
     
     Parameters
     ----------
@@ -52,18 +53,18 @@ class WANN(BaseAdaptDeep):
         
     history_ : dict
         history of the losses and metrics across the epochs.
-        
+
     Examples
     --------
-    from adapt.utils import make_regression_da
-    from adapt.instance_based import WANN
-    Xs, ys, Xt, yt = make_regression_da()
-    model = WANN(Xt=Xt[:10], yt=yt[:10], random_state=0)
-    model.fit(Xs, ys, epochs=100, verbose=0)
-    model.score(Xt, yt)
+    >>> from adapt.utils import make_regression_da
+    >>> from adapt.instance_based import WANN
+    >>> Xs, ys, Xt, yt = make_regression_da()
+    >>> model = WANN(Xt=Xt[:10], yt=yt[:10], random_state=0)
+    >>> model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
     1/1 [==============================] - 0s 106ms/step - loss: 0.1096
-    0.10955706238746643    
-    
+    0.10955706238746643
+
     References
     ----------
     .. [1] `[1] <https://arxiv.org/pdf/2006.08251.pdf>`_ A. de Mathelin, \
