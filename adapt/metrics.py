@@ -466,6 +466,8 @@ M. Sugiyama, S. Nakajima, H. Kashima, P. von Bünau and  M. Kawanabe. \
 "Direct importance estimation with model selection and its application \
 to covariateshift adaptation". In NIPS 2007
     """
+    Xs = check_array(Xs, ensure_2d=True, allow_nd=True, accept_sparse=True)
+    Xt = check_array(Xt, ensure_2d=True, allow_nd=True, accept_sparse=True)
     if len(Xt) > max_centers:
         random_index = np.random.choice(
         len(Xt), size=max_centers, replace=False)

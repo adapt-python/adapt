@@ -53,6 +53,16 @@ class WANN(BaseAdaptDeep):
     history_ : dict
         history of the losses and metrics across the epochs.
         
+    Examples
+    --------
+    from adapt.utils import make_regression_da
+    from adapt.instance_based import WANN
+    Xs, ys, Xt, yt = make_regression_da()
+    model = WANN(Xt=Xt[:10], yt=yt[:10], random_state=0)
+    model.fit(Xs, ys, epochs=100, verbose=0)
+    model.score(Xt, yt)
+    1/1 [==============================] - 0s 106ms/step - loss: 0.1096
+    0.10955706238746643    
     
     References
     ----------

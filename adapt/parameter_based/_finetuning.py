@@ -24,7 +24,7 @@ class FineTuning(BaseAdaptDeep):
     Parameters
     ----------        
     training : bool or list of bool, optional (default=True)
-        Trade-off parameters.
+        Weither to train the ``encoder`` or not.
         If a list is given, values from ``training`` are assigned
         successively to the ``trainable`` attribute of the
         ``encoder`` layers going from the last layer to the first one.
@@ -47,6 +47,23 @@ class FineTuning(BaseAdaptDeep):
     history_ : dict
         history of the losses and metrics across the epochs
         of the network training.
+    
+    Examples
+    --------
+    >>> from adapt.utils import make_regression_da
+    >>> from adapt.parameter_based import FineTuning
+    >>> Xs, ys, Xt, yt = make_regression_da()
+    >>> src_model = FineTuning(loss="mse", pretrain=False, random_state=0)
+    >>> src_model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> print(src_model.score(Xt, yt))
+    1/1 [==============================] - 0s 82ms/step - loss: 0.2645
+    0.26447802782058716
+    >>> tgt_model = FineTuning(encoder=src_model.encoder_, loss="mse", pretrain=True,
+    ...                        pretrain__epochs=30, random_state=0)
+    >>> tgt_model.fit(Xt[:3], yt[:3], epochs=100, verbose=0)
+    >>> tgt_model.score(Xt, yt)
+    1/1 [==============================] - 0s 78ms/step - loss: 0.1114
+    0.11144775152206421
     
     References
     ----------

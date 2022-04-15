@@ -134,27 +134,24 @@ class TrAdaBoost(BaseAdaptEstimator):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.instance_based import TrAdaBoost
-    >>> from sklearn.tree import DecisionTreeClassifier
-    >>> np.random.seed(0)
-    >>> Xs = np.random.random((100, 2))
-    >>> Xt = np.random.random((100, 2))
-    >>> ys = (Xs[:, [0]] < 0.5).astype(int)
-    >>> yt = (Xt[:, [1]] < 0.5).astype(int)
-    >>> dtc = DecisionTreeClassifier(max_depth=5)
-    >>> dtc.fit(np.concatenate((Xs, Xt[:10])),
-    ...         np.concatenate((ys, yt[:10])))
-    >>> dtc.score(Xt, yt)
-    0.55
-    >>> tr = TrAdaBoost(DecisionTreeClassifier(max_depth=5),
-    ...                 n_estimators=20, random_state=1)
-    >>> tr.fit(Xs, ys, Xt[:10], yt[:10])
-    Iteration 0 - Error: 0.1000
-    ...
-    Iteration 19 - Error: 0.0000
-    >>> (tr.predict(Xt) == yt.ravel()).mean()
-    0.59
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = TrAdaBoost(RidgeClassifier(), n_estimators=10, Xt=Xt[:10], yt=yt[:10], random_state=0)
+    >>> model.fit(Xs, ys)
+    Iteration 0 - Error: 0.2550
+    Iteration 1 - Error: 0.2820
+    Iteration 2 - Error: 0.3011
+    Iteration 3 - Error: 0.3087
+    Iteration 4 - Error: 0.3046
+    Iteration 5 - Error: 0.2933
+    Iteration 6 - Error: 0.2819
+    Iteration 7 - Error: 0.2747
+    Iteration 8 - Error: 0.2712
+    Iteration 9 - Error: 0.2698
+    >>> model.score(Xt, yt)
+    0.66
         
     See also
     --------
@@ -598,26 +595,24 @@ class TrAdaBoostR2(TrAdaBoost):
         
     Examples
     --------
-    >>> import numpy as np
-    >>> from sklearn.linear_model import LinearRegression
+    >>> from sklearn.linear_model import Ridge
+    >>> from adapt.utils import make_regression_da
     >>> from adapt.instance_based import TrAdaBoostR2
-    >>> np.random.seed(0)
-    >>> Xs = np.random.random((100, 2))
-    >>> Xt = np.random.random((100, 2))
-    >>> ys = Xs[:, [0]]
-    >>> yt = Xt[:, [1]]
-    >>> lr = LinearRegression()
-    >>> lr.fit(np.concatenate((Xs, Xt[:10])),
-    ...        np.concatenate((ys, yt[:10])))
-    >>> np.abs(lr.predict(Xt) - yt).mean()
-    0.30631...
-    >>> tr = TrAdaBoostR2(n_estimators=20)
-    >>> tr.fit(Xs, ys, Xt[:10], yt[:10])
-    Iteration 0 - Error: 0.4396
-    ...
-    Iteration 19 - Error: 0.0675
-    >>> np.abs(tr.predict(Xt) - yt).mean()
-    0.05801...
+    >>> Xs, ys, Xt, yt = make_regression_da()
+    >>> model = TrAdaBoostR2(Ridge(), n_estimators=10, Xt=Xt[:10], yt=yt[:10], random_state=0)
+    >>> model.fit(Xs, ys)
+    Iteration 0 - Error: 0.4862
+    Iteration 1 - Error: 0.5711
+    Iteration 2 - Error: 0.6709
+    Iteration 3 - Error: 0.7095
+    Iteration 4 - Error: 0.7154
+    Iteration 5 - Error: 0.6987
+    Iteration 6 - Error: 0.6589
+    Iteration 7 - Error: 0.5907
+    Iteration 8 - Error: 0.4930
+    Iteration 9 - Error: 0.3666
+    >>> model.score(Xt, yt)
+    0.6998064452649377
 
     See also
     --------
@@ -764,25 +759,24 @@ class TwoStageTrAdaBoostR2(TrAdaBoostR2):
         
     Examples
     --------
-    >>> import numpy as np
-    >>> from adapt.instance_based import TwoStageTrAdaBoostR2
-    >>> np.random.seed(0)
-    >>> Xs = np.random.random((100, 2))
-    >>> Xt = np.random.random((100, 2))
-    >>> ys = Xs[:, [0]]
-    >>> yt = Xt[:, [1]]
-    >>> lr = LinearRegression()
-    >>> lr.fit(np.concatenate((Xs, Xt[:10])),
-    ...        np.concatenate((ys, yt[:10])))
-    >>> np.abs(lr.predict(Xt) - yt).mean()
-    0.30631...
-    >>> tr = TwoStageTrAdaBoostR2()
-    >>> tr.fit(Xs, ys, Xt[:10], yt[:10])
-    Iteration 0 - Cross-validation score: 0.3154 (0.1813)
-    ...
-    Iteration 9 - Cross-validation score: 0.0015 (0.0009)
-    >>> np.abs(tr.predict(Xt) - yt).mean()
-    0.00126...
+    >>> from sklearn.linear_model import Ridge
+    >>> from adapt.utils import make_regression_da
+    >>> from adapt.instance_based import TrAdaBoostR2
+    >>> Xs, ys, Xt, yt = make_regression_da()
+    >>> model = TrAdaBoostR2(Ridge(), n_estimators=10, Xt=Xt[:10], yt=yt[:10], random_state=0)
+    >>> model.fit(Xs, ys)
+    Iteration 0 - Cross-validation score: 0.2956 (0.0905)
+    Iteration 1 - Cross-validation score: 0.2956 (0.0905)
+    Iteration 2 - Cross-validation score: 0.2614 (0.1472)
+    Iteration 3 - Cross-validation score: 0.2701 (0.1362)
+    Iteration 4 - Cross-validation score: 0.2745 (0.1280)
+    Iteration 5 - Cross-validation score: 0.2768 (0.1228)
+    Iteration 6 - Cross-validation score: 0.2782 (0.1195)
+    Iteration 7 - Cross-validation score: 0.2783 (0.1170)
+    Iteration 8 - Cross-validation score: 0.2767 (0.1156)
+    Iteration 9 - Cross-validation score: 0.2702 (0.1155)
+    >>> model.score(Xt, yt)
+    0.5997110100905185
 
     See also
     --------

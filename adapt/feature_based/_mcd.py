@@ -53,18 +53,14 @@ class MCD(BaseAdaptDeep):
         
     Examples
     --------
-    >>> Xs = np.concatenate((np.random.random((100, 1)),
-    ...                      np.zeros((100, 1))), 1)
-    >>> Xt = np.concatenate((np.random.random((100, 1)),
-    ...                      np.ones((100, 1))), 1)
-    >>> ys = 0.2 * Xs[:, 0]
-    >>> yt = 0.2 * Xt[:, 0]
-    >>> model = MCD(random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.history_src_["task_t"][-1]
-    0.0234...
-    >>> model.history_["task_t"][-1]
-    0.0009...
+    >>> from adapt.utils import make_classification_da
+    >>> from adapt.feature_based import MCD
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = MCD(pretrain=True, n_steps=1, Xt=Xt, metrics=["acc"], random_state=0)
+    >>> model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
+    1/1 [==============================] - 0s 147ms/step - loss: 0.2527 - acc: 0.6200
+    0.25267112255096436
         
     References
     ----------

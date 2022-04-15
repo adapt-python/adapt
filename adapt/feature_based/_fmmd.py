@@ -146,6 +146,17 @@ class fMMD(BaseAdaptEstimator):
     CORAL
     FE
     
+    Examples
+    --------
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
+    >>> from adapt.feature_based import fMMD
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = fMMD(RidgeClassifier(), Xt=Xt, kernel="linear", random_state=0, verbose=0)
+    >>> model.fit(Xs, ys)
+    >>> model.score(Xt, yt)
+    0.45
+    
     References
     ----------
     .. [1] `[1] <https://www.cs.cmu.edu/afs/cs/Web/People/jgc/publication\
@@ -225,6 +236,9 @@ class fMMD(BaseAdaptEstimator):
         G = matrix(np.concatenate((linear_const_G, squared_constraint_G)))
         h = matrix(np.concatenate((linear_const_h, squared_constraint_h)))
         dims = {'l': p, 'q': [p+1], 's':  []}
+        
+        solvers.options["show_progress"] = bool(self.verbose)
+        
         sol = solvers.cp(F, G, h, dims)
         
         W = np.array(sol["x"]).ravel()

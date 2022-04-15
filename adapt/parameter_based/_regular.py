@@ -14,7 +14,8 @@ from adapt.utils import (check_arrays,
                          set_random_seed,
                          check_estimator,
                          check_network,
-                         check_fitted_estimator)
+                         check_fitted_estimator,
+                         get_default_task)
 
 
 @make_insert_doc(supervised=True)
@@ -60,24 +61,18 @@ class RegularTransferLR(BaseAdaptEstimator):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from sklearn.linear_model import Ridge
+    >>> from adapt.utils import make_regression_da
     >>> from adapt.parameter_based import RegularTransferLR
-    >>> from sklearn.linear_model import LinearRegression
-    >>> np.random.seed(0)
-    >>> Xs = np.random.randn(50) * 0.1
-    >>> Xs = np.concatenate((Xs, Xs + 1.))
-    >>> Xt = np.random.randn(100) * 0.1
-    >>> ys = (np.array([-0.2 * x if x<0.5 else 1. for x in Xs])
-    ...       + 0.1 * np.random.randn(100))
-    >>> yt = 0.75 * Xt + 0.1 * np.random.randn(100)
-    >>> lr = LinearRegression()
-    >>> lr.fit(Xs.reshape(-1, 1), ys)
-    >>> lr.score(Xt.reshape(-1, 1), yt)
-    0.2912...
-    >>> rt = RegularTransferLR(lr, lambda_=0.01, random_state=0)
-    >>> rt.fit(Xt[:10].reshape(-1, 1), yt[:10])
-    >>> rt.estimator_.score(Xt.reshape(-1, 1), yt)
-    0.3276...
+    >>> Xs, ys, Xt, yt = make_regression_da()
+    >>> src_model = Ridge()
+    >>> src_model.fit(Xs, ys)
+    >>> print(src_model.score(Xt, yt))
+    0.6771931378706197
+    >>> tgt_model = RegularTransferLR(src_model, lambda_=1.)
+    >>> tgt_model.fit(Xt[:3], yt[:3])
+    >>> tgt_model.score(Xt, yt)
+    0.6454964910964297
         
     See also
     --------
@@ -241,23 +236,18 @@ class RegularTransferLC(RegularTransferLR):
             
     Examples
     --------
-    >>> import numpy as np
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.parameter_based import RegularTransferLC
-    >>> from sklearn.linear_model import LogisticRegression
-    >>> np.random.seed(0)
-    >>> Xs = np.random.randn(50) * 0.1
-    >>> Xs = np.concatenate((Xs, Xs + 1.))
-    >>> Xt = np.random.randn(100) * 0.1
-    >>> ys = (Xs < 0.1).astype(int)
-    >>> yt = (Xt < 0.05).astype(int)
-    >>> lc = LogisticRegression()
-    >>> lc.fit(Xs.reshape(-1, 1), ys)
-    >>> lc.score(Xt.reshape(-1, 1), yt)
-    0.67
-    >>> rt = RegularTransferLC(lc, lambda_=0.01, random_state=0)
-    >>> rt.fit(Xt[:10].reshape(-1, 1), yt[:10].reshape(-1, 1))
-    >>> rt.estimator_.score(Xt.reshape(-1, 1), yt)
-    0.67
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> src_model = RidgeClassifier()
+    >>> src_model.fit(Xs, ys)
+    >>> print(src_model.score(Xt, yt))
+    0.88
+    >>> tgt_model = RegularTransferLC(src_model, lambda_=10.)
+    >>> tgt_model.fit(Xt[:3], yt[:3])
+    >>> tgt_model.score(Xt, yt)
+    0.92
 
     See also
     --------
@@ -337,28 +327,19 @@ class RegularTransferNN(BaseAdaptDeep):
         
     Examples
     --------
-    >>> import numpy as np
-    >>> import tensorflow as tf
+    >>> from adapt.utils import make_regression_da
     >>> from adapt.parameter_based import RegularTransferNN
-    >>> np.random.seed(0)
-    >>> tf.random.set_seed(0)
-    >>> Xs = np.random.randn(50) * 0.1
-    >>> Xs = np.concatenate((Xs, Xs + 1.))
-    >>> Xt = np.random.randn(100) * 0.1
-    >>> ys = (np.array([-0.2 * x if x<0.5 else 1. for x in Xs])
-    ...       + 0.1 * np.random.randn(100))
-    >>> yt = 0.75 * Xt + 0.1 * np.random.randn(100)
-    >>> model = tf.keras.Sequential()
-    >>> model.add(tf.keras.layers.Dense(1))
-    >>> model.compile(optimizer="adam", loss="mse")
-    >>> model.predict(Xt.reshape(-1,1))
-    >>> model.fit(Xs.reshape(-1, 1), ys, epochs=300, verbose=0)
-    >>> np.abs(model.predict(Xt).ravel() - yt).mean()
-    0.48265...
-    >>> rt = RegularTransferNN(model, lambdas=0.01, random_state=0)
-    >>> rt.fit(Xt[:10].reshape(-1,1), yt[:10], epochs=300, verbose=0)
-    >>> np.abs(rt.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
-    0.1900...
+    >>> Xs, ys, Xt, yt = make_regression_da()
+    >>> src_model = RegularTransferNN(loss="mse", lambdas=0., random_state=0)
+    >>> src_model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> print(src_model.score(Xt, yt))
+    1/1 [==============================] - 0s 127ms/step - loss: 0.2744
+    0.27443504333496094
+    >>> model = RegularTransferNN(src_model.task_, loss="mse", lambdas=1., random_state=0)
+    >>> model.fit(Xt[:3], yt[:3], epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
+    1/1 [==============================] - 0s 109ms/step - loss: 0.0832
+    0.08321201056241989
         
     See also
     --------
@@ -420,7 +401,7 @@ can help a lot". In EMNLP, 2004.
     
     def _initialize_networks(self):
         if self.task is None:
-            self.task_ = get_zeros_network(name="task")
+            self.task_ = get_default_task(name="task")
         else:
             self.task_ = check_network(self.task,
                                        copy=self.copy,

@@ -35,6 +35,17 @@ class SA(BaseAdaptEstimator):
     M_ : numpy array
         Alignment matrix
         
+    Examples
+    --------
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
+    >>> from adapt.feature_based import SA
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = SA(RidgeClassifier(), Xt=Xt, random_state=0)
+    >>> model.fit(Xs, ys)
+    >>> model.score(Xt, yt)
+    0.91
+        
     References
     ----------
     .. [1] `[1] <https://arxiv.org/abs/1409.5241>`_ B. Fernando, A. Habrard, \

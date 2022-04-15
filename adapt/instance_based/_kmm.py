@@ -134,28 +134,14 @@ class KMM(BaseAdaptEstimator):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.instance_based import KMM
-    >>> np.random.seed(0)
-    >>> Xs = np.random.randn(50) * 0.1
-    >>> Xs = np.concatenate((Xs, Xs + 1.))
-    >>> Xt = np.random.randn(100) * 0.1
-    >>> ys = np.array([-0.2 * x if x<0.5 else 1. for x in Xs])
-    >>> yt = -0.2 * Xt
-    >>> kmm = KMM(random_state=0)
-    >>> kmm.fit_estimator(Xs.reshape(-1,1), ys)
-    >>> np.abs(kmm.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
-    0.09388...
-    >>> kmm.fit(Xs.reshape(-1,1), ys, Xt.reshape(-1,1))
-    Fitting weights...
-     pcost       dcost       gap    pres   dres
-     0:  3.7931e+04 -1.2029e+06  3e+07  4e-01  2e-15
-    ...
-    13: -4.9095e+03 -4.9095e+03  8e-04  2e-16  1e-16
-    Optimal solution found.
-    Fitting estimator...
-    >>> np.abs(kmm.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
-    0.00588...
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = KMM(RidgeClassifier(), Xt=Xt, kernel="rbf", gamma=1., verbose=0, random_state=0)
+    >>> model.fit(Xs, ys)
+    >>> model.score(Xt, yt)
+    0.76
 
     See also
     --------
