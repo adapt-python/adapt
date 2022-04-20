@@ -5,7 +5,8 @@ Synthetic Examples
 
 .. nbgallery::
    :maxdepth: 1
-
+	
+   examples/Quick_start
    examples/Classification
    examples/Two_moons
    examples/Rotation
