@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Correcting Sample Bias with Transfer Leanring &mdash; adapt 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../_static/js/custom.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> adapt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu"> 
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../map.html">Choosing the right algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quick_start.html">Quick-Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.FA.html">FA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CORAL.html">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.fMMD.html">fMMD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DANN.html">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.ADDA.html">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.WDGRL.html">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CDAN.html">CDAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MCD.html">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MDD.html">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CCSA.html">CCSA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.LDM.html">LDM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KLIEP.html">KLIEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.WANN.html">WANN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.make_uda_scorer.html">make_uda_scorer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.cov_distance.html">cov_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.neg_j_score.html">neg_j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.frechet_distance.html">frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.normalized_frechet_distance.html">normalized_frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.domain_classifier.html">domain_classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.reverse_validation.html">reverse_validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.UpdateLambda.html">UpdateLambda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.accuracy.html">accuracy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_arrays.html">check_arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_estimator.html">check_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_network.html">check_network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_encoder.html">get_default_encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_task.html">get_default_task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_discriminator.html">get_default_discriminator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.GradientHandler.html">GradientHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_classification_da.html">make_classification_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_regression_da.html">make_regression_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.set_random_seed.html">set_random_seed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_fitted_estimator.html">check_fitted_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_fitted_network.html">check_fitted_network</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Classification.html">Classification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Classification.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Classification.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Classification.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Classification.html#Instance-Based">Instance Based</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Two_moons.html">Two Moons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#CDAN">CDAN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Rotation.html">Rotation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Rotation.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rotation.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rotation.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rotation.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rotation.html#ADDA">ADDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Regression.html">Toy Regression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#TGT-Only">TGT Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#All">All</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sample_bias.html">Sample Bias 1D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sample_bias_2d.html">Sample Bias 2D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias_2d.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias_2d.html#Estimator">Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias_2d.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias_2d.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias_2d.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Multi_fidelity.html">Multi-Fidelity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Multi_fidelity.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Multi_fidelity.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Multi_fidelity.html#Low-fidelity-only">Low fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Multi_fidelity.html#High-fidelity-only">High fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Real Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="#">Sample Bias</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Sample-Bias-on-the-diabetes-dataset">Diabetes Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Applying-Transfer-Learning-for-correcting-sample-bias">Sample bias correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Hidden-bias-and-features-importance-estimation">Features importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Flowers_example.html">Fine-Tuning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Flowers_example.html#Training-a-model-from-scratch">Train from Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Flowers_example.html#Model-based-Transfer">Model-based Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Office_example.html">Deep Domain Adaptation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Office_example.html#Dataset-Preprocessing">Dataset Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Office_example.html#Fit-without-adaptation">Fit without adaptation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Office_example.html#Fit-with-adaptation">Fit with adaptation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tradaboost_experiments.html">TrAdaBoost Experiments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tradaboost_experiments.html#Mushrooms">Mushrooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tradaboost_experiments.html#20-NewsGroup">20-NewsGroup</a></li>
+</ul>
+</li>
+</ul>
+ 
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Correcting Sample Bias with Transfer Leanring</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="Correcting-Sample-Bias-with-Transfer-Leanring">
+<h1>Correcting Sample Bias with Transfer Leanring<a class="headerlink" href="#Correcting-Sample-Bias-with-Transfer-Leanring" title="Permalink to this headline"></a></h1>
+<center><figure><p><img alt="sample bias illustration" src="../_images/sample_bias_img.png" /></p>
+<figcaption><p>Illustration of sample bias</p>
+</figcaption></figure></center><p>For many statistical applications, it is crucial that the data set used to make estimates is distributed in the same way as the target population. For example, in medicine, to estimate the effectiveness of a drug on a population, it is important that the sample of patients considered in the study is representative of the whole population. The same thing happens for polls, to estimate the voting percentages on the whole country, it is important that the sample of people surveyed are
+representative of the whole country population (the proportion of social and professional categories should be respected as well as the distribution of ages etc…).</p>
+<p>In machine learning, the same principle applies. When a model is trained on a dataset, it is important that this dataset is representative of the data on which the model will be applied later. For example, for a classification problem, if one of the classes is under-represented compared to the others, the model will tend to make more errors on this class.</p>
+<p>In mathematical terms, this question of the representativeness of the training dataset with respect to the test dataset is written:</p>
+<div class="math notranslate nohighlight">
+\[P_{train}(X, Y) = P_{test}(X, Y)\]</div>
+<p>Where <span class="math notranslate nohighlight">\(X\)</span> represent the inputs variables (for instance, the age, the height and the number of medical intervention of the patient) and <span class="math notranslate nohighlight">\(Y\)</span> is the output variable (the survival time for instance).</p>
+<p>This assumption of representativeness is rarely verified as the training data set is often “biased” with respect to the testing set. For example, in a survey, one socio-professional category is over-represented compared to the others, or the patients considered are predominantly of one sex rather than another. This issue is called “sample bias” and can be formulated as follows:</p>
+<div class="math notranslate nohighlight">
+\[P_{train}(X) \neq P_{test}(X)\]</div>
+<p>Because of sample bias, the estimation of the variable of interest <span class="math notranslate nohighlight">\(Y\)</span> based on <span class="math notranslate nohighlight">\(X\)</span> will often be biased as well. However, if we have access to the distribution of the target population <span class="math notranslate nohighlight">\(P_{test}(X)\)</span>, it is possible to correct the estimation. For example, in the case of surveys, it is often possible to know the true distribution of social categories over the whole country. One will then give different weights to the votes of each person in the polling sample according to their
+social category. Thus, the vote of a person from an under-represented category in the sample will have a greater weight and vice versa. Mathematically speaking, the optimal weights that should be used to correct the sample bias is the following:</p>
+<div class="math notranslate nohighlight">
+\[w(X) = \frac{P_{test}(X)}{P_{train}(X)}\]</div>
+<p>We can easily see that the weights <span class="math notranslate nohighlight">\(w(X)\)</span> verify for any function <span class="math notranslate nohighlight">\(f\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[E_{X \sim P_{train}(X)}[w(X) f(X)] = E_{X \sim P_{test}(X)}[f(X)]\]</div>
+<p>Which is convenient for many applications. Without entering in too much details, we can see, for example, in a case of binary vote where <span class="math notranslate nohighlight">\(Y \in \{0, 1\}\)</span>, if <span class="math notranslate nohighlight">\(Y = f(X)\)</span>, the above formula states that the proportion of people voting <span class="math notranslate nohighlight">\(1\)</span> in the test population will be accurately estimated by applying the importance weighting <span class="math notranslate nohighlight">\(w(X)\)</span> to the training set.</p>
+<p>In practice, however, one does not access directly to the distributions <span class="math notranslate nohighlight">\(P_{train}(X)\)</span> and <span class="math notranslate nohighlight">\(P_{test}(X)\)</span> but to samples drawn according to these distributions <span class="math notranslate nohighlight">\(X_{train} \sim P_{train}(X)\)</span> and <span class="math notranslate nohighlight">\(X_{test} \sim P_{test}(X)\)</span>. The use of samples instead of distribution harden the estimation of <span class="math notranslate nohighlight">\(w(X)\)</span>, that’s why instance-based transfer learning methods have been developed to perform non-parametric estimation of <span class="math notranslate nohighlight">\(w(X)\)</span> based on <span class="math notranslate nohighlight">\(X_{train}\)</span> and
+<span class="math notranslate nohighlight">\(X_{test}\)</span>.</p>
+<p>In the transfer learning setting, the sample bias issue is characterized as an unsupervised domain adaptation problem. The problem is unsupervised because one only has access to the output variable <span class="math notranslate nohighlight">\(Y\)</span> in the training set (<span class="math notranslate nohighlight">\(X_{train}, Y_{train}\)</span>). In the test set, only <span class="math notranslate nohighlight">\(X_{test}\)</span> is available. This problem is also characterized by what is called the “covariate-shift” assumption, this technical term means that the conditional training and test distributions are the same
+<span class="math notranslate nohighlight">\(P(Y_{train} | X_{train}) = P(Y_{test} | X_{test})\)</span>. This is the case for example in the biased poll issue, as the distribution of votes within the same social category is the same for the train and the test samples. Thus, according to the <a class="reference external" href="https://adapt-python.github.io/adapt/map.html">ADAPT flowchart</a>, one should choose an instance-based approach which reweights the training data in order to match the test distribution.</p>
+<p>Let’s now look at how transfer learning can tackle sample bias in a concrete case. We will use in the following the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_diabetes.html">diabetes</a> dataset from scikit-learn.</p>
+<section id="Sample-Bias-on-the-diabetes-dataset">
+<h2>Sample Bias on the diabetes dataset<a class="headerlink" href="#Sample-Bias-on-the-diabetes-dataset" title="Permalink to this headline"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_diabetes</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span>
+</pre></div>
+</div>
+</div>
+<p>Above is the description of the “diabetes” dataset, this dataset represents a study of the evolution of diabetes built on 442 patients. On one side we have observation variables of the patient (age, weight, blood data…) that we will arrange in a matrix <span class="math notranslate nohighlight">\(X\)</span> and on the other side we have a variable of interest that gives quantitatively the evolution of the disease that we will arrange in a vector <span class="math notranslate nohighlight">\(y\)</span>. The large values of <span class="math notranslate nohighlight">\(y\)</span> correspond to an important progression of the disease.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">load_diabetes</span><span class="p">(</span><span class="n">as_frame</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;DESCR&quot;</span><span class="p">])</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+.. _diabetes_dataset:
+
+Diabetes dataset
+----------------
+
+Ten baseline variables, age, sex, body mass index, average blood
+pressure, and six blood serum measurements were obtained for each of n =
+442 diabetes patients, as well as the response of interest, a
+quantitative measure of disease progression one year after baseline.
+
+**Data Set Characteristics:**
+
+  :Number of Instances: 442
+
+  :Number of Attributes: First 10 columns are numeric predictive values
+
+  :Target: Column 11 is a quantitative measure of disease progression one year after baseline
+
+  :Attribute Information:
+      - age     age in years
+      - sex
+      - bmi     body mass index
+      - bp      average blood pressure
+      - s1      tc, total serum cholesterol
+      - s2      ldl, low-density lipoproteins
+      - s3      hdl, high-density lipoproteins
+      - s4      tch, total cholesterol / HDL
+      - s5      ltg, possibly log of serum triglycerides level
+      - s6      glu, blood sugar level
+
+Note: Each of these 10 feature variables have been mean centered and scaled by the standard deviation times `n_samples` (i.e. the sum of squares of each column totals 1).
+
+Source URL:
+https://www4.stat.ncsu.edu/~boos/var.select/diabetes.html
+
+For more information see:
+Bradley Efron, Trevor Hastie, Iain Johnstone and Robert Tibshirani (2004) &#34;Least Angle Regression,&#34; Annals of Statistics (with discussion), 407-499.
+(https://web.stanford.edu/~hastie/Papers/LARS/LeastAngle_2002.pdf)
+</pre></div></div>
+</div>
+<p>We consider that the data sets <span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(y\)</span> are well distributed, i.e. that they represent the distribution of all people with diabetes. For our study, we artificially create a “sample bias” on our data set. To do so, we randomly draw some points <span class="math notranslate nohighlight">\((x_i, y_i)\)</span> from <span class="math notranslate nohighlight">\(X, y\)</span> with a bias on the “age” variable. We put more weight around the lowest ages. We simulate here a case where the sample of patients used to study the evolution of diabetes would be globally younger than the
+whole population.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">sample_bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span><span class="o">+</span><span class="mf">0.06</span><span class="p">))</span>
+<span class="n">biased_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="n">sample_bias</span><span class="o">/</span><span class="n">sample_bias</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="n">biased_X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biased_index</span><span class="p">]</span>
+<span class="n">biased_y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biased_index</span><span class="p">]</span>
+
+<span class="n">biased_age</span> <span class="o">=</span> <span class="n">biased_X</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
+<span class="n">age</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>We can now observe the “sample bias” on the age variable:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">biased_age</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;biased sample&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">age</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;true sample&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Age distribution&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Age (scaled)&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Sample_bias_example_13_0.png" src="../_images/examples_Sample_bias_example_13_0.png" />
+</div>
+</div>
+<p>We can see above a clear bias between the age distribution for the source sample (in blue) and the whole population (in orange). Let’s note right away that the “true” age distribution is assumed to be known during the study. Indeed, this information may be available from statistical or health organizations (which report the age of diabetes patients). It can be noted that the orange distribution follows more or less a Gaussian distribution, which is what we find in some research papers: <a class="reference external" href="https://www.researchgate.net/figure/Age-distribution-of-registered-diabetic-divers-in-the-UK-on-joining-the-database_fig1_242671518">Diabetes
+and Recreational Diving: Guidelines for the Future</a></p>
+<p>A question that may arise at this point is: “Is this bias over ages problematic for the study of the evolution of the diabetes disease?” To check this, we can look at the correlation between the age of the patients and the evolution of the disease. Indeed, if this correlation is null (the distribution of the variable <span class="math notranslate nohighlight">\(Y\)</span> is the same for all ages: <span class="math notranslate nohighlight">\(P(Y|\text{age}) = P(Y)\)</span>) there is no problem to have a biased sample for this variable.</p>
+<p>However, we observe below that there is a positive correlation (of the order of 0.2) between the age of the patient and the disease progression variable.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">],</span> <span class="n">y</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Corr: </span><span class="si">%.2f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">corr</span>,
+            <span class="n">scatter_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;s&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">},</span> <span class="n">line_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span><span class="s2">&quot;k&quot;</span><span class="p">})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;target y variable in function of the age&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Sample_bias_example_16_0.png" src="../_images/examples_Sample_bias_example_16_0.png" />
+</div>
+</div>
+<p>Because of this correlation between the age variable and the target variable, the “sample bias” on the age will be reflected on the target variable <span class="math notranslate nohighlight">\(Y\)</span> as we have:</p>
+<div class="math notranslate nohighlight">
+\[P_{test}(Y) = \int_{x} P_{test}(Y|X=x) P_{test}(X=x)\]</div>
+<p>As we have the covariate shift assumption (<span class="math notranslate nohighlight">\(P_{test}(Y | X=x) = P_{train}(Y | X=x)\)</span>), if <span class="math notranslate nohighlight">\(Y\)</span> and <span class="math notranslate nohighlight">\(X\)</span> were independent, we would have <span class="math notranslate nohighlight">\(P(Y|X=x) = P(Y)\)</span> and then <span class="math notranslate nohighlight">\(P_{test}(Y | X=x) = P_{train}(Y | X=x) = P_{train}(Y)\)</span> which would lead to:</p>
+<div class="math notranslate nohighlight">
+\[P_{test}(Y) = \int_{x} P_{train}(Y) P_{test}(X=x) = P_{train}(Y)\]</div>
+<p>Therefore, there would be no difference on the distribution <span class="math notranslate nohighlight">\(P(Y)\)</span> between tre training and the testing set. But when <span class="math notranslate nohighlight">\(P(Y|X) \neq P(Y)\)</span>, it is very likely that we have <span class="math notranslate nohighlight">\(P_{train}(Y) \neq P_{test}(Y)\)</span>.</p>
+<p>To be convinced, we represent the distributions <span class="math notranslate nohighlight">\(P(Y)\)</span> for the biased and the true sample. Note that this is not possible in practice because we do not have access to the variable <span class="math notranslate nohighlight">\(Y_{test}\)</span>. We can see on the Figure below, a clear difference between the two distributions.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">biased_y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;biased sample&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;true sample&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Y distribution&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Sample_bias_example_19_0.png" src="../_images/examples_Sample_bias_example_19_0.png" />
+</div>
+</div>
+<p>Now let’s consider a simple task for our study of the evolution of diabetes. Let’s try to evaluate the mean or a quantile of the target distribution. This value can be used as a threshold to determine the status of a patient. Let’s say for example that patients above the 75% quantile are considered in a severe state and the others in a stable state. A comparison of the two distributions is shown below:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]),</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">biased_y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;biased target&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
+<span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>target</th>
+      <th>biased target</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>442.000000</td>
+      <td>442.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>152.133484</td>
+      <td>142.389140</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>77.093005</td>
+      <td>74.338154</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>25.000000</td>
+      <td>25.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>140.500000</td>
+      <td>125.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>211.500000</td>
+      <td>200.000000</td>
+    </tr>
+    <tr>
+      <th>90%</th>
+      <td>265.000000</td>
+      <td>258.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>346.000000</td>
+      <td>346.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>We can see that because of the sample bias, the estimations of the mean or quantiles of our target distribution is biased. We are about 10 points below for the mean, the median and the 75% quantile.</p>
+</section>
+<section id="Applying-Transfer-Learning-for-correcting-sample-bias">
+<h2>Applying Transfer Learning for correcting sample bias<a class="headerlink" href="#Applying-Transfer-Learning-for-correcting-sample-bias" title="Permalink to this headline"></a></h2>
+<p>We will now try to correct our biased sample using a transfer learning method. For this, we have seen that the <a class="reference external" href="https://adapt-python.github.io/adapt/map.html">ADAPT flowchart</a> suggests to use a reweighting method. This kind of methods will give a different weights to every instance in our biased sample according to their age to match the true age distribution.</p>
+<p>Let’s take the Kullback–Leibler Importance Estimation Procedure (KLIEP) method for example. We are not going to go into the details of this method which require a certain mathematical background, in particular a knowledge of kernel methods. What you need to know is that KLIEP will automatically assign a weight to each instance in our biased sample so that the reweighted distribution of ages will resemble to the target distribution as much as possible. Those who are interested can look at the
+<a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.KLIEP.html">KLIEP documentation</a> or read <a class="reference external" href="https://proceedings.neurips.cc/paper/2007/file/be83ab3ecd0db773eb2dc1b0a17836a1-Paper.pdf">Sugiyama’s paper</a>.</p>
+<p>Like any machine learning method, KLIEP uses hyper-parameters (here a choice of kernel and the parameters of this kernel as for the SVM of scikit-learn). For a Gaussian kernel (the default one) the choice of the <code class="docutils literal notranslate"><span class="pre">gamma</span></code> parameter plays an important role in the success of the method. To choose it well, KLIEP proposes the possibility to try several gammas and to select the one that reduces the most the gap between the two distributions (this gap being measured with a proxy of the Kullback
+Leibler called the <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.metrics.neg_j_score.html">J-score</a>).</p>
+<p>Let’s now reweight our biased sample! We have chosen a list of values of <code class="docutils literal notranslate"><span class="pre">gamma</span></code> evolving on the power of <span class="math notranslate nohighlight">\(10\)</span> between <span class="math notranslate nohighlight">\(10^{-4}\)</span> and <span class="math notranslate nohighlight">\(10^4\)</span>. The J-score for each value is displayed, the higher the J-score the better.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">adapt.instance_based</span> <span class="kn">import</span> <span class="n">KLIEP</span>
+
+<span class="n">kliep</span> <span class="o">=</span> <span class="n">KLIEP</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">)],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">kliep_weights</span> <span class="o">=</span> <span class="n">kliep</span><span class="o">.</span><span class="n">fit_weights</span><span class="p">(</span><span class="n">biased_age</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">age</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Cross Validation process...
+Parameters {&#39;gamma&#39;: 0.0001} -- J-score = -0.000 (0.000)
+Parameters {&#39;gamma&#39;: 0.001} -- J-score = 0.000 (0.000)
+Parameters {&#39;gamma&#39;: 0.01} -- J-score = 0.000 (0.000)
+Parameters {&#39;gamma&#39;: 0.1} -- J-score = -0.000 (0.000)
+Parameters {&#39;gamma&#39;: 1} -- J-score = 0.003 (0.000)
+Parameters {&#39;gamma&#39;: 10} -- J-score = 0.030 (0.003)
+Parameters {&#39;gamma&#39;: 100} -- J-score = 0.169 (0.025)
+Parameters {&#39;gamma&#39;: 1000} -- J-score = 0.287 (0.055)
+Parameters {&#39;gamma&#39;: 10000} -- J-score = 0.260 (0.069)
+</pre></div></div>
+</div>
+<p>We see above that we have called the <code class="docutils literal notranslate"><span class="pre">fit_weights</span></code> method of KLIEP. This method takes in the biased and the unbiased datasets and returns the weights for the best <code class="docutils literal notranslate"><span class="pre">gamma</span></code> (the one with the highest J-score, here <code class="docutils literal notranslate"><span class="pre">gamma=1000.</span></code>).</p>
+<p>To have an idea of the reweighting done by KLIEP, we can display the weights given by KLIEP according to the “age” variable:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">biased_age</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">kliep_weights</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;KLIEP weights in function of the age&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Sample_bias_example_27_0.png" src="../_images/examples_Sample_bias_example_27_0.png" />
+</div>
+</div>
+<p>You can see on the Figure above, that KLIEP gives a higher weight to the older patients, precisely to compensate the fact that the younger patients are over-represented in our sample.</p>
+<p>Now that we have source weights, we will draw a new sample: the “debiased sample”, by taking randomly input data in our biased sample. The random choice will be weighted by the KLIEP weights. Note that we can draw as many instances as we want, here we will take <span class="math notranslate nohighlight">\(2000\)</span>, in general the more we take the better. Please don’t forget that we draw with discount, so the same patient can be drawn several times.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">debiasing_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">biased_age</span><span class="p">),</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">kliep_weights</span><span class="o">/</span><span class="n">kliep_weights</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="n">debiased_age</span> <span class="o">=</span> <span class="n">biased_age</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">debiasing_index</span><span class="p">]</span>
+<span class="n">debiased_y</span> <span class="o">=</span> <span class="n">biased_y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">debiasing_index</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>Let’s now look at the correction made on the ages. We can see on the left Figure that our “debiased” sample has an age distribution very close to the one of the “real” sample, which is great! For comparison, we have shown the biased distribution on the Figure on the right.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">[</span><span class="n">debiased_age</span><span class="p">,</span> <span class="n">biased_age</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;debiased sample&quot;</span><span class="p">,</span> <span class="s2">&quot;biased sample&quot;</span><span class="p">]):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">age</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;true sample&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Age distribution&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Age (scaled)&quot;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Sample_bias_example_31_0.png" src="../_images/examples_Sample_bias_example_31_0.png" />
+</div>
+</div>
+<p>Now, all that remains is to compute our quantile estimations on the target variable with our debiased sample.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]),</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">debiased_y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;debiased target&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]),</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">biased_y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;biased target&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
+<span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>target</th>
+      <th>debiased target</th>
+      <th>biased target</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>442.000000</td>
+      <td>2000.000000</td>
+      <td>442.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>152.133484</td>
+      <td>148.301000</td>
+      <td>142.389140</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>77.093005</td>
+      <td>77.939673</td>
+      <td>74.338154</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>25.000000</td>
+      <td>25.000000</td>
+      <td>25.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>140.500000</td>
+      <td>134.000000</td>
+      <td>125.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>211.500000</td>
+      <td>212.000000</td>
+      <td>200.000000</td>
+    </tr>
+    <tr>
+      <th>90%</th>
+      <td>265.000000</td>
+      <td>265.000000</td>
+      <td>258.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>346.000000</td>
+      <td>346.000000</td>
+      <td>346.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>And here we are!</p>
+<p>It’s not perfect yet, but you can clearly see that the new estimations are closer to the target values! In particular the estimation of the quantiles at 75% and 90% is almost perfect!</p>
+</section>
+<section id="Hidden-bias-and-features-importance-estimation">
+<h2>Hidden bias and features importance estimation<a class="headerlink" href="#Hidden-bias-and-features-importance-estimation" title="Permalink to this headline"></a></h2>
+<p>Ok, let’s now go a little bit further… In the previous example, the bias was known and easily identifiable (the disparity on the patients’ ages). There was therefore only one variable to correct. However, in some cases, the bias is on a hidden variable that is not accessible at the time of estimation. This bias affects all the variables and it is not easy to know which variables to correct.</p>
+<p>Fortunately, transfer learning methods can handle multivariate bias in the same way as univariate one as long as a dataset drawn according to the unbiased (test) distribution is available.</p>
+<p>We will assume in this example that there is a strong bias on the “sex” variable in our sample of patients. We assume that one sex is represented 5 times more than the other. We also assume that this variable is not available in the input variables <span class="math notranslate nohighlight">\(X\)</span>. As the “sex” variable is correlated to the others, we are then facing a bias on each of the input variable without being able to identify from where comes the bias. We also assume that we have access to a unbiased dataset (i.e. an estimate
+of the distribution of the input variables <span class="math notranslate nohighlight">\(X\)</span> in the whole population).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">sample_bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="n">sample_bias</span><span class="p">[</span><span class="n">X</span><span class="o">.</span><span class="n">sex</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">5.</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;sex&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">biased_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="n">sample_bias</span><span class="o">/</span><span class="n">sample_bias</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="n">biased_X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biased_index</span><span class="p">]</span>
+<span class="n">biased_y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biased_index</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>This generalized bias can be visualized by comparing the PCAs of the biased and unbiased datasets:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="n">X_pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">biased_X</span><span class="p">)))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_pca</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_pca</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="mi">1</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Unbiased dataset&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_pca</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">):,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_pca</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">):,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Biased dataset&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;PCA of input variables&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Sample_bias_example_39_0.png" src="../_images/examples_Sample_bias_example_39_0.png" />
+</div>
+</div>
+<p>A task that is often considered in this type of medical study is the estimation of the importances of the input variables with respect to the target variable. In this case of a study on diabetes, we are looking for the influence that each of the patient feature has on the evolution of the disease.</p>
+<p>One approach to determine these importances is to compute the parameters of a linear model <span class="math notranslate nohighlight">\(\beta_j\)</span> such that:</p>
+<div class="math notranslate nohighlight">
+\[\sum_{j=0}^{\text{nb of variables}} \beta_j x_{ij} \simeq y_{i}\]</div>
+<p>For any <span class="math notranslate nohighlight">\(i \in [0, \text{nb of patients}]\)</span>, with <span class="math notranslate nohighlight">\(x_{ij}\)</span> the data variable <span class="math notranslate nohighlight">\(j\)</span> for patient <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(y_i\)</span> the disease progression variable for patient <span class="math notranslate nohighlight">\(i\)</span>.</p>
+<p>The fact that our data set <span class="math notranslate nohighlight">\((X_{train}, y_{train})\)</span> used to determine the <span class="math notranslate nohighlight">\(\beta_j\)</span> parameters is biased will induce a bias on the estimation of these <span class="math notranslate nohighlight">\(\beta_j\)</span>. We will therefore compare the estimates of these parameters for three linear models:</p>
+<ul class="simple">
+<li><p>The one fitted with the unbiased data <span class="math notranslate nohighlight">\((X_{test}, y_{test})\)</span> (the ground truth)</p></li>
+<li><p>The one fitted with the <span class="math notranslate nohighlight">\((X_{train}, y_{train})\)</span> biased data</p></li>
+<li><p>The one fitted with the data <span class="math notranslate nohighlight">\((X'_{train}, y'_{train})\)</span> debiased by a transfer method.</p></li>
+</ul>
+<p>To diversify, we will use another bias correction method: <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.KMM.html">Kernel Mean Matching (KMM)</a>. KMM is also a kernel method where the kernel parameters (in particular the <code class="docutils literal notranslate"><span class="pre">gamma</span></code> parameter for a Gaussian kernel) must be chosen. KMM, unlike KLIEP does not have an integrated procedure for the choice of the parameters. We will therefore use some <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.metrics.make_uda_scorer.html">ADAPT
+tools</a> to conduct an unsupervised gridsearch for the choice of <code class="docutils literal notranslate"><span class="pre">gamma</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adapt.metrics</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">adapt</span><span class="o">.</span><span class="n">metrics</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">adapt.metrics</span> <span class="kn">import</span> <span class="n">make_uda_scorer</span><span class="p">,</span> <span class="n">neg_j_score</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">adapt.instance_based</span> <span class="kn">import</span> <span class="n">KMM</span>
+<span class="kn">from</span> <span class="nn">adapt.metrics</span> <span class="kn">import</span> <span class="n">make_uda_scorer</span><span class="p">,</span> <span class="n">neg_j_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Ridge</span>
+
+<span class="c1"># Instantiate KMM model with a random gamma parameter</span>
+<span class="n">kmm</span> <span class="o">=</span> <span class="n">KMM</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">Ridge</span><span class="p">(</span><span class="mf">0.1</span><span class="p">),</span>
+    <span class="n">Xt</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+    <span class="n">kernel</span><span class="o">=</span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span>  <span class="c1"># Gaussian kernel</span>
+    <span class="n">gamma</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>     <span class="c1"># Bandwidth of the kernel</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+
+<span class="c1"># Create a score function from the neg_j_score metric and biased_X, X</span>
+<span class="n">score</span> <span class="o">=</span> <span class="n">make_uda_scorer</span><span class="p">(</span><span class="n">neg_j_score</span><span class="p">,</span> <span class="n">biased_X</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Launch the gridsearch on four gamma parameters [0.1, 1., 10., 100., 1000.]</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">kmm</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">1000.</span><span class="p">]},</span>
+                  <span class="n">scoring</span><span class="o">=</span><span class="n">score</span><span class="p">,</span>
+                  <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">gs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">biased_X</span><span class="p">,</span> <span class="n">biased_y</span><span class="p">);</span>
+
+<span class="c1"># Print results (the neg_j_score is given in &quot;train_score&quot;)</span>
+<span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">,</span> <span class="s1">&#39;mean_train_score&#39;</span><span class="p">,</span> <span class="s1">&#39;std_train_score&#39;</span><span class="p">]</span>
+<span class="n">results</span> <span class="o">=</span>  <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">gs</span><span class="o">.</span><span class="n">cv_results_</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
+<span class="n">best</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best Params </span><span class="si">%s</span><span class="s2"> -- Score </span><span class="si">%.3f</span><span class="s2"> (</span><span class="si">%.3f</span><span class="s2">)&quot;</span><span class="o">%</span>
+      <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">best</span><span class="p">]),</span> <span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">best</span><span class="p">],</span> <span class="n">results</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">best</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">50</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Params </span><span class="si">%s</span><span class="s2"> -- Score </span><span class="si">%.3f</span><span class="s2"> (</span><span class="si">%.3f</span><span class="s2">)&quot;</span><span class="o">%</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">mu</span><span class="o">*</span><span class="mf">1000.</span><span class="p">,</span> <span class="n">std</span><span class="o">*</span><span class="mf">1000.</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Best Params {&#39;gamma&#39;: 100.0} -- Score -0.000 (0.000)
+--------------------------------------------------
+Params {&#39;gamma&#39;: 0.1} -- Score 0.012 (0.288)
+Params {&#39;gamma&#39;: 1.0} -- Score -0.033 (0.269)
+Params {&#39;gamma&#39;: 10.0} -- Score -0.064 (0.067)
+Params {&#39;gamma&#39;: 100.0} -- Score -0.264 (0.088)
+Params {&#39;gamma&#39;: 1000.0} -- Score 0.370 (0.392)
+</pre></div></div>
+</div>
+<p>The best parameters is the one with the smallest <code class="docutils literal notranslate"><span class="pre">neg_j_score</span></code> which is <code class="docutils literal notranslate"><span class="pre">gamma=100</span></code> here. Note that this gridsearch have been done whithout using the <code class="docutils literal notranslate"><span class="pre">y</span></code> data. Remind that the J-score is a metric that measure the divergence between the debiased distribution and the unbiased distribution.</p>
+<p>Now that we have determined the value of the <code class="docutils literal notranslate"><span class="pre">gamma</span></code> parameter we can fit KMM to obtain the debiasing weight vector.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kmm</span> <span class="o">=</span> <span class="n">KMM</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">Ridge</span><span class="p">(),</span>
+    <span class="n">Xt</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+    <span class="n">kernel</span><span class="o">=</span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span>  <span class="c1"># Gaussian kernel</span>
+    <span class="n">gamma</span><span class="o">=</span><span class="mf">100.</span><span class="p">,</span>     <span class="c1"># Bandwidth of the kernel</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">kmm</span><span class="o">.</span><span class="n">fit_weights</span><span class="p">(</span><span class="n">biased_X</span><span class="p">,</span> <span class="n">X</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<p>Let’s now fit the three linear models with the three types of data sets (biased, unbiased and debiased). To have a better estimate of the coeficients of the linear regressions we will repeat the experiments 100 times.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">true_coefs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">biased_coefs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">debiased_coefs</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">bs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+    <span class="n">biased_bs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">biased_X</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+    <span class="n">debiased_bs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">biased_X</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">biased_X</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="n">weights</span><span class="o">/</span><span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="n">true_coefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Ridge</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bs</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bs</span><span class="p">])</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
+    <span class="n">biased_coefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Ridge</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">biased_X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biased_bs</span><span class="p">],</span> <span class="n">biased_y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">biased_bs</span><span class="p">])</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
+    <span class="n">debiased_coefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Ridge</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">biased_X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">debiased_bs</span><span class="p">],</span> <span class="n">biased_y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">debiased_bs</span><span class="p">])</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We can now plot the results…</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">true_coefs</span><span class="p">,</span> <span class="n">biased_coefs</span><span class="p">,</span> <span class="n">debiased_coefs</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">true_coefs</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">biased_coefs</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">debiased_coefs</span><span class="p">))</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">([</span><span class="s2">&quot;Ground Truth&quot;</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">true_coefs</span><span class="p">)</span><span class="o">*</span><span class="mi">9</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Biased&quot;</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">biased_coefs</span><span class="p">)</span><span class="o">*</span><span class="mi">9</span> <span class="o">+</span>
+          <span class="p">[</span><span class="s2">&quot;Debiased&quot;</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">debiased_coefs</span><span class="p">)</span><span class="o">*</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">arr</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">labels</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;coef&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">catplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;coef&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;labels&quot;</span><span class="p">,</span>
+            <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="s2">&quot;sd&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.6</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Estimation of the Feature Importances&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Sample_bias_example_50_0.png" src="../_images/examples_Sample_bias_example_50_0.png" />
+</div>
+</div>
+<p>Well done KMM!</p>
+<p>We can clearly see that the coefficients obtained after debiasing the data are much closer to the ground truth coefficients than those of the biased model. We can see, for instance, that the biased model overestimate the importance of the variable “age”, “s3” and “s5” and underestimate that of “bmi” (body mass index). We can also notice that the biased model have made an inversion: it gives a negative contribution to the parameter “s4” whereas the real contribution of this variable is rather
+positive. This type of error can lead to a wrong treatment! For example here, “s4” corresponds to the cholesterol level. Because of the bias in the model, a doctor may recommand to his patients the opposite diet that the one which should be favored! Notice that the debiased model does not give a confident assessment on the contribution of this variable and would then not mislead the treatment. This shows the importance of debiasing the dataset before conducting a study!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, ADAPT team, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

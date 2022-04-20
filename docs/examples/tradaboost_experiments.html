@@ -49,6 +49,7 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../map.html">Choosing the right algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quick_start.html">Quick-Start</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
@@ -118,7 +119,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Classification.html#Experimental-Setup">Experimental Setup</a></li>
@@ -181,13 +182,31 @@
 <li class="toctree-l2"><a class="reference internal" href="Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Real Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Sample_bias_example.html">Sample Bias</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Sample_bias_example.html#Sample-Bias-on-the-diabetes-dataset">Diabetes Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sample_bias_example.html#Applying-Transfer-Learning-for-correcting-sample-bias">Sample bias correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sample_bias_example.html#Hidden-bias-and-features-importance-estimation">Features importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Flowers_example.html">Fine-Tuning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Flowers_example.html#Training-a-model-from-scratch">Train from Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Flowers_example.html#Model-based-Transfer">Model-based Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Office_example.html">Deep Domain Adaptation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Office_example.html#Dataset-Preprocessing">Dataset Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Office_example.html#Fit-without-adaptation">Fit without adaptation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Office_example.html#Fit-with-adaptation">Fit with adaptation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="#">TrAdaBoost Experiments</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Mushrooms">Mushrooms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#20-NewsGroup">20-NewsGroup</a></li>
 </ul>
 </li>
-    
-    
 </ul>
  
         </div>
@@ -485,7 +504,7 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Reproduction-of-the-TrAdaBoost-experiments">
 <h1>Reproduction of the TrAdaBoost experiments<a class="headerlink" href="#Reproduction-of-the-TrAdaBoost-experiments" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="fbf602663ad5440f87a98200b4671953" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/adapt/blob/master/src_docs/examples/tradaboost_experiments.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="8932519a39e247c7a449deb13954fa47" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/adapt/blob/master/src_docs/examples/tradaboost_experiments.ipynb">View on GitHub</a></p>
 </div><p>The purpose of this example is to reproduce the results obtained in the paper <a class="reference external" href="https://cse.hkust.edu.hk/~qyang/Docs/2007/tradaboost.pdf">Boosting for Transfer Learning (2007)</a>. In this work, the authors developed a transfer algorithm called TrAdaBoost dedicated for <a class="reference external" href="https://adapt-python.github.io/adapt/map.html">supervised domain adaptation</a>. You can find more details about this algorithm <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.TrAdaBoost.html">here</a>. The
 goal of this algorithm is to combine a source dataset with many labeled instances to a target dataset with few labels in order to learn a good model on the target domain.</p>
 <p>We try to reproduce the two following exepriments:</p>
