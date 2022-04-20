@@ -204,4 +204,6 @@ This module contains utility functions used in the previous modules.
    utils.check_fitted_network
    
    
-.. include:: examples_gallery.rst
+.. include:: synthetic_examples.rst
+
+.. include:: real_examples.rst
