@@ -219,7 +219,7 @@ adapt_model.score(Xt, yt)
 
 | <img src="src_docs/_static/images/results_qs.png"> | 
 |:--:| 
-| **Quick-Start Plotting Results**. *The dotted and dashed lines are respectively the class separation of the "source only" and KMM models. Note that the predicted positive class is on the right of the dotted line for the "source only" model but on the left of the dashed line for KMM.* |
+| **Quick-Start Plotting Results**. *The dotted and dashed lines are respectively the class separation of the "source only" and KMM models. Note that the predicted positive class is on the right of the dotted line for the "source only" model but on the left of the dashed line for KMM. (The code for plotting the Figure is available [here](docs/examples/Quick_start.html))* |
 
 
 ## Contents
