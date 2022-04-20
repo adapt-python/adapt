@@ -162,7 +162,7 @@ In the transfer learning framework, however, one assumes that the target data (o
 Thus, the transfer learning models from the ADAPT library can be seen as machine learning models that are fitted with a specific target in mind. This target is different but somewhat related to the training data. This is generally achieved by a transformation of the input features (see [feature-based transfer](https://adapt-python.github.io/adapt/contents.html#adapt-feature-based-feature-based-methods)) or by importance weighting (see [instance-based transfer](https://adapt-python.github.io/adapt/contents.html#adapt-instance-based)). In some cases, the training data are no more available but one aims at fine-tuning a pre-trained source model on a new target dataset (see [parameter-based transfer](https://adapt-python.github.io/adapt/contents.html#adapt-parameter-based)).
 
 
-## A guide to select the appropriate transfer algorithm
+## Navigate into ADAPT
 
 The ADAPT library proposes numerous transfer algorithms and it can be hard to know which algorithm is best suited for a particular problem. If you do not know which algorithm to choose, this [flowchart](https://adapt-python.github.io/adapt/map.html) may help you:
 
