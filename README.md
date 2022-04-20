@@ -171,31 +171,55 @@ The ADAPT library proposes numerous transfer algorithms and it can be hard to kn
 
 ## Quick Start
 
+Here is a simple usage example of the ADAPT library. This is a simulation of a 1D sample bias problem with binary classfication task. The source input data are distributed according to a Gaussian distribution centered in -1 with standard deviation of 2. The target data are drawn from Gaussian distribution centered in 1 with standard deviation of 2. The output labels are equal to 1 in the interval [-1, 1] and 0 elsewhere.
+
 ```python
+# Import standard librairies
 import numpy as np
-from adapt.feature_based import DANN
+from sklearn.linear_model import LogisticRegression
+
+# Import KMM method form adapt.instance_based module
+from adapt.instance_based import KMM
+
 np.random.seed(0)
 
-# Xs and Xt are shifted along the second feature.
-Xs = np.concatenate((np.random.random((100, 1)),
-                     np.zeros((100, 1))), 1)
-Xt = np.concatenate((np.random.random((100, 1)),
-                     np.ones((100, 1))), 1)
-ys = 0.2 * Xs[:, 0]
-yt = 0.2 * Xt[:, 0]
+# Create source dataset (Xs ~ N(-1, 2))
+# ys = 1 for ys in [-1, 1] else, ys = 0
+Xs = np.random.randn(1000, 1)*2-1
+ys = (Xs[:, 0] > -1.) & (Xs[:, 0] < 1.)
 
-# With lambda set to zero, no adaptation is performed.
-model = DANN(lambda_=0., random_state=0)
-model.fit(Xs, ys, Xt=Xt, epochs=100, verbose=0)
-print(model.evaluate(Xt, yt)) # This gives the target score at the last training epoch.
->>> 0.0231
+# Create target dataset (Xt ~ N(1, 2)), yt ~ ys
+Xt = np.random.randn(1000, 1)*2+1
+yt = (Xt[:, 0] > -1.) & (Xt[:, 0] < 1.)
 
-# With lambda set to 0.1, the shift is corrected, the target score is then improved.
-model = DANN(lambda_=0.1, random_state=0)
-model.fit(Xs, ys, Xt=Xt, epochs=100, verbose=0)
-model.evaluate(Xt, yt)
->>> 0.0011
+# Instantiate and fit a source only model for comparison
+src_only = LogisticRegression(penalty="none")
+src_only.fit(Xs, ys)
+
+# Instantiate a KMM model : estimator and target input
+# data Xt are given as parameters with the kernel parameters
+adapt_model = KMM(
+    estimator=LogisticRegression(penalty="none"), 
+    Xt=Xt,
+    kernel="rbf",  # Gaussian kernel
+    gamma=1.,     # Bandwidth of the kernel
+    verbose=0,
+    random_state=0
+)
+
+# Fit the model.
+adapt_model.fit(Xs, ys);
+
+# Get the score on target data
+adapt_model.score(Xt, yt)
 ```
+```python
+>>> 0.574
+```
+
+| <img src="src_docs/_static/images/results_qs.png"> | 
+|:--:| 
+| **Quick-Start Plotting Results**. *The dotted and dashed lines are respectively the class separation of the "source only" and KMM models. Note that the predicted positive class is on the right of the dotted line for the "source only" model but on the left of the dashed line for KMM.* |
 
 
 ## Contents
