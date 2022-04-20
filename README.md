@@ -7,13 +7,58 @@
 
 **A**wesome **D**omain **A**daptation **P**ython **T**oolbox
 
-ADAPT is a python library which provides several domain adaptation methods implemented with [Tensorflow](https://www.tensorflow.org/) and [Scikit-learn](https://scikit-learn.org/stable/).
+---
 
-## Documentation Website
+ADAPT is an open source library providing numerous tools to perform Transfer Learning and Domain Adaptation.
 
-Find the details of all implemented methods as well as illustrative examples here: [ADAPT Documentation Website](https://adapt-python.github.io/adapt/)
+The purpose of the ADAPT library is to facilitate the access to transfer leanring algorithms for a large public, including industrial players. ADAPT is specifically designed for [Scikit-learn](https://scikit-learn.org/stable/) and [Tensorflow](https://www.tensorflow.org/) users with a "user-friendly" approach. All objects in ADAPT implement the ***fit***, ***predict*** and ***score*** methods like any scikit-learn object. A very detailed documentation with several examples is provided:
 
-## Installation
+:arrow_right: [Documentation](https://adapt-python.github.io/adapt/)
+
+<table>
+  <tr valign="top">
+    <td width="50%" >
+        <a href="doc/examples/Sample_bias_example.html">
+            <br>
+            <b>Sample bias correction</b>
+            <br>
+            <br>
+            <img src="src_docs/_static/images/sample_bias_corr_img.png">
+        </a>
+    </td>
+    <td width="50%">
+        <a href="doc/examples/Flowers_example.html">
+            <br>
+            <b>Model-based Transfer</b>
+            <br>
+            <br>
+            <img src="src_docs/_static/images/finetuned.png">
+        </a>
+    </td>
+  </tr>
+  <tr valign="top">
+    <td width="50%">
+        <a href="doc/examples/Flowers_example.html">
+            <br>
+            <b>Deep Domain Adaptation</b>
+            <br>
+            <br>
+            <img src="src_docs/_static/images/office_item.png">
+        </a>
+    </td>
+    <td width="50%">
+        <a href="https://adapt-python.github.io/adapt/examples/Multi_fidelity.html">
+            <br>
+            <b>Multi-Fidelity Transfer</b>
+            <br>
+            <br>
+            <img src="https://raw.githubusercontent.com/adapt-python/adapt/a490a5c4cefb80d6222bc831a8cc25b2f65221ce/docs/_static/images/multifidelity_setup.png">
+        </a>
+    </td>
+  </tr>
+</table>
+
+## Installation and Usage
 
 This package is available on [Pypi](https://pypi.org/project/adapt) and can be installed with the following command line: 
 
@@ -40,18 +85,7 @@ Finally import the module in your python scripts with:
 import adapt
 ```
 
-## Reference
-
-If you use this library in your research, please cite ADAPT using the following reference: https://arxiv.org/pdf/2107.03049.pdf
-
-```
-@article{de2021adapt,
-	  title={ADAPT: Awesome Domain Adaptation Python Toolbox},
-	  author={de Mathelin, Antoine and Deheeger, Fran{\c{c}}ois and Richard, Guillaume and Mougeot, Mathilde and Vayatis, Nicolas},
-	  journal={arXiv preprint arXiv:2107.03049},
-	  year={2021}
-	}
-```
+An usage example is given in the [Qick-Start](#Quick-Start) below.
 
 
 ## Quick Start
@@ -81,16 +115,6 @@ model.fit(Xs, ys, Xt=Xt, epochs=100, verbose=0)
 model.evaluate(Xt, yt)
 >>> 0.0011
 ```
-
-## Examples
-
-| Two Moons  | Classification | Regression  |
-| :-------------: | :-------------: | :-------------: |
-| [<img src="https://raw.githubusercontent.com/adapt-python/adapt/a490a5c4cefb80d6222bc831a8cc25b2f65221ce/docs/_static/images/two_moons_setup.png">](https://adapt-python.github.io/adapt/examples/Two_moons.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Tz-TIkHI8ashHP90Im6D3tMjZ3lkR7s6?usp=sharing) | [<img src="https://raw.githubusercontent.com/adapt-python/adapt/a490a5c4cefb80d6222bc831a8cc25b2f65221ce/docs/_static/images/classification_setup.png">](https://adapt-python.github.io/adapt/examples/Classification.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1ANQUix9Y6V4RXu-vAaCFGmU979d5m4bO?usp=sharing)  | [<img src="https://raw.githubusercontent.com/adapt-python/adapt/a490a5c4cefb80d6222bc831a8cc25b2f65221ce/docs/_static/images/regression_setup.png">](https://adapt-python.github.io/adapt/examples/Regression.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1adhqoV6b0uEavLDmMfkiwtRjam0DrXux?usp=sharing) |
-
-| Sample Bias   | Multi-Fidelity | Rotation |
-| :-------------: | :-------------: | :-------------: |
-| [<img src="https://raw.githubusercontent.com/adapt-python/adapt/a490a5c4cefb80d6222bc831a8cc25b2f65221ce/docs/_static/images/sample_bias_2d_setup.png">](https://adapt-python.github.io/adapt/examples/sample_bias_2d.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Hbg2kDXKjKzeQKJSwxzaV7pwbmORhyA3?usp=sharing) | [<img src="https://raw.githubusercontent.com/adapt-python/adapt/a490a5c4cefb80d6222bc831a8cc25b2f65221ce/docs/_static/images/multifidelity_setup.png">](https://adapt-python.github.io/adapt/examples/Multi_fidelity.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Cc9TVY_Tl_boVzZDNisQnqe6Qx78svqe?usp=sharing)  | [<img src="https://raw.githubusercontent.com/adapt-python/adapt/a490a5c4cefb80d6222bc831a8cc25b2f65221ce/docs/_static/images/rotation_setup.png">](https://adapt-python.github.io/adapt/examples/Rotation.html) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1XePW12UF80PKzvLu9cyRJKWQoZIxk_J2?usp=sharing) |
 
 
 ## Content
@@ -129,8 +153,22 @@ ADAPT package is divided in three sub-modules containing the following domain ad
 - [RegularTransferLC](https://adapt-python.github.io/adapt/generated/adapt.parameter_based.RegularTransferLC.html) (*Regular Transfer with Linear Classification*) [[paper]](https://www.microsoft.com/en-us/research/wp-content/uploads/2004/07/2004-chelba-emnlp.pdf)
 - [RegularTransferNN](https://adapt-python.github.io/adapt/generated/adapt.parameter_based.RegularTransferNN.html) (*Regular Transfer with Neural Network*) [[paper]](https://hal.inria.fr/hal-00911179v1/document)
 
+
+## Reference
+
+If you use this library in your research, please cite ADAPT using the following reference: https://arxiv.org/pdf/2107.03049.pdf
+
+```
+@article{de2021adapt,
+	  title={ADAPT: Awesome Domain Adaptation Python Toolbox},
+	  author={de Mathelin, Antoine and Deheeger, Fran{\c{c}}ois and Richard, Guillaume and Mougeot, Mathilde and Vayatis, Nicolas},
+	  journal={arXiv preprint arXiv:2107.03049},
+	  year={2021}
+	}
+```
+
 ## Acknowledgement
 
 This work has been funded by Michelin and the Industrial Data Analytics and Machine Learning chair from ENS Paris-Saclay, Borelli center.
 
-[<img src="https://www.michelin.com/wp-content/themes/michelin/public/img/michelin-logo.svg" width=200px alt="Michelin">](https://www.michelin.com/) [<img src="https://www.centreborelli.fr/wp-content/uploads/2021/01/Logotype_IDAML.png" width=200px alt="IDAML">](https://www.centreborelli.fr/partenariats/chaires/chaires-industrielles-2/) [<img src="https://www.centreborelli.fr/wp-content/uploads/2020/07/logotype_centre_borelli_site_web.png" alt="Centre Borelli" width=150px>](https://www.centreborelli.fr)
+[<img src="src_docs/_static/images/michelin.png" width=200px alt="Michelin">](https://www.michelin.com/) <img src="src_docs/_static/images/idaml.jpg" width=200px alt="IDAML"> <img src="src_docs/_static/images/borelli.jpg" alt="Centre Borelli" width=150px>
