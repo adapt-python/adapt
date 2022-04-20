@@ -166,7 +166,7 @@ Thus, the transfer learning models from the ADAPT library can be seen as machine
 
 The ADAPT library proposes numerous transfer algorithms and it can be hard to know which algorithm is best suited for a particular problem. If you do not know which algorithm to choose, this [flowchart](https://adapt-python.github.io/adapt/map.html) may help you:
 
-[<img src="https://adapt-python.github.io/adapt/_static/images/carto4.png" width=30%>](https://adapt-python.github.io/adapt/map.html)
+[<img src="src_docs/_static/images/thumbnai_flowchart.PNG" width=30%>](https://adapt-python.github.io/adapt/map.html)
 
 
 ## Quick Start
