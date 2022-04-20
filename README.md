@@ -171,7 +171,7 @@ The ADAPT library proposes numerous transfer algorithms and it can be hard to kn
 
 ## Quick Start
 
-Here is a simple usage example of the ADAPT library. This is a simulation of a 1D sample bias problem with binary classfication task. The source input data are distributed according to a Gaussian distribution centered in -1 with standard deviation of 2. The target data are drawn from Gaussian distribution centered in 1 with standard deviation of 2. The output labels are equal to 1 in the interval [-1, 1] and 0 elsewhere.
+Here is a simple usage example of the ADAPT library. This is a simulation of a 1D sample bias problem with binary classfication task. The source input data are distributed according to a Gaussian distribution centered in -1 with standard deviation of 2. The target data are drawn from Gaussian distribution centered in 1 with standard deviation of 2. The output labels are equal to 1 in the interval [-1, 1] and 0 elsewhere. We apply the transfer method [KMM](https://adapt-python.github.io/adapt/generated/adapt.instance_based.KMM.html) which is an unsupervised instance-based algortihm.
 
 ```python
 # Import standard librairies
