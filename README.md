@@ -85,7 +85,7 @@ Finally import the module in your python scripts with:
 import adapt
 ```
 
-An simple example of usage is given in the [Qick-Start](#Quick-Start) below.
+A simple example of usage is given in the [Qick-Start](#Quick-Start) below.
 
 
 ## ADAPT Guideline
