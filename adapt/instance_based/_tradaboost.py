@@ -384,8 +384,8 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         self.estimators_.append(estimator)
         self.estimator_errors_.append(estimator_error)
         
-        if estimator_error <= 0.:
-            return None, None
+        # if estimator_error <= 0.:
+        #     return None, None
         
         beta_t = estimator_error / (2. - estimator_error)
         

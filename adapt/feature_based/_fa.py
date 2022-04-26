@@ -6,6 +6,7 @@ import warnings
 
 import numpy as np
 from sklearn.utils import check_array
+from sklearn.exceptions import NotFittedError
 
 from adapt.base import BaseAdaptEstimator, make_insert_doc
 from adapt.utils import check_arrays
@@ -221,6 +222,11 @@ class FA(BaseAdaptEstimator):
         domain of ``X`` in order to apply the appropriate feature transformation.
         """
         X = check_array(X, allow_nd=True)
+        
+        if not hasattr(self, "n_domains_"):
+            raise NotFittedError("FA model is not fitted yet, please "
+                                 "call 'fit_transform' or 'fit' first.")
+        
         if domain in ["tgt", "target"]:
             X_emb = np.concatenate((np.zeros((len(X), X.shape[-1]*self.n_domains_)),
                                     X,

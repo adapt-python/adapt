@@ -71,3 +71,27 @@ def test_fit():
     #     model.predict(Xs, "source").ravel() - ys)) < 0.01
     assert np.sum(np.abs(np.ravel(model.predict_task(Xs, domain="src")) - ys)) < 11
     assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) < 25
+    
+    
+def test_nopretrain():
+    tf.random.set_seed(0)
+    np.random.seed(0)
+    encoder = _get_encoder()
+    task = _get_task()
+    
+    src_model = Sequential()
+    src_model.add(encoder)
+    src_model.add(task)
+    src_model.compile(loss="mse", optimizer=Adam(0.01))
+    
+    src_model.fit(Xs, ys, epochs=100, batch_size=34, verbose=0)
+    
+    Xs_enc = src_model.predict(Xs)
+    
+    model = ADDA(encoder, task, _get_discriminator(), pretrain=False,
+                 loss="mse", optimizer=Adam(0.01), metrics=["mae"],
+                 copy=False)
+    model.fit(Xs_enc, ys, Xt, epochs=30, batch_size=34, verbose=0)
+    assert np.abs(model.encoder_.get_weights()[0][1][0]) < 0.2
+    assert np.sum(np.abs(np.ravel(model.predict(Xs)) - ys)) < 25
+    assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) < 25
