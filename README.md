@@ -18,32 +18,32 @@ The purpose of the ADAPT library is to facilitate the access to transfer leanrin
 <table>
   <tr valign="top">
     <td width="50%" >
-        <a href="doc/examples/Sample_bias_example.html">
+        <a href="https://adapt-python.github.io/adapt/examples/Sample_bias_example.html">
             <br>
             <b>Sample bias correction</b>
             <br>
             <br>
-            <img src="src_docs/_static/images/sample_bias_corr_img.png">
+            <img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/sample_bias_corr_img.png">
         </a>
     </td>
     <td width="50%">
-        <a href="doc/examples/Flowers_example.html">
+        <a href="https://adapt-python.github.io/adapt/examples/Flowers_example.html">
             <br>
             <b>Model-based Transfer</b>
             <br>
             <br>
-            <img src="src_docs/_static/images/finetuned.png">
+            <img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/finetuned.png">
         </a>
     </td>
   </tr>
   <tr valign="top">
     <td width="50%">
-        <a href="doc/examples/Flowers_example.html">
+        <a href="https://adapt-python.github.io/adapt/examples/Office_example.html">
             <br>
             <b>Deep Domain Adaptation</b>
             <br>
             <br>
-            <img src="src_docs/_static/images/office_item.png">
+            <img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/office_item.png">
         </a>
     </td>
     <td width="50%">
@@ -85,7 +85,7 @@ Finally import the module in your python scripts with:
 import adapt
 ```
 
-An simple example of usage is given in the [Qick-Start](#Quick-Start) below.
+A simple example of usage is given in the [Qick-Start](#Quick-Start) below.
 
 
 ## ADAPT Guideline
@@ -217,9 +217,9 @@ adapt_model.score(Xt, yt)
 >>> 0.574
 ```
 
-| <img src="src_docs/_static/images/results_qs.png"> | 
+| <img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/results_qs.png"> | 
 |:--:| 
-| **Quick-Start Plotting Results**. *The dotted and dashed lines are respectively the class separation of the "source only" and KMM models. Note that the predicted positive class is on the right of the dotted line for the "source only" model but on the left of the dashed line for KMM. (The code for plotting the Figure is available [here](docs/examples/Quick_start.html))* |
+| **Quick-Start Plotting Results**. *The dotted and dashed lines are respectively the class separation of the "source only" and KMM models. Note that the predicted positive class is on the right of the dotted line for the "source only" model but on the left of the dashed line for KMM. (The code for plotting the Figure is available [here](https://adapt-python.github.io/adapt/examples/Quick_start.html))* |
 
 
 ## Contents
@@ -285,4 +285,4 @@ If you use this library in your research, please cite ADAPT using the following 
 
 This work has been funded by Michelin and the Industrial Data Analytics and Machine Learning chair from ENS Paris-Saclay, Borelli center.
 
-[<img src="src_docs/_static/images/michelin.png" width=200px alt="Michelin">](https://www.michelin.com/) <img src="src_docs/_static/images/idaml.jpg" width=200px alt="IDAML"> <img src="src_docs/_static/images/borelli.jpg" alt="Centre Borelli" width=150px>
+[<img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/michelin.png" width=200px alt="Michelin">](https://www.michelin.com/) [<img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/idaml.jpg" width=200px alt="IDAML">](https://centreborelli.ens-paris-saclay.fr/fr/chaire-idaml) [<img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/borelli.jpg" alt="Centre Borelli" width=150px>](https://centreborelli.ens-paris-saclay.fr/fr)

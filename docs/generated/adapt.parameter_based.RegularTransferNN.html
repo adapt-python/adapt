@@ -49,6 +49,7 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../map.html">Choosing the right algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Quick_start.html">Quick-Start</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
@@ -118,7 +119,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
@@ -181,13 +182,31 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Real Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Sample_bias_example.html">Sample Bias</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Sample-Bias-on-the-diabetes-dataset">Diabetes Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Applying-Transfer-Learning-for-correcting-sample-bias">Sample bias correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Hidden-bias-and-features-importance-estimation">Features importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Flowers_example.html">Fine-Tuning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Flowers_example.html#Training-a-model-from-scratch">Train from Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Flowers_example.html#Model-based-Transfer">Model-based Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Office_example.html">Deep Domain Adaptation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Dataset-Preprocessing">Dataset Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Fit-without-adaptation">Fit without adaptation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Fit-with-adaptation">Fit with adaptation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/tradaboost_experiments.html">TrAdaBoost Experiments</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/tradaboost_experiments.html#Mushrooms">Mushrooms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/tradaboost_experiments.html#20-NewsGroup">20-NewsGroup</a></li>
 </ul>
 </li>
-    
-    
 </ul>
  
         </div>
@@ -351,28 +370,19 @@ on these arguments.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.utils</span> <span class="kn">import</span> <span class="n">make_regression_da</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.parameter_based</span> <span class="kn">import</span> <span class="n">RegularTransferNN</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Xs</span><span class="p">,</span> <span class="n">Xs</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span><span class="o">&lt;</span><span class="mf">0.5</span> <span class="k">else</span> <span class="mf">1.</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xs</span><span class="p">])</span>
-<span class="gp">... </span>      <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">yt</span> <span class="o">=</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">Xt</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;mse&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ys</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="go">0.48265...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rt</span> <span class="o">=</span> <span class="n">RegularTransferNN</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">lambdas</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">yt</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="go">0.1900...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span> <span class="o">=</span> <span class="n">make_regression_da</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">src_model</span> <span class="o">=</span> <span class="n">RegularTransferNN</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span> <span class="n">lambdas</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">src_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">src_model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">))</span>
+<span class="go">1/1 [==============================] - 0s 127ms/step - loss: 0.2744</span>
+<span class="go">0.27443504333496094</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">RegularTransferNN</span><span class="p">(</span><span class="n">src_model</span><span class="o">.</span><span class="n">task_</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span> <span class="n">lambdas</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">yt</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">)</span>
+<span class="go">1/1 [==============================] - 0s 109ms/step - loss: 0.0832</span>
+<span class="go">0.08321201056241989</span>
 </pre></div>
 </div>
 <dl class="field-list simple">

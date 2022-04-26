@@ -49,6 +49,7 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../map.html">Choosing the right algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Quick_start.html">Quick-Start</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
@@ -118,7 +119,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
@@ -181,13 +182,31 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Real Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Sample_bias_example.html">Sample Bias</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Sample-Bias-on-the-diabetes-dataset">Diabetes Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Applying-Transfer-Learning-for-correcting-sample-bias">Sample bias correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Hidden-bias-and-features-importance-estimation">Features importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Flowers_example.html">Fine-Tuning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Flowers_example.html#Training-a-model-from-scratch">Train from Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Flowers_example.html#Model-based-Transfer">Model-based Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Office_example.html">Deep Domain Adaptation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Dataset-Preprocessing">Dataset Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Fit-without-adaptation">Fit without adaptation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Fit-with-adaptation">Fit with adaptation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/tradaboost_experiments.html">TrAdaBoost Experiments</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/tradaboost_experiments.html#Mushrooms">Mushrooms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/tradaboost_experiments.html#20-NewsGroup">20-NewsGroup</a></li>
 </ul>
 </li>
-    
-    
 </ul>
  
         </div>
@@ -374,40 +393,15 @@ select the best parameter <code class="docutils literal notranslate"><span class
 </dl>
 </dd>
 </dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference internal" href="adapt.instance_based.KMM.html#adapt.instance_based.KMM" title="adapt.instance_based.KMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KMM</span></code></a></dt><dd></dd>
-</dl>
-</div>
-<p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="r37425ff8ed62-1"><span class="brackets">1</span></dt>
-<dd><p><a class="reference external" href="https://papers.nips.cc/paper/3248-direct-importance-estimation-with-model-selection-and-its-application-to-covariate-shift-adaptation.pdf">[1]</a> M. Sugiyama, S. Nakajima, H. Kashima, P. von Bünau and  M. Kawanabe. “Direct importance estimation with model selection and its application to covariateshift adaptation”. In NIPS 2007</p>
-</dd>
-</dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">RidgeClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.utils</span> <span class="kn">import</span> <span class="n">make_classification_da</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.instance_based</span> <span class="kn">import</span> <span class="n">KLIEP</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Xs</span><span class="p">,</span> <span class="n">Xs</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Xt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span><span class="o">&lt;</span><span class="mf">0.5</span> <span class="k">else</span> <span class="mf">1.</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">Xs</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">yt</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">Xt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kliep</span> <span class="o">=</span> <span class="n">KLIEP</span><span class="p">(</span><span class="n">sigmas</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kliep</span><span class="o">.</span><span class="n">fit_estimator</span><span class="p">(</span><span class="n">Xs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">ys</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">kliep</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="go">0.09388...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kliep</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="go">Fitting weights...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span> <span class="o">=</span> <span class="n">make_classification_da</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">KLIEP</span><span class="p">(</span><span class="n">RidgeClassifier</span><span class="p">(),</span> <span class="n">Xt</span><span class="o">=</span><span class="n">Xt</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
+<span class="go">Fit weights...</span>
 <span class="go">Cross Validation process...</span>
-<span class="go">Parameter sigma = 0.1000 -- J-score = 0.059 (0.001)</span>
-<span class="go">Parameter sigma = 1.0000 -- J-score = 0.427 (0.003)</span>
-<span class="go">Parameter sigma = 10.0000 -- J-score = 0.704 (0.017)</span>
-<span class="go">Fitting estimator...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">kliep</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="go">0.00302...</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -776,6 +770,18 @@ data and the target input data.</p>
       <span class="caption-text">
         <a class="reference internal" href="../examples/sample_bias_2d.html">
           <span class="std std-ref">Sample Bias 2D</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="../_static/images/sample_bias_corr_img.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="../examples/Sample_bias_example.html">
+          <span class="std std-ref">Correcting Sample Bias with Transfer Leanring</span>
         </a>
       </span>
     </p>
