@@ -5,6 +5,7 @@ Kernel Mean Matching
 import numpy as np
 from sklearn.metrics import pairwise
 from sklearn.utils import check_array
+from sklearn.exceptions import NotFittedError
 from sklearn.metrics.pairwise import KERNEL_PARAMS
 from cvxopt import matrix, solvers
 

@@ -28,6 +28,10 @@ ys = 0.2 * Xs[:, 0].ravel()
 yt = 0.2 * Xt[:, 0].ravel()
 
 
+def _custom_metric(yt, yp):
+    return tf.shape(yt)[0]
+
+
 class DummyFeatureBased(BaseAdaptEstimator):
     
     def fit_transform(self, Xs, **kwargs):
@@ -240,3 +244,53 @@ def test_multisource():
     model.predict(Xs)
     model.evaluate(Xs, ys)
     assert model.n_sources_ == 2
+
+    
+def test_complete_batch():
+    model = BaseAdaptDeep(Xt=Xt[:3], metrics=[_custom_metric])
+    model.fit(Xs, ys, batch_size=120)
+    assert model.history_["cm"][0] == 120
+    
+    model = BaseAdaptDeep(Xt=Xt[:10], yt=yt[:10], metrics=[_custom_metric])
+    model.fit(Xs[:23], ys[:23], batch_size=17, buffer_size=1024)
+    assert model.history_["cm"][0] == 17
+    assert model.total_steps_ == 2
+    
+    dataset = tf.data.Dataset.zip((tf.data.Dataset.from_tensor_slices(Xs),
+                                   tf.data.Dataset.from_tensor_slices(ys.reshape(-1,1))
+                                  ))
+    Xtt = tf.data.Dataset.from_tensor_slices(Xt)
+    model = BaseAdaptDeep(Xt=Xtt, metrics=[_custom_metric])
+    model.fit(dataset, batch_size=32, validation_data=dataset)
+    assert model.history_["cm"][0] == 32
+    
+    model = BaseAdaptDeep(Xt=Xtt.batch(32), metrics=[_custom_metric])
+    model.fit(dataset.batch(32), batch_size=48, validation_data=dataset.batch(32))
+    assert model.history_["cm"][0] == 25
+    
+    def gens():
+        for i in range(40):
+            yield Xs[i], ys[i]
+            
+    dataset = tf.data.Dataset.from_generator(gens,
+                                             output_shapes=([2], []),
+                                             output_types=("float32", "float32"))
+    
+    def gent():
+        for i in range(50):
+            yield Xs[i], ys[i]
+            
+    dataset2 = tf.data.Dataset.from_generator(gent,
+                                             output_shapes=([2], []),
+                                             output_types=("float32", "float32"))
+    
+    model = BaseAdaptDeep(metrics=[_custom_metric])
+    model.fit(dataset, Xt=dataset2, validation_data=dataset, batch_size=22)
+    assert model.history_["cm"][0] == 22
+    assert model.total_steps_ == 3
+    assert model.length_src_ == 40
+    assert model.length_tgt_ == 50
+    
+    model.fit(dataset, Xt=dataset2, validation_data=dataset, batch_size=32)
+    assert model.total_steps_ == 2
+    assert model.history_["cm"][-1] == 32
