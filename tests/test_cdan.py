@@ -72,8 +72,8 @@ def test_fit_lambda_one_no_entropy():
                  random_state=0, validation_data=(Xt, ytt))
     model.fit(Xs, yss, Xt, ytt,
               epochs=300, verbose=0)
-    assert model.history_['acc'][-1] > 0.9
-    assert model.history_['val_acc'][-1] > 0.9
+    assert model.history_['acc'][-1] > 0.8
+    assert model.history_['val_acc'][-1] > 0.8
     
     
 def test_fit_lambda_entropy():
