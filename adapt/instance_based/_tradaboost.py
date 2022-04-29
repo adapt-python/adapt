@@ -304,12 +304,16 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
                                        warm_start=False,
                                        **fit_params)
         
-        if hasattr(estimator, "predict_proba"):
-            ys_pred = estimator.predict_proba(Xs)
-            yt_pred = estimator.predict_proba(Xt)
-        elif hasattr(estimator, "_predict_proba_lr"):
-            ys_pred = estimator._predict_proba_lr(Xs)
-            yt_pred = estimator._predict_proba_lr(Xt)
+        if not isinstance(self, TrAdaBoostR2) and isinstance(estimator, BaseEstimator):
+            if hasattr(estimator, "predict_proba"):
+                ys_pred = estimator.predict_proba(Xs)
+                yt_pred = estimator.predict_proba(Xt)
+            elif hasattr(estimator, "_predict_proba_lr"):
+                ys_pred = estimator._predict_proba_lr(Xs)
+                yt_pred = estimator._predict_proba_lr(Xt)
+            else:
+                ys_pred = estimator.predict(Xs)
+                yt_pred = estimator.predict(Xt)
         else:
             ys_pred = estimator.predict(Xs)
             yt_pred = estimator.predict(Xt)
