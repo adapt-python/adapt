@@ -183,11 +183,11 @@ def test_check_network_force_copy():
     new_net = check_network(model, copy=False, force_copy=True)
     
     
-def test_check_network_high_dataset():
-    Xs, ys, Xt, yt = make_regression_da(100000, 1001)
-    net = _get_model_Sequential(compiled=True)
-    new_net = check_network(net, copy=True)
-    new_net.predict(Xs)
+# def test_check_network_high_dataset():
+#     Xs, ys, Xt, yt = make_regression_da(100000, 1001)
+#     net = _get_model_Sequential(compiled=True)
+#     new_net = check_network(net, copy=True)
+#     new_net.predict(Xs)
     
 
 estimators = [
