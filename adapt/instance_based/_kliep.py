@@ -180,8 +180,8 @@ class KLIEP(BaseAdaptEstimator):
     >>> model.fit(Xs, ys)
     Fit weights...
     Cross Validation process...
-    Parameters {'gamma': 0.1} -- J-score = 0.013 (0.003)
-    Parameters {'gamma': 1.0} -- J-score = 0.120 (0.026)
+    Parameter {'gamma': 0.1} -- J-score = 0.013 (0.003)
+    Parameter {'gamma': 1.0} -- J-score = 0.120 (0.026)
     Fit Estimator...
     >>> model.score(Xt, yt)
     0.85
