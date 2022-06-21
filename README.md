@@ -11,7 +11,7 @@
 
 ADAPT is an open source library providing numerous tools to perform Transfer Learning and Domain Adaptation.
 
-The purpose of the ADAPT library is to facilitate the access to transfer leanring algorithms for a large public, including industrial players. ADAPT is specifically designed for [Scikit-learn](https://scikit-learn.org/stable/) and [Tensorflow](https://www.tensorflow.org/) users with a "user-friendly" approach. All objects in ADAPT implement the ***fit***, ***predict*** and ***score*** methods like any scikit-learn object. A very detailed documentation with several examples is provided:
+The purpose of the ADAPT library is to facilitate the access to transfer learning algorithms for a large public, including industrial players. ADAPT is specifically designed for [Scikit-learn](https://scikit-learn.org/stable/) and [Tensorflow](https://www.tensorflow.org/) users with a "user-friendly" approach. All objects in ADAPT implement the ***fit***, ***predict*** and ***score*** methods like any scikit-learn object. A very detailed documentation with several examples is provided:
 
 :arrow_right: [Documentation](https://adapt-python.github.io/adapt/)
 

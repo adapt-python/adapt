@@ -469,6 +469,8 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         else:
             Xt = check_array(Xt, ensure_2d=True, allow_nd=True)
         set_random_seed(self.random_state)
+        
+        self.n_features_in_ = X.shape[1]
  
         if hasattr(self, "fit_weights"):
             if self.verbose:
