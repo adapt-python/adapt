@@ -16,6 +16,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -447,6 +448,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -455,10 +457,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -470,12 +476,15 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
@@ -503,7 +512,7 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <section id="Correcting-Sample-Bias-with-Transfer-Leanring">
-<h1>Correcting Sample Bias with Transfer Leanring<a class="headerlink" href="#Correcting-Sample-Bias-with-Transfer-Leanring" title="Permalink to this headline"></a></h1>
+<h1>Correcting Sample Bias with Transfer Leanring<a class="headerlink" href="#Correcting-Sample-Bias-with-Transfer-Leanring" title="Permalink to this heading"></a></h1>
 <center><figure><p><img alt="sample bias illustration" src="../_images/sample_bias_img.png" /></p>
 <figcaption><p>Illustration of sample bias</p>
 </figcaption></figure></center><p>For many statistical applications, it is crucial that the data set used to make estimates is distributed in the same way as the target population. For example, in medicine, to estimate the effectiveness of a drug on a population, it is important that the sample of patients considered in the study is representative of the whole population. The same thing happens for polls, to estimate the voting percentages on the whole country, it is important that the sample of people surveyed are
@@ -530,7 +539,7 @@ social category. Thus, the vote of a person from an under-represented category i
 <span class="math notranslate nohighlight">\(P(Y_{train} | X_{train}) = P(Y_{test} | X_{test})\)</span>. This is the case for example in the biased poll issue, as the distribution of votes within the same social category is the same for the train and the test samples. Thus, according to the <a class="reference external" href="https://adapt-python.github.io/adapt/map.html">ADAPT flowchart</a>, one should choose an instance-based approach which reweights the training data in order to match the test distribution.</p>
 <p>Let’s now look at how transfer learning can tackle sample bias in a concrete case. We will use in the following the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_diabetes.html">diabetes</a> dataset from scikit-learn.</p>
 <section id="Sample-Bias-on-the-diabetes-dataset">
-<h2>Sample Bias on the diabetes dataset<a class="headerlink" href="#Sample-Bias-on-the-diabetes-dataset" title="Permalink to this headline"></a></h2>
+<h2>Sample Bias on the diabetes dataset<a class="headerlink" href="#Sample-Bias-on-the-diabetes-dataset" title="Permalink to this heading"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
@@ -774,7 +783,7 @@ and Recreational Diving: Guidelines for the Future</a></p>
 <p>We can see that because of the sample bias, the estimations of the mean or quantiles of our target distribution is biased. We are about 10 points below for the mean, the median and the 75% quantile.</p>
 </section>
 <section id="Applying-Transfer-Learning-for-correcting-sample-bias">
-<h2>Applying Transfer Learning for correcting sample bias<a class="headerlink" href="#Applying-Transfer-Learning-for-correcting-sample-bias" title="Permalink to this headline"></a></h2>
+<h2>Applying Transfer Learning for correcting sample bias<a class="headerlink" href="#Applying-Transfer-Learning-for-correcting-sample-bias" title="Permalink to this heading"></a></h2>
 <p>We will now try to correct our biased sample using a transfer learning method. For this, we have seen that the <a class="reference external" href="https://adapt-python.github.io/adapt/map.html">ADAPT flowchart</a> suggests to use a reweighting method. This kind of methods will give a different weights to every instance in our biased sample according to their age to match the true age distribution.</p>
 <p>Let’s take the Kullback–Leibler Importance Estimation Procedure (KLIEP) method for example. We are not going to go into the details of this method which require a certain mathematical background, in particular a knowledge of kernel methods. What you need to know is that KLIEP will automatically assign a weight to each instance in our biased sample so that the reweighted distribution of ages will resemble to the target distribution as much as possible. Those who are interested can look at the
 <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.KLIEP.html">KLIEP documentation</a> or read <a class="reference external" href="https://proceedings.neurips.cc/paper/2007/file/be83ab3ecd0db773eb2dc1b0a17836a1-Paper.pdf">Sugiyama’s paper</a>.</p>
@@ -960,7 +969,7 @@ Parameters {&#39;gamma&#39;: 10000} -- J-score = 0.260 (0.069)
 <p>It’s not perfect yet, but you can clearly see that the new estimations are closer to the target values! In particular the estimation of the quantiles at 75% and 90% is almost perfect!</p>
 </section>
 <section id="Hidden-bias-and-features-importance-estimation">
-<h2>Hidden bias and features importance estimation<a class="headerlink" href="#Hidden-bias-and-features-importance-estimation" title="Permalink to this headline"></a></h2>
+<h2>Hidden bias and features importance estimation<a class="headerlink" href="#Hidden-bias-and-features-importance-estimation" title="Permalink to this heading"></a></h2>
 <p>Ok, let’s now go a little bit further… In the previous example, the bias was known and easily identifiable (the disparity on the patients’ ages). There was therefore only one variable to correct. However, in some cases, the bias is on a hidden variable that is not accessible at the time of estimation. This bias affects all the variables and it is not easy to know which variables to correct.</p>
 <p>Fortunately, transfer learning methods can handle multivariate bias in the same way as univariate one as long as a dataset drawn according to the unbiased (test) distribution is available.</p>
 <p>We will assume in this example that there is a strong bias on the “sex” variable in our sample of patients. We assume that one sex is represented 5 times more than the other. We also assume that this variable is not available in the input variables <span class="math notranslate nohighlight">\(X\)</span>. As the “sex” variable is correlated to the others, we are then facing a bias on each of the input variable without being able to identify from where comes the bias. We also assume that we have access to a unbiased dataset (i.e. an estimate

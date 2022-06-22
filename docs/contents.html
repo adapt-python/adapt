@@ -16,6 +16,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -257,7 +258,7 @@
 }
 </style>
 <section id="adapt">
-<h1>ADAPT<a class="headerlink" href="#adapt" title="Permalink to this headline"></a></h1>
+<h1>ADAPT<a class="headerlink" href="#adapt" title="Permalink to this heading"></a></h1>
 <p><a class="reference internal" href="index.html#index"><span class="std std-ref">ADAPT</span></a> is a <strong>Python</strong> package providing some well known <strong>domain adaptation</strong> methods.</p>
 <p>The purpose of <strong>domain adaptation (DA)</strong> methods is to handle the common issue encounter in
 <strong>machine learning</strong> where training and testing data are drawn according to different distributions.</p>
@@ -279,7 +280,7 @@ one refers to <strong>supervised domain adaptation</strong> also called <strong>
 </div></blockquote>
 <p>The following part explains each strategy and gives lists of the implemented methods in the <a class="reference internal" href="index.html#index"><span class="std std-ref">ADAPT</span></a> package.</p>
 <section id="adapt-feature-based-feature-based-methods">
-<span id="adapt-feature-based"></span><h2><a class="reference internal" href="#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>: Feature-Based Methods<a class="headerlink" href="#adapt-feature-based-feature-based-methods" title="Permalink to this headline"></a></h2>
+<span id="adapt-feature-based"></span><h2><a class="reference internal" href="#adapt-feature-based"><span class="std std-ref">adapt.feature_based</span></a>: Feature-Based Methods<a class="headerlink" href="#adapt-feature-based-feature-based-methods" title="Permalink to this heading"></a></h2>
 <p>Feature-based methods are based on the research of common features which have similar
 behaviour with respect to the <strong>task</strong> on <strong>source</strong> and <strong>target</strong> domain.</p>
 <p>A new feature representation (often called <strong>encoded feature space</strong>) is built with a
@@ -335,7 +336,7 @@ and <strong>target</strong> distributions. The <strong>task</strong> is then lea
 </table>
 </section>
 <section id="adapt-instance-based-instance-based-methods">
-<span id="adapt-instance-based"></span><h2><a class="reference internal" href="#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>: Instance-Based Methods<a class="headerlink" href="#adapt-instance-based-instance-based-methods" title="Permalink to this headline"></a></h2>
+<span id="adapt-instance-based"></span><h2><a class="reference internal" href="#adapt-instance-based"><span class="std std-ref">adapt.instance_based</span></a>: Instance-Based Methods<a class="headerlink" href="#adapt-instance-based-instance-based-methods" title="Permalink to this heading"></a></h2>
 <p>The general principle of these methods is to <strong>reweight</strong> labeled training data
 in order to correct the difference between <strong>source</strong> and <strong>target</strong> distributions.
 This <strong>reweighting</strong> consists in multiplying, during the training process, the individual loss of each training instance by a positive <strong>weight</strong>.</p>
@@ -378,7 +379,7 @@ This <strong>reweighting</strong> consists in multiplying, during the training p
 </table>
 </section>
 <section id="adapt-parameter-based-parameter-based-methods">
-<span id="adapt-parameter-based"></span><h2><a class="reference internal" href="#adapt-parameter-based"><span class="std std-ref">adapt.parameter_based</span></a>: Parameter-Based Methods<a class="headerlink" href="#adapt-parameter-based-parameter-based-methods" title="Permalink to this headline"></a></h2>
+<span id="adapt-parameter-based"></span><h2><a class="reference internal" href="#adapt-parameter-based"><span class="std std-ref">adapt.parameter_based</span></a>: Parameter-Based Methods<a class="headerlink" href="#adapt-parameter-based-parameter-based-methods" title="Permalink to this heading"></a></h2>
 <p>In parameter-based methods, the <strong>parameters</strong> of one or few pre-trained models built with
 the <strong>source</strong> data are adapted to build a suited model for the <strong>task</strong> on the <strong>target</strong> domain.</p>
 <figure class="align-center">
@@ -413,7 +414,7 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 </table>
 </section>
 <section id="adapt-metrics-metrics">
-<span id="adapt-metrics"></span><h2><a class="reference internal" href="#adapt-metrics"><span class="std std-ref">adapt.metrics</span></a>: Metrics<a class="headerlink" href="#adapt-metrics-metrics" title="Permalink to this headline"></a></h2>
+<span id="adapt-metrics"></span><h2><a class="reference internal" href="#adapt-metrics"><span class="std std-ref">adapt.metrics</span></a>: Metrics<a class="headerlink" href="#adapt-metrics-metrics" title="Permalink to this heading"></a></h2>
 <p>This module contains functions to compute adaptation metrics.</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
@@ -452,7 +453,7 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 </table>
 </section>
 <section id="adapt-utils-utility-functions">
-<span id="adapt-utils"></span><h2><a class="reference internal" href="#adapt-utils"><span class="std std-ref">adapt.utils</span></a>: Utility Functions<a class="headerlink" href="#adapt-utils-utility-functions" title="Permalink to this headline"></a></h2>
+<span id="adapt-utils"></span><h2><a class="reference internal" href="#adapt-utils"><span class="std std-ref">adapt.utils</span></a>: Utility Functions<a class="headerlink" href="#adapt-utils-utility-functions" title="Permalink to this heading"></a></h2>
 <p>This module contains utility functions used in the previous modules.</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
@@ -510,7 +511,7 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 </section>
 </section>
 <section id="synthetic-examples">
-<span id="gallery"></span><h1>Synthetic Examples<a class="headerlink" href="#synthetic-examples" title="Permalink to this headline"></a></h1>
+<span id="gallery"></span><h1>Synthetic Examples<a class="headerlink" href="#synthetic-examples" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-thumbcontainer">
@@ -611,7 +612,7 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 </div>
 <div class="sphx-glr-clear"></div></section>
 <section id="real-examples">
-<h1>Real Examples<a class="headerlink" href="#real-examples" title="Permalink to this headline"></a></h1>
+<h1>Real Examples<a class="headerlink" href="#real-examples" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-thumbcontainer">

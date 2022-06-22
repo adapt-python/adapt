@@ -16,6 +16,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -447,6 +448,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -455,10 +457,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -470,12 +476,15 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
@@ -503,7 +512,7 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <section id="Deep-Domain-Adaptation:-Transfer-one-domain-to-another">
-<h1>Deep Domain Adaptation: Transfer one domain to another<a class="headerlink" href="#Deep-Domain-Adaptation:-Transfer-one-domain-to-another" title="Permalink to this headline"></a></h1>
+<h1>Deep Domain Adaptation: Transfer one domain to another<a class="headerlink" href="#Deep-Domain-Adaptation:-Transfer-one-domain-to-another" title="Permalink to this heading"></a></h1>
 <center><figure><p><img alt="Deep DA" src="../_images/deep_da.png" /></p>
 <figcaption><p>Deep Domain Adaptation from images of Amazon to Webcam pictures</p>
 </figcaption></figure></center><p>Deep learning approaches have proven to be very efficient nowadays, especially in visual computing. However, these approaches require a large amount of labeled data to be efficient. Obtaining labels for a new target dataset can be costly (an expert must annotate each image). However, in some cases, a similar dataset can be accessed with labels easily, the dataset however comes from another domain (source domain) and presents a shift with respect to the target dataset (e.g. a synthetically
@@ -556,7 +565,7 @@ a plain background (usually white) which creates a shift compared to the webcam 
 </div>
 </div>
 <section id="Dataset-Preprocessing">
-<h2>Dataset Preprocessing<a class="headerlink" href="#Dataset-Preprocessing" title="Permalink to this headline"></a></h2>
+<h2>Dataset Preprocessing<a class="headerlink" href="#Dataset-Preprocessing" title="Permalink to this heading"></a></h2>
 <p>We will first preprocess the dataset. We are going to use a <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/applications/resnet50/ResNet50">ResNet50</a> as a base learning model. The idea will be to finetune the last block of the ResNet to make the adaptation rather than finetuning the whole ResNet. This way, we will reduce the computation time. We then extract, in preprocessing, the features corresponding to the output of the first blocks of the ReSNet50. These features are fixed and will
 be used as input for the model. We thus obtain two matrices <code class="docutils literal notranslate"><span class="pre">Xs</span></code> and <code class="docutils literal notranslate"><span class="pre">Xt</span></code> for the two domains Amazon and Webcam.</p>
 <p>We first fetch the images of the two domains:</p>
@@ -760,7 +769,7 @@ X target shape: (795, 7, 7, 2048)
 </div>
 </section>
 <section id="Fit-without-adaptation">
-<h2>Fit without adaptation<a class="headerlink" href="#Fit-without-adaptation" title="Permalink to this headline"></a></h2>
+<h2>Fit without adaptation<a class="headerlink" href="#Fit-without-adaptation" title="Permalink to this heading"></a></h2>
 <p>We will first fit the model without adaptation, i.e. we will finetune the ResNet50 on the source data only without using the target data. Note that we consider the target labels unknown, so we cannot use the target data in a classical supervised training.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
@@ -861,7 +870,7 @@ clusters are not aligned with the target data, which explains the loss of accura
 </div>
 </section>
 <section id="Fit-with-adaptation">
-<h2>Fit with adaptation<a class="headerlink" href="#Fit-with-adaptation" title="Permalink to this headline"></a></h2>
+<h2>Fit with adaptation<a class="headerlink" href="#Fit-with-adaptation" title="Permalink to this heading"></a></h2>
 <p>Let’s now apply a domain adaptation method to our problem of transfer between Amazon and Webcam. We will use the Maximum Disparity Discrepancy (MDD) method which is an adversarial domain adaptation method that currently obtains the best results for this type of problem. The idea of this method is based on a regularization of the model which forces the encoder to create a feature space in which the classification task can be learned easily on the sources and the source and target data are
 indistinguishable. This is achieved by training a third network similar to the task in an aadversarial fashion. For more details on the loss of the MDD model see the <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.MDD.html">ADAPT documentation</a> or the <a class="reference external" href="https://arxiv.org/pdf/1904.05801.pdf">Zangh’s paper</a>.</p>
 <div class="nbinput nblast docutils container">

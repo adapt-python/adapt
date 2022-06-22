@@ -16,6 +16,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -447,6 +448,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -455,10 +457,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -470,12 +476,15 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
@@ -503,9 +512,9 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <section id="Classification">
-<h1>Classification<a class="headerlink" href="#Classification" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="dda7d7dd3db14ac69e4918e30af9deca" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1ANQUix9Y6V4RXu-vAaCFGmU979d5m4bO?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="2f3cd66b341b4a609e2fc4334bdc16d6" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Classification.ipynb">View on GitHub</a></p>
+<h1>Classification<a class="headerlink" href="#Classification" title="Permalink to this heading"></a></h1>
+<div class="btn btn-notebook" role="button"><p><img alt="ead9dc2c8f8c4a499c7099239f2912db" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1ANQUix9Y6V4RXu-vAaCFGmU979d5m4bO?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="0f32383f40b549c281a24e45e339a80a" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Classification.ipynb">View on GitHub</a></p>
 </div><p>You will find here the application of DA methods from the ADAPT package on a simple two dimensional DA classification problem.</p>
 <p>First we import packages needed in the following. We will use <code class="docutils literal notranslate"><span class="pre">matplotlib</span> <span class="pre">Animation</span></code> tools in order to get a visual understanding of the mselected methods:</p>
 <div class="nbinput nblast docutils container">
@@ -523,7 +532,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <section id="Experimental-Setup">
-<h2>Experimental Setup<a class="headerlink" href="#Experimental-Setup" title="Permalink to this headline"></a></h2>
+<h2>Experimental Setup<a class="headerlink" href="#Experimental-Setup" title="Permalink to this heading"></a></h2>
 <p>We now set the synthetic classification DA problem using the <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.utils.make_classification_da.html">make_classification_da</a> function from <code class="docutils literal notranslate"><span class="pre">adapt.utils</span></code>.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -642,7 +651,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </section>
 <section id="Src-Only">
-<h2>Src Only<a class="headerlink" href="#Src-Only" title="Permalink to this headline"></a></h2>
+<h2>Src Only<a class="headerlink" href="#Src-Only" title="Permalink to this heading"></a></h2>
 <p>First, let’s fit a network on source data without any adaptation. As we can observe, the “o” labels from the target domain are missclassified. Because of the “<em>” blue points close to the “o” domain, the network learns a class border not regularized enough and then misclassifies the target “</em>” data.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[98]:
@@ -689,7 +698,7 @@ div.rendered_html tbody tr:hover {
 <p><img alt="src_only" src="../_images/srcOnlyCla.gif" /></p>
 </section>
 <section id="DANN">
-<h2>DANN<a class="headerlink" href="#DANN" title="Permalink to this headline"></a></h2>
+<h2>DANN<a class="headerlink" href="#DANN" title="Permalink to this heading"></a></h2>
 <p>We now consider the <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.DANN.html">DANN</a> method. This method consists in learning a new feature representation on which no <code class="docutils literal notranslate"><span class="pre">discriminator</span></code> network can be able to classify between source and target data.</p>
 <p>This is done with adversarial techniques following the principle of GANs.</p>
 <div class="nbinput nblast docutils container">
@@ -847,7 +856,7 @@ div.rendered_html tbody tr:hover {
 <p>As we can see on the figure above, when applying <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.DANN.html">DANN</a> algorithm, source data are projected on target data in the encoded space. Thus a <code class="docutils literal notranslate"><span class="pre">task</span></code> network trained in parallel to the <code class="docutils literal notranslate"><span class="pre">encoder</span></code> and the <code class="docutils literal notranslate"><span class="pre">discriminator</span></code> is able to well classify “o” from “*” in the target domain.</p>
 </section>
 <section id="Instance-Based">
-<h2>Instance Based<a class="headerlink" href="#Instance-Based" title="Permalink to this headline"></a></h2>
+<h2>Instance Based<a class="headerlink" href="#Instance-Based" title="Permalink to this heading"></a></h2>
 <p>Finally, we consider here the instance-based method <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.KMM.html">KMM</a>. This method consists in reweighting source instances in order to minimize the MMD distance between source and target domain. Then the algorithm trains a classifier using the reweighted source data.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
