@@ -464,6 +464,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         """
         Xt, yt = self._get_target_data(Xt, yt)
         X, y = check_arrays(X, y)
+        self.n_features_in_ = X.shape[1]
         if yt is not None:
             Xt, yt = check_arrays(Xt, yt)
         else:
