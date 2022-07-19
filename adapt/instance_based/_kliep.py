@@ -349,6 +349,7 @@ to covariateshift adaptation". In NIPS 2007
         b = b.reshape(-1, 1)
 
         alpha = np.ones((len(centers), 1)) / len(centers)
+        alpha = self._projection(alpha, b)
         previous_objective = -np.inf
         objective = np.mean(np.log(np.dot(A, alpha) + EPS))
         if self.verbose > 1:
@@ -360,10 +361,7 @@ to covariateshift adaptation". In NIPS 2007
             alpha += self.lr * np.dot(
                 np.transpose(A), 1./(np.dot(A, alpha) + EPS)
             )
-            alpha += b * ((((1-np.dot(np.transpose(b), alpha)) /
-                            (np.dot(np.transpose(b), b) + EPS))))
-            alpha = np.maximum(0, alpha)
-            alpha /= (np.dot(np.transpose(b), alpha) + EPS)
+            alpha = self._projection(alpha, b)
             objective = np.mean(np.log(np.dot(A, alpha) + EPS))
             k += 1
             
@@ -374,6 +372,14 @@ to covariateshift adaptation". In NIPS 2007
         return alpha, centers
 
 
+    def _projection(self, alpha, b):
+        alpha += b * ((((1-np.dot(np.transpose(b), alpha)) /
+                            (np.dot(np.transpose(b), b) + EPS))))
+        alpha = np.maximum(0, alpha)
+        alpha /= (np.dot(np.transpose(b), alpha) + EPS)
+        return alpha
+    
+    
     def _cross_val_jscore(self, Xs, Xt, kernel_params, cv):        
         split = int(len(Xt) / cv)
         cv_scores = []

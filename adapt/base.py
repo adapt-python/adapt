@@ -1351,7 +1351,8 @@ class BaseAdaptDeep(Model, BaseAdapt):
             loss = tf.reduce_mean(loss)
 
         # Run backwards pass.
-        self.optimizer.minimize(loss, self.trainable_variables, tape=tape)
+        gradients = tape.gradient(loss, self.trainable_variables)
+        self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
         self.compiled_metrics.update_state(ys, y_pred)
         # Collect metrics to return
         return_metrics = {}

@@ -2,6 +2,7 @@
 DANN
 """
 
+import warnings
 import numpy as np
 import tensorflow as tf
 
@@ -104,11 +105,16 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
                  Xt=None,
                  yt=None,
                  lambda_=0.1,
-                 gamma=10.,
                  verbose=1,
                  copy=True,
                  random_state=None,
                  **params):
+        
+        if "gamma" in params:
+            warnings.warn("the `gamma` argument has been removed from DANN."
+                          " If you want to use the lambda update process, please"
+                          " use the `UpdateLambda` callback from adapt.utils")
+            params.pop("gamma")
         
         names = self._get_param_names()
         kwargs = {k: v for k, v in locals().items() if k in names}
