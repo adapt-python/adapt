@@ -86,8 +86,7 @@ class CORAL(BaseAdaptEstimator):
     See also
     --------
     DeepCORAL
-    FE
-    mSDA
+    FA
 
     References
     ----------

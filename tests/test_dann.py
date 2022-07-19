@@ -2,6 +2,7 @@
 Test functions for dann module.
 """
 
+import pytest
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
@@ -112,3 +113,9 @@ def test_optimizer_enc_disc():
     assert np.all(model.encoder_.get_weights()[0] == encoder.get_weights()[0])
     assert np.any(model.task_.get_weights()[0] != task.get_weights()[0])
     assert np.any(model.discriminator_.get_weights()[0] != disc.get_weights()[0])
+    
+    
+def test_warnings():
+    with pytest.warns() as record:
+        model = DANN(gamma=10.)
+    assert len(record) == 1

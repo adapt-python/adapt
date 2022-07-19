@@ -69,7 +69,6 @@ class FA(BaseAdaptEstimator):
     See also
     --------
     CORAL
-    mSDA
         
     Examples
     --------

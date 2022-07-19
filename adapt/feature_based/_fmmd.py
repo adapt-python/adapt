@@ -37,7 +37,7 @@ def _get_optim_function(Xs, Xt, kernel="linear", gamma=1., degree=2, coef=1.):
             Kxy = tf.matmul(tf.matmul(Xs, tf.linalg.diag(W**1)), tf.transpose(Xt))
 
             K = tf.concat((Kxx, Kxy), axis=1)
-            K = tf.concat((K, tf.concat((Kyy, tf.transpose(Kxy)), axis=1)), axis=0)
+            K = tf.concat((K, tf.concat((tf.transpose(Kxy), Kyy), axis=1)), axis=0)
 
             f = -tf.linalg.trace(tf.matmul(K, L))
             Df = tf.gradients(f, W)
@@ -53,7 +53,7 @@ def _get_optim_function(Xs, Xt, kernel="linear", gamma=1., degree=2, coef=1.):
             Kxy = pairwise_X(tf.matmul(Xs, tf.linalg.diag(W**1)), Xt)
 
             K = tf.concat((Kxx, Kxy), axis=1)
-            K = tf.concat((K, tf.concat((Kyy, tf.transpose(Kxy)), axis=1)), axis=0)
+            K = tf.concat((K, tf.concat((tf.transpose(Kxy), Kyy), axis=1)), axis=0)
             K = tf.exp(-gamma * K)
 
             f = -tf.linalg.trace(tf.matmul(K, L))
@@ -70,7 +70,7 @@ def _get_optim_function(Xs, Xt, kernel="linear", gamma=1., degree=2, coef=1.):
             Kxy = tf.matmul(tf.matmul(Xs, tf.linalg.diag(W**1)), tf.transpose(Xt))
 
             K = tf.concat((Kxx, Kxy), axis=1)
-            K = tf.concat((K, tf.concat((Kyy, tf.transpose(Kxy)), axis=1)), axis=0)
+            K = tf.concat((K, tf.concat((tf.transpose(Kxy), Kyy), axis=1)), axis=0)
             K = (gamma * K + coef)**degree
 
             f = -tf.linalg.trace(tf.matmul(K, L))
@@ -144,7 +144,7 @@ class fMMD(BaseAdaptEstimator):
     See also
     --------
     CORAL
-    FE
+    FA
     
     Examples
     --------
@@ -155,7 +155,7 @@ class fMMD(BaseAdaptEstimator):
     >>> model = fMMD(RidgeClassifier(), Xt=Xt, kernel="linear", random_state=0, verbose=0)
     >>> model.fit(Xs, ys)
     >>> model.score(Xt, yt)
-    0.45
+    0.92
     
     References
     ----------
