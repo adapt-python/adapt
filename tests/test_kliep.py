@@ -8,6 +8,8 @@ from sklearn.base import BaseEstimator
 
 from adapt.instance_based import KLIEP
 
+import pytest
+import warnings
 
 class DummyEstimator(BaseEstimator):
     
@@ -49,6 +51,50 @@ def test_fit():
     assert np.abs(model.predict(Xt) - yt).sum() < 20
     assert np.all(model.weights_ == model.predict_weights())
     assert np.all(model.weights_ == model.predict_weights(Xs))
+    
+    
+def test_fit_OG():
+    np.random.seed(0)
+    model = KLIEP(LinearRegression(fit_intercept=False),
+                  Xt,
+                  sigmas=[10, 100],
+                  algo="original")
+    model.fit(Xs, ys)
+    assert np.abs(model.estimator_.coef_[0][0] - 0.2) < 10
+    assert model.weights_[:50].sum() > 90
+    assert model.weights_[50:].sum() < 0.5
+    assert np.abs(model.predict(Xt) - yt).sum() < 20
+    assert np.all(model.weights_ == model.predict_weights())
+    assert np.all(model.weights_ == model.predict_weights(Xs))
+    
+
+def test_fit_PG():
+    np.random.seed(0)
+    model = KLIEP(LinearRegression(fit_intercept=False),
+                  Xt,
+                  sigmas=[10, 100],
+                  algo="PG")
+    model.fit(Xs, ys)
+    assert np.abs(model.estimator_.coef_[0][0] - 0.2) < 10
+    assert model.weights_[:50].sum() > 90
+    assert model.weights_[50:].sum() < 0.5
+    assert np.abs(model.predict(Xt) - yt).sum() < 20
+    assert np.all(model.weights_ == model.predict_weights())
+    assert np.all(model.weights_ == model.predict_weights(Xs))
+    
+    
+def test_centers():
+    np.random.seed(0)
+    
+    with pytest.raises(ValueError) as excinfo:
+        model = KLIEP(gamma=10**16)
+        model.fit_weights(Xs, Xt)
+        assert ("No centers found! Please change the value of kernel parameter." in str(excinfo.value))
+    
+    with warnings.catch_warnings(record=True) as w:
+        model = KLIEP(gamma=10**6)
+        model.fit_weights(Xs, Xt)
+        assert ("Not enough centers" in str(w[-1].message))
     
 
 def test_fit_estimator_bootstrap_index():
