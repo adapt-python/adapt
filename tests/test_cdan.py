@@ -7,6 +7,7 @@ import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.initializers import GlorotUniform
 
 from adapt.feature_based import CDAN
 
@@ -26,7 +27,8 @@ def _entropy(x):
 
 def _get_encoder(input_shape=Xs.shape[1:], units=10):
     model = Sequential()
-    model.add(Dense(units, input_shape=input_shape))
+    model.add(Dense(units, input_shape=input_shape,
+                    kernel_initializer=GlorotUniform(seed=0),))
     model.compile(loss="mse", optimizer="adam")
     return model
 
@@ -35,8 +37,9 @@ def _get_discriminator(input_shape=(10*2,)):
     model = Sequential()
     model.add(Dense(10,
                     input_shape=input_shape,
+                    kernel_initializer=GlorotUniform(seed=0),
                     activation="relu"))
-    model.add(Dense(1, activation="sigmoid"))
+    model.add(Dense(1, activation="sigmoid", kernel_initializer=GlorotUniform(seed=0)))
     model.compile(loss="mse", optimizer="adam")
     return model
 
@@ -44,6 +47,7 @@ def _get_discriminator(input_shape=(10*2,)):
 def _get_task(input_shape=(10,)):
     model = Sequential()
     model.add(Dense(2,
+                    kernel_initializer=GlorotUniform(seed=0),
                     input_shape=input_shape,
                     activation="softmax"))
     model.compile(loss="mse", optimizer=Adam(0.1))

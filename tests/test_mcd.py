@@ -7,6 +7,7 @@ import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.initializers import GlorotUniform
 
 from adapt.feature_based import MCD
 
@@ -35,8 +36,10 @@ def _get_discriminator(input_shape=(1,)):
     model = Sequential()
     model.add(Dense(10,
                     input_shape=input_shape,
+                    kernel_initializer=GlorotUniform(seed=0),
                     activation="relu"))
     model.add(Dense(1,
+                    kernel_initializer=GlorotUniform(seed=0),
                     activation="sigmoid"))
     model.compile(loss="mse", optimizer="adam")
     return model
@@ -45,6 +48,7 @@ def _get_discriminator(input_shape=(1,)):
 def _get_task(input_shape=(1,), output_shape=(1,)):
     model = Sequential()
     model.add(Dense(np.prod(output_shape),
+                    kernel_initializer=GlorotUniform(seed=0),
                     use_bias=False,
                     input_shape=input_shape))
     model.compile(loss="mse", optimizer=Adam(0.1))

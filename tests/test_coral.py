@@ -8,6 +8,7 @@ from scipy import linalg
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense
+from tensorflow.keras.initializers import GlorotUniform
 
 from adapt.feature_based import CORAL, DeepCORAL
 
@@ -31,6 +32,7 @@ yt[(Xt[:, 1]-0.5*Xt[:, 0])>0] = 1
 def _get_encoder(input_shape=Xs.shape[1:]):
     model = Sequential()
     model.add(Dense(2, input_shape=input_shape,
+                    kernel_initializer=GlorotUniform(seed=0),
                     use_bias=False))
     model.compile(loss="mse", optimizer="adam")
     return model
@@ -39,6 +41,7 @@ def _get_encoder(input_shape=Xs.shape[1:]):
 def _get_task(input_shape=(2,), output_shape=(1,)):
     model = Sequential()
     model.add(Dense(np.prod(output_shape),
+                    kernel_initializer=GlorotUniform(seed=0),
                     input_shape=input_shape,
                     use_bias=False,
                     activation="sigmoid"))

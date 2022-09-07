@@ -17,6 +17,7 @@ import tensorflow.keras.backend as K
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Layer, Dense, Flatten, Input
 from tensorflow.keras.models import clone_model
+from tensorflow.keras.initializers import GlorotUniform
 
 
 class UpdateLambda(tf.keras.callbacks.Callback):
@@ -284,7 +285,7 @@ def check_network(network, copy=True,
     return new_network
 
 
-def get_default_encoder(name=None):
+def get_default_encoder(name=None, state=None):
     """
     Return a tensorflow Model of one layer
     with 10 neurons and a relu activation.
@@ -295,11 +296,15 @@ def get_default_encoder(name=None):
     """
     model = Sequential(name=name)
     model.add(Flatten())
-    model.add(Dense(10, activation="relu"))
+    if state is not None:
+        model.add(Dense(10, activation="relu",
+        kernel_initializer=GlorotUniform(seed=state)))
+    else:
+        model.add(Dense(10, activation="relu"))
     return model
 
 
-def get_default_task(activation=None, name=None):
+def get_default_task(activation=None, name=None, state=None):
     """
     Return a tensorflow Model of two hidden layers
     with 10 neurons each and relu activations. The
@@ -317,13 +322,21 @@ def get_default_task(activation=None, name=None):
     """
     model = Sequential(name=name)
     model.add(Flatten())
-    model.add(Dense(10, activation="relu"))
-    model.add(Dense(10, activation="relu"))
-    model.add(Dense(1, activation=activation))
+    if state is not None:
+        model.add(Dense(10, activation="relu",
+        kernel_initializer=GlorotUniform(seed=state)))
+        model.add(Dense(10, activation="relu",
+        kernel_initializer=GlorotUniform(seed=state)))
+        model.add(Dense(1,
+        kernel_initializer=GlorotUniform(seed=state)))
+    else:
+        model.add(Dense(10, activation="relu"))
+        model.add(Dense(10, activation="relu"))
+        model.add(Dense(1, activation=activation))
     return model
 
 
-def get_default_discriminator(name=None):
+def get_default_discriminator(name=None, state=None):
     """
     Return a tensorflow Model of two hidden layers
     with 10 neurons each and relu activations. The
@@ -336,9 +349,17 @@ def get_default_discriminator(name=None):
     """
     model = Sequential(name=name)
     model.add(Flatten())
-    model.add(Dense(10, activation="relu"))
-    model.add(Dense(10, activation="relu"))
-    model.add(Dense(1, activation="sigmoid"))
+    if state is not None:
+        model.add(Dense(10, activation="relu",
+        kernel_initializer=GlorotUniform(seed=state)))
+        model.add(Dense(10, activation="relu",
+        kernel_initializer=GlorotUniform(seed=state)))
+        model.add(Dense(1, activation="sigmoid",
+        kernel_initializer=GlorotUniform(seed=state)))
+    else:
+        model.add(Dense(10, activation="relu"))
+        model.add(Dense(10, activation="relu"))
+        model.add(Dense(1, activation="sigmoid"))
     return model
 
 

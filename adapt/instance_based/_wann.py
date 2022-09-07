@@ -92,7 +92,7 @@ for Domain Adaptation in Regression". In ICTAI, 2021.
     
     def _initialize_networks(self):
         if self.weighter is None:
-            self.weighter_ = get_default_task(name="weighter")
+            self.weighter_ = get_default_task(name="weighter", state=self.random_state)
             if self.C > 0.:
                 self.weighter_ = self._add_regularization(self.weighter_)
         else:
@@ -102,13 +102,13 @@ for Domain Adaptation in Regression". In ICTAI, 2021.
                                           copy=self.copy,
                                           name="weighter")
         if self.task is None:
-            self.task_ = get_default_task(name="task")
+            self.task_ = get_default_task(name="task", state=self.random_state)
         else:
             self.task_ = check_network(self.task,
                                        copy=self.copy,
                                        name="task")
         if self.task is None:
-            self.discriminator_ = get_default_task(name="discriminator")
+            self.discriminator_ = get_default_task(name="discriminator", state=self.random_state)
         else:
             self.discriminator_ = check_network(self.task,
                                                 copy=self.copy,

@@ -166,19 +166,19 @@ domain adaptation". ICML, 2019.
     
     def _initialize_networks(self):
         if self.encoder is None:
-            self.encoder_ = get_default_encoder(name="encoder")
+            self.encoder_ = get_default_encoder(name="encoder", state=self.random_state)
         else:
             self.encoder_ = check_network(self.encoder,
                                           copy=self.copy,
                                           name="encoder")
         if self.task is None:
-            self.task_ = get_default_task(name="task")
+            self.task_ = get_default_task(name="task", state=self.random_state)
         else:
             self.task_ = check_network(self.task,
                                        copy=self.copy,
                                        name="task")
         if self.task is None:
-            self.discriminator_ = get_default_task(name="discriminator")
+            self.discriminator_ = get_default_task(name="discriminator", state=self.random_state)
         else:
             # Impose Copy, else undesired behaviour
             self.discriminator_ = check_network(self.task,
