@@ -366,22 +366,25 @@ to covariateshift adaptation". In NIPS 2007
             if self.verbose > 1:
                 print("learning rate : %s"%lr)
             alpha = 1/(len(centers)*b)
+            alpha = alpha.reshape(-1,1)
             previous_objective = -np.inf
-            objective = np.mean(np.log(np.dot(A, alpha) + EPS))
+            objective = np.sum(np.log(np.dot(A, alpha) + EPS))
             if self.verbose > 1:
                     print("Alpha's optimization : iter %i -- Obj %.4f"%(0, objective))
             k = 0
             while k < self.max_iter and objective-previous_objective > self.tol:
                 previous_objective = objective
                 alpha_p = np.copy(alpha)
-                alpha += lr * np.dot(
-                    np.transpose(A), 1./(np.dot(A, alpha) + EPS)
+                r = 1./np.clip(np.dot(A, alpha), EPS, np.inf)
+                g = np.dot(
+                    np.transpose(A), r
                 )
+                alpha += lr * g
                 if PG :
                     alpha = self._projection_PG(alpha, b).reshape(-1,1)
                 else :
                     alpha = self._projection_original(alpha, b)
-                objective = np.mean(np.log(np.dot(A, alpha) + EPS))
+                objective = np.sum(np.log(np.dot(A, alpha) + EPS))
                 k += 1
 
                 if self.verbose > 1:
@@ -396,21 +399,23 @@ to covariateshift adaptation". In NIPS 2007
         centers, A, b = self.centers_selection(Xs, Xt, kernel_params)
 
         alpha = 1/(len(centers)*b)
-        objective = np.mean(np.log(np.dot(A, alpha) + EPS))
+        alpha = alpha.reshape(-1,1)
+        objective = np.sum(np.log(np.dot(A, alpha) + EPS))
         if self.verbose > 1:
                 print("Alpha's optimization : iter %i -- Obj %.4f"%(0, objective))
         k = 0
         while k < self.max_iter:
             previous_objective = objective
             alpha_p = np.copy(alpha)
+            r = 1./np.clip(np.dot(A, alpha), EPS, np.inf)
             g = np.dot(
-                np.transpose(A), 1./(np.dot(A, alpha) + EPS)
+                np.transpose(A), r
             )
             B = np.diag(1/b.ravel())
             LP = np.dot(g.transpose(), B)
             lr = 2/(k+2)
             alpha = (1 - lr)*alpha + lr*B[np.argmax(LP)].reshape(-1,1)
-            objective = np.mean(np.log(np.dot(A, alpha) + EPS))
+            objective = np.sum(np.log(np.dot(A, alpha) + EPS))
             k += 1
             
             if self.verbose > 1:
@@ -449,13 +454,12 @@ to covariateshift adaptation". In NIPS 2007
             centers = centers[:max_centers]
             A = A[:, :max_centers]
             b = b[:max_centers]
-            b = b.reshape(-1,1)
         elif len(centers) > 0:
             warnings.warn("Not enough centers, only %i centers found. Maybe consider a different value of kernel parameter."%len(centers))
         else:
             raise ValueError("No centers found! Please change the value of kernel parameter.")
         
-        return centers, A, b
+        return centers, A, b.reshape(-1,1)
 
     def _projection_original(self, alpha, b):
         alpha += b * ((((1-np.dot(np.transpose(b), alpha)) /
