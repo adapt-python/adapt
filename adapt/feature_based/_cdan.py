@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 
 from adapt.base import BaseAdaptDeep, make_insert_doc
-
+from tensorflow.keras.initializers import GlorotUniform
 from adapt.utils import (check_network,
                          get_default_encoder,
                          get_default_discriminator)
@@ -14,12 +14,20 @@ from adapt.utils import (check_network,
 EPS = np.finfo(np.float32).eps
 
 
-def _get_default_classifier(name=None):
+def _get_default_classifier(name=None, state=None):
     model = tf.keras.Sequential(name=name)
     model.add(tf.keras.layers.Flatten())
-    model.add(tf.keras.layers.Dense(10, activation="relu"))
-    model.add(tf.keras.layers.Dense(10, activation="relu"))
-    model.add(tf.keras.layers.Dense(2, activation="softmax"))
+    if state is None:
+        model.add(tf.keras.layers.Dense(10, activation="relu"))
+        model.add(tf.keras.layers.Dense(10, activation="relu"))
+        model.add(tf.keras.layers.Dense(2, activation="softmax"))
+    else:
+        model.add(tf.keras.layers.Dense(10, activation="relu",
+                                       kernel_initializer=GlorotUniform(seed=state)))
+        model.add(tf.keras.layers.Dense(10, activation="relu",
+                                       kernel_initializer=GlorotUniform(seed=state)))
+        model.add(tf.keras.layers.Dense(2, activation="softmax",
+                                       kernel_initializer=GlorotUniform(seed=state)))
     return model
 
 
@@ -311,19 +319,19 @@ In NIPS, 2018
     
     def _initialize_networks(self):
         if self.encoder is None:
-            self.encoder_ = get_default_encoder(name="encoder")
+            self.encoder_ = get_default_encoder(name="encoder", state=self.random_state)
         else:
             self.encoder_ = check_network(self.encoder,
                                           copy=self.copy,
                                           name="encoder")
         if self.task is None:
-            self.task_ = _get_default_classifier(name="task")
+            self.task_ = _get_default_classifier(name="task", state=self.random_state)
         else:
             self.task_ = check_network(self.task,
                                        copy=self.copy,
                                        name="task")
         if self.discriminator is None:
-            self.discriminator_ = get_default_discriminator(name="discriminator")
+            self.discriminator_ = get_default_discriminator(name="discriminator", state=self.random_state)
         else:
             self.discriminator_ = check_network(self.discriminator,
                                                 copy=self.copy,
