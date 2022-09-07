@@ -3,13 +3,14 @@ import tensorflow as tf
 
 from adapt.utils import make_classification_da
 from adapt.feature_based import CCSA
+from tensorflow.keras.initializers import GlorotUniform
 
 np.random.seed(0)
 tf.random.set_seed(0)
 
 task = tf.keras.Sequential()
-task.add(tf.keras.layers.Dense(50, activation="relu"))
-task.add(tf.keras.layers.Dense(2, activation="softmax"))
+task.add(tf.keras.layers.Dense(50, activation="relu", kernel_initializer=GlorotUniform(seed=0)))
+task.add(tf.keras.layers.Dense(2, activation="softmax", kernel_initializer=GlorotUniform(seed=0)))
 
 ind = np.random.choice(100, 10)
 Xs, ys, Xt, yt = make_classification_da()
