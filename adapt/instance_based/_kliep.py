@@ -58,7 +58,7 @@ class KLIEP(BaseAdaptEstimator):
         
     Where:
     
-    - :math:`X_T` is the source input data of size :math:`n_S`.
+    - :math:`X_S` is the source input data of size :math:`n_S`.
     
     The above OP is solved through gradient ascent algorithm.
     
@@ -93,16 +93,20 @@ class KLIEP(BaseAdaptEstimator):
     max_centers : int (default=100)
         Maximal number of target instances use to
         compute kernels.
+    
+    algo : str (default="FW")
+        Optimization algorithm.
+        Possible values: ['original', 'PG', 'FW']
         
-    lr : float (default=1e-4)
+    lr : float or list of float (default=np.logspace(-3,1,5))
         Learning rate of the gradient ascent.
+        Used only if algo different to 'FW'
         
     tol : float (default=1e-6)
         Optimization threshold.
         
-    max_iter : int (default=5000)
-        Maximal iteration of the gradient ascent
-        optimization.
+    max_iter : int (default=2000)
+        Maximal iteration of the optimization algorithm.
         
     Yields
     ------
@@ -205,9 +209,10 @@ to covariateshift adaptation". In NIPS 2007
                  sigmas=None,
                  max_centers=100,
                  cv=5,
-                 lr=1e-4,
+                 algo="FW",
+                 lr=np.logspace(-3,1,5),
                  tol=1e-6,
-                 max_iter=5000,
+                 max_iter=2000,
                  copy=True,
                  verbose=1,
                  random_state=None,
@@ -333,51 +338,150 @@ to covariateshift adaptation". In NIPS 2007
             raise NotFittedError("Weights are not fitted yet, please "
                                  "call 'fit_weights' or 'fit' first.")
 
-
+          
     def _fit(self, Xs, Xt, kernel_params):
-        index_centers = np.random.choice(
-                        len(Xt),
-                        min(len(Xt), self.max_centers),
-                        replace=False)
-        centers = Xt[index_centers]
+        if self.algo == "original":
+            return self._fit_PG(Xs, Xt, PG=False, kernel_params=kernel_params)
+        elif self.algo == "PG":
+            return self._fit_PG(Xs, Xt, PG=True, kernel_params=kernel_params)
+        elif self.algo == "FW":
+            return self._fit_FW(Xs, Xt, kernel_params=kernel_params)
+        else :
+            raise ValueError("%s is not a valid value of algo"%self.algo)
+            
+    def _fit_PG(self, Xs, Xt, PG, kernel_params):
+        alphas = []
+        OBJs = []
         
-        A = pairwise.pairwise_kernels(Xt, centers, metric=self.kernel,
-                                      **kernel_params)
-        B = pairwise.pairwise_kernels(centers, Xs, metric=self.kernel,
-                                      **kernel_params)
-        b = np.mean(B, axis=1)
-        b = b.reshape(-1, 1)
+        if type(self.lr) == float or type(self.lr) == int:
+            LRs = [self.lr]
+        elif type(self.lr) == list or type(self.lr) == np.ndarray:
+            LRs = self.lr
+        else:
+            raise TypeError("invalid argument type for lr")
+        
+        centers, A, b = self.centers_selection(Xs, Xt, kernel_params)
 
-        alpha = np.ones((len(centers), 1)) / len(centers)
-        alpha = self._projection(alpha, b)
-        previous_objective = -np.inf
-        objective = np.mean(np.log(np.dot(A, alpha) + EPS))
+        for lr in LRs:
+            if self.verbose > 1:
+                print("learning rate : %s"%lr)
+            alpha = 1/(len(centers)*b)
+            alpha = alpha.reshape(-1,1)
+            previous_objective = -np.inf
+            objective = np.sum(np.log(np.dot(A, alpha) + EPS))
+            if self.verbose > 1:
+                    print("Alpha's optimization : iter %i -- Obj %.4f"%(0, objective))
+            k = 0
+            while k < self.max_iter and objective-previous_objective > self.tol:
+                previous_objective = objective
+                alpha_p = np.copy(alpha)
+                r = 1./np.clip(np.dot(A, alpha), EPS, np.inf)
+                g = np.dot(
+                    np.transpose(A), r
+                )
+                alpha += lr * g
+                if PG :
+                    alpha = self._projection_PG(alpha, b).reshape(-1,1)
+                else :
+                    alpha = self._projection_original(alpha, b)
+                objective = np.sum(np.log(np.dot(A, alpha) + EPS))
+                k += 1
+
+                if self.verbose > 1:
+                    if k%100 == 0:
+                        print("Alpha's optimization : iter %i -- Obj %.4f"%(k, objective))
+            alphas.append(alpha_p)
+            OBJs.append(previous_objective)
+        OBJs = np.array(OBJs).ravel()
+        return alphas[np.argmax(OBJs)], centers
+    
+    def _fit_FW(self, Xs, Xt, kernel_params):
+        centers, A, b = self.centers_selection(Xs, Xt, kernel_params)
+
+        alpha = 1/(len(centers)*b)
+        alpha = alpha.reshape(-1,1)
+        objective = np.sum(np.log(np.dot(A, alpha) + EPS))
         if self.verbose > 1:
                 print("Alpha's optimization : iter %i -- Obj %.4f"%(0, objective))
         k = 0
-        while k < self.max_iter and objective-previous_objective > self.tol:
+        while k < self.max_iter:
             previous_objective = objective
             alpha_p = np.copy(alpha)
-            alpha += self.lr * np.dot(
-                np.transpose(A), 1./(np.dot(A, alpha) + EPS)
+            r = 1./np.clip(np.dot(A, alpha), EPS, np.inf)
+            g = np.dot(
+                np.transpose(A), r
             )
-            alpha = self._projection(alpha, b)
-            objective = np.mean(np.log(np.dot(A, alpha) + EPS))
+            B = np.diag(1/b.ravel())
+            LP = np.dot(g.transpose(), B)
+            lr = 2/(k+2)
+            alpha = (1 - lr)*alpha + lr*B[np.argmax(LP)].reshape(-1,1)
+            objective = np.sum(np.log(np.dot(A, alpha) + EPS))
             k += 1
             
             if self.verbose > 1:
                 if k%100 == 0:
                     print("Alpha's optimization : iter %i -- Obj %.4f"%(k, objective))
-
         return alpha, centers
+    
+    def centers_selection(self, Xs, Xt, kernel_params):
+        A = np.empty((Xt.shape[0], 0))
+        b = np.empty((0,))
+        centers = np.empty((0, Xt.shape[1]))
+        
+        max_centers = min(len(Xt), self.max_centers)
+        np.random.seed(self.random_state)
+        index = np.random.permutation(Xt.shape[0])
+        
+        k = 0
+        
+        while k*max_centers < len(index) and len(centers) < max_centers and k<3:
+            index_ = index[k*max_centers:(k+1)*max_centers]
+            centers_ = Xt[index_]
+            A_ = pairwise.pairwise_kernels(Xt, centers_, metric=self.kernel,
+                                      **kernel_params)
+            B_ = pairwise.pairwise_kernels(centers_, Xs, metric=self.kernel,
+                                          **kernel_params)
+            b_ = np.mean(B_, axis=1)
+            mask = (b_ < EPS).ravel()
+            if np.sum(~mask) > 0 :
+                centers_ = centers_[~mask]
+                centers = np.concatenate((centers, centers_), axis = 0)
+                A = np.concatenate((A, A_[:,~mask]), axis=1)
+                b = np.append(b, b_[~mask])
+            k += 1
+            
+        if len(centers) >= max_centers:
+            centers = centers[:max_centers]
+            A = A[:, :max_centers]
+            b = b[:max_centers]
+        elif len(centers) > 0:
+            warnings.warn("Not enough centers, only %i centers found. Maybe consider a different value of kernel parameter."%len(centers))
+        else:
+            raise ValueError("No centers found! Please change the value of kernel parameter.")
+        
+        return centers, A, b.reshape(-1,1)
 
-
-    def _projection(self, alpha, b):
+    def _projection_original(self, alpha, b):
         alpha += b * ((((1-np.dot(np.transpose(b), alpha)) /
                             (np.dot(np.transpose(b), b) + EPS))))
         alpha = np.maximum(0, alpha)
         alpha /= (np.dot(np.transpose(b), alpha) + EPS)
         return alpha
+    
+    def _projection_PG(self, y, b):
+        sort= np.argsort(y.ravel()/b.ravel())
+        y_hat = np.array(y).ravel()[sort]
+        b_hat = np.array(b).ravel()[sort]
+        nu = [(np.dot(y_hat[k:],b_hat[k:])-1)/np.dot(b_hat[k:], b_hat[k:]) for k in range(len(y_hat))]
+        k = 0
+        for i in range(len(nu)):
+            if i == 0 :
+                if nu[i]<=y_hat[i]/b_hat[i]:
+                    break
+            elif (nu[i]>y_hat[i-1]/b_hat[i-1] and nu[i]<=y_hat[i]/b_hat[i]):
+                    k = i
+                    break
+        return np.maximum(0, y-nu[k]*b)
     
     
     def _cross_val_jscore(self, Xs, Xt, kernel_params, cv):        
@@ -388,19 +492,23 @@ to covariateshift adaptation". In NIPS 2007
             train_index = np.array(
                 list(set(np.arange(len(Xt))) - set(test_index))
             )
+            
+            try:
+                alphas, centers = self._fit(Xs,
+                                            Xt[train_index],
+                                            kernel_params)
 
-            alphas, centers = self._fit(Xs,
-                                        Xt[train_index],
-                                        kernel_params)
-
-            j_score = np.mean(np.log(
-                np.dot(
-                    pairwise.pairwise_kernels(Xt[test_index],
-                                             centers,
-                                             metric=self.kernel,
-                                             **kernel_params),
-                    alphas
-                ) + EPS
-            ))
+                j_score = np.mean(np.log(
+                    np.dot(
+                        pairwise.pairwise_kernels(Xt[test_index],
+                                                 centers,
+                                                 metric=self.kernel,
+                                                 **kernel_params),
+                        alphas
+                    ) + EPS
+                ))
+            except Exception as e:
+                j_score = -np.inf
+                
             cv_scores.append(j_score)
         return cv_scores
