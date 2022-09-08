@@ -99,8 +99,7 @@ class KLIEP(BaseAdaptEstimator):
         Possible values: ['original', 'PG', 'FW']
         
         - 'original' follows the algorithm of [1]. Useful to reproduce the paper's experiences.
-        - 'PG' is a improved version of 'original'. 
-        A convex projection into the constraints set is used.
+        - 'PG' is a improved version of 'original'. A convex projection into the constraints set is used.
         - 'FW' [2] uses the Frank-Wolfe algorithm to solve the above OP.
         
         In general, 'FW' is more efficient than 'original' or 'PG'. 
