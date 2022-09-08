@@ -98,6 +98,15 @@ class KLIEP(BaseAdaptEstimator):
         Optimization algorithm.
         Possible values: ['original', 'PG', 'FW']
         
+        - 'original' follows the algorithm of [1]. Useful to reproduce the paper's experiences.
+        - 'PG' is a improved version of 'original'. 
+        A convex projection into the constraints set is used.
+        - 'FW' [2] uses the Frank-Wolfe algorithm to solve the above OP.
+        
+        In general, 'FW' is more efficient than 'original' or 'PG'. 
+        In some cases, 'PG' converges faster than 'FW' with a good choice of learning rate.
+        
+        
     lr : float or list of float (default=np.logspace(-3,1,5))
         Learning rate of the gradient ascent.
         Used only if algo different to 'FW'
@@ -201,7 +210,10 @@ class KLIEP(BaseAdaptEstimator):
 M. Sugiyama, S. Nakajima, H. Kashima, P. von Bünau and  M. Kawanabe. \
 "Direct importance estimation with model selection and its application \
 to covariateshift adaptation". In NIPS 2007
-    """
+    .. [2] `[2] <https://webdocs.cs.ualberta.ca/~dale/papers/ijcai15.pdf>`_ \
+J. Wen, R. Greiner and D. Schuurmans. \
+"Correcting Covariate Shift with the Frank-Wolfe Algorithm". In IJCAI 2015
+"""
     def __init__(self,
                  estimator=None,
                  Xt=None,
