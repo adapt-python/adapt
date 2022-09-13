@@ -212,14 +212,6 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         fit_params : key, value arguments
             Arguments given to the fit method of the
             estimator.
-            
-        Other Parameters
-        ----------------
-        Xt : array (default=self.Xt)
-            Target input data.
-
-        yt : array (default=self.yt)
-            Target output data.
 
         Returns
         -------
