@@ -75,7 +75,7 @@ class PRED(BaseAdaptEstimator):
         super().__init__(**kwargs)
 
 
-    def fit_transform(self, Xs, Xt, ys, yt, domains=None, **kwargs):
+    def fit_transform(self, Xs, Xt, ys, yt, **kwargs):
         """
         Fit embeddings.
         
