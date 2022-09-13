@@ -15,6 +15,7 @@ from ._sa import SA
 from ._fmmd import fMMD
 from ._ccsa import CCSA
 from ._tca import TCA
+from ._pred import PRED
 
 __all__ = ["FA", "CORAL", "DeepCORAL", "ADDA", "DANN",
-           "MCD", "MDD", "WDGRL", "CDAN", "SA", "fMMD", "CCSA", "TCA"]
+           "MCD", "MDD", "WDGRL", "CDAN", "SA", "fMMD", "CCSA", "TCA", "PRED"]
