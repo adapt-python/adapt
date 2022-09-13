@@ -476,9 +476,15 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         if hasattr(self, "fit_weights"):
             if self.verbose:
                 print("Fit weights...")
-            self.weights_ = self.fit_weights(Xs=X, Xt=Xt,
-                                             ys=y, yt=yt,
-                                             domains=domains)
+            out = self.fit_weights(Xs=X, Xt=Xt,
+                                   ys=y, yt=yt,
+                                   domains=domains)
+            if isinstance(out, tuple):
+                self.weights_ = out[0]
+                X = out[1]
+                y = out[2]
+            else:
+                self.weights_ = out
             if "sample_weight" in fit_params:
                 fit_params["sample_weight"] *= self.weights_
             else:
