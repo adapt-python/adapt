@@ -10,7 +10,9 @@ from ._ldm import LDM
 from ._nearestneighborsweighting import NearestNeighborsWeighting
 from ._balancedweighting import BalancedWeighting
 from ._iwn import IWN
+from ._ulsif import ULSIF
+from ._rulsif import RULSIF
 
 __all__ = ["LDM", "KLIEP", "KMM", "TrAdaBoost", "TrAdaBoostR2",
            "TwoStageTrAdaBoostR2", "WANN", "NearestNeighborsWeighting",
-           "BalancedWeighting", "IWN"]
+           "BalancedWeighting", "IWN", "ULSIF", "RULSIF"]
