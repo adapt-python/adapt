@@ -13,11 +13,12 @@ from adapt.utils import set_random_seed
 EPS = np.finfo(float).eps
 
 
+@make_insert_doc()
 class ULSIF(BaseAdaptEstimator):
     """
-    RULSIF: Relative least-squares importance fitting 
+    ULSIF: Unconstrained Least-Squares Importance Fitting
     
-    RULSIF is an instance-based method for domain adaptation. 
+    ULSIF is an instance-based method for domain adaptation. 
     
     The purpose of the algorithm is to correct the difference between
     input distributions of source and target domains. This is done by
@@ -33,12 +34,12 @@ class ULSIF(BaseAdaptEstimator):
     Where:
     
     - :math:`x, x_i` are input instances.
-    - :math:`X_T` is the target input data.
+    - :math:`X_T` is the target input data of size :math:`n_T`.
     - :math:`\\theta_i` are the basis functions coefficients.
     - :math:`K(x, x_i) = \\text{exp}(-\\gamma ||x - x_i||^2)`
       for instance if ``kernel="rbf"``.
       
-    KLIEP algorithm consists in finding the optimal :math:`\\theta` according to
+    ULSIF algorithm consists in finding the optimal :math:`\\theta` according to
     the quadratic problem 
     
     .. math::
@@ -50,26 +51,28 @@ class ULSIF(BaseAdaptEstimator):
     
     .. math::
     
-        H_{ll'}= \\frac{\\alpha}{n_s} \sum_{x_i \\in X_S}  K(x_i, x_l) K(x_i, x_l') + \\frac{1-\\alpha}{n_t} \\sum_{x_i \\in X_T}  K(x_i, x_l) K(x_i, x_l') 
+        H_{ll'} = \\frac{1}{n_s} \sum_{x_i \\in X_S}  K(x_i, x_l) K(x_i, x_l') \\
         h_{l}= \\frac{1}{n_T} \sum_{x_i \\in X_T} K(x_i, x_l)
         
-    Where:
-    
-    - :math:`X_T` is the source input data of size :math:`n_T`.
     
     The above OP is solved by the closed form expression
     
-    - :math:\hat{\\theta}=(H+\\lambda I_{n_s})^{(-1)} h 
+    .. math::
     
-    Furthemore the method admits a leave one out cross validation score that has a clossed expression 
+        \hat{\\theta} = (H+\\lambda I_{n_s})^{(-1)} h 
+    
+    Furthemore the method admits a leave one out cross validation score that has a closed form expression 
     and can be used to select the appropriate parameters of the kernel function :math:`K` (typically, the paramter
     :math:`\\gamma` of the Gaussian kernel). The parameter is then selected using
     cross-validation on the :math:`J` score defined as follows:
-    :math:`J = -\\frac{\\alpha}{2|X_S|} \\sum_{x \\in X_S} w(x)^2 - \frac{1-\\alpha}{2|X_T|} \\sum_{x \in X_T} w(x)^2 `
+    
+    .. math::
+    
+        J = -\\frac{1}{2 n_s} \\sum_{x \\in X_S} w(x)^2
     
     Finally, an estimator is fitted using the reweighted labeled source instances.
     
-    RULSIF method has been originally introduced for **unsupervised**
+    ULSIF method has been originally introduced for **unsupervised**
     DA but it could be widen to **supervised** by simply adding labeled
     target data to the training set.
     
@@ -81,9 +84,10 @@ class ULSIF(BaseAdaptEstimator):
         ‘linear’, ‘poly’, ‘polynomial’, ‘rbf’,
         ‘laplacian’, ‘sigmoid’, ‘cosine’]
     
-    sigmas : float or list of float (default=None)
-        Deprecated, please use the ``gamma`` parameter
-        instead. (See below).
+    lambdas : float or list of float (default=1.)
+        Optimization parameter. If a list is given,
+        the best lambda will be selected based on
+        the unsupervised Leave-One-Out J-score.
 
     max_centers : int (default=100)
         Maximal number of target instances use to
@@ -131,6 +135,7 @@ class ULSIF(BaseAdaptEstimator):
         parameter description).
         If a list is given, the LCV process is performed to
         select the best parameter ``degree``.
+    
     Attributes
     ----------
     weights_ : numpy array
@@ -156,54 +161,37 @@ class ULSIF(BaseAdaptEstimator):
         
     Examples
     --------
-    >>> import numpy as np
-    >>> from adapt.instance_based import KLIEP
-    >>> np.random.seed(0)
-    >>> Xs = np.random.randn(50) * 0.1
-    >>> Xs = np.concatenate((Xs, Xs + 1.))
-    >>> Xt = np.random.randn(100) * 0.1
-    >>> ys = np.array([-0.2 * x if x<0.5 else 1. for x in Xs])
-    >>> yt = -0.2 * Xt
-    >>> kliep = KLIEP(sigmas=[0.1, 1, 10], random_state=0)
-    >>> kliep.fit_estimator(Xs.reshape(-1,1), ys)
-    >>> np.abs(kliep.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
-    0.09388...
-    >>> kliep.fit(Xs.reshape(-1,1), ys, Xt.reshape(-1,1))
-    Fitting weights...
-    Cross Validation process...
-    Parameter sigma = 0.1000 -- J-score = 0.059 (0.001)
-    Parameter sigma = 1.0000 -- J-score = 0.427 (0.003)
-    Parameter sigma = 10.0000 -- J-score = 0.704 (0.017)
-    Fitting estimator...
-    >>> np.abs(kliep.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
-    0.00302...
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
+    >>> from adapt.instance_based import ULSIF
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = ULSIF(RidgeClassifier(0.), Xt=Xt, kernel="rbf",
+    ...               lambdas=[0.1, 1., 10.], gamma=[0.1, 1., 10.], random_state=0)
+    >>> model.fit(Xs, ys);
+    >>> model.score(Xt, yt)
+    0.71
+
     See also
     --------
-    KMM
+    RULSIF
+    KLIEP
+    
     References
     ----------
-    .. [1] `[1] <https://proceedings.neurips.cc/paper/2011/file/
-    d1f255a373a3cef72e03aa9d980c7eca-Paper.pdf>`_ \
-M. Yamada, T. Suzuki, T. Kanamori, H. Hachiya and  M. Sugiyama. \
-"Relative Density-Ratio Estimation
-for Robust Distribution Comparison". In NIPS 2011
+    .. [1] `[1] <https://www.jmlr.org/papers/volume10/kanamori09a/kanamori09a.pdf>`_ \
+Takafumi Kanamori, Shohei Hido, Masashi Sugiyama  \
+"A Least-squares Approach to Direct Importance Estimation". In JMLR 2009
     """
     def __init__(self,
                  estimator=None,
                  Xt=None,
                  kernel="rbf",
-                 sigmas=None,
-                 lambdas=None,
+                 lambdas=1.,
                  max_centers=100,
                  copy=True,
                  verbose=1,
                  random_state=None,
                  **params):
-        
-        if sigmas is not None:
-            warnings.warn("The `sigmas` argument is deprecated, "
-              "please use the `gamma` argument instead.",
-              DeprecationWarning)
         
         names = self._get_param_names()
         kwargs = {k: v for k, v in locals().items() if k in names}
@@ -238,10 +226,6 @@ for Robust Distribution Comparison". In NIPS 2011
         # LCV GridSearch
         kernel_params = {k: v for k, v in self.__dict__.items()
                          if k in KERNEL_PARAMS[self.kernel]}
-        
-        # Handle deprecated sigmas (will be removed)
-        if (self.sigmas is not None) and (not "gamma" in kernel_params):
-            kernel_params["gamma"] = self.sigmas
         
         kernel_params_dict = {k:(v if hasattr(v, "__iter__") else [v]) for k, v in kernel_params.items()}
         lambdas_params_dict={"lamb":(self.lambdas if hasattr(self.lambdas, "__iter__") else [self.lambdas])}
@@ -343,7 +327,7 @@ for Robust Distribution Comparison". In NIPS 2011
         Return fitted source weights
         
         If ``None``, the fitted source weights are returned.
-        Else, sample weights are computing using the fitted
+        Else, sample weights are computed using the fitted
         ``thetas_`` and the chosen ``centers_``.
         
         Parameters
