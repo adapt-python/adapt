@@ -12,7 +12,8 @@ from ._balancedweighting import BalancedWeighting
 from ._iwn import IWN
 from ._ulsif import ULSIF
 from ._rulsif import RULSIF
+from ._iwc import IWC
 
 __all__ = ["LDM", "KLIEP", "KMM", "TrAdaBoost", "TrAdaBoostR2",
            "TwoStageTrAdaBoostR2", "WANN", "NearestNeighborsWeighting",
-           "BalancedWeighting", "IWN", "ULSIF", "RULSIF"]
+           "BalancedWeighting", "IWN", "ULSIF", "RULSIF", "IWC"]
