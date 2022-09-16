@@ -360,6 +360,7 @@ J. Wen, R. Greiner and D. Schuurmans. \
         else :
             raise ValueError("%s is not a valid value of algo"%self.algo)
             
+    
     def _fit_PG(self, Xs, Xt, PG, kernel_params):
         alphas = []
         OBJs = []
@@ -371,12 +372,34 @@ J. Wen, R. Greiner and D. Schuurmans. \
         else:
             raise TypeError("invalid argument type for lr")
         
-        centers, A, b = self.centers_selection(Xs, Xt, kernel_params)
+        # For original, no center selection
+        if PG:
+            centers, A, b = self.centers_selection(Xs, Xt, kernel_params)
+        else:
+            index_centers = np.random.choice(
+                        len(Xt),
+                        min(len(Xt), self.max_centers),
+                        replace=False)
+            centers = Xt[index_centers]
+            
+            A = pairwise.pairwise_kernels(Xt, centers, metric=self.kernel,
+                                      **kernel_params)
+            B = pairwise.pairwise_kernels(centers, Xs, metric=self.kernel,
+                                          **kernel_params)
+            b = np.mean(B, axis=1)
+            b = b.reshape(-1, 1)
 
         for lr in LRs:
             if self.verbose > 1:
                 print("learning rate : %s"%lr)
-            alpha = 1/(len(centers)*b)
+            
+            # For original, init alpha = ones and project
+            if PG:
+                alpha = 1/(len(centers)*b)
+            else:
+                alpha = np.ones((len(centers), 1))
+                alpha = self._projection_original(alpha, b)
+                
             alpha = alpha.reshape(-1,1)
             previous_objective = -np.inf
             objective = np.sum(np.log(np.dot(A, alpha) + EPS))
