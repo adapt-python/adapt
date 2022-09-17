@@ -13,8 +13,9 @@ EPS = np.finfo(np.float32).eps
 @make_insert_doc(["encoder", "task", "discriminator"])
 class WDGRL(BaseAdaptDeep):
     """
-    WDGRL (Wasserstein Distance Guided Representation Learning) is an
-    unsupervised domain adaptation method on the model of the 
+    WDGRL: Wasserstein Distance Guided Representation Learning
+    
+    WDGRL is an unsupervised domain adaptation method on the model of the 
     :ref:`DANN <adapt.feature_based.DANN>`. In WDGRL the discriminator
     is used to approximate the Wasserstein distance between the
     source and target encoded distributions in the spirit of WGAN.

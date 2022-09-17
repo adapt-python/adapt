@@ -42,8 +42,8 @@ class LinInt(BaseAdaptEstimator):
           
     See also
     --------
-    FA
-    PRED
+    adapt.feature_based.FA
+    adapt.feature_based.PRED
         
     Examples
     --------

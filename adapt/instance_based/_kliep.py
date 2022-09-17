@@ -374,7 +374,7 @@ J. Wen, R. Greiner and D. Schuurmans. \
         
         # For original, no center selection
         if PG:
-            centers, A, b = self.centers_selection(Xs, Xt, kernel_params)
+            centers, A, b = self._centers_selection(Xs, Xt, kernel_params)
         else:
             index_centers = np.random.choice(
                         len(Xt),
@@ -430,7 +430,7 @@ J. Wen, R. Greiner and D. Schuurmans. \
         return alphas[np.argmax(OBJs)], centers
     
     def _fit_FW(self, Xs, Xt, kernel_params):
-        centers, A, b = self.centers_selection(Xs, Xt, kernel_params)
+        centers, A, b = self._centers_selection(Xs, Xt, kernel_params)
 
         alpha = 1/(len(centers)*b)
         alpha = alpha.reshape(-1,1)
@@ -457,7 +457,7 @@ J. Wen, R. Greiner and D. Schuurmans. \
                     print("Alpha's optimization : iter %i -- Obj %.4f"%(k, objective))
         return alpha, centers
     
-    def centers_selection(self, Xs, Xt, kernel_params):
+    def _centers_selection(self, Xs, Xt, kernel_params):
         A = np.empty((Xt.shape[0], 0))
         b = np.empty((0,))
         centers = np.empty((0, Xt.shape[1]))

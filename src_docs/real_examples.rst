@@ -8,3 +8,4 @@ Real Examples
    examples/Flowers_example
    examples/Office_example
    examples/tradaboost_experiments
+   examples/Heart_Failure

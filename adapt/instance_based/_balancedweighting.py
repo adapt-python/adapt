@@ -10,7 +10,7 @@ class BalancedWeighting(BaseAdaptEstimator):
     """
     BW : Balanced Weighting
     
-    Fit the estimator on source and target labeled data
+    Fit the estimator :math:`h` on source and target labeled data
     according to the modified loss:
     
     .. math::
@@ -26,7 +26,7 @@ class BalancedWeighting(BaseAdaptEstimator):
     
     Parameters
     ----------
-    gamma : float
+    gamma : float (default=0.5)
         ratio between 0 and 1 correspond to the importance
         given to the target labeled data. When `ratio=1`, the
         estimator is only fitted on target data. `ratio=0.5`

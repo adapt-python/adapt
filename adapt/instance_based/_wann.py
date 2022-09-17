@@ -13,9 +13,10 @@ EPS = np.finfo(np.float32).eps
 @make_insert_doc(["task", "weighter"], supervised=True)
 class WANN(BaseAdaptDeep):
     """
-    WANN : Weighting Adversarial Neural Network is an instance-based domain adaptation
-    method suited for regression tasks. It supposes the supervised setting where some
-    labeled target data are available.
+    WANN : Weighting Adversarial Neural Network
+    
+    WANN is an instance-based domain adaptation method suited for regression tasks.
+    It supposes the supervised setting where some labeled target data are available.
     
     The goal of WANN is to compute a source instances reweighting which correct
     "shifts" between source and target domain. This is done by minimizing the

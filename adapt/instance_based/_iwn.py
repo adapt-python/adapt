@@ -47,11 +47,12 @@ def weighted_mmd(Xs, Xt, weights, gamma=1.):
     return mxx + myy -2*mxy
 
 
-@make_insert_doc(["estimator", "weighter"], supervised=True)
+@make_insert_doc(["estimator", "weighter"])
 class IWN(BaseAdaptDeep):
     """
-    IWN : Importance Weighting Network is an instance-based method for
-    unsupervised domain adaptation<.
+    IWN : Importance Weighting Network
+    
+    IWN is an instance-based method for unsupervised domain adaptation.
     
     The goal of IWN is to reweight the source instances in order to
     minimize the Maximum Mean Discreancy (MMD) between the reweighted
@@ -107,7 +108,7 @@ class IWN(BaseAdaptDeep):
     
     References
     ----------
-    .. [1] `[1] <https://arxiv.org/pdf/2209.04215.pdff>`_ A. de Mathelin, F. Deheeger, \
+    .. [1] `[1] <https://arxiv.org/pdf/2209.04215.pdf>`_ A. de Mathelin, F. Deheeger, \
 M. Mougeot and N. Vayatis "Fast and Accurate Importance Weighting for \
 Correcting Sample Bias" In ECML-PKDD, 2022.
     """

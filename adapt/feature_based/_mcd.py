@@ -14,8 +14,10 @@ EPS = np.finfo(np.float32).eps
 @make_insert_doc(["encoder", "task"])
 class MCD(BaseAdaptDeep):
     """
-    MCD: Maximum Classifier Discrepancy is a feature-based domain adaptation
-    method originally introduced for unsupervised classification DA.
+    MCD: Maximum Classifier Discrepancy
+    
+    MCD is a feature-based domain adaptation method originally introduced
+    for unsupervised classification DA.
     
     The goal of MCD is to find a new representation of the input features which
     minimizes the discrepancy between the source and target domains 
