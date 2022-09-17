@@ -16,7 +16,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -55,9 +54,11 @@
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.PRED.html">PRED</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.FA.html">FA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CORAL.html">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.TCA.html">TCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.fMMD.html">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DANN.html">DANN</a></li>
@@ -73,7 +74,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.LDM.html">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KLIEP.html">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.ULSIF.html">ULSIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.RULSIF.html">RULSIF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.IWC.html">IWC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.IWN.html">IWN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.BalancedWeighting.html">BalancedWeighting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
@@ -81,6 +87,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.LinInt.html">LinInt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
@@ -206,6 +213,20 @@
 <li class="toctree-l1"><a class="reference internal" href="tradaboost_experiments.html">TrAdaBoost Experiments</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tradaboost_experiments.html#Mushrooms">Mushrooms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tradaboost_experiments.html#20-NewsGroup">20-NewsGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Heart_Failure.html">Heart Failure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#CDAN">CDAN</a></li>
 </ul>
 </li>
 </ul>
@@ -448,7 +469,6 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
-.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -457,14 +477,10 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
-.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
-.jp-RenderedHTMLCommon tr,
-.jp-RenderedHTMLCommon th,
-.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -476,15 +492,12 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
-.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
-.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
-.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
@@ -512,9 +525,9 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <section id="Toy-Regression">
-<h1>Toy Regression<a class="headerlink" href="#Toy-Regression" title="Permalink to this heading"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="c925fba50d144fb8aacea738bbb6275f" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1adhqoV6b0uEavLDmMfkiwtRjam0DrXux?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="950517f4355345879a6d36748af2b4e7" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Regression.ipynb">View on GitHub</a></p>
+<h1>Toy Regression<a class="headerlink" href="#Toy-Regression" title="Permalink to this headline"></a></h1>
+<div class="btn btn-notebook" role="button"><p><img alt="8c51eaf34fdf4a92b6426b9927bcfc92" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1adhqoV6b0uEavLDmMfkiwtRjam0DrXux?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="12a76ef45d4247fea552edb1aa358940" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Regression.ipynb">View on GitHub</a></p>
 </div><p>You will find here the application of DA methods from the ADAPT package on a simple one dimensional DA regression problem.</p>
 <p>First we import packages needed in the following. We will use <code class="docutils literal notranslate"><span class="pre">matplotlib</span> <span class="pre">Animation</span></code> tools in order to get a visual understanding of the selected methods:</p>
 <div class="nbinput nblast docutils container">
@@ -530,7 +543,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <section id="Experimental-Setup">
-<h2>Experimental Setup<a class="headerlink" href="#Experimental-Setup" title="Permalink to this heading"></a></h2>
+<h2>Experimental Setup<a class="headerlink" href="#Experimental-Setup" title="Permalink to this headline"></a></h2>
 <p>We now set the synthetic regression DA problem using the <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.utils.make_regression_da.html">make_regression_da</a> function from <code class="docutils literal notranslate"><span class="pre">adapt.utils</span></code>.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -634,7 +647,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </section>
 <section id="TGT-Only">
-<h2>TGT Only<a class="headerlink" href="#TGT-Only" title="Permalink to this heading"></a></h2>
+<h2>TGT Only<a class="headerlink" href="#TGT-Only" title="Permalink to this headline"></a></h2>
 <p>First, let’s fit a network only on the three labeled target data. As we could have guessed, this is not sufficient to build an efficient model on the whole target domain.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
@@ -683,7 +696,7 @@ div.rendered_html tbody tr:hover {
 <p><img alt="tgtOnly" src="../_images/tgtOnly.gif" /></p>
 </section>
 <section id="Src-Only">
-<h2>Src Only<a class="headerlink" href="#Src-Only" title="Permalink to this heading"></a></h2>
+<h2>Src Only<a class="headerlink" href="#Src-Only" title="Permalink to this headline"></a></h2>
 <p>We would like to use the large amount of labeled source data to improve the training of the neural network on the target domain. However, as we can see on the figure below, using only the source dataset fails to provide an efficient model.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
@@ -718,7 +731,7 @@ div.rendered_html tbody tr:hover {
 <p><img alt="srcOnly" src="../_images/srcOnlyReg.gif" /></p>
 </section>
 <section id="All">
-<h2>All<a class="headerlink" href="#All" title="Permalink to this heading"></a></h2>
+<h2>All<a class="headerlink" href="#All" title="Permalink to this headline"></a></h2>
 <p>Same thing happen when using both source and target labeled data. As the source sample ovewhelms the target one, the model is not fitted enough on the target domain.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
@@ -756,7 +769,7 @@ div.rendered_html tbody tr:hover {
 <p><img alt="all" src="../_images/all.gif" /></p>
 </section>
 <section id="CORAL">
-<h2>CORAL<a class="headerlink" href="#CORAL" title="Permalink to this heading"></a></h2>
+<h2>CORAL<a class="headerlink" href="#CORAL" title="Permalink to this headline"></a></h2>
 <p>Let’s now consider the domain adaptation method <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.CORAL.html">CORAL</a> This “two-stage” method first perfroms a feature alignment on source data and then fit an estimator on the new feature space.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
@@ -805,7 +818,7 @@ Fit Estimator...
 <p>As we can see. when using CORAL method, source input data are translated closer to target data. However, for this example, this is not enough to obtain a good model on the target domain.</p>
 </section>
 <section id="TrAdaBoostR2">
-<h2>TrAdaBoostR2<a class="headerlink" href="#TrAdaBoostR2" title="Permalink to this heading"></a></h2>
+<h2>TrAdaBoostR2<a class="headerlink" href="#TrAdaBoostR2" title="Permalink to this headline"></a></h2>
 <p>We now consider an instance-based method: <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a>. This method consists in a reverse boosting algorithm decreasing the weights of source data poorly predicted at each boosting iteraton.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
@@ -903,7 +916,7 @@ Iteration 29 - Error: 0.0191
 obtain a good target model.</p>
 </section>
 <section id="RegularTransferNN">
-<h2>RegularTransferNN<a class="headerlink" href="#RegularTransferNN" title="Permalink to this heading"></a></h2>
+<h2>RegularTransferNN<a class="headerlink" href="#RegularTransferNN" title="Permalink to this headline"></a></h2>
 <p>Finally, we consider here the paremeter-based method <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a>. This method fits the target labeled data with a regularized loss. During training, the mean squared error on target data is regularized with the euclidean distance between the target model parameters and the ones of a pre-trained source model.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:

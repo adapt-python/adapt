@@ -16,7 +16,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -55,9 +54,11 @@
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.PRED.html">PRED</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.FA.html">FA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CORAL.html">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.TCA.html">TCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.fMMD.html">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DANN.html">DANN</a></li>
@@ -73,7 +74,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.LDM.html">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KLIEP.html">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.ULSIF.html">ULSIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.RULSIF.html">RULSIF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.IWC.html">IWC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.IWN.html">IWN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.BalancedWeighting.html">BalancedWeighting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
@@ -81,6 +87,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.LinInt.html">LinInt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
@@ -206,6 +213,20 @@
 <li class="toctree-l1"><a class="reference internal" href="#">TrAdaBoost Experiments</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Mushrooms">Mushrooms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#20-NewsGroup">20-NewsGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Heart_Failure.html">Heart Failure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#CDAN">CDAN</a></li>
 </ul>
 </li>
 </ul>
@@ -448,7 +469,6 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
-.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -457,14 +477,10 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
-.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
-.jp-RenderedHTMLCommon tr,
-.jp-RenderedHTMLCommon th,
-.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -476,15 +492,12 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
-.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
-.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
-.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
@@ -512,8 +525,8 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <section id="Reproduction-of-the-TrAdaBoost-experiments">
-<h1>Reproduction of the TrAdaBoost experiments<a class="headerlink" href="#Reproduction-of-the-TrAdaBoost-experiments" title="Permalink to this heading"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="51ac0c8416ca45c284fd90e806f147be" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/adapt/blob/master/src_docs/examples/tradaboost_experiments.ipynb">View on GitHub</a></p>
+<h1>Reproduction of the TrAdaBoost experiments<a class="headerlink" href="#Reproduction-of-the-TrAdaBoost-experiments" title="Permalink to this headline"></a></h1>
+<div class="btn btn-notebook" role="button"><p><img alt="e0fb4a4f5ab7471fb2b59e251330f058" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/adapt/blob/master/src_docs/examples/tradaboost_experiments.ipynb">View on GitHub</a></p>
 </div><p>The purpose of this example is to reproduce the results obtained in the paper <a class="reference external" href="https://cse.hkust.edu.hk/~qyang/Docs/2007/tradaboost.pdf">Boosting for Transfer Learning (2007)</a>. In this work, the authors developed a transfer algorithm called TrAdaBoost dedicated for <a class="reference external" href="https://adapt-python.github.io/adapt/map.html">supervised domain adaptation</a>. You can find more details about this algorithm <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.instance_based.TrAdaBoost.html">here</a>. The
 goal of this algorithm is to combine a source dataset with many labeled instances to a target dataset with few labels in order to learn a good model on the target domain.</p>
 <p>We try to reproduce the two following exepriments:</p>
@@ -522,7 +535,7 @@ goal of this algorithm is to combine a source dataset with many labeled instance
 <li><p>20newsgroups</p></li>
 </ul>
 <section id="Mushrooms">
-<h2>Mushrooms<a class="headerlink" href="#Mushrooms" title="Permalink to this heading"></a></h2>
+<h2>Mushrooms<a class="headerlink" href="#Mushrooms" title="Permalink to this headline"></a></h2>
 <p><strong>Dataset description</strong> The <a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/mushroom">Mushrooms</a> data set includes descriptions of hypothetical samples corresponding to 23 species of gilled mushrooms in the Agaricus and Lepiota Family (pp. 500-525). Each species is identified as definitely edible, definitely poisonous, or of unknown edibility and not recommended. This latter class was combined with the poisonous one. The Guide clearly states that there is no simple rule for determining the edibility
 of a mushroom.</p>
 <p><strong>Experiment description</strong>: For the TrAdaBoost experiment, according to the authors :</p>
@@ -876,7 +889,7 @@ Round 9 : {&#39;SVM&#39;: 0.261, &#39;SVMt&#39;: 0.042, &#39;AUX&#39;: 0.042, &#
 </pre></div></div>
 </div>
 <section id="Results-Summary">
-<h3>Results Summary<a class="headerlink" href="#Results-Summary" title="Permalink to this heading"></a></h3>
+<h3>Results Summary<a class="headerlink" href="#Results-Summary" title="Permalink to this headline"></a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
 </pre></div>
@@ -931,7 +944,7 @@ Round 9 : {&#39;SVM&#39;: 0.261, &#39;SVMt&#39;: 0.042, &#39;AUX&#39;: 0.042, &#
 </section>
 </section>
 <section id="20-NewsGroup">
-<h2>20 NewsGroup<a class="headerlink" href="#20-NewsGroup" title="Permalink to this heading"></a></h2>
+<h2>20 NewsGroup<a class="headerlink" href="#20-NewsGroup" title="Permalink to this headline"></a></h2>
 <p><strong>Dataset description</strong> The <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_20newsgroups.html">20 NewsGroup</a> data set comprises around 18000 newsgroups posts on 20 main topics, whith some topics divided in subcategories.</p>
 <p><strong>Experiment description</strong> For the TrAdaBoost experiment, according to the authors: &gt;We define the tasks as top-category classification problems. When we split the data to generate diff-distribution (source) and same-distribution (target) sets, the data are split based on subcategories instead of based on random splitting. Then, the two data sets contain data in different subcategories. Their distributions also differ as a result. &gt; – Boosting for Transfer Learning (2007)</p>
 <p>The authors do not precise which categories have been selected whithin each domain. We try to impute them based on the number of instances in each domain given by the authors in Table 1.</p>
@@ -990,7 +1003,7 @@ Round 9 : {&#39;SVM&#39;: 0.261, &#39;SVMt&#39;: 0.042, &#39;AUX&#39;: 0.042, &#
 </div>
 <p>We conduct the three proposed experiments “rec vs talk”, “rec vs sci” and “sci vs talk”. We set the number of TrAdaBoost estimators to 10 instead of 100. We found that using 100 estimators give poor results for TrAdaBoost.</p>
 <section id="Rec-vs-talk">
-<h3>Rec vs talk<a class="headerlink" href="#Rec-vs-talk" title="Permalink to this heading"></a></h3>
+<h3>Rec vs talk<a class="headerlink" href="#Rec-vs-talk" title="Permalink to this headline"></a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
@@ -1068,7 +1081,7 @@ Round 9 : {&#39;SVM&#39;: 0.206, &#39;SVMt&#39;: 0.104, &#39;AUX&#39;: 0.088, &#
 </div>
 </section>
 <section id="id1">
-<h3>Results Summary<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<h3>Results Summary<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
@@ -1121,7 +1134,7 @@ Round 9 : {&#39;SVM&#39;: 0.206, &#39;SVMt&#39;: 0.104, &#39;AUX&#39;: 0.088, &#
 </div>
 </section>
 <section id="Rec-vs-Sci">
-<h3>Rec vs Sci<a class="headerlink" href="#Rec-vs-Sci" title="Permalink to this heading"></a></h3>
+<h3>Rec vs Sci<a class="headerlink" href="#Rec-vs-Sci" title="Permalink to this headline"></a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
@@ -1199,7 +1212,7 @@ Round 9 : {&#39;SVM&#39;: 0.349, &#39;SVMt&#39;: 0.205, &#39;AUX&#39;: 0.169, &#
 </div>
 </section>
 <section id="id2">
-<h3>Results Summary<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<h3>Results Summary<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
@@ -1252,7 +1265,7 @@ Round 9 : {&#39;SVM&#39;: 0.349, &#39;SVMt&#39;: 0.205, &#39;AUX&#39;: 0.169, &#
 </div>
 </section>
 <section id="Talk-vs-Sci">
-<h3>Talk vs Sci<a class="headerlink" href="#Talk-vs-Sci" title="Permalink to this heading"></a></h3>
+<h3>Talk vs Sci<a class="headerlink" href="#Talk-vs-Sci" title="Permalink to this headline"></a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
@@ -1330,7 +1343,7 @@ Round 9 : {&#39;SVM&#39;: 0.26, &#39;SVMt&#39;: 0.192, &#39;AUX&#39;: 0.167, &#3
 </div>
 </section>
 <section id="id3">
-<h3>Results Summary<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<h3>Results Summary<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
 </pre></div>

@@ -16,7 +16,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -55,9 +54,11 @@
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.PRED.html">PRED</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.FA.html">FA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CORAL.html">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.TCA.html">TCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.fMMD.html">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DANN.html">DANN</a></li>
@@ -73,7 +74,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.LDM.html">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KLIEP.html">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.ULSIF.html">ULSIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.RULSIF.html">RULSIF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.IWC.html">IWC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.IWN.html">IWN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.BalancedWeighting.html">BalancedWeighting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
@@ -81,6 +87,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.LinInt.html">LinInt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
@@ -206,6 +213,20 @@
 <li class="toctree-l1"><a class="reference internal" href="tradaboost_experiments.html">TrAdaBoost Experiments</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tradaboost_experiments.html#Mushrooms">Mushrooms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tradaboost_experiments.html#20-NewsGroup">20-NewsGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Heart_Failure.html">Heart Failure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#CDAN">CDAN</a></li>
 </ul>
 </li>
 </ul>
@@ -448,7 +469,6 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
-.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -457,14 +477,10 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
-.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
-.jp-RenderedHTMLCommon tr,
-.jp-RenderedHTMLCommon th,
-.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -476,15 +492,12 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
-.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
-.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
-.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
@@ -512,7 +525,7 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <section id="Model-Based-Transfer-Learning">
-<h1>Model-Based Transfer Learning<a class="headerlink" href="#Model-Based-Transfer-Learning" title="Permalink to this heading"></a></h1>
+<h1>Model-Based Transfer Learning<a class="headerlink" href="#Model-Based-Transfer-Learning" title="Permalink to this headline"></a></h1>
 <center><figure><p><img alt="flowers" src="../_images/flowers.jpg" /></p>
 <figcaption><p>Daisy picture (source: flowers dataset)</p>
 </figcaption></figure></center><p>In many machine learning cases, the learner has access to a very small amount of labeled data. This is the case for example in radiology when we want to learn a tumor classification task from X-ray images. The number of images available will be very small compared to the complexity of the task. On the other hand, there are very large labeled image datasets like <a class="reference external" href="https://image-net.org/">ImageNet</a> on which huge neural networks have been pre-trained to classify different types of items. Although
@@ -648,7 +661,7 @@ with BatchNormalization). We don’t take the last layer of the ResNet which is 
 </div>
 </div>
 <section id="Training-a-model-from-scratch">
-<h2>Training a model from scratch<a class="headerlink" href="#Training-a-model-from-scratch" title="Permalink to this heading"></a></h2>
+<h2>Training a model from scratch<a class="headerlink" href="#Training-a-model-from-scratch" title="Permalink to this headline"></a></h2>
 <p>To get an idea of the potential gain of using transfer, we will first look at the perfroamnces that can be obtained by training a model using only the 863 flowers data that we have. We will create a convolutional model and train it on this small training dataset.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
@@ -831,7 +844,7 @@ Epoch 20/20
 <p>We observe that the performances on the test dataset are not at the level of the train, we have about 57% of accuracy, which is not very satisfactory. There is some overfitting here since the train score reaches 95%, the network we used could perhaps be optimized to increase the test score but we will study here the effect of using a pre-trained model.</p>
 </section>
 <section id="Model-based-Transfer">
-<h2>Model-based Transfer<a class="headerlink" href="#Model-based-Transfer" title="Permalink to this heading"></a></h2>
+<h2>Model-based Transfer<a class="headerlink" href="#Model-based-Transfer" title="Permalink to this headline"></a></h2>
 <p>We will now look at what can be obtained by using the ResNet, we will study two ways of transferring:</p>
 <ul class="simple">
 <li><p>Features Extraction**: We use directly the last hidden layer of the ResNet as input features for a new smaller model.</p></li>
@@ -854,7 +867,7 @@ Epoch 20/20
 </div>
 </div>
 <section id="Features-Extraction">
-<h3>Features Extraction<a class="headerlink" href="#Features-Extraction" title="Permalink to this heading"></a></h3>
+<h3>Features Extraction<a class="headerlink" href="#Features-Extraction" title="Permalink to this headline"></a></h3>
 <p>We create two data sets <code class="docutils literal notranslate"><span class="pre">X_train_enc</span></code> and <code class="docutils literal notranslate"><span class="pre">X_test_enc</span></code> from the outputs of the ResNet:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
@@ -965,7 +978,7 @@ Epoch 20/20
 <p>You can clearly see that the results obtained are much better: 0.89% of accuracy instead of 0.57%! We can say that the features extracted from the ResNet50 make sense for our set of flower images. As the ResNet has been trained on a large dataset we can also consider that the features of the last layer are more general which leads to reduce the overfitting.</p>
 </section>
 <section id="Fine-Tuning">
-<h3>Fine-Tuning<a class="headerlink" href="#Fine-Tuning" title="Permalink to this heading"></a></h3>
+<h3>Fine-Tuning<a class="headerlink" href="#Fine-Tuning" title="Permalink to this headline"></a></h3>
 <p>Previously, we have fixed the parameters of the ResNet50, we will see if a gain is possible by fine-tuning them with respect to the flower classification task. Note that we don’t want to change completely the parameters of the ResNet because otherwise we lose the information of the sources and we come back to a target only model and thus to the risk of overfitting. This is why we will update the ResNet parameters more slowly than those of the task model. We will also pre-train the task model
 with the ResNet parameters fixed to avoid that the first updates of the ResNet are made using the gradients returned by a poor task model.</p>
 <p>We will use the <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.parameter_based.FineTuning.html">FineTuning</a> object of the ADAPT library which allows to easily implement such a finetuning. Note that we could use directly the <code class="docutils literal notranslate"><span class="pre">task</span></code> model that we have just trained above, but to see how to use FineTuning directly we will do a pre-training.</p>
