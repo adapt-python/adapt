@@ -44,22 +44,25 @@ class ULSIF(BaseAdaptEstimator):
     
     .. math::
     
-        \max_{\theta } \frac{1}{2}  \\theta^T H \\theta - h^T \\theta  + 
-        \frac{\\lambda}{2} \\theta^T \\theta
+        \max_{\\theta } \\frac{1}{2}  \\theta^T H \\theta - h^T \\theta  + 
+        \\frac{\\lambda}{2} \\theta^T \\theta
         
     where :
     
     .. math::
     
-        H_{ll'} = \\frac{1}{n_s} \sum_{x_i \\in X_S}  K(x_i, x_l) K(x_i, x_l') \\
-        h_{l}= \\frac{1}{n_T} \sum_{x_i \\in X_T} K(x_i, x_l)
+        H_{kl} = \\frac{1}{n_s} \sum_{x_i \\in X_S}  K(x_i, x_k) K(x_i, x_l)
+    
+    .. math::
+    
+        h_{k} = \\frac{1}{n_T} \sum_{x_i \\in X_T} K(x_i, x_k)
         
     
     The above OP is solved by the closed form expression
     
     .. math::
     
-        \hat{\\theta} = (H+\\lambda I_{n_s})^{(-1)} h 
+        \\hat{\\theta} = (H+\\lambda I_{n_s})^{(-1)} h 
     
     Furthemore the method admits a leave one out cross validation score that has a closed form expression 
     and can be used to select the appropriate parameters of the kernel function :math:`K` (typically, the paramter

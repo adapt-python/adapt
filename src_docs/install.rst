@@ -21,7 +21,7 @@ Pypi Installation
 -----------------
 
 This package is available on `Pypi <https://badge.fury.io/py/adapt>`_. It has been tested on Linux, MacOSX and Windows
-for Python versions: 3.6, 3.7 and 3.8. It can be installed with the following command line:
+for Python versions: 3.6, 3.7, 3.8 and 3.9. It can be installed with the following command line:
 
 .. code-block:: python
 	

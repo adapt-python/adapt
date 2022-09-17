@@ -15,6 +15,8 @@ from adapt.utils import set_random_seed
 
 EPS = np.finfo(float).eps
 
+
+@make_insert_doc()
 class RULSIF(BaseAdaptEstimator):
     """
     RULSIF: Relative Unconstrained Least-Squares Importance Fitting
@@ -45,15 +47,18 @@ class RULSIF(BaseAdaptEstimator):
     
     .. math::
     
-        \max_{\theta } \frac{1}{2}  \\theta^T H \\theta - h^T \\theta  + 
-        \frac{\\lambda}{2} \\theta^T \\theta
+        \max_{\\theta } \\frac{1}{2}  \\theta^T H \\theta - h^T \\theta  + 
+        \\frac{\\lambda}{2} \\theta^T \\theta
         
     where :
     
     .. math::
     
-        H_{ll'} = \\frac{\\alpha}{n_s} \sum_{x_i \\in X_S}  K(x_i, x_l) K(x_i, x_l') + \\frac{1-\\alpha}{n_t} \\sum_{x_i \\in X_T}  K(x_i, x_l) K(x_i, x_l') \\
-        h_{l}= \\frac{1}{n_T} \sum_{x_i \\in X_T} K(x_i, x_l)
+        H_{kl} = \\frac{\\alpha}{n_s} \sum_{x_i \\in X_S}  K(x_i, x_k) K(x_i, x_l) + \\frac{1-\\alpha}{n_T} \\sum_{x_i \\in X_T}  K(x_i, x_k) K(x_i, x_l)
+        
+    .. math::
+    
+        h_{k} = \\frac{1}{n_T} \sum_{x_i \\in X_T} K(x_i, x_k)
     
     The above OP is solved by the closed form expression
     
@@ -68,7 +73,7 @@ class RULSIF(BaseAdaptEstimator):
     
     .. math::
     
-        J = -\\frac{\\alpha}{2|X_S|} \\sum_{x \\in X_S} w(x)^2 - \frac{1-\\alpha}{2|X_T|} \\sum_{x \in X_T} w(x)^2
+        J = -\\frac{\\alpha}{2|X_S|} \\sum_{x \\in X_S} w(x)^2 - \\frac{1-\\alpha}{2|X_T|} \\sum_{x \in X_T} w(x)^2
     
     Finally, an estimator is fitted using the reweighted labeled source instances.
     

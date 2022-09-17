@@ -14,8 +14,10 @@ EPS = np.finfo(np.float32).eps
 @make_insert_doc(["encoder", "task"])
 class MDD(BaseAdaptDeep):
     """
-    MDD: Margin Disparity Discrepancy is a feature-based domain adaptation
-    method originally introduced for unsupervised classification DA.
+    MDD: Margin Disparity Discrepancy
+    
+    MDD is a feature-based domain adaptation method originally introduced
+    for unsupervised classification DA.
     
     The goal of MDD is to find a new representation of the input features which
     minimizes the disparity discrepancy between the source and target domains 

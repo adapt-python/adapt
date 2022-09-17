@@ -1,9 +1,9 @@
-﻿:ref:`adapt.feature_based <adapt.feature_based>`.TCA
-===========================================================
+﻿:ref:`adapt.feature_based <adapt.feature_based>`.PRED
+============================================================
 
 .. currentmodule:: adapt.feature_based
 
-.. autoclass:: TCA
+.. autoclass:: PRED
 	:no-members:
 	:no-inherited-members:
 	:no-special-members:
@@ -15,17 +15,17 @@
 	
 	.. autosummary::
 	    
-		~TCA.__init__
-		~TCA.fit
-		~TCA.fit_estimator
-		~TCA.fit_transform
-		~TCA.get_params
-		~TCA.predict
-		~TCA.predict_estimator
-		~TCA.score
-		~TCA.set_params
-		~TCA.transform
-		~TCA.unsupervised_score
+		~PRED.__init__
+		~PRED.fit
+		~PRED.fit_estimator
+		~PRED.fit_transform
+		~PRED.get_params
+		~PRED.predict
+		~PRED.predict_estimator
+		~PRED.score
+		~PRED.set_params
+		~PRED.transform
+		~PRED.unsupervised_score
 	
 	
 	.. automethod:: __init__
@@ -47,5 +47,5 @@
 
    <h2> Examples </h2>
 	
-.. include:: ../gallery/TCA.rst
+.. include:: ../gallery/PRED.rst
 	

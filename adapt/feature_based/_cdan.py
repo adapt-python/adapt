@@ -34,8 +34,9 @@ def _get_default_classifier(name=None, state=None):
 @make_insert_doc(["encoder"])
 class CDAN(BaseAdaptDeep):
     """
-    CDAN (Conditional Adversarial Domain Adaptation) is an
-    unsupervised domain adaptation method on the model of the 
+    CDAN: Conditional Adversarial Domain Adaptation
+    
+    CDAN is an unsupervised domain adaptation method on the model of the 
     :ref:`DANN <adapt.feature_based.DANN>`. In CDAN the discriminator
     is conditioned on the prediction of the task network for
     source and target data. This should , in theory, focus the

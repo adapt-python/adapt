@@ -28,7 +28,7 @@ class IWC(BaseAdaptEstimator):
     
     .. math::
     
-    w(x) = \frac{1}{P(x \in Source)} - 1
+        w(x) = \\frac{1}{P(x \in Source)} - 1
 
     Parameters
     ----------

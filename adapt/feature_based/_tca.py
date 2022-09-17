@@ -50,7 +50,7 @@ class TCA(BaseAdaptEstimator):
     
     References
     ----------
-    .. [1] `[1] <https://www.cse.ust.hk/~qyang/Docs/2009/TCA.pdf>` S. J. Pan, \
+    .. [1] `[1] <https://www.cse.ust.hk/~qyang/Docs/2009/TCA.pdf>`_ S. J. Pan, \
 I. W. Tsang, J. T. Kwok and Q. Yang. "Domain Adaptation via Transfer Component \
 Analysis". In IEEE transactions on neural networks 2010
     """
