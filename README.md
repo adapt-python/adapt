@@ -23,7 +23,7 @@ The purpose of the ADAPT library is to facilitate the access to transfer learnin
             <b>Sample bias correction</b>
             <br>
             <br>
-            <img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/sample_bias_corr_img.png">
+            <img src="https://github.com/adapt-python/adapt/raw/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/sample_bias_corr_img.png">
         </a>
     </td>
     <td width="50%">
@@ -32,7 +32,7 @@ The purpose of the ADAPT library is to facilitate the access to transfer learnin
             <b>Model-based Transfer</b>
             <br>
             <br>
-            <img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/finetuned.png">
+            <img src="https://github.com/adapt-python/adapt/raw/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/finetuned.png">
         </a>
     </td>
   </tr>
@@ -43,7 +43,7 @@ The purpose of the ADAPT library is to facilitate the access to transfer learnin
             <b>Deep Domain Adaptation</b>
             <br>
             <br>
-            <img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/office_item.png">
+            <img src="https://github.com/adapt-python/adapt/raw/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/office_item.png">
         </a>
     </td>
     <td width="50%">
@@ -166,7 +166,7 @@ Thus, the transfer learning models from the ADAPT library can be seen as machine
 
 The ADAPT library proposes numerous transfer algorithms and it can be hard to know which algorithm is best suited for a particular problem. If you do not know which algorithm to choose, this [flowchart](https://adapt-python.github.io/adapt/map.html) may help you:
 
-[<img src="src_docs/_static/images/thumbnai_flowchart.PNG" width=30%>](https://adapt-python.github.io/adapt/map.html)
+[<img src="https://github.com/adapt-python/adapt/raw/master/src_docs/_static/images/thumbnai_flowchart.PNG" width=30%>](https://adapt-python.github.io/adapt/map.html)
 
 
 ## Quick Start
@@ -217,7 +217,7 @@ adapt_model.score(Xt, yt)
 >>> 0.574
 ```
 
-| <img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/results_qs.png"> | 
+| <img src="https://github.com/adapt-python/adapt/raw/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/results_qs.png"> | 
 |:--:| 
 | **Quick-Start Plotting Results**. *The dotted and dashed lines are respectively the class separation of the "source only" and KMM models. Note that the predicted positive class is on the right of the dotted line for the "source only" model but on the left of the dashed line for KMM. (The code for plotting the Figure is available [here](https://adapt-python.github.io/adapt/examples/Quick_start.html))* |
 
@@ -285,4 +285,4 @@ If you use this library in your research, please cite ADAPT using the following 
 
 This work has been funded by Michelin and the Industrial Data Analytics and Machine Learning chair from ENS Paris-Saclay, Borelli center.
 
-[<img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/michelin.png" width=200px alt="Michelin">](https://www.michelin.com/) [<img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/idaml.jpg" width=200px alt="IDAML">](https://centreborelli.ens-paris-saclay.fr/fr/chaire-idaml) [<img src="https://github.com/adapt-python/adapt/blob/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/borelli.jpg" alt="Centre Borelli" width=150px>](https://centreborelli.ens-paris-saclay.fr/fr)
+[<img src="https://github.com/adapt-python/adapt/raw/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/michelin.png" width=200px alt="Michelin">](https://www.michelin.com/) [<img src="https://github.com/adapt-python/adapt/raw/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/idaml.jpg" width=200px alt="IDAML">](https://centreborelli.ens-paris-saclay.fr/fr/chaire-idaml) [<img src="https://github.com/adapt-python/adapt/raw/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/borelli.jpg" alt="Centre Borelli" width=150px>](https://centreborelli.ens-paris-saclay.fr/fr)
