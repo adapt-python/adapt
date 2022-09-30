@@ -232,7 +232,7 @@ ADAPT package is divided in three sub-modules containing the following domain ad
 
 - [FA](https://adapt-python.github.io/adapt/generated/adapt.feature_based.FA.html) (*Frustratingly Easy Domain Adaptation*) [[paper]](https://arxiv.org/pdf/0907.1815.pdf)
 - [SA](https://adapt-python.github.io/adapt/generated/adapt.feature_based.SA.html) (*Subspace Alignment*) [[paper]](https://arxiv.org/abs/1409.5241)
-- [fMMD](https://adapt-python.github.io/adapt/generated/adapt.feature_based.SA.html) (*feature Selection with MMD*) [[paper]](https://www.cs.cmu.edu/afs/cs/Web/People/jgc/publication/Feature%20Selection%20for%20Transfer%20Learning.pdf)
+- [fMMD](https://adapt-python.github.io/adapt/generated/adapt.feature_based.fMMD.html) (*feature Selection with MMD*) [[paper]](https://www.cs.cmu.edu/afs/cs/Web/People/jgc/publication/Feature%20Selection%20for%20Transfer%20Learning.pdf)
 - [DANN](https://adapt-python.github.io/adapt/generated/adapt.feature_based.DANN.html) (*Discriminative Adversarial Neural Network*) [[paper]](https://jmlr.org/papers/volume17/15-239/15-239.pdf)
 - [ADDA](https://adapt-python.github.io/adapt/generated/adapt.feature_based.ADDA.html) (*Adversarial Discriminative Domain Adaptation*) [[paper]](https://arxiv.org/pdf/1702.05464.pdf)
 - [CORAL](https://adapt-python.github.io/adapt/generated/adapt.feature_based.CORAL.html) (*CORrelation ALignment*) [[paper]](https://arxiv.org/pdf/1511.05547.pdf)
