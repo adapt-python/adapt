@@ -2,6 +2,7 @@
 Test functions for iwn module.
 """
 
+import numpy as np
 from sklearn.linear_model import RidgeClassifier
 from adapt.utils import make_classification_da
 from adapt.instance_based import IWC
@@ -15,6 +16,9 @@ def test_iwn():
     model.fit(Xs, ys);
     model.predict(Xt)
     model.score(Xt, yt)
+    w1 = model.predict_weights()
+    w2 = model.predict_weights(Xs)
+    assert np.abs(w1-w2).sum() < 10**-5
     
     
 def test_default_classif():
@@ -23,6 +27,9 @@ def test_default_classif():
     model.fit(Xs, ys);
     model.predict(Xt)
     model.score(Xt, yt)
+    w1 = model.predict_weights()
+    w2 = model.predict_weights(Xs)
+    assert np.abs(w1-w2).sum() < 10**-5
     
     
 def test_nn_classif():
@@ -32,3 +39,7 @@ def test_nn_classif():
     model.fit(Xs, ys);
     model.predict(Xt)
     model.score(Xt, yt)
+    w1 = model.predict_weights()
+    w2 = model.predict_weights(Xs)
+    assert np.abs(w1-w2).sum() < 10**-5
+    
