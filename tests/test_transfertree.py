@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 
+from adapt.utils import make_classification_da
 from adapt.parameter_based import TransferTreeClassifier, TransferForestClassifier
 
 methods = [
@@ -189,3 +190,15 @@ def test_transfer_tree():
         clfs.append(transferred_dt.estimator)
         #clfs.append(clf_transfer)
         scores.append(score)
+        
+        
+def test_specific():
+    Xs, ys, Xt, yt = make_classification_da()
+    
+    src_model = DecisionTreeClassifier()
+    src_model.fit(Xs, ys)
+    
+    model = TransferTreeClassifier(src_model)
+    
+    model.estimator_ = src_model
+    model._strut(Xt[:0], yt[:0], no_prune_on_cl=True, cl_no_prune=[0], node=3)
