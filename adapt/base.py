@@ -795,7 +795,6 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
 
 
     def __getstate__(self):
-        print("getting")
         dict_ = {k: v for k, v in self.__dict__.items()}
         if "estimator_" in dict_:
             if isinstance(dict_["estimator_"], Model):
@@ -817,7 +816,6 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
 
 
     def __setstate__(self, dict_):
-        print("setting")
         if "estimator_" in dict_:
             if isinstance(dict_["estimator_"], dict):
                 dict_["estimator_"] = self._from_config_keras_model(
