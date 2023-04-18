@@ -7,6 +7,10 @@ from adapt.utils import make_classification_da
 from adapt.instance_based import IWN
 from adapt.utils import get_default_task
 from sklearn.neighbors import KNeighborsClassifier
+try:
+    from tensorflow.keras.optimizers.legacy import Adam
+except:
+    from tensorflow.keras.optimizers import Adam
 
 Xs, ys, Xt, yt = make_classification_da()
 
@@ -21,7 +25,7 @@ def test_iwn():
     
 def test_iwn_fit_estim():
     task = get_default_task()
-    task.compile(optimizer="adam", loss="mse", metrics=["mae"])
+    task.compile(optimizer=Adam(), loss="mse", metrics=["mae"])
     model = IWN(task, Xt=Xt, sigma_init=0.1, random_state=0,
                 pretrain=True, pretrain__epochs=100, pretrain__verbose=0)
     model.fit(Xs, ys)

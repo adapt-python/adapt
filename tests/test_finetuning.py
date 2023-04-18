@@ -41,7 +41,7 @@ def test_finetune():
 
     fine_tuned = FineTuning(encoder=model.encoder_, task=model.task_,
                             training=True,
-                            loss="bce", optimizer="adam", random_state=0)
+                            loss="bce", optimizer=Adam(), random_state=0)
     fine_tuned.fit(Xt[ind], yt[ind], epochs=100, verbose=0)
 
     assert np.abs(fine_tuned.encoder_.get_weights()[0] - model.encoder_.get_weights()[0]).sum() > 1.
@@ -49,7 +49,7 @@ def test_finetune():
 
     fine_tuned = FineTuning(encoder=model.encoder_, task=model.task_,
                             training=[True, False],
-                            loss="bce", optimizer="adam", random_state=0)
+                            loss="bce", optimizer=Adam(), random_state=0)
     fine_tuned.fit(Xt[ind], yt[ind], epochs=100, verbose=0)
 
     assert np.abs(fine_tuned.encoder_.get_weights()[0] - model.encoder_.get_weights()[0]).sum() == 0.
@@ -57,7 +57,7 @@ def test_finetune():
 
     fine_tuned = FineTuning(encoder=model.encoder_, task=model.task_,
                             training=[False],
-                            loss="bce", optimizer="adam", random_state=0)
+                            loss="bce", optimizer=Adam(), random_state=0)
     fine_tuned.fit(Xt[ind], yt[ind], epochs=100, verbose=0)
 
     assert np.abs(fine_tuned.encoder_.get_weights()[0] - model.encoder_.get_weights()[0]).sum() == 0.
@@ -66,13 +66,13 @@ def test_finetune():
     
 def test_finetune_pretrain():
     model = FineTuning(encoder=encoder, task=task, pretrain=True, pretrain__epochs=2,
-                       loss="bce", optimizer="adam", random_state=0)
+                       loss="bce", optimizer=Adam(), random_state=0)
     model.fit(Xs, ys, epochs=1, verbose=0)
     
     
 def test_clone():
     model = FineTuning(encoder=encoder, task=task,
-                       loss="bce", optimizer="adam", random_state=0)
+                       loss="bce", optimizer=Adam(), random_state=0)
     model.fit(Xs, ys, epochs=1, verbose=0)
     
     new_model = clone(model)

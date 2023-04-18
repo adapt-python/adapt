@@ -456,7 +456,11 @@ Peignier, Sergio and Mougeot, Mathilde \
             if not coh:
                 if Translate :
                     if auto_drift:
-                        b_infs,b_sups = ut.bounds_rule(rule,self.estimator_.n_features_)
+                        try:
+                            n_feat = self.estimator_.n_features_
+                        except:
+                            n_feat = self.estimator_.n_features_in_
+                        b_infs,b_sups = ut.bounds_rule(rule, n_feat)
                         if non_coherent_sense == -1:
                             if b_sups[phi] == np.inf:
                                 self.updateSplit(node,phi,th+D_MARGIN)
@@ -817,8 +821,12 @@ Peignier, Sergio and Mougeot, Mathilde \
         maj_class = np.argmax(self.estimator_.tree_.value[node, :].copy())
         
         if min_drift is None or max_drift is None:
-            min_drift = np.zeros(self.estimator_.n_features_)
-            max_drift = np.zeros(self.estimator_.n_features_)
+            try:
+                n_feat = self.estimator_.n_features_
+            except:
+                n_feat = self.estimator_.n_features_in_
+            min_drift = np.zeros(self.estimator_.n_feat)
+            max_drift = np.zeros(self.estimator_.n_feat)
 
         current_class_distribution = ut.compute_class_distribution(classes_, Y_target_node)
         is_reached = (Y_target_node.size > 0)
