@@ -825,8 +825,8 @@ Peignier, Sergio and Mougeot, Mathilde \
                 n_feat = self.estimator_.n_features_
             except:
                 n_feat = self.estimator_.n_features_in_
-            min_drift = np.zeros(self.estimator_.n_feat)
-            max_drift = np.zeros(self.estimator_.n_feat)
+            min_drift = np.zeros(n_feat)
+            max_drift = np.zeros(n_feat)
 
         current_class_distribution = ut.compute_class_distribution(classes_, Y_target_node)
         is_reached = (Y_target_node.size > 0)
