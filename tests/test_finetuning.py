@@ -5,6 +5,10 @@ from sklearn.base import clone
 from adapt.utils import make_classification_da
 from adapt.parameter_based import FineTuning
 from tensorflow.keras.initializers import GlorotUniform
+try:
+    from tensorflow.keras.optimizers.legacy import Adam
+except:
+    from tensorflow.keras.optimizers import Adam
 
 np.random.seed(0)
 tf.random.set_seed(0)
@@ -21,14 +25,14 @@ Xs, ys, Xt, yt = make_classification_da()
 
 
 def test_finetune():
-    model = FineTuning(encoder=encoder, task=task, loss="bce", optimizer="adam", random_state=0)
+    model = FineTuning(encoder=encoder, task=task, loss="bce", optimizer=Adam(), random_state=0)
     model.fit(Xs, ys, epochs=100, verbose=0)
 
     assert np.mean((model.predict(Xt).ravel()>0.5) == yt) < 0.7
 
     fine_tuned = FineTuning(encoder=model.encoder_, task=model.task_,
                             training=False,
-                            loss="bce", optimizer="adam", random_state=0)
+                            loss="bce", optimizer=Adam(), random_state=0)
     fine_tuned.fit(Xt[ind], yt[ind], epochs=100, verbose=0)
 
     assert np.abs(fine_tuned.encoder_.get_weights()[0] - model.encoder_.get_weights()[0]).sum() == 0.

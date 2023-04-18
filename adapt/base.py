@@ -14,6 +14,11 @@ from sklearn.metrics.pairwise import KERNEL_PARAMS
 from sklearn.exceptions import NotFittedError
 from tensorflow.keras import Model
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
+try:
+    from tensorflow.keras.optimizers.legacy import RMSprop
+except:
+    from tensorflow.keras.optimizers import RMSprop
+
 
 from adapt.utils import (check_estimator,
                          check_network,
@@ -1308,7 +1313,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
         
         if ((not "optimizer" in compile_params) or 
             (compile_params["optimizer"] is None)):
-            compile_params["optimizer"] = "rmsprop"
+            compile_params["optimizer"] = RMSprop()
         else:
             if optimizer is None:
                 if not isinstance(compile_params["optimizer"], str):
