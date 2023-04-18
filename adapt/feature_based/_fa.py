@@ -92,9 +92,9 @@ class FA(BaseAdaptEstimator):
 
     Notes
     -----
-    FA can be used for multi-source DA by giving list of source data
-    for arguments Xs, ys of fit method : Xs = [Xs1, Xs2, ...],
-    ys = [ys1, ys2, ...]
+    FA can be used for multi-source DA by using the ``domains`` argument
+    in the ``fit`` or ``fit_transform`` method. An example is given
+    `[here] <https://github.com/adapt-python/adapt/issues/86>`
     """
     def __init__(self,
                  estimator=None,
