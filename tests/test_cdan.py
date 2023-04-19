@@ -6,7 +6,10 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
+try:
+    from tensorflow.keras.optimizers.legacy import Adam
+except:
+    from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.initializers import GlorotUniform
 
 from adapt.feature_based import CDAN

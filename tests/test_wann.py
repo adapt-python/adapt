@@ -4,7 +4,10 @@ Test functions for wann module.
 
 import numpy as np
 from sklearn.linear_model import LinearRegression
-from tensorflow.keras.optimizers import Adam
+try:
+    from tensorflow.keras.optimizers.legacy import Adam
+except:
+    from tensorflow.keras.optimizers import Adam
 import tensorflow as tf
 from adapt.instance_based import WANN
 

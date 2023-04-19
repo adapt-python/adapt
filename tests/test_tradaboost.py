@@ -8,6 +8,10 @@ import scipy
 from sklearn.linear_model import LinearRegression, LogisticRegression, Ridge, RidgeClassifier
 from sklearn.metrics import r2_score, accuracy_score
 import tensorflow as tf
+try:
+    from tensorflow.keras.optimizers.legacy import Adam
+except:
+    from tensorflow.keras.optimizers import Adam
 
 from adapt.instance_based import (TrAdaBoost,
                                   TrAdaBoostR2,
@@ -50,14 +54,14 @@ def test_tradaboost_fit_keras_model():
     np.random.seed(0)
     est = tf.keras.Sequential()
     est.add(tf.keras.layers.Dense(1, activation="sigmoid"))
-    est.compile(loss="bce", optimizer="adam")
+    est.compile(loss="bce", optimizer=Adam())
     model = TrAdaBoost(est, n_estimators=2, random_state=0)
     model.fit(Xs, ys_classif, Xt=Xt[:10], yt=yt_classif[:10])
     yp = model.predict(Xt)
     
     est = tf.keras.Sequential()
     est.add(tf.keras.layers.Dense(2, activation="softmax"))
-    est.compile(loss="mse", optimizer="adam")
+    est.compile(loss="mse", optimizer=Adam())
     model = TrAdaBoost(est, n_estimators=2, random_state=0)
     model.fit(Xs, np.random.random((100, 2)),
               Xt=Xt[:10], yt=np.random.random((10, 2)))

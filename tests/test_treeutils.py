@@ -82,8 +82,13 @@ def test_rules():
     ut.isinrule(rule, split_0)
     ut.isdisj_feat(p[0],t[0],p[1],t[1])
     ut.isdisj(rule,rule2)
-
-    ut.bounds_rule(rule,clf_source_dt.n_features_)
+    
+    try:
+        n_feat = clf_source_dt.n_features_
+    except:
+        n_feat = clf_source_dt.n_features_in_
+    
+    ut.bounds_rule(rule,n_feat)
     
     leaves,rules = ut.extract_leaves_rules(clf_source_dt)
     ut.add_to_parents(clf_source_dt, node_test, values_test)

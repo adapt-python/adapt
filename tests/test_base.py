@@ -9,7 +9,10 @@ import pytest
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
+try:
+    from tensorflow.keras.optimizers.legacy import Adam
+except:
+    from tensorflow.keras.optimizers import Adam
 from sklearn.utils.estimator_checks import check_estimator
 from sklearn.base import clone
 
