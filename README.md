@@ -85,7 +85,7 @@ Finally import the module in your python scripts with:
 import adapt
 ```
 
-A simple example of usage is given in the [Qick-Start](#Quick-Start) below.
+A simple example of usage is given in the [Quick-Start](#Quick-Start) below.
 
 
 ## ADAPT Guideline
@@ -157,7 +157,7 @@ SklearnMetaEstimator(
 
 As you can see, the main difference between ADAPT models and scikit-learn and tensorflow objects is the two arguments `Xt, yt` which refer to the target data. Indeed, in classical machine learning, one assumes that the fitted model is applied on data distributed according to the training distribution. This is why, in this setting, one performs cross-validation and splits uniformly the training set to evaluate a model.
 
-In the transfer learning framework, however, one assumes that the target data (on which the model will be used at the end) are not distributed like the source training data. Moreover, one assumes that the target distribution can be estimated and compared to the training distribution. Either because a small sample of labeled target data `Xt, yt` is avalaible or because a large sample of unlabeled target data `Xt` is at one's disposal.
+In the transfer learning framework, however, one assumes that the target data (on which the model will be used at the end) are not distributed like the source training data. Moreover, one assumes that the target distribution can be estimated and compared to the training distribution. Either because a small sample of labeled target data `Xt, yt` is available or because a large sample of unlabeled target data `Xt` is at one's disposal.
 
 Thus, the transfer learning models from the ADAPT library can be seen as machine learning models that are fitted with a specific target in mind. This target is different but somewhat related to the training data. This is generally achieved by a transformation of the input features (see [feature-based transfer](https://adapt-python.github.io/adapt/contents.html#adapt-feature-based-feature-based-methods)) or by importance weighting (see [instance-based transfer](https://adapt-python.github.io/adapt/contents.html#adapt-instance-based)). In some cases, the training data are no more available but one aims at fine-tuning a pre-trained source model on a new target dataset (see [parameter-based transfer](https://adapt-python.github.io/adapt/contents.html#adapt-parameter-based)).
 
@@ -171,10 +171,10 @@ The ADAPT library proposes numerous transfer algorithms and it can be hard to kn
 
 ## Quick Start
 
-Here is a simple usage example of the ADAPT library. This is a simulation of a 1D sample bias problem with binary classfication task. The source input data are distributed according to a Gaussian distribution centered in -1 with standard deviation of 2. The target data are drawn from Gaussian distribution centered in 1 with standard deviation of 2. The output labels are equal to 1 in the interval [-1, 1] and 0 elsewhere. We apply the transfer method [KMM](https://adapt-python.github.io/adapt/generated/adapt.instance_based.KMM.html) which is an unsupervised instance-based algortihm.
+Here is a simple usage example of the ADAPT library. This is a simulation of a 1D sample bias problem with binary classification task. The source input data are distributed according to a Gaussian distribution centered in -1 with standard deviation of 2. The target data are drawn from Gaussian distribution centered in 1 with standard deviation of 2. The output labels are equal to 1 in the interval [-1, 1] and 0 elsewhere. We apply the transfer method [KMM](https://adapt-python.github.io/adapt/generated/adapt.instance_based.KMM.html) which is an unsupervised instance-based algorithm.
 
 ```python
-# Import standard librairies
+# Import standard libraries
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
