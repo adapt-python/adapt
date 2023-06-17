@@ -14,4 +14,6 @@ __all__ = ["RegularTransferLR",
            "FineTuning",
            "TransferTreeClassifier",
            "TransferForestClassifier",
+           "TransferTreeSelector",
+           "TransferForestSelector",
            "LinInt"]
