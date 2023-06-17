@@ -226,3 +226,16 @@ def test_regulargp_classif():
     tgt_model.fit(Xt[:3], yt[:3])
     score2 = tgt_model.score(Xt, yt)
     assert score1 < score2
+    
+
+def test_regulargp_multi_classif():
+    Xs, ys, Xt, yt = make_classification_da()
+    ys[:5] = 3
+    kernel = Matern() + WhiteKernel()
+    src_model = GaussianProcessClassifier(kernel)
+    src_model.fit(Xs, ys)
+    score1 = src_model.score(Xt, yt)
+    tgt_model = RegularTransferGP(src_model, lambda_=1.)
+    tgt_model.fit(Xt[:3], yt[:3])
+    score2 = tgt_model.score(Xt, yt)
+    assert score1 < score2

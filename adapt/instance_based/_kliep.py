@@ -221,7 +221,7 @@ J. Wen, R. Greiner and D. Schuurmans. \
                  max_centers=100,
                  cv=5,
                  algo="FW",
-                 lr=np.logspace(-3,1,5),
+                 lr=[0.001, 0.01, 0.1, 1.0, 10.0],
                  tol=1e-6,
                  max_iter=2000,
                  copy=True,
