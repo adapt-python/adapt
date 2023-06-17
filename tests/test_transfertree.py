@@ -63,7 +63,7 @@ clf_source_dt.fit(Xs, ys)
 clf_source_rf.fit(Xs, ys)
 
 
-def test_transfer_tree(clf_source_dt,Xt,yt,Xt_test,yt_test):
+def test_transfer_tree():
 
     clfs = []
     scores = []
@@ -153,7 +153,7 @@ def test_transfer_tree(clf_source_dt,Xt,yt,Xt_test,yt_test):
         clfs.append(transferred_dt.estimator_)
         scores.append(score)
         
-def test_transfer_forest(clf_source_rf,Xt,yt,Xt_test,yt_test):
+def test_transfer_forest():
 
     clfs = []
     scores = []
