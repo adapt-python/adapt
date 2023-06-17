@@ -231,7 +231,7 @@ def test_transfer_forest():
         scores.append(score)
         
         
-def test_transfer_forest_selection(clf_source_rf,Xt,yt,Xt_test,yt_test):
+def test_transfer_forest_selection():
     
     algo_list = ['src','trgt','relab','ser','strut','ser','ser','strut','strut','strut']
     algo_name = ['src','trgt','relab','ser','strut','ser_noprune','ser_lambda_noprune','strut_nodiv','strut_lambda','strut_lambda_noprune']
