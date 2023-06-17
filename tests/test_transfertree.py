@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 
+from adapt.utils import make_classification_da
 from adapt.parameter_based import TransferTreeClassifier, TransferForestClassifier
 from adapt.parameter_based import TransferTreeSelector, TransferForestSelector
 
@@ -149,8 +150,7 @@ def test_transfer_tree(clf_source_dt,Xt,yt,Xt_test,yt_test):
         score = transferred_dt.estimator.score(Xt_test, yt_test)
 
         print('Testing score transferred model ({}) : {:.3f}'.format(method, score))
-        clfs.append(transferred_dt.estimator)
-
+        clfs.append(transferred_dt.estimator_)
         scores.append(score)
         
 def test_transfer_forest(clf_source_rf,Xt,yt,Xt_test,yt_test):
@@ -226,8 +226,8 @@ def test_transfer_forest(clf_source_rf,Xt,yt,Xt_test,yt_test):
         score = transferred_rf.estimator_.score(Xt_test, yt_test)
 
         print('Testing score transferred model ({}) : {:.3f}'.format(method, score))
-        clfs.append(transferred_rf.estimator_)
 
+        clfs.append(transferred_rf.estimator_)
         scores.append(score)
         
         
@@ -257,3 +257,15 @@ def test_transfer_forest_selection(clf_source_rf,Xt,yt,Xt_test,yt_test):
     print('Testing score selective transferred RF :', TFS.STRF_model.score(Xt_test,yt_test) )
         
         
+        
+def test_specific():
+    Xs, ys, Xt, yt = make_classification_da()
+    
+    src_model = DecisionTreeClassifier()
+    src_model.fit(Xs, ys)
+    
+    model = TransferTreeClassifier(src_model)
+    
+    model.estimator_ = src_model
+    model._strut(Xt[:0], yt[:0], no_prune_on_cl=True, cl_no_prune=[0], node=3)
+

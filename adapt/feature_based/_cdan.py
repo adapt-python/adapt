@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 
 from adapt.base import BaseAdaptDeep, make_insert_doc
-
+from tensorflow.keras.initializers import GlorotUniform
 from adapt.utils import (check_network,
                          get_default_encoder,
                          get_default_discriminator)
@@ -14,20 +14,29 @@ from adapt.utils import (check_network,
 EPS = np.finfo(np.float32).eps
 
 
-def _get_default_classifier(name=None):
+def _get_default_classifier(name=None, state=None):
     model = tf.keras.Sequential(name=name)
     model.add(tf.keras.layers.Flatten())
-    model.add(tf.keras.layers.Dense(10, activation="relu"))
-    model.add(tf.keras.layers.Dense(10, activation="relu"))
-    model.add(tf.keras.layers.Dense(2, activation="softmax"))
+    if state is None:
+        model.add(tf.keras.layers.Dense(10, activation="relu"))
+        model.add(tf.keras.layers.Dense(10, activation="relu"))
+        model.add(tf.keras.layers.Dense(2, activation="softmax"))
+    else:
+        model.add(tf.keras.layers.Dense(10, activation="relu",
+                                       kernel_initializer=GlorotUniform(seed=state)))
+        model.add(tf.keras.layers.Dense(10, activation="relu",
+                                       kernel_initializer=GlorotUniform(seed=state)))
+        model.add(tf.keras.layers.Dense(2, activation="softmax",
+                                       kernel_initializer=GlorotUniform(seed=state)))
     return model
 
 
 @make_insert_doc(["encoder"])
 class CDAN(BaseAdaptDeep):
     """
-    CDAN (Conditional Adversarial Domain Adaptation) is an
-    unsupervised domain adaptation method on the model of the 
+    CDAN: Conditional Adversarial Domain Adaptation
+    
+    CDAN is an unsupervised domain adaptation method on the model of the 
     :ref:`DANN <adapt.feature_based.DANN>`. In CDAN the discriminator
     is conditioned on the prediction of the task network for
     source and target data. This should , in theory, focus the
@@ -139,6 +148,20 @@ class CDAN(BaseAdaptDeep):
     DANN
     ADDA
     WDGRL
+    
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from adapt.utils import make_classification_da
+    >>> from adapt.feature_based import CDAN
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> ys = np.stack([ys, np.abs(1-ys)], 1)
+    >>> yt = np.stack([yt, np.abs(1-yt)], 1)
+    >>> model = CDAN(lambda_=0.1, Xt=Xt, metrics=["acc"], random_state=0)
+    >>> model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
+    1/1 [==============================] - 0s 106ms/step - loss: 0.1081 - acc: 0.8400
+    0.10809497535228729
     
     References
     ----------
@@ -297,19 +320,19 @@ In NIPS, 2018
     
     def _initialize_networks(self):
         if self.encoder is None:
-            self.encoder_ = get_default_encoder(name="encoder")
+            self.encoder_ = get_default_encoder(name="encoder", state=self.random_state)
         else:
             self.encoder_ = check_network(self.encoder,
                                           copy=self.copy,
                                           name="encoder")
         if self.task is None:
-            self.task_ = _get_default_classifier(name="task")
+            self.task_ = _get_default_classifier(name="task", state=self.random_state)
         else:
             self.task_ = check_network(self.task,
                                        copy=self.copy,
                                        name="task")
         if self.discriminator is None:
-            self.discriminator_ = get_default_discriminator(name="discriminator")
+            self.discriminator_ = get_default_discriminator(name="discriminator", state=self.random_state)
         else:
             self.discriminator_ = check_network(self.discriminator,
                                                 copy=self.copy,

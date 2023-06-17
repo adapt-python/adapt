@@ -47,13 +47,17 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../map.html">Choosing the right algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Quick_start.html">Quick-Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Developer_Guide.html">Developer Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.PRED.html">PRED</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.FA.html">FA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CORAL.html">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.TCA.html">TCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.fMMD.html">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DANN.html">DANN</a></li>
@@ -69,7 +73,12 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.LDM.html">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KLIEP.html">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.ULSIF.html">ULSIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.RULSIF.html">RULSIF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.IWC.html">IWC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.IWN.html">IWN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.BalancedWeighting.html">BalancedWeighting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
@@ -77,11 +86,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.LinInt.html">LinInt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
@@ -115,7 +126,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
@@ -179,6 +190,45 @@
 </ul>
 </li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Real Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Sample_bias_example.html">Sample Bias</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Sample-Bias-on-the-diabetes-dataset">Diabetes Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Applying-Transfer-Learning-for-correcting-sample-bias">Sample bias correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Hidden-bias-and-features-importance-estimation">Features importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Flowers_example.html">Fine-Tuning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Flowers_example.html#Training-a-model-from-scratch">Train from Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Flowers_example.html#Model-based-Transfer">Model-based Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Office_example.html">Deep Domain Adaptation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Dataset-Preprocessing">Dataset Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Fit-without-adaptation">Fit without adaptation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Fit-with-adaptation">Fit with adaptation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tradaboost_experiments.html">TrAdaBoost Experiments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/tradaboost_experiments.html#Mushrooms">Mushrooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/tradaboost_experiments.html#20-NewsGroup">20-NewsGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Heart_Failure.html">Heart Failure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#CDAN">CDAN</a></li>
+</ul>
+</li>
+</ul>
  
         </div>
       </div>
@@ -232,21 +282,19 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="adapt.instance_based.WANN">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adapt.instance_based.</span></span><span class="sig-name descname"><span class="pre">WANN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_wann.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.WANN" title="Permalink to this definition"></a></dt>
-<dd><p>WANN: Weighting Adversarial Neural Network is an instance-based domain adaptation
-method suited for regression tasks. It supposes the supervised setting where some
-labeled target data are available.</p>
+<dd><p>WANN : Weighting Adversarial Neural Network</p>
+<p>WANN is an instance-based domain adaptation method suited for regression tasks.
+It supposes the supervised setting where some labeled target data are available.</p>
 <p>The goal of WANN is to compute a source instances reweighting which correct
 “shifts” between source and target domain. This is done by minimizing the
 Y-discrepancy distance between source and target distributions</p>
-<dl class="simple">
-<dt>WANN involves three networks:</dt><dd><ul class="simple">
+<p>WANN involves three networks:</p>
+<ul class="simple">
 <li><p>the weighting network which learns the source weights.</p></li>
 <li><p>the task network which learns the task.</p></li>
 <li><p>the discrepancy network which is used to estimate a distance 
 between the reweighted source and target distributions: the Y-discrepancy</p></li>
 </ul>
-</dd>
-</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -329,6 +377,17 @@ on these arguments.</p>
 <dd><p><a class="reference external" href="https://arxiv.org/pdf/2006.08251.pdf">[1]</a> A. de Mathelin, G. Richard, F. Deheeger, M. Mougeot and N. Vayatis  “Adversarial Weighting for Domain Adaptation in Regression”. In ICTAI, 2021.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.utils</span> <span class="kn">import</span> <span class="n">make_regression_da</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.instance_based</span> <span class="kn">import</span> <span class="n">WANN</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span> <span class="o">=</span> <span class="n">make_regression_da</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">WANN</span><span class="p">(</span><span class="n">Xt</span><span class="o">=</span><span class="n">Xt</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">yt</span><span class="o">=</span><span class="n">yt</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">)</span>
+<span class="go">1/1 [==============================] - 0s 106ms/step - loss: 0.1096</span>
+<span class="go">0.10955706238746643</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes</dt>
 <dd class="field-odd"><dl class="simple">
@@ -359,8 +418,14 @@ on these arguments.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.fit" title="adapt.instance_based.WANN.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X[, y, Xt, yt, domains])</p></td>
 <td><p>Fit Model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.get_params" title="adapt.instance_based.WANN.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.get_metrics_result" title="adapt.instance_based.WANN.get_metrics_result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metrics_result</span></code></a>()</p></td>
+<td><p>Returns the model's metrics values as a dict.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.get_params" title="adapt.instance_based.WANN.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
 <td><p>Get parameters for this estimator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.get_weight_paths" title="adapt.instance_based.WANN.get_weight_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weight_paths</span></code></a>()</p></td>
+<td><p>Retrieve all the variables and their paths for the model.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.predict" title="adapt.instance_based.WANN.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, batch_size, verbose, steps, ...])</p></td>
 <td><p>Generates output predictions for the input samples.</p></td>
@@ -520,6 +585,20 @@ data. Can be used for multisource purpose.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.WANN.get_metrics_result">
+<span class="sig-name descname"><span class="pre">get_metrics_result</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_wann.get_metrics_result.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.WANN.get_metrics_result" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the model’s metrics values as a dict.</p>
+<p>If any of the metric result is a dict (containing multiple metrics),
+each of them gets added to the top level returned dict of this method.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>A <cite>dict</cite> containing values of the metrics listed in <cite>self.metrics</cite>.
+Example:
+<cite>{‘loss’: 0.2, ‘accuracy’: 0.7}</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="adapt.instance_based.WANN.get_params">
 <span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_wann.get_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.WANN.get_params" title="Permalink to this definition"></a></dt>
 <dd><p>Get parameters for this estimator.</p>
@@ -537,6 +616,66 @@ data. Can be used for multisource purpose.</p>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.WANN.get_weight_paths">
+<span class="sig-name descname"><span class="pre">get_weight_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_wann.get_weight_paths.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.WANN.get_weight_paths" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve all the variables and their paths for the model.</p>
+<p>The variable path (string) is a stable key to indentify a <cite>tf.Variable</cite>
+instance owned by the model. It can be used to specify variable-specific
+configurations (e.g. DTensor, quantization) from a global view.</p>
+<p>This method returns a dict with weight object paths as keys
+and the corresponding <cite>tf.Variable</cite> instances as values.</p>
+<p>Note that if the model is a subclassed model and the weights haven’t
+been initialized, an empty dict will be returned.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>A dict where keys are variable paths and values are <cite>tf.Variable</cite></dt><dd><p>instances.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Example:</p>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a>python
+class SubclassModel(tf.keras.Model):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, name=None):</dt><dd><p>super().__init__(name=name)
+self.d1 = tf.keras.layers.Dense(10)
+self.d2 = tf.keras.layers.Dense(20)</p>
+</dd>
+<dt>def call(self, inputs):</dt><dd><p>x = self.d1(inputs)
+return self.d2(x)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>model = SubclassModel()
+model(tf.zeros((10, 10)))
+weight_paths = model.get_weight_paths()
+# weight_paths:
+# {
+#    ‘d1.kernel’: model.d1.kernel,
+#    ‘d1.bias’: model.d1.bias,
+#    ‘d2.kernel’: model.d2.kernel,
+#    ‘d2.bias’: model.d2.bias,
+# }</p>
+<p># Functional model
+inputs = tf.keras.Input((10,), batch_size=10)
+x = tf.keras.layers.Dense(20, name=’d1’)(inputs)
+output = tf.keras.layers.Dense(30, name=’d2’)(x)
+model = tf.keras.Model(inputs, output)
+d1 = model.layers[1]
+d2 = model.layers[2]
+weight_paths = model.get_weight_paths()
+# weight_paths:
+# {
+#    ‘d1.kernel’: d1.kernel,
+#    ‘d1.bias’: d1.bias,
+#    ‘d2.kernel’: d2.kernel,
+#    ‘d2.bias’: d2.bias,
+# }
+<a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">

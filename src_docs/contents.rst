@@ -55,9 +55,11 @@ and **target** distributions. The **task** is then learned in this **encoded fea
    :toctree: generated/
    :template: class.rst
 
+   feature_based.PRED
    feature_based.FA
    feature_based.CORAL
    feature_based.SA
+   feature_based.TCA
    feature_based.fMMD
    feature_based.DeepCORAL
    feature_based.DANN
@@ -102,11 +104,17 @@ The **reweighted** training instances are then directly used to learn the task.
    instance_based.LDM
    instance_based.KLIEP
    instance_based.KMM
+   instance_based.ULSIF
+   instance_based.RULSIF
    instance_based.NearestNeighborsWeighting
+   instance_based.IWC
+   instance_based.IWN
+   instance_based.BalancedWeighting
    instance_based.TrAdaBoost
    instance_based.TrAdaBoostR2
    instance_based.TwoStageTrAdaBoostR2
    instance_based.WANN
+
 
 .. _adapt.parameter_based:
 
@@ -134,11 +142,13 @@ the **source** data are adapted to build a suited model for the **task** on the 
    :toctree: generated/
    :template: class.rst
 
+   parameter_based.LinInt
    parameter_based.RegularTransferLR
    parameter_based.RegularTransferLC
    parameter_based.RegularTransferNN
    parameter_based.FineTuning
    parameter_based.TransferTreeClassifier
+   parameter_based.TransferForestClassifier
 
 
 .. _adapt.metrics:
@@ -203,4 +213,6 @@ This module contains utility functions used in the previous modules.
    utils.check_fitted_network
    
    
-.. include:: examples_gallery.rst
+.. include:: synthetic_examples.rst
+
+.. include:: real_examples.rst

@@ -6,6 +6,7 @@ import warnings
 
 import numpy as np
 from sklearn.utils import check_array
+from sklearn.exceptions import NotFittedError
 
 from adapt.base import BaseAdaptEstimator, make_insert_doc
 from adapt.utils import check_arrays
@@ -68,27 +69,21 @@ class FA(BaseAdaptEstimator):
     See also
     --------
     CORAL
-    mSDA
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.feature_based import FA
-    >>> np.random.seed(0)
-    >>> Xs = 0.1 * np.random.randn(100, 1) + 1.
-    >>> Xt = 0.1 * np.random.randn(100, 1) + 1.
-    >>> ys = 0.1 * np.random.randn(100, 1) + 0.
-    >>> yt = 0.1 * np.random.randn(100, 1) + 1.
-    >>> model = FA()
-    >>> model.fit(Xs, ys, Xt[:10], yt[:10]);
-    Augmenting feature space...
-    Previous shape: (100, 1)
-    New shape: (100, 3)
-    Fit estimator...
-    >>> np.abs(model.predict(Xt, domain="src") - yt).mean()
-    0.9846...
-    >>> np.abs(model.predict(Xt, domain="tgt") - yt).mean()
-    0.1010...
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = FA(RidgeClassifier(), Xt=Xt[:10], yt=yt[:10], random_state=0)
+    >>> model.fit(Xs, ys)
+    Fit transform...
+    Previous shape: (100, 2)
+    New shape: (110, 6)
+    Fit Estimator...
+    >>> model.score(Xt, yt)
+    0.92
 
     References
     ----------
@@ -97,9 +92,9 @@ class FA(BaseAdaptEstimator):
 
     Notes
     -----
-    FA can be used for multi-source DA by giving list of source data
-    for arguments Xs, ys of fit method : Xs = [Xs1, Xs2, ...],
-    ys = [ys1, ys2, ...]
+    FA can be used for multi-source DA by using the ``domains`` argument
+    in the ``fit`` or ``fit_transform`` method. An example is given
+    `[here] <https://github.com/adapt-python/adapt/issues/86>`_
     """
     def __init__(self,
                  estimator=None,
@@ -145,6 +140,10 @@ class FA(BaseAdaptEstimator):
         -------
         X_emb, y : embedded input and output data
         """
+        if yt is None:
+            raise ValueError("The target labels `yt` is `None`, FA is a supervised"
+                             " domain adaptation method and need `yt` to be specified.")
+        
         Xs, ys = check_arrays(Xs, ys)
         Xt, yt = check_arrays(Xt, yt)
         
@@ -222,6 +221,11 @@ class FA(BaseAdaptEstimator):
         domain of ``X`` in order to apply the appropriate feature transformation.
         """
         X = check_array(X, allow_nd=True)
+        
+        if not hasattr(self, "n_domains_"):
+            raise NotFittedError("FA model is not fitted yet, please "
+                                 "call 'fit_transform' or 'fit' first.")
+        
         if domain in ["tgt", "target"]:
             X_emb = np.concatenate((np.zeros((len(X), X.shape[-1]*self.n_domains_)),
                                     X,

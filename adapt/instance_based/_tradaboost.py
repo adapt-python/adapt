@@ -8,13 +8,15 @@ from sklearn.base import BaseEstimator
 from sklearn.exceptions import NotFittedError
 from sklearn.utils import check_array
 from sklearn.metrics import r2_score, accuracy_score
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+from scipy.sparse import vstack, issparse
 
 from adapt.base import BaseAdaptEstimator, make_insert_doc
 from adapt.utils import check_arrays, check_estimator, set_random_seed
 
 EPS = np.finfo(float).eps
 
-def _get_median_predict(X, predictions, weights):
+def _get_median_predict(predictions, weights):
     sorted_idx = np.argsort(predictions, axis=-1)
     # Find index of median prediction for each sample
     weight_cdf = np.cumsum(weights[sorted_idx], axis=-1)
@@ -22,13 +24,13 @@ def _get_median_predict(X, predictions, weights):
     median_idx = median_or_above.argmax(axis=-1)
     new_predictions = None
     for i in range(median_idx.shape[1]):
-        median_estimators = sorted_idx[np.arange(len(X)), i, median_idx[:, i]]
+        median_estimators = sorted_idx[np.arange(len(predictions)), i, median_idx[:, i]]
         if new_predictions is None:
-            new_predictions = predictions[np.arange(len(X)), i, median_estimators].reshape(-1,1)
+            new_predictions = predictions[np.arange(len(predictions)), i, median_estimators].reshape(-1,1)
         else:
             new_predictions = np.concatenate((
                 new_predictions,
-                predictions[np.arange(len(X)), i, median_estimators].reshape(-1,1)
+                predictions[np.arange(len(predictions)), i, median_estimators].reshape(-1,1)
             ), axis=1)
     return new_predictions
 
@@ -132,27 +134,24 @@ class TrAdaBoost(BaseAdaptEstimator):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.instance_based import TrAdaBoost
-    >>> from sklearn.tree import DecisionTreeClassifier
-    >>> np.random.seed(0)
-    >>> Xs = np.random.random((100, 2))
-    >>> Xt = np.random.random((100, 2))
-    >>> ys = (Xs[:, [0]] < 0.5).astype(int)
-    >>> yt = (Xt[:, [1]] < 0.5).astype(int)
-    >>> dtc = DecisionTreeClassifier(max_depth=5)
-    >>> dtc.fit(np.concatenate((Xs, Xt[:10])),
-    ...         np.concatenate((ys, yt[:10])))
-    >>> dtc.score(Xt, yt)
-    0.55
-    >>> tr = TrAdaBoost(DecisionTreeClassifier(max_depth=5),
-    ...                 n_estimators=20, random_state=1)
-    >>> tr.fit(Xs, ys, Xt[:10], yt[:10])
-    Iteration 0 - Error: 0.1000
-    ...
-    Iteration 19 - Error: 0.0000
-    >>> (tr.predict(Xt) == yt.ravel()).mean()
-    0.59
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = TrAdaBoost(RidgeClassifier(), n_estimators=10, Xt=Xt[:10], yt=yt[:10], random_state=0)
+    >>> model.fit(Xs, ys)
+    Iteration 0 - Error: 0.2550
+    Iteration 1 - Error: 0.2820
+    Iteration 2 - Error: 0.3011
+    Iteration 3 - Error: 0.3087
+    Iteration 4 - Error: 0.3046
+    Iteration 5 - Error: 0.2933
+    Iteration 6 - Error: 0.2819
+    Iteration 7 - Error: 0.2747
+    Iteration 8 - Error: 0.2712
+    Iteration 9 - Error: 0.2698
+    >>> model.score(Xt, yt)
+    0.66
         
     See also
     --------
@@ -213,14 +212,6 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         fit_params : key, value arguments
             Arguments given to the fit method of the
             estimator.
-            
-        Other Parameters
-        ----------------
-        Xt : array (default=self.Xt)
-            Target input data.
-
-        yt : array (default=self.yt)
-            Target output data.
 
         Returns
         -------
@@ -229,12 +220,17 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         set_random_seed(self.random_state)
         tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
         
-        Xs, ys = check_arrays(X, y)
+        Xs, ys = check_arrays(X, y, accept_sparse=True)
         Xt, yt = self._get_target_data(Xt, yt)
-        Xt, yt = check_arrays(Xt, yt)
+        Xt, yt = check_arrays(Xt, yt, accept_sparse=True)
         
-        n_s = len(Xs) 
-        n_t = len(Xt)
+        if not isinstance(self, TrAdaBoostR2) and isinstance(self.estimator, BaseEstimator):
+            self.label_encoder_ = LabelEncoder()
+            ys = self.label_encoder_.fit_transform(ys)
+            yt = self.label_encoder_.transform(yt)
+        
+        n_s = Xs.shape[0]
+        n_t = Xt.shape[0]
         
         if sample_weight_src is None:
             sample_weight_src = np.ones(n_s) / (n_s + n_t)
@@ -284,8 +280,11 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
     def _boost(self, iboost, Xs, ys, Xt, yt,
                sample_weight_src, sample_weight_tgt,
                **fit_params):
-
-        X = np.concatenate((Xs, Xt))
+        
+        if issparse(Xs):
+            X = vstack((Xs, Xt))
+        else:
+            X = np.concatenate((Xs, Xt))
         y = np.concatenate((ys, yt))
         sample_weight = np.concatenate((sample_weight_src,
                                         sample_weight_tgt))
@@ -297,39 +296,76 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
                                        warm_start=False,
                                        **fit_params)
         
-        ys_pred = estimator.predict(Xs)
-        yt_pred = estimator.predict(Xt)
+        if not isinstance(self, TrAdaBoostR2) and isinstance(estimator, BaseEstimator):
+            if hasattr(estimator, "predict_proba"):
+                ys_pred = estimator.predict_proba(Xs)
+                yt_pred = estimator.predict_proba(Xt)
+            elif hasattr(estimator, "_predict_proba_lr"):
+                ys_pred = estimator._predict_proba_lr(Xs)
+                yt_pred = estimator._predict_proba_lr(Xt)
+            else:
+                ys_pred = estimator.predict(Xs)
+                yt_pred = estimator.predict(Xt)
+        else:
+            ys_pred = estimator.predict(Xs)
+            yt_pred = estimator.predict(Xt)
         
-        if ys_pred.ndim == 1 or ys.ndim == 1:
+        if ys.ndim == 1:
             ys = ys.reshape(-1, 1)
             yt = yt.reshape(-1, 1)
+            
+        if ys_pred.ndim == 1:
             ys_pred = ys_pred.reshape(-1, 1)
             yt_pred = yt_pred.reshape(-1, 1)
         
-        if isinstance(self, TrAdaBoostR2):
+        if not isinstance(self, TrAdaBoostR2):
+            if isinstance(estimator, BaseEstimator):
+                ohe = OneHotEncoder(sparse=False)
+                ohe.fit(y.reshape(-1, 1))
+                ys = ohe.transform(ys)
+                yt = ohe.transform(yt)
+                
+                if ys_pred.shape[1] == 1:
+                    ys_pred = ohe.transform(ys_pred)
+                    yt_pred = ohe.transform(yt_pred)
+                    
+                error_vect_src = np.abs(ys_pred - ys).sum(tuple(range(1, ys.ndim))) / 2.
+                error_vect_tgt = np.abs(yt_pred - yt).sum(tuple(range(1, yt.ndim))) / 2.
+                    
+            else:
+                assert np.all(ys_pred.shape == ys.shape)
+                error_vect_src = np.abs(ys_pred - ys).sum(tuple(range(1, ys.ndim)))
+                error_vect_tgt = np.abs(yt_pred - yt).sum(tuple(range(1, yt.ndim)))
+                
+                if ys.ndim != 1:
+                    error_vect_src /= 2.
+                    error_vect_tgt /= 2.
+                    
+        else:
             error_vect_src = np.abs(ys_pred - ys).mean(tuple(range(1, ys.ndim)))
             error_vect_tgt = np.abs(yt_pred - yt).mean(tuple(range(1, yt.ndim)))
-            error_vect = np.concatenate((error_vect_src, error_vect_tgt))
             
-            error_max = error_vect.max() + EPS
-            if error_max != 0:
-                error_vect /= error_max
+            error_max = max(error_vect_src.max(), error_vect_tgt.max())+ EPS
+            if error_max > 0:
                 error_vect_src /= error_max
                 error_vect_tgt /= error_max
-        else:
-            if isinstance(estimator, BaseEstimator):
-                error_vect_src = (ys_pred != ys).astype(float).ravel()
-                error_vect_tgt = (yt_pred != yt).astype(float).ravel()
-                error_vect = np.concatenate((error_vect_src, error_vect_tgt))
-            else:
-                if ys.shape[1] == 1:
-                    error_vect_src = (np.abs(ys_pred - ys) > 0.5).astype(float).ravel()
-                    error_vect_tgt = (np.abs(yt_pred - yt) > 0.5).astype(float).ravel()
-                else:
-                    error_vect_src = (ys_pred.argmax(1) != ys.argmax(1)).astype(float).ravel()
-                    error_vect_tgt = (yt_pred.argmax(1) != yt.argmax(1)).astype(float).ravel()
+        
+        # else:
+        #     if isinstance(estimator, BaseEstimator):
+        #         error_vect_src = (ys_pred != ys).astype(float).ravel()
+        #         error_vect_tgt = (yt_pred != yt).astype(float).ravel()
+        #         error_vect = np.concatenate((error_vect_src, error_vect_tgt))
+        #     else:
+        #         if ys.shape[1] == 1:
+        #             error_vect_src = (np.abs(ys_pred - ys) > 0.5).astype(float).ravel()
+        #             error_vect_tgt = (np.abs(yt_pred - yt) > 0.5).astype(float).ravel()
+        #         else:
+        #             error_vect_src = (ys_pred.argmax(1) != ys.argmax(1)).astype(float).ravel()
+        #             error_vect_tgt = (yt_pred.argmax(1) != yt.argmax(1)).astype(float).ravel()
                 
         error_vect = np.concatenate((error_vect_src, error_vect_tgt))
+        
+        assert sample_weight.ndim == error_vect.ndim
 
         if isinstance(self, _AdaBoostR2):
             estimator_error = (sample_weight * error_vect).sum()
@@ -341,10 +377,16 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         # if estimator_error > 0.49:
         #     estimator_error = 0.49
         
+        self.estimators_.append(estimator)
+        self.estimator_errors_.append(estimator_error)
+        
+        # if estimator_error <= 0.:
+        #     return None, None
+        
         beta_t = estimator_error / (2. - estimator_error)
         
         beta_s = 1. / (1. + np.sqrt(
-            2. * np.log(len(Xs)) / self.n_estimators
+            2. * np.log(Xs.shape[0]) / self.n_estimators
         ))
         
         if not iboost == self.n_estimators - 1:
@@ -362,9 +404,6 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
                 # Target updating weights
                 sample_weight_tgt *= np.power(
                     beta_t, - self.lr * error_vect_tgt)
-
-        self.estimators_.append(estimator)
-        self.estimator_errors_.append(estimator_error)
         
         return sample_weight_src, sample_weight_tgt
 
@@ -383,14 +422,21 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         y_pred : array
             Vote results.
         """
-        X = check_array(X)
+        X = check_array(X, ensure_2d=True, allow_nd=True, accept_sparse=True)
         N = len(self.estimators_)
         weights = np.array(self.estimator_weights_)
         weights = weights[int(N/2):]
         predictions = []
         for est in self.estimators_[int(N/2):]:
             if isinstance(est, BaseEstimator):
-                y_pred = est.predict_proba(X)
+                if hasattr(est, "predict_proba"):
+                    y_pred = est.predict_proba(X)
+                elif hasattr(est, "_predict_proba_lr"):
+                    y_pred = est._predict_proba_lr(X)
+                else:
+                    labels = est.predict(X)
+                    y_pred = np.zeros((len(labels), int(max(labels))+1))
+                    y_pred[np.arange(len(labels)), labels] = 1.
             else:
                 y_pred = est.predict(X)
                 if y_pred.ndim == 1:
@@ -401,7 +447,10 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
             predictions.append(y_pred)
         predictions = np.stack(predictions, -1)
         weighted_vote = predictions.dot(weights).argmax(1)
-        return weighted_vote
+        if hasattr(self, "label_encoder_"):
+            return self.label_encoder_.inverse_transform(weighted_vote)
+        else:
+            return weighted_vote
 
 
     def predict_weights(self, domain="src"):
@@ -454,7 +503,7 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         score : float
             estimator score.
         """
-        X, y = check_arrays(X, y)
+        X, y = check_arrays(X, y, accept_sparse=True)
         yp = self.predict(X)
         if isinstance(self, TrAdaBoostR2):
             score = r2_score(y, yp)
@@ -542,26 +591,24 @@ class TrAdaBoostR2(TrAdaBoost):
         
     Examples
     --------
-    >>> import numpy as np
-    >>> from sklearn.linear_model import LinearRegression
+    >>> from sklearn.linear_model import Ridge
+    >>> from adapt.utils import make_regression_da
     >>> from adapt.instance_based import TrAdaBoostR2
-    >>> np.random.seed(0)
-    >>> Xs = np.random.random((100, 2))
-    >>> Xt = np.random.random((100, 2))
-    >>> ys = Xs[:, [0]]
-    >>> yt = Xt[:, [1]]
-    >>> lr = LinearRegression()
-    >>> lr.fit(np.concatenate((Xs, Xt[:10])),
-    ...        np.concatenate((ys, yt[:10])))
-    >>> np.abs(lr.predict(Xt) - yt).mean()
-    0.30631...
-    >>> tr = TrAdaBoostR2(n_estimators=20)
-    >>> tr.fit(Xs, ys, Xt[:10], yt[:10])
-    Iteration 0 - Error: 0.4396
-    ...
-    Iteration 19 - Error: 0.0675
-    >>> np.abs(tr.predict(Xt) - yt).mean()
-    0.05801...
+    >>> Xs, ys, Xt, yt = make_regression_da()
+    >>> model = TrAdaBoostR2(Ridge(), n_estimators=10, Xt=Xt[:10], yt=yt[:10], random_state=0)
+    >>> model.fit(Xs, ys)
+    Iteration 0 - Error: 0.4862
+    Iteration 1 - Error: 0.5711
+    Iteration 2 - Error: 0.6709
+    Iteration 3 - Error: 0.7095
+    Iteration 4 - Error: 0.7154
+    Iteration 5 - Error: 0.6987
+    Iteration 6 - Error: 0.6589
+    Iteration 7 - Error: 0.5907
+    Iteration 8 - Error: 0.4930
+    Iteration 9 - Error: 0.3666
+    >>> model.score(Xt, yt)
+    0.6998064452649377
 
     See also
     --------
@@ -587,7 +634,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         y_pred : array
             Median results.
         """
-        X = check_array(X)
+        X = check_array(X, ensure_2d=True, allow_nd=True, accept_sparse=True)
         N = len(self.estimators_)
         weights = np.array(self.estimator_weights_)
         weights = weights[int(N/2):]
@@ -598,7 +645,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
                 y_pred = y_pred.reshape(-1, 1)
             predictions.append(y_pred)
         predictions = np.stack(predictions, -1)
-        return _get_median_predict(X, predictions, weights)
+        return _get_median_predict(predictions, weights)
 
 
 class _AdaBoostR2(TrAdaBoostR2):
@@ -708,25 +755,24 @@ class TwoStageTrAdaBoostR2(TrAdaBoostR2):
         
     Examples
     --------
-    >>> import numpy as np
-    >>> from adapt.instance_based import TwoStageTrAdaBoostR2
-    >>> np.random.seed(0)
-    >>> Xs = np.random.random((100, 2))
-    >>> Xt = np.random.random((100, 2))
-    >>> ys = Xs[:, [0]]
-    >>> yt = Xt[:, [1]]
-    >>> lr = LinearRegression()
-    >>> lr.fit(np.concatenate((Xs, Xt[:10])),
-    ...        np.concatenate((ys, yt[:10])))
-    >>> np.abs(lr.predict(Xt) - yt).mean()
-    0.30631...
-    >>> tr = TwoStageTrAdaBoostR2()
-    >>> tr.fit(Xs, ys, Xt[:10], yt[:10])
-    Iteration 0 - Cross-validation score: 0.3154 (0.1813)
-    ...
-    Iteration 9 - Cross-validation score: 0.0015 (0.0009)
-    >>> np.abs(tr.predict(Xt) - yt).mean()
-    0.00126...
+    >>> from sklearn.linear_model import Ridge
+    >>> from adapt.utils import make_regression_da
+    >>> from adapt.instance_based import TrAdaBoostR2
+    >>> Xs, ys, Xt, yt = make_regression_da()
+    >>> model = TrAdaBoostR2(Ridge(), n_estimators=10, Xt=Xt[:10], yt=yt[:10], random_state=0)
+    >>> model.fit(Xs, ys)
+    Iteration 0 - Cross-validation score: 0.2956 (0.0905)
+    Iteration 1 - Cross-validation score: 0.2956 (0.0905)
+    Iteration 2 - Cross-validation score: 0.2614 (0.1472)
+    Iteration 3 - Cross-validation score: 0.2701 (0.1362)
+    Iteration 4 - Cross-validation score: 0.2745 (0.1280)
+    Iteration 5 - Cross-validation score: 0.2768 (0.1228)
+    Iteration 6 - Cross-validation score: 0.2782 (0.1195)
+    Iteration 7 - Cross-validation score: 0.2783 (0.1170)
+    Iteration 8 - Cross-validation score: 0.2767 (0.1156)
+    Iteration 9 - Cross-validation score: 0.2702 (0.1155)
+    >>> model.score(Xt, yt)
+    0.5997110100905185
 
     See also
     --------
@@ -770,12 +816,12 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         set_random_seed(self.random_state)
         tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
         
-        Xs, ys = check_arrays(X, y)
+        Xs, ys = check_arrays(X, y, accept_sparse=True)
         Xt, yt = self._get_target_data(Xt, yt)
-        Xt, yt = check_arrays(Xt, yt)
+        Xt, yt = check_arrays(Xt, yt, accept_sparse=True)
         
-        n_s = len(Xs) 
-        n_t = len(Xt)
+        n_s = Xs.shape[0]
+        n_t = Xt.shape[0]
 
         if sample_weight_src is None:
             sample_weight_src = np.ones(n_s) / (n_s + n_t)
@@ -786,9 +832,6 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
                        sample_weight_tgt.sum())
         sample_weight_src = sample_weight_src / sum_weights
         sample_weight_tgt = sample_weight_tgt / sum_weights
-        
-        X = np.concatenate((Xs, Xt))
-        y = np.concatenate((ys, yt))
 
         self.sample_weights_src_ = []
         self.sample_weights_tgt_ = []
@@ -901,13 +944,13 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
     def _cross_val_score(self, Xs, ys, Xt, yt,
                          sample_weight_src, sample_weight_tgt,
                          **fit_params):
-        if len(Xt) >= self.cv:
+        if Xt.shape[0] >= self.cv:
             cv = self.cv
         else:
-            cv = len(Xt)
+            cv = Xt.shape[0]
         
-        tgt_index = np.arange(len(Xt))
-        split = int(len(Xt) / cv)
+        tgt_index = np.arange(Xt.shape[0])
+        split = int(Xt.shape[0] / cv)
         scores = []
         for i in range(cv):
             if i == cv-1:
@@ -916,7 +959,11 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
                 test_index = tgt_index[i * split: (i + 1) * split]
             train_index = list(set(tgt_index) - set(test_index))
             
-            X = np.concatenate((Xs, Xt[train_index]))
+                    
+            if issparse(Xs):
+                X = vstack((Xs, Xt[train_index]))
+            else:
+                X = np.concatenate((Xs, Xt[train_index]))
             y = np.concatenate((ys, yt[train_index]))
             sample_weight = np.concatenate((sample_weight_src,
                                             sample_weight_tgt[train_index]))
@@ -956,7 +1003,7 @@ D. Pardoe and P. Stone. "Boosting for regression transfer". In ICML, 2010.
         y_pred : array
             Best estimator predictions.
         """
-        X = check_array(X)
+        X = check_array(X, ensure_2d=True, allow_nd=True, accept_sparse=True)
         best_estimator = self.estimators_[
             np.argmin(self.estimator_errors_)]
         return best_estimator.predict(X)

@@ -14,6 +14,11 @@ from sklearn.metrics.pairwise import KERNEL_PARAMS
 from sklearn.exceptions import NotFittedError
 from tensorflow.keras import Model
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
+try:
+    from tensorflow.keras.optimizers.legacy import RMSprop
+except:
+    from tensorflow.keras.optimizers import RMSprop
+
 
 from adapt.utils import (check_estimator,
                          check_network,
@@ -282,8 +287,8 @@ class BaseAdapt:
         score : float
             Unsupervised score.
         """
-        Xs = check_array(np.array(Xs))
-        Xt = check_array(np.array(Xt))
+        Xs = check_array(Xs, accept_sparse=True)
+        Xt = check_array(Xt, accept_sparse=True)
         
         if hasattr(self, "transform"):
             args = [
@@ -306,13 +311,11 @@ class BaseAdapt:
             
             set_random_seed(self.random_state)
             bootstrap_index = np.random.choice(
-            len(Xs), size=len(Xs), replace=True, p=sample_weight)
+            Xs.shape[0], size=Xs.shape[0], replace=True, p=sample_weight)
             Xs = Xs[bootstrap_index]
         else:
             raise ValueError("The Adapt model should implement"
                              " a transform or predict_weights methods")
-        Xs = np.array(Xs)
-        Xt = np.array(Xt)
         return normalized_linear_discrepancy(Xs, Xt)
     
     
@@ -466,18 +469,27 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         """
         Xt, yt = self._get_target_data(Xt, yt)
         X, y = check_arrays(X, y)
+        self.n_features_in_ = X.shape[1]
         if yt is not None:
             Xt, yt = check_arrays(Xt, yt)
         else:
             Xt = check_array(Xt, ensure_2d=True, allow_nd=True)
         set_random_seed(self.random_state)
+        
+        self.n_features_in_ = X.shape[1]
  
         if hasattr(self, "fit_weights"):
             if self.verbose:
                 print("Fit weights...")
-            self.weights_ = self.fit_weights(Xs=X, Xt=Xt,
-                                             ys=y, yt=yt,
-                                             domains=domains)
+            out = self.fit_weights(Xs=X, Xt=Xt,
+                                   ys=y, yt=yt,
+                                   domains=domains)
+            if isinstance(out, tuple):
+                self.weights_ = out[0]
+                X = out[1]
+                y = out[2]
+            else:
+                self.weights_ = out
             if "sample_weight" in fit_params:
                 fit_params["sample_weight"] *= self.weights_
             else:
@@ -534,7 +546,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         -------
         estimator_ : fitted estimator
         """
-        X, y = check_arrays(X, y)
+        X, y = check_arrays(X, y, accept_sparse=True)
         set_random_seed(random_state)
 
         if (not warm_start) or (not hasattr(self, "estimator_")):
@@ -613,7 +625,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         y_pred : array
             prediction of estimator.
         """      
-        X = check_array(X, ensure_2d=True, allow_nd=True)
+        X = check_array(X, ensure_2d=True, allow_nd=True, accept_sparse=True)
         predict_params = self._filter_params(self.estimator_.predict,
                                             predict_params)
         return self.estimator_.predict(X, **predict_params)
@@ -648,7 +660,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         y_pred : array
             prediction of the Adapt Model.
         """
-        X = check_array(X, ensure_2d=True, allow_nd=True)
+        X = check_array(X, ensure_2d=True, allow_nd=True, accept_sparse=True)
         if hasattr(self, "transform"):
             if domain is None:
                 domain = "tgt"
@@ -700,7 +712,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         score : float
             estimator score.
         """
-        X, y = check_arrays(X, y)
+        X, y = check_arrays(X, y, accept_sparse=True)
         
         if domain is None:
             domain = "target"
@@ -788,7 +800,6 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
 
 
     def __getstate__(self):
-        print("getting")
         dict_ = {k: v for k, v in self.__dict__.items()}
         if "estimator_" in dict_:
             if isinstance(dict_["estimator_"], Model):
@@ -810,7 +821,6 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
 
 
     def __setstate__(self, dict_):
-        print("setting")
         if "estimator_" in dict_:
             if isinstance(dict_["estimator_"], dict):
                 dict_["estimator_"] = self._from_config_keras_model(
@@ -960,9 +970,10 @@ class BaseAdaptDeep(Model, BaseAdapt):
         epochs = fit_params.get("epochs", 1)
         batch_size = fit_params.pop("batch_size", 32)
         shuffle = fit_params.pop("shuffle", True)
+        buffer_size = fit_params.pop("buffer_size", None)
         validation_data = fit_params.pop("validation_data", None)
         validation_split = fit_params.pop("validation_split", 0.)
-        validation_batch_size = fit_params.pop("validation_batch_size", batch_size)
+        validation_batch_size = fit_params.get("validation_batch_size", batch_size)
         
         # 2. Prepare datasets
         
@@ -1000,8 +1011,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
                     for dom in range(self.n_sources_))
                 )
             
-            dataset_src = tf.data.Dataset.zip((dataset_Xs, dataset_ys))
-            
+            dataset_src = tf.data.Dataset.zip((dataset_Xs, dataset_ys))            
         else:
             dataset_src = X
             
@@ -1031,47 +1041,62 @@ class BaseAdaptDeep(Model, BaseAdapt):
             self._initialize_networks()
             if isinstance(Xt, tf.data.Dataset):
                 first_elem = next(iter(Xt))
-                if (not isinstance(first_elem, tuple) or
-                not len(first_elem)==2):
-                    raise ValueError("When first argument is a dataset. "
-                                     "It should return (x, y) tuples.")
+                if not isinstance(first_elem, tuple):
+                    shape = first_elem.shape
                 else:
                     shape = first_elem[0].shape
+                if self._check_for_batch(Xt):
+                    shape = shape[1:]
             else:
                 shape = Xt.shape[1:]
             self._initialize_weights(shape)
             
-#         validation_data = self._check_validation_data(validation_data,
-#                                                       validation_batch_size,
-#                                                       shuffle)
+        
+        # 3.5 Get datasets length
+        self.length_src_ = self._get_length_dataset(dataset_src, domain="src")
+        self.length_tgt_ = self._get_length_dataset(dataset_tgt, domain="tgt")
+        
         
         # 4. Prepare validation dataset
         if validation_data is None and validation_split>0.:
             if shuffle:
-                dataset_src = dataset_src.shuffle(buffer_size=1024)
-            frac = int(len(dataset_src)*validation_split)
+                dataset_src = dataset_src.shuffle(buffer_size=self.length_src_,
+                                                  reshuffle_each_iteration=False)
+            frac = int(self.length_src_*validation_split)
             validation_data = dataset_src.take(frac)
             dataset_src = dataset_src.skip(frac)
-            validation_data = validation_data.batch(batch_size)
+            if not self._check_for_batch(validation_data):
+                validation_data = validation_data.batch(validation_batch_size)
+        
+        if validation_data is not None:
+            if isinstance(validation_data, tf.data.Dataset):
+                if not self._check_for_batch(validation_data):
+                    validation_data = validation_data.batch(validation_batch_size)
             
+        
         # 5. Set datasets
         # Same length for src and tgt + complete last batch + shuffle
-        try:
-            max_size = max(len(dataset_src), len(dataset_tgt))
-            max_size = np.ceil(max_size / batch_size) * batch_size
-            repeat_src = np.ceil(max_size/len(dataset_src))
-            repeat_tgt = np.ceil(max_size/len(dataset_tgt))
-
-            dataset_src = dataset_src.repeat(repeat_src)
-            dataset_tgt = dataset_tgt.repeat(repeat_tgt)
-            
-            self.total_steps_ = float(np.ceil(max_size/batch_size)*epochs)
-        except:
-            pass
-        
         if shuffle:
-            dataset_src = dataset_src.shuffle(buffer_size=1024)
-            dataset_tgt = dataset_tgt.shuffle(buffer_size=1024)
+            if buffer_size is None:                
+                dataset_src = dataset_src.shuffle(buffer_size=self.length_src_,
+                                                  reshuffle_each_iteration=True)
+                dataset_tgt = dataset_tgt.shuffle(buffer_size=self.length_tgt_,
+                                                  reshuffle_each_iteration=True)
+            else:
+                dataset_src = dataset_src.shuffle(buffer_size=buffer_size,
+                                                  reshuffle_each_iteration=True)
+                dataset_tgt = dataset_tgt.shuffle(buffer_size=buffer_size,
+                                                  reshuffle_each_iteration=True)
+        
+        max_size = max(self.length_src_, self.length_tgt_)
+        max_size = np.ceil(max_size / batch_size) * batch_size
+        repeat_src = np.ceil(max_size/self.length_src_)
+        repeat_tgt = np.ceil(max_size/self.length_tgt_)
+
+        dataset_src = dataset_src.repeat(repeat_src).take(max_size)
+        dataset_tgt = dataset_tgt.repeat(repeat_tgt).take(max_size)
+
+        self.total_steps_ = float(np.ceil(max_size/batch_size)*epochs)
         
         # 5. Pretraining
         if not hasattr(self, "pretrain_"):
@@ -1099,14 +1124,14 @@ class BaseAdaptDeep(Model, BaseAdapt):
             pre_verbose = prefit_params.pop("verbose", verbose)
             pre_epochs = prefit_params.pop("epochs", epochs)
             pre_batch_size = prefit_params.pop("batch_size", batch_size)
-            pre_shuffle = prefit_params.pop("shuffle", shuffle)
             prefit_params.pop("validation_data", None)
-            prefit_params.pop("validation_split", None)
-            prefit_params.pop("validation_batch_size", None)
             
             # !!! shuffle is already done
-            dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt)).batch(pre_batch_size)
-                
+            dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt))
+            
+            if not self._check_for_batch(dataset):
+                dataset = dataset.batch(pre_batch_size)
+
             hist = super().fit(dataset, validation_data=validation_data,
                                epochs=pre_epochs, verbose=pre_verbose, **prefit_params)
 
@@ -1123,7 +1148,10 @@ class BaseAdaptDeep(Model, BaseAdapt):
             self.history_ = {}
 
         # .7 Training
-        dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt)).batch(batch_size)
+        dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt))
+        
+        if not self._check_for_batch(dataset):
+            dataset = dataset.batch(batch_size)
 
         self.pretrain_ = False
         
@@ -1259,7 +1287,8 @@ class BaseAdaptDeep(Model, BaseAdapt):
             if "_" in name:
                 new_name = ""
                 for split in name.split("_"):
-                    new_name += split[0]
+                    if len(split) > 0:
+                        new_name += split[0]
                 name = new_name
             else:
                 name = name[:3]
@@ -1284,7 +1313,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
         
         if ((not "optimizer" in compile_params) or 
             (compile_params["optimizer"] is None)):
-            compile_params["optimizer"] = "rmsprop"
+            compile_params["optimizer"] = RMSprop()
         else:
             if optimizer is None:
                 if not isinstance(compile_params["optimizer"], str):
@@ -1331,7 +1360,8 @@ class BaseAdaptDeep(Model, BaseAdapt):
             loss = tf.reduce_mean(loss)
 
         # Run backwards pass.
-        self.optimizer.minimize(loss, self.trainable_variables, tape=tape)
+        gradients = tape.gradient(loss, self.trainable_variables)
+        self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
         self.compiled_metrics.update_state(ys, y_pred)
         # Collect metrics to return
         return_metrics = {}
@@ -1573,6 +1603,37 @@ class BaseAdaptDeep(Model, BaseAdapt):
             X_enc = self.encoder_(np.zeros((1,) + shape_X))
             if hasattr(self, "discriminator_"):
                 self.discriminator_(X_enc)
+                
+    
+    def _get_length_dataset(self, dataset, domain="src"):
+        try:
+            length = len(dataset)
+        except:
+            if self.verbose:
+                print("Computing %s dataset size..."%domain)
+            if not hasattr(self, "length_%s_"%domain):
+                length = 0
+                for _ in dataset:
+                    length += 1
+            else:
+                length = getattr(self, "length_%s_"%domain)
+            if self.verbose:
+                print("Done!")
+        return length
+        
+        
+    def _check_for_batch(self, dataset):
+        if dataset.__class__.__name__ == "BatchDataset":
+            return True
+        if hasattr(dataset, "_input_dataset"):
+            return self._check_for_batch(dataset._input_dataset)
+        elif hasattr(dataset, "_datasets"):
+            checks = []
+            for data in dataset._datasets:
+                checks.append(self._check_for_batch(data))
+            return np.all(checks)
+        else:
+            return False
 
 
     def _unpack_data(self, data):
@@ -1596,19 +1657,19 @@ class BaseAdaptDeep(Model, BaseAdapt):
     
     def _initialize_networks(self):
         if self.encoder is None:
-            self.encoder_ = get_default_encoder(name="encoder")
+            self.encoder_ = get_default_encoder(name="encoder", state=self.random_state)
         else:
             self.encoder_ = check_network(self.encoder,
                                           copy=self.copy,
                                           name="encoder")
         if self.task is None:
-            self.task_ = get_default_task(name="task")
+            self.task_ = get_default_task(name="task", state=self.random_state)
         else:
             self.task_ = check_network(self.task,
                                        copy=self.copy,
                                        name="task")
         if self.discriminator is None:
-            self.discriminator_ = get_default_discriminator(name="discriminator")
+            self.discriminator_ = get_default_discriminator(name="discriminator", state=self.random_state)
         else:
             self.discriminator_ = check_network(self.discriminator,
                                                 copy=self.copy,

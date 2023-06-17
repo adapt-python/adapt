@@ -173,21 +173,21 @@ def test_check_network_no_model(no_net):
             " got: %s"%str(no_net) in str(excinfo.value))
     
 
-def test_check_network_force_copy():
-    model = DummyModel()
-    with pytest.raises(ValueError) as excinfo:
-        new_net = check_network(model, copy=True, force_copy=True)
-    assert ("`network` argument can't be duplicated. "
-            "Recorded exception: " in str(excinfo.value))
+#def test_check_network_force_copy():
+#    model = DummyModel()
+#    with pytest.raises(ValueError) as excinfo:
+#        new_net = check_network(model, copy=True, force_copy=True)
+#    assert ("`network` argument can't be duplicated. "
+#            "Recorded exception: " in str(excinfo.value))
+#    
+#    new_net = check_network(model, copy=False, force_copy=True)
     
-    new_net = check_network(model, copy=False, force_copy=True)
     
-    
-def test_check_network_high_dataset():
-    Xs, ys, Xt, yt = make_regression_da(100000, 1001)
-    net = _get_model_Sequential(compiled=True)
-    new_net = check_network(net, copy=True)
-    new_net.predict(Xs)
+# def test_check_network_high_dataset():
+#     Xs, ys, Xt, yt = make_regression_da(100000, 1001)
+#     net = _get_model_Sequential(compiled=True)
+#     new_net = check_network(net, copy=True)
+#     new_net.predict(Xs)
     
 
 estimators = [

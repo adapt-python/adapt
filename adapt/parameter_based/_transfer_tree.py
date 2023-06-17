@@ -11,25 +11,34 @@ from adapt.utils import check_arrays, set_random_seed, check_estimator, check_fi
 import adapt._tree_utils as ut
 
 
-@make_insert_doc(supervised=True)
+# @make_insert_doc(supervised=True)
 class TransferTreeClassifier(BaseAdaptEstimator):
     """
-    TransferTreeClassifier
-    
-    Decision tree classifier structure for model-based transfer algorithms.
-    
-    This includes several algorithms : leaves relabeling according to target data, SER and STRUT algorithms
-    and various variants for target class imbalance situations.
-    
+    TransferTreeClassifier: Modify a source Decision tree on a target dataset.
+
     Parameters
     ----------    
     estimator : sklearn DecsionTreeClassifier (default=None)
         Source decision tree classifier.
+        
+    Xt : numpy array (default=None)
+        Target input data.
+            
+    yt : numpy array (default=None)
+        Target output data.
                 
     algo : str or callable (default="")
         Leaves relabeling if "" or "relab". 
         "ser" and "strut" for SER and STRUT algorithms
-     
+        
+    copy : boolean (default=True)
+        Whether to make a copy of ``estimator`` or not.
+        
+    verbose : int (default=1)
+        Verbosity level.
+        
+    random_state : int (default=None)
+        Seed of random generator.
         
     Attributes
     ----------
@@ -452,7 +461,12 @@ Peignier, Sergio and Mougeot, Mathilde \
             if not coh:
                 if Translate :
                     if auto_drift:
-                        b_infs,b_sups = ut.bounds_rule(rule,self.estimator_.n_features_in_)
+                        try:
+                            n_feat = self.estimator_.n_features_
+                        except:
+                            n_feat = self.estimator_.n_features_in_
+                        b_infs,b_sups = ut.bounds_rule(rule, n_feat)
+
                         if non_coherent_sense == -1:
                             if b_sups[phi] == np.inf:
                                 self.updateSplit(node,phi,th+D_MARGIN)
@@ -926,8 +940,12 @@ Peignier, Sergio and Mougeot, Mathilde \
         maj_class = np.argmax(self.estimator_.tree_.value[node, :].copy())
         
         if min_drift is None or max_drift is None:
-            min_drift = np.zeros(self.estimator_.n_features_in_)
-            max_drift = np.zeros(self.estimator_.n_features_in_)
+            try:
+                n_feat = self.estimator_.n_features_
+            except:
+                n_feat = self.estimator_.n_features_in_
+            min_drift = np.zeros(n_feat)
+            max_drift = np.zeros(n_feat)
 
         current_class_distribution = ut.compute_class_distribution(classes_, Y_target_node)
         is_reached = (Y_target_node.size > 0)
@@ -1242,7 +1260,7 @@ class TransferTreeSelector(BaseAdaptEstimator):
     
 class TransferForestClassifier(BaseAdaptEstimator):
     """
-    TransferForestClassifier
+    TransferForestClassifier: Modify a source Random Forest on a target dataset.
     
     Random forest classifier structure for model-based transfer algorithms.
     
@@ -1254,12 +1272,26 @@ class TransferForestClassifier(BaseAdaptEstimator):
     estimator : sklearn RandomForestClassifier (default=None)
         Source random forest classifier.
         
+    Xt : numpy array (default=None)
+        Target input data.
+            
+    yt : numpy array (default=None)
+        Target output data.
+                
     algo : str or callable (default="")
         Leaves relabeling if "" or "relab". 
         "ser" and "strut" for SER and STRUT algorithms
         
     bootstrap : boolean (default=True).
-
+        
+    copy : boolean (default=True)
+        Whether to make a copy of ``estimator`` or not.
+        
+    verbose : int (default=1)
+        Verbosity level.
+        
+    random_state : int (default=None)
+        Seed of random generator.
         
     Attributes
     ----------

@@ -3,12 +3,13 @@ import copy
 
 import numpy as np
 import tensorflow as tf
+from tensorflow.keras.optimizers import Adam
 from scipy import linalg
 from sklearn.metrics import pairwise
 from sklearn.base import clone
 from sklearn.model_selection import train_test_split
+from sklearn.utils import check_array
 from adapt.utils import get_default_discriminator, check_sample_weight
-from tensorflow.keras.optimizers import Adam
 
 EPS = np.finfo(float).eps
 
@@ -29,6 +30,7 @@ def _estimator_predict(estimator, Xs, Xt, X):
             Xs = estimator.transform(Xs)
     
     elif hasattr(estimator, "predict_weights"):
+        X = check_array(X, ensure_2d=True, allow_nd=True, accept_sparse=True)
         sample_weight = estimator.predict_weights()
         
         if len(X) != len(sample_weight):
@@ -37,7 +39,7 @@ def _estimator_predict(estimator, Xs, Xt, X):
         sample_weight = check_sample_weight(sample_weight, X)
         sample_weight /= sample_weight.sum()
         bootstrap_index = np.random.choice(
-        len(X), size=len(X), replace=True, p=sample_weight)
+        X.shape[0], size=X.shape[0], replace=True, p=sample_weight)
         Xs = X[bootstrap_index]
     
     else:
@@ -464,6 +466,8 @@ M. Sugiyama, S. Nakajima, H. Kashima, P. von Bünau and  M. Kawanabe. \
 "Direct importance estimation with model selection and its application \
 to covariateshift adaptation". In NIPS 2007
     """
+    Xs = check_array(Xs, ensure_2d=True, allow_nd=True, accept_sparse=True)
+    Xt = check_array(Xt, ensure_2d=True, allow_nd=True, accept_sparse=True)
     if len(Xt) > max_centers:
         random_index = np.random.choice(
         len(Xt), size=max_centers, replace=False)

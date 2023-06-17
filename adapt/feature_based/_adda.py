@@ -113,21 +113,15 @@ class ADDA(BaseAdaptDeep):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.feature_based import ADDA
-    >>> np.random.seed(0)
-    >>> Xs = np.concatenate((np.random.random((100, 1)),
-    ...                      np.zeros((100, 1))), 1)
-    >>> Xt = np.concatenate((np.random.random((100, 1)),
-    ...                      np.ones((100, 1))), 1)
-    >>> ys = 0.2 * Xs[:, 0]
-    >>> yt = 0.2 * Xt[:, 0]
-    >>> model = ADDA(random_state=0)
-    >>> model.fit(Xs, ys, Xt, epochs=100, verbose=0)
-    >>> np.abs(model.predict_task(Xt, domain="src").ravel() - yt).mean()
-    0.1531...
-    >>> np.abs(model.predict_task(Xt, domain="tgt").ravel() - yt).mean()
-    0.0227...
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = ADDA(Xt=Xt, metrics=["acc"], random_state=0)
+    >>> model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
+    1/1 [==============================] - 0s 153ms/step - loss: 0.0960 - acc: 0.9300
+    0.09596743434667587
+    
     
     See also
     --------

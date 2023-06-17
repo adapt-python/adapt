@@ -14,8 +14,10 @@ EPS = np.finfo(np.float32).eps
 @make_insert_doc(["encoder", "task"])
 class MDD(BaseAdaptDeep):
     """
-    MDD: Margin Disparity Discrepancy is a feature-based domain adaptation
-    method originally introduced for unsupervised classification DA.
+    MDD: Margin Disparity Discrepancy
+    
+    MDD is a feature-based domain adaptation method originally introduced
+    for unsupervised classification DA.
     
     The goal of MDD is to find a new representation of the input features which
     minimizes the disparity discrepancy between the source and target domains 
@@ -49,16 +51,14 @@ class MDD(BaseAdaptDeep):
         
     Examples
     --------
-    >>> Xs = np.concatenate((np.random.random((100, 1)),
-    ...                      np.zeros((100, 1))), 1)
-    >>> Xt = np.concatenate((np.random.random((100, 1)),
-    ...                      np.ones((100, 1))), 1)
-    >>> ys = 0.2 * Xs[:, 0]
-    >>> yt = 0.2 * Xt[:, 0]
-    >>> model = MDD(random_state=0)
-    >>> model.fit(Xs, ys, Xt, yt, epochs=100, verbose=0)
-    >>> model.history_["task_t"][-1]
-    0.0009...
+    >>> from adapt.utils import make_classification_da
+    >>> from adapt.feature_based import MDD
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = MDD(lambda_=0.1, gamma=4., Xt=Xt, metrics=["acc"], random_state=0)
+    >>> model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
+    1/1 [==============================] - 0s 102ms/step - loss: 0.1971 - acc: 0.7800
+    0.19707153737545013
         
     References
     ----------
@@ -168,19 +168,19 @@ domain adaptation". ICML, 2019.
     
     def _initialize_networks(self):
         if self.encoder is None:
-            self.encoder_ = get_default_encoder(name="encoder")
+            self.encoder_ = get_default_encoder(name="encoder", state=self.random_state)
         else:
             self.encoder_ = check_network(self.encoder,
                                           copy=self.copy,
                                           name="encoder")
         if self.task is None:
-            self.task_ = get_default_task(name="task")
+            self.task_ = get_default_task(name="task", state=self.random_state)
         else:
             self.task_ = check_network(self.task,
                                        copy=self.copy,
                                        name="task")
         if self.task is None:
-            self.discriminator_ = get_default_task(name="discriminator")
+            self.discriminator_ = get_default_task(name="discriminator", state=self.random_state)
         else:
             # Impose Copy, else undesired behaviour
             self.discriminator_ = check_network(self.task,

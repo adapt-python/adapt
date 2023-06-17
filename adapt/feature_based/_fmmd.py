@@ -8,14 +8,10 @@ from adapt.utils import set_random_seed
 
 
 def pairwise_X(X, Y):
-    batch_size_x = tf.shape(X)[0]
-    batch_size_y = tf.shape(Y)[0]
-    dim = tf.reduce_prod(tf.shape(X)[1:])
-    X = tf.reshape(X, (batch_size_x, dim))
-    Y = tf.reshape(Y, (batch_size_y, dim))
-    X = tf.tile(tf.expand_dims(X, -1), [1, 1, batch_size_y])
-    Y = tf.tile(tf.expand_dims(Y, -1), [1, 1, batch_size_x])
-    return tf.reduce_sum(tf.square(X-tf.transpose(Y)), 1)
+    X2 = tf.tile(tf.reduce_sum(tf.square(X), axis=1, keepdims=True), [1, tf.shape(Y)[0]])
+    Y2 = tf.tile(tf.reduce_sum(tf.square(Y), axis=1, keepdims=True), [1, tf.shape(X)[0]])
+    XY = tf.matmul(X, tf.transpose(Y))
+    return X2 + tf.transpose(Y2) - 2*XY
 
 
 def _get_optim_function(Xs, Xt, kernel="linear", gamma=1., degree=2, coef=1.):
@@ -41,7 +37,7 @@ def _get_optim_function(Xs, Xt, kernel="linear", gamma=1., degree=2, coef=1.):
             Kxy = tf.matmul(tf.matmul(Xs, tf.linalg.diag(W**1)), tf.transpose(Xt))
 
             K = tf.concat((Kxx, Kxy), axis=1)
-            K = tf.concat((K, tf.concat((Kyy, tf.transpose(Kxy)), axis=1)), axis=0)
+            K = tf.concat((K, tf.concat((tf.transpose(Kxy), Kyy), axis=1)), axis=0)
 
             f = -tf.linalg.trace(tf.matmul(K, L))
             Df = tf.gradients(f, W)
@@ -57,7 +53,7 @@ def _get_optim_function(Xs, Xt, kernel="linear", gamma=1., degree=2, coef=1.):
             Kxy = pairwise_X(tf.matmul(Xs, tf.linalg.diag(W**1)), Xt)
 
             K = tf.concat((Kxx, Kxy), axis=1)
-            K = tf.concat((K, tf.concat((Kyy, tf.transpose(Kxy)), axis=1)), axis=0)
+            K = tf.concat((K, tf.concat((tf.transpose(Kxy), Kyy), axis=1)), axis=0)
             K = tf.exp(-gamma * K)
 
             f = -tf.linalg.trace(tf.matmul(K, L))
@@ -74,7 +70,7 @@ def _get_optim_function(Xs, Xt, kernel="linear", gamma=1., degree=2, coef=1.):
             Kxy = tf.matmul(tf.matmul(Xs, tf.linalg.diag(W**1)), tf.transpose(Xt))
 
             K = tf.concat((Kxx, Kxy), axis=1)
-            K = tf.concat((K, tf.concat((Kyy, tf.transpose(Kxy)), axis=1)), axis=0)
+            K = tf.concat((K, tf.concat((tf.transpose(Kxy), Kyy), axis=1)), axis=0)
             K = (gamma * K + coef)**degree
 
             f = -tf.linalg.trace(tf.matmul(K, L))
@@ -148,7 +144,18 @@ class fMMD(BaseAdaptEstimator):
     See also
     --------
     CORAL
-    FE
+    FA
+    
+    Examples
+    --------
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
+    >>> from adapt.feature_based import fMMD
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = fMMD(RidgeClassifier(), Xt=Xt, kernel="linear", random_state=0, verbose=0)
+    >>> model.fit(Xs, ys)
+    >>> model.score(Xt, yt)
+    0.92
     
     References
     ----------
@@ -229,6 +236,9 @@ class fMMD(BaseAdaptEstimator):
         G = matrix(np.concatenate((linear_const_G, squared_constraint_G)))
         h = matrix(np.concatenate((linear_const_h, squared_constraint_h)))
         dims = {'l': p, 'q': [p+1], 's':  []}
+        
+        solvers.options["show_progress"] = bool(self.verbose)
+        
         sol = solvers.cp(F, G, h, dims)
         
         W = np.array(sol["x"]).ravel()

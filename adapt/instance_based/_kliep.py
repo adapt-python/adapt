@@ -54,11 +54,11 @@ class KLIEP(BaseAdaptEstimator):
     
     .. math::
     
-        \sum_{x_k \in X_S} \sum_{x_j \in X_T} \\alpha_i K(x_j, x_k)) = n_S
+        \sum_{x_j \in X_S} \sum_{x_i \in X_T} \\alpha_i K(x_j, x_i)) = n_S
         
     Where:
     
-    - :math:`X_T` is the source input data of size :math:`n_S`.
+    - :math:`X_S` is the source input data of size :math:`n_S`.
     
     The above OP is solved through gradient ascent algorithm.
     
@@ -93,16 +93,28 @@ class KLIEP(BaseAdaptEstimator):
     max_centers : int (default=100)
         Maximal number of target instances use to
         compute kernels.
+    
+    algo : str (default="FW")
+        Optimization algorithm.
+        Possible values: ['original', 'PG', 'FW']
         
-    lr : float (default=1e-4)
+        - 'original' follows the algorithm of [1]. Useful to reproduce the paper's experiences.
+        - 'PG' is a improved version of 'original'. A convex projection into the constraints set is used.
+        - 'FW' [2] uses the Frank-Wolfe algorithm to solve the above OP.
+        
+        In general, 'FW' is more efficient than 'original' or 'PG'. 
+        In some cases, 'PG' converges faster than 'FW' with a good choice of learning rate.
+        
+        
+    lr : float or list of float (default=np.logspace(-3,1,5))
         Learning rate of the gradient ascent.
+        Used only if algo different to 'FW'
         
     tol : float (default=1e-6)
         Optimization threshold.
         
-    max_iter : int (default=5000)
-        Maximal iteration of the gradient ascent
-        optimization.
+    max_iter : int (default=2000)
+        Maximal iteration of the optimization algorithm.
         
     Yields
     ------
@@ -172,27 +184,19 @@ class KLIEP(BaseAdaptEstimator):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from sklearn.linear_model import RidgeClassifier
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.instance_based import KLIEP
-    >>> np.random.seed(0)
-    >>> Xs = np.random.randn(50) * 0.1
-    >>> Xs = np.concatenate((Xs, Xs + 1.))
-    >>> Xt = np.random.randn(100) * 0.1
-    >>> ys = np.array([-0.2 * x if x<0.5 else 1. for x in Xs])
-    >>> yt = -0.2 * Xt
-    >>> kliep = KLIEP(sigmas=[0.1, 1, 10], random_state=0)
-    >>> kliep.fit_estimator(Xs.reshape(-1,1), ys)
-    >>> np.abs(kliep.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
-    0.09388...
-    >>> kliep.fit(Xs.reshape(-1,1), ys, Xt.reshape(-1,1))
-    Fitting weights...
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = KLIEP(RidgeClassifier(), Xt=Xt, kernel="rbf", gamma=[0.1, 1.], random_state=0)
+    >>> model.fit(Xs, ys)
+    Fit weights...
     Cross Validation process...
-    Parameter sigma = 0.1000 -- J-score = 0.059 (0.001)
-    Parameter sigma = 1.0000 -- J-score = 0.427 (0.003)
-    Parameter sigma = 10.0000 -- J-score = 0.704 (0.017)
-    Fitting estimator...
-    >>> np.abs(kliep.predict(Xt.reshape(-1,1)).ravel() - yt).mean()
-    0.00302...
+    Parameter {'gamma': 0.1} -- J-score = 0.013 (0.003)
+    Parameter {'gamma': 1.0} -- J-score = 0.120 (0.026)
+    Fit Estimator...
+    >>> model.score(Xt, yt)
+    0.85
 
     See also
     --------
@@ -205,7 +209,10 @@ class KLIEP(BaseAdaptEstimator):
 M. Sugiyama, S. Nakajima, H. Kashima, P. von Bünau and  M. Kawanabe. \
 "Direct importance estimation with model selection and its application \
 to covariateshift adaptation". In NIPS 2007
-    """
+    .. [2] `[2] <https://webdocs.cs.ualberta.ca/~dale/papers/ijcai15.pdf>`_ \
+J. Wen, R. Greiner and D. Schuurmans. \
+"Correcting Covariate Shift with the Frank-Wolfe Algorithm". In IJCAI 2015
+"""
     def __init__(self,
                  estimator=None,
                  Xt=None,
@@ -213,9 +220,10 @@ to covariateshift adaptation". In NIPS 2007
                  sigmas=None,
                  max_centers=100,
                  cv=5,
-                 lr=1e-4,
+                 algo="FW",
+                 lr=np.logspace(-3,1,5),
                  tol=1e-6,
-                 max_iter=5000,
+                 max_iter=2000,
                  copy=True,
                  verbose=1,
                  random_state=None,
@@ -341,47 +349,175 @@ to covariateshift adaptation". In NIPS 2007
             raise NotFittedError("Weights are not fitted yet, please "
                                  "call 'fit_weights' or 'fit' first.")
 
-
+          
     def _fit(self, Xs, Xt, kernel_params):
-        index_centers = np.random.choice(
+        if self.algo == "original":
+            return self._fit_PG(Xs, Xt, PG=False, kernel_params=kernel_params)
+        elif self.algo == "PG":
+            return self._fit_PG(Xs, Xt, PG=True, kernel_params=kernel_params)
+        elif self.algo == "FW":
+            return self._fit_FW(Xs, Xt, kernel_params=kernel_params)
+        else :
+            raise ValueError("%s is not a valid value of algo"%self.algo)
+            
+    
+    def _fit_PG(self, Xs, Xt, PG, kernel_params):
+        alphas = []
+        OBJs = []
+        
+        if type(self.lr) == float or type(self.lr) == int:
+            LRs = [self.lr]
+        elif type(self.lr) == list or type(self.lr) == np.ndarray:
+            LRs = self.lr
+        else:
+            raise TypeError("invalid argument type for lr")
+        
+        # For original, no center selection
+        if PG:
+            centers, A, b = self._centers_selection(Xs, Xt, kernel_params)
+        else:
+            index_centers = np.random.choice(
                         len(Xt),
                         min(len(Xt), self.max_centers),
                         replace=False)
-        centers = Xt[index_centers]
-        
-        A = pairwise.pairwise_kernels(Xt, centers, metric=self.kernel,
+            centers = Xt[index_centers]
+            
+            A = pairwise.pairwise_kernels(Xt, centers, metric=self.kernel,
                                       **kernel_params)
-        B = pairwise.pairwise_kernels(centers, Xs, metric=self.kernel,
-                                      **kernel_params)
-        b = np.mean(B, axis=1)
-        b = b.reshape(-1, 1)
+            B = pairwise.pairwise_kernels(centers, Xs, metric=self.kernel,
+                                          **kernel_params)
+            b = np.mean(B, axis=1)
+            b = b.reshape(-1, 1)
 
-        alpha = np.ones((len(centers), 1)) / len(centers)
-        previous_objective = -np.inf
-        objective = np.mean(np.log(np.dot(A, alpha) + EPS))
+        for lr in LRs:
+            if self.verbose > 1:
+                print("learning rate : %s"%lr)
+            
+            # For original, init alpha = ones and project
+            if PG:
+                alpha = 1/(len(centers)*b)
+            else:
+                alpha = np.ones((len(centers), 1))
+                alpha = self._projection_original(alpha, b)
+                
+            alpha = alpha.reshape(-1,1)
+            previous_objective = -np.inf
+            objective = np.sum(np.log(np.dot(A, alpha) + EPS))
+            if self.verbose > 1:
+                    print("Alpha's optimization : iter %i -- Obj %.4f"%(0, objective))
+            k = 0
+            while k < self.max_iter and objective-previous_objective > self.tol:
+                previous_objective = objective
+                alpha_p = np.copy(alpha)
+                r = 1./np.clip(np.dot(A, alpha), EPS, np.inf)
+                g = np.dot(
+                    np.transpose(A), r
+                )
+                alpha += lr * g
+                if PG :
+                    alpha = self._projection_PG(alpha, b).reshape(-1,1)
+                else :
+                    alpha = self._projection_original(alpha, b)
+                objective = np.sum(np.log(np.dot(A, alpha) + EPS))
+                k += 1
+
+                if self.verbose > 1:
+                    if k%100 == 0:
+                        print("Alpha's optimization : iter %i -- Obj %.4f"%(k, objective))
+            alphas.append(alpha_p)
+            OBJs.append(previous_objective)
+        OBJs = np.array(OBJs).ravel()
+        return alphas[np.argmax(OBJs)], centers
+    
+    def _fit_FW(self, Xs, Xt, kernel_params):
+        centers, A, b = self._centers_selection(Xs, Xt, kernel_params)
+
+        alpha = 1/(len(centers)*b)
+        alpha = alpha.reshape(-1,1)
+        objective = np.sum(np.log(np.dot(A, alpha) + EPS))
         if self.verbose > 1:
                 print("Alpha's optimization : iter %i -- Obj %.4f"%(0, objective))
         k = 0
-        while k < self.max_iter and objective-previous_objective > self.tol:
+        while k < self.max_iter:
             previous_objective = objective
             alpha_p = np.copy(alpha)
-            alpha += self.lr * np.dot(
-                np.transpose(A), 1./(np.dot(A, alpha) + EPS)
+            r = 1./np.clip(np.dot(A, alpha), EPS, np.inf)
+            g = np.dot(
+                np.transpose(A), r
             )
-            alpha += b * ((((1-np.dot(np.transpose(b), alpha)) /
-                            (np.dot(np.transpose(b), b) + EPS))))
-            alpha = np.maximum(0, alpha)
-            alpha /= (np.dot(np.transpose(b), alpha) + EPS)
-            objective = np.mean(np.log(np.dot(A, alpha) + EPS))
+            B = np.diag(1/b.ravel())
+            LP = np.dot(g.transpose(), B)
+            lr = 2/(k+2)
+            alpha = (1 - lr)*alpha + lr*B[np.argmax(LP)].reshape(-1,1)
+            objective = np.sum(np.log(np.dot(A, alpha) + EPS))
             k += 1
             
             if self.verbose > 1:
                 if k%100 == 0:
                     print("Alpha's optimization : iter %i -- Obj %.4f"%(k, objective))
-
         return alpha, centers
+    
+    def _centers_selection(self, Xs, Xt, kernel_params):
+        A = np.empty((Xt.shape[0], 0))
+        b = np.empty((0,))
+        centers = np.empty((0, Xt.shape[1]))
+        
+        max_centers = min(len(Xt), self.max_centers)
+        np.random.seed(self.random_state)
+        index = np.random.permutation(Xt.shape[0])
+        
+        k = 0
+        
+        while k*max_centers < len(index) and len(centers) < max_centers and k<3:
+            index_ = index[k*max_centers:(k+1)*max_centers]
+            centers_ = Xt[index_]
+            A_ = pairwise.pairwise_kernels(Xt, centers_, metric=self.kernel,
+                                      **kernel_params)
+            B_ = pairwise.pairwise_kernels(centers_, Xs, metric=self.kernel,
+                                          **kernel_params)
+            b_ = np.mean(B_, axis=1)
+            mask = (b_ < EPS).ravel()
+            if np.sum(~mask) > 0 :
+                centers_ = centers_[~mask]
+                centers = np.concatenate((centers, centers_), axis = 0)
+                A = np.concatenate((A, A_[:,~mask]), axis=1)
+                b = np.append(b, b_[~mask])
+            k += 1
+            
+        if len(centers) >= max_centers:
+            centers = centers[:max_centers]
+            A = A[:, :max_centers]
+            b = b[:max_centers]
+        elif len(centers) > 0:
+            warnings.warn("Not enough centers, only %i centers found. Maybe consider a different value of kernel parameter."%len(centers))
+        else:
+            raise ValueError("No centers found! Please change the value of kernel parameter.")
+        
+        return centers, A, b.reshape(-1,1)
 
-
+    def _projection_original(self, alpha, b):
+        alpha += b * ((((1-np.dot(np.transpose(b), alpha)) /
+                            (np.dot(np.transpose(b), b) + EPS))))
+        alpha = np.maximum(0, alpha)
+        alpha /= (np.dot(np.transpose(b), alpha) + EPS)
+        return alpha
+    
+    def _projection_PG(self, y, b):
+        sort= np.argsort(y.ravel()/b.ravel())
+        y_hat = np.array(y).ravel()[sort]
+        b_hat = np.array(b).ravel()[sort]
+        nu = [(np.dot(y_hat[k:],b_hat[k:])-1)/np.dot(b_hat[k:], b_hat[k:]) for k in range(len(y_hat))]
+        k = 0
+        for i in range(len(nu)):
+            if i == 0 :
+                if nu[i]<=y_hat[i]/b_hat[i]:
+                    break
+            elif (nu[i]>y_hat[i-1]/b_hat[i-1] and nu[i]<=y_hat[i]/b_hat[i]):
+                    k = i
+                    break
+        return np.maximum(0, y-nu[k]*b)
+    
+    
     def _cross_val_jscore(self, Xs, Xt, kernel_params, cv):        
         split = int(len(Xt) / cv)
         cv_scores = []
@@ -390,19 +526,23 @@ to covariateshift adaptation". In NIPS 2007
             train_index = np.array(
                 list(set(np.arange(len(Xt))) - set(test_index))
             )
+            
+            try:
+                alphas, centers = self._fit(Xs,
+                                            Xt[train_index],
+                                            kernel_params)
 
-            alphas, centers = self._fit(Xs,
-                                        Xt[train_index],
-                                        kernel_params)
-
-            j_score = np.mean(np.log(
-                np.dot(
-                    pairwise.pairwise_kernels(Xt[test_index],
-                                             centers,
-                                             metric=self.kernel,
-                                             **kernel_params),
-                    alphas
-                ) + EPS
-            ))
+                j_score = np.mean(np.log(
+                    np.dot(
+                        pairwise.pairwise_kernels(Xt[test_index],
+                                                 centers,
+                                                 metric=self.kernel,
+                                                 **kernel_params),
+                        alphas
+                    ) + EPS
+                ))
+            except Exception as e:
+                j_score = -np.inf
+                
             cv_scores.append(j_score)
         return cv_scores

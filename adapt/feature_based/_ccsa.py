@@ -15,17 +15,14 @@ def pairwise_y(X, Y):
     Y = tf.reshape(Y, (batch_size_y, dim))
     X = tf.tile(tf.expand_dims(X, -1), [1, 1, batch_size_y])
     Y = tf.tile(tf.expand_dims(Y, -1), [1, 1, batch_size_x])
-    return tf.reduce_sum(tf.abs(X-tf.transpose(Y)), 1)/2
+    return tf.reduce_sum(tf.abs(X-tf.transpose(Y)), 1)/2.
+
 
 def pairwise_X(X, Y):
-    batch_size_x = tf.shape(X)[0]
-    batch_size_y = tf.shape(Y)[0]
-    dim = tf.reduce_prod(tf.shape(X)[1:])
-    X = tf.reshape(X, (batch_size_x, dim))
-    Y = tf.reshape(Y, (batch_size_y, dim))
-    X = tf.tile(tf.expand_dims(X, -1), [1, 1, batch_size_y])
-    Y = tf.tile(tf.expand_dims(Y, -1), [1, 1, batch_size_x])
-    return tf.reduce_sum(tf.square(X-tf.transpose(Y)), 1)
+    X2 = tf.tile(tf.reduce_sum(tf.square(X), axis=1, keepdims=True), [1, tf.shape(Y)[0]])
+    Y2 = tf.tile(tf.reduce_sum(tf.square(Y), axis=1, keepdims=True), [1, tf.shape(X)[0]])
+    XY = tf.matmul(X, tf.transpose(Y))
+    return X2 + tf.transpose(Y2) - 2*XY
 
 
 @make_insert_doc(["encoder", "task"], supervised=True)
@@ -91,6 +88,22 @@ class CCSA(BaseAdaptDeep):
         If ``yt`` is given in ``fit`` method, target metrics
         and losses are recorded too.
         
+    See also
+    --------
+    CDAN
+        
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from adapt.utils import make_classification_da
+    >>> from adapt.feature_based import CCSA
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = CCSA(margin=1., gamma=0.5, Xt=Xt, metrics=["acc"], random_state=0)
+    >>> model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
+    1/1 [==============================] - 0s 180ms/step - loss: 0.1550 - acc: 0.8900
+    0.15503168106079102
+        
     References
     ----------
     .. [1] `[1] <https://arxiv.org/abs/1709.10190>`_ S. Motiian, M. Piccirilli, \
@@ -119,17 +132,35 @@ generalization". In ICCV 2017.
     def train_step(self, data):
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
-       
+        
+        # Check that yt is not None
+        if yt is None:
+            raise ValueError("The target labels `yt` is `None`, CCSA is a supervised"
+                             " domain adaptation method and need `yt` to be specified.")
+        
+        # Check shape of ys
+        if len(ys.get_shape()) <= 1 or ys.get_shape()[1] == 1:
+            self._ys_is_1d = True
+        else:
+            self._ys_is_1d = False
+
         # loss
-        with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape:
+        with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape:            
             # Forward pass
             Xs_enc = self.encoder_(Xs, training=True)
             ys_pred = self.task_(Xs_enc, training=True)
             
+            # Change type
+            ys = tf.cast(ys, ys_pred.dtype)
+            yt = tf.cast(yt, ys_pred.dtype)
+            
             Xt_enc = self.encoder_(Xt, training=True)
             
-            dist_y = pairwise_y(ys, yt)
+            dist_y = pairwise_y(ys, yt)            
             dist_X = pairwise_X(Xs_enc, Xt_enc)
+            
+            if self._ys_is_1d:
+                dist_y *= 2.
             
             contrastive_loss = tf.reduce_sum(dist_y * tf.maximum(0., self.margin - dist_X), 1) / (tf.reduce_sum(dist_y, 1) + EPS)
             contrastive_loss += tf.reduce_sum((1-dist_y) * dist_X, 1) / (tf.reduce_sum(1-dist_y, 1) + EPS)

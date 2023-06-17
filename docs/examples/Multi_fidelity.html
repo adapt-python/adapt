@@ -49,13 +49,17 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../map.html">Choosing the right algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quick_start.html">Quick-Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Developer_Guide.html">Developer Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.PRED.html">PRED</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.FA.html">FA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CORAL.html">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.TCA.html">TCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.fMMD.html">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DANN.html">DANN</a></li>
@@ -71,7 +75,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.LDM.html">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KLIEP.html">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.ULSIF.html">ULSIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.RULSIF.html">RULSIF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.IWC.html">IWC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.IWN.html">IWN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.BalancedWeighting.html">BalancedWeighting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
@@ -79,11 +88,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.LinInt.html">LinInt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
@@ -117,7 +128,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Classification.html#Experimental-Setup">Experimental Setup</a></li>
@@ -178,6 +189,45 @@
 <li class="toctree-l2"><a class="reference internal" href="#Low-fidelity-only">Low fidelity only</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#High-fidelity-only">High fidelity only</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Real Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Sample_bias_example.html">Sample Bias</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Sample_bias_example.html#Sample-Bias-on-the-diabetes-dataset">Diabetes Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sample_bias_example.html#Applying-Transfer-Learning-for-correcting-sample-bias">Sample bias correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sample_bias_example.html#Hidden-bias-and-features-importance-estimation">Features importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Flowers_example.html">Fine-Tuning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Flowers_example.html#Training-a-model-from-scratch">Train from Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Flowers_example.html#Model-based-Transfer">Model-based Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Office_example.html">Deep Domain Adaptation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Office_example.html#Dataset-Preprocessing">Dataset Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Office_example.html#Fit-without-adaptation">Fit without adaptation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Office_example.html#Fit-with-adaptation">Fit with adaptation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tradaboost_experiments.html">TrAdaBoost Experiments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tradaboost_experiments.html#Mushrooms">Mushrooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tradaboost_experiments.html#20-NewsGroup">20-NewsGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Heart_Failure.html">Heart Failure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#CDAN">CDAN</a></li>
 </ul>
 </li>
 </ul>
@@ -477,8 +527,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Multi-Fidelity">
 <h1>Multi-Fidelity<a class="headerlink" href="#Multi-Fidelity" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="30ffe81bd05f45ea916075bb1f6386f1" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Cc9TVY_Tl_boVzZDNisQnqe6Qx78svqe?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="d04db52ebb1f471a93a750710c96c5a7" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Multi_fidelity.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="fe758e855f4c4b1dbec0d2a24bfbd1d8" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/1Cc9TVY_Tl_boVzZDNisQnqe6Qx78svqe?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="fa66fbcf91614ae1a57ca11f12d0b398" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/Multi_fidelity.ipynb">View on GitHub</a></p>
 </div><p>The following example is a 1D regression multi-fidelity issue. Blue points are low fidelity observations and orange points are high fidelity observations. The goal is to use both datasets to learn the task on the [0, 1] interval.</p>
 <p>To tackle this challenge, we use here the parameter-based method: <a class="reference external" href="#RegularTransferNN">RegularTransferNN</a></p>
 <div class="nbinput nblast docutils container">
@@ -588,7 +638,7 @@ div.rendered_html tbody tr:hover {
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y = f(X)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Low Fidelity Only -- MAE = </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">sc</span>ore, <span class="nv">fontsize</span><span class="o">=</span><span class="m">18</span><span class="o">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Low Fidelity Only -- MAE = </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">sc</span>ore,<span class="w"> </span><span class="nv">fontsize</span><span class="o">=</span><span class="m">18</span><span class="o">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -630,7 +680,7 @@ div.rendered_html tbody tr:hover {
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y = f(X)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Low Fidelity Only -- MAE = </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">sc</span>ore, <span class="nv">fontsize</span><span class="o">=</span><span class="m">18</span><span class="o">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Low Fidelity Only -- MAE = </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">sc</span>ore,<span class="w"> </span><span class="nv">fontsize</span><span class="o">=</span><span class="m">18</span><span class="o">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -678,7 +728,7 @@ WARNING:tensorflow:Gradients do not exist for variables [&#39;Variable:0&#39;] w
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y = f(X)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Low Fidelity Only -- MAE = </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">sc</span>ore, <span class="nv">fontsize</span><span class="o">=</span><span class="m">18</span><span class="o">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Low Fidelity Only -- MAE = </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">sc</span>ore,<span class="w"> </span><span class="nv">fontsize</span><span class="o">=</span><span class="m">18</span><span class="o">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>

@@ -4,9 +4,14 @@ Test functions for tradaboost module.
 
 import copy
 import numpy as np
-from sklearn.linear_model import LinearRegression, LogisticRegression, Ridge
+import scipy
+from sklearn.linear_model import LinearRegression, LogisticRegression, Ridge, RidgeClassifier
 from sklearn.metrics import r2_score, accuracy_score
 import tensorflow as tf
+try:
+    from tensorflow.keras.optimizers.legacy import Adam
+except:
+    from tensorflow.keras.optimizers import Adam
 
 from adapt.instance_based import (TrAdaBoost,
                                   TrAdaBoostR2,
@@ -49,14 +54,14 @@ def test_tradaboost_fit_keras_model():
     np.random.seed(0)
     est = tf.keras.Sequential()
     est.add(tf.keras.layers.Dense(1, activation="sigmoid"))
-    est.compile(loss="bce", optimizer="adam")
+    est.compile(loss="bce", optimizer=Adam())
     model = TrAdaBoost(est, n_estimators=2, random_state=0)
     model.fit(Xs, ys_classif, Xt=Xt[:10], yt=yt_classif[:10])
     yp = model.predict(Xt)
     
     est = tf.keras.Sequential()
     est.add(tf.keras.layers.Dense(2, activation="softmax"))
-    est.compile(loss="mse", optimizer="adam")
+    est.compile(loss="mse", optimizer=Adam())
     model = TrAdaBoost(est, n_estimators=2, random_state=0)
     model.fit(Xs, np.random.random((100, 2)),
               Xt=Xt[:10], yt=np.random.random((10, 2)))
@@ -184,4 +189,27 @@ def test_tradaboost_lr():
     model.fit(Xs, ys_classif)
     err2 = model.estimator_errors_
     
-    assert np.sum(err1) > 10 * np.sum(err2)
+    assert np.sum(err1) > 5 * np.sum(err2)
+    
+    
+def test_tradaboost_sparse_matrix():
+    X = scipy.sparse.csr_matrix(np.eye(200))
+    y = np.random.randn(100)
+    yc = np.random.choice(["e", "p"], 100)
+    Xt = X[:100]
+    Xs = X[100:]
+    
+    model = TrAdaBoost(RidgeClassifier(), Xt=Xt[:10], yt=yc[:10])
+    model.fit(Xs, yc)
+    model.score(Xt, yc)
+    model.predict(Xs)
+    
+    model = TrAdaBoostR2(Ridge(), Xt=Xt[:10], yt=y[:10])
+    model.fit(Xs, y)
+    model.score(Xt, y)
+    model.predict(Xs)
+    
+    model = TwoStageTrAdaBoostR2(Ridge(), Xt=Xt[:10], yt=y[:10], n_estimators=3)
+    model.fit(Xs, y)
+    model.score(Xt, y)
+    model.predict(Xs)

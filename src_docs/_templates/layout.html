@@ -7,7 +7,12 @@
 {%- if pathto("examples/Regression") == "#" %}{% set Regression = "" %}{% else %}{% set Regression = "#" %}{% endif %} 
 {%- if pathto("examples/sample_bias") == "#" %}{% set sample_bias = "" %}{% else %}{% set sample_bias = "#" %}{% endif %} 
 {%- if pathto("examples/Multi_fidelity") == "#" %}{% set Multi_fidelity = "" %}{% else %}{% set Multi_fidelity = "#" %}{% endif %} 
-{%- if pathto("examples/Rotation") == "#" %}{% set Rotation = "" %}{% else %}{% set Rotation = "#" %}{% endif %} 
+{%- if pathto("examples/Rotation") == "#" %}{% set Rotation = "" %}{% else %}{% set Rotation = "#" %}{% endif %}
+{%- if pathto("examples/tradaboost_experiments") == "#" %}{% set tradaboost_experiments = "" %}{% else %}{% set tradaboost_experiments = "#" %}{% endif %}
+{%- if pathto("examples/Office_example") == "#" %}{% set Office_example = "" %}{% else %}{% set Office_example = "#" %}{% endif %}
+{%- if pathto("examples/Sample_bias_example") == "#" %}{% set Sample_bias_example = "" %}{% else %}{% set Sample_bias_example = "#" %}{% endif %}
+{%- if pathto("examples/Flowers_example") == "#" %}{% set Flowers_example = "" %}{% else %}{% set Flowers_example = "#" %}{% endif %}
+{%- if pathto("examples/Heart_Failure") == "#" %}{% set Heart_Failure = "" %}{% else %}{% set Heart_Failure = "#" %}{% endif %}
 
  {% block menu %} 
 <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
@@ -18,13 +23,17 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("map") }}">Choosing the right algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Quick_start") }}">Quick-Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Developer_Guide") }}">Developer Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("contents") }}{{ contents }}{{ "adapt-feature-based" }}">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.PRED") }}">PRED</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.FA") }}">FA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.CORAL") }}">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.SA") }}">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.TCA") }}">TCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.fMMD") }}">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.DeepCORAL") }}">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.feature_based.DANN") }}">DANN</a></li>
@@ -40,7 +49,12 @@
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.LDM") }}">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.KLIEP") }}">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.KMM") }}">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.ULSIF") }}">ULSIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.RULSIF") }}">RULSIF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.NearestNeighborsWeighting") }}">NearestNeighborsWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.IWC") }}">IWC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.IWN") }}">IWN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.BalancedWeighting") }}">BalancedWeighting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.TrAdaBoost") }}">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.TrAdaBoostR2") }}">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.instance_based.TwoStageTrAdaBoostR2") }}">TwoStageTrAdaBoostR2</a></li>
@@ -48,11 +62,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("contents") }}{{ contents }}{{ "adapt-parameter-based" }}">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.parameter_based.LinInt") }}">LinInt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.parameter_based.RegularTransferLR") }}">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.parameter_based.RegularTransferLC") }}">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.parameter_based.RegularTransferNN") }}">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.parameter_based.FineTuning") }}">FineTuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.parameter_based.TransferTreeClassifier") }}">TransferTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("generated/adapt.parameter_based.TransferForestClassifier") }}">TransferForestClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("contents") }}{{ contents }}{{ "adapt-metrics" }}">Metrics</a><ul>
@@ -86,7 +102,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Classification") }}">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Classification") }}{{ Classification }}{{ "Experimental-Setup" }}">Experimental Setup</a></li>
@@ -147,6 +163,45 @@
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Multi_fidelity") }}{{ Multi_fidelity }}{{ "Low-fidelity-only" }}">Low fidelity only</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Multi_fidelity") }}{{ Multi_fidelity }}{{ "High-fidelity-only" }}">High fidelity only</a></li>
 <li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Multi_fidelity") }}{{ Multi_fidelity }}{{ "RegularTransferNN" }}">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Real Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Sample_bias_example") }}">Sample Bias</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Sample_bias_example") }}{{ Sample_bias_example }}{{ "Sample-Bias-on-the-diabetes-dataset" }}">Diabetes Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Sample_bias_example") }}{{ Sample_bias_example }}{{ "Applying-Transfer-Learning-for-correcting-sample-bias" }}">Sample bias correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Sample_bias_example") }}{{ Sample_bias_example }}{{ "Hidden-bias-and-features-importance-estimation" }}">Features importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Flowers_example") }}">Fine-Tuning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Flowers_example") }}{{ Flowers_example }}{{ "Training-a-model-from-scratch" }}">Train from Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Flowers_example") }}{{ Flowers_example }}{{ "Model-based-Transfer" }}">Model-based Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Office_example") }}">Deep Domain Adaptation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Office_example") }}{{ Office_example }}{{ "Dataset-Preprocessing" }}">Dataset Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Office_example") }}{{ Office_example }}{{ "Fit-without-adaptation" }}">Fit without adaptation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Office_example") }}{{ Office_example }}{{ "Fit-with-adaptation" }}">Fit with adaptation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/tradaboost_experiments") }}">TrAdaBoost Experiments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/tradaboost_experiments") }}{{ tradaboost_experiments }}{{ "Mushrooms" }}">Mushrooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/tradaboost_experiments") }}{{ tradaboost_experiments }}{{ "20-NewsGroup" }}">20-NewsGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}">Heart Failure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}{{ Heart_Failure }}{{ "Setup" }}">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}{{ Heart_Failure }}{{ "Network" }}">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}{{ Heart_Failure }}{{ "Source-Only" }}">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}{{ Heart_Failure }}{{ "DANN" }}">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}{{ Heart_Failure }}{{ "ADDA" }}">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}{{ Heart_Failure }}{{ "DeepCORAL" }}">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}{{ Heart_Failure }}{{ "CORAL" }}">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}{{ Heart_Failure }}{{ "MCD" }}">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}{{ Heart_Failure }}{{ "MDD" }}">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}{{ Heart_Failure }}{{ "WDGRL" }}">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="{{ pathto("examples/Heart_Failure") }}{{ Heart_Failure }}{{ "CDAN" }}">CDAN</a></li>
 </ul>
 </li>
 </ul>

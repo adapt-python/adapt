@@ -9,7 +9,11 @@ from sklearn.base import clone
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
+try:
+    from tensorflow.keras.optimizers.legacy import Adam
+except:
+    from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.initializers import GlorotUniform
 
 from adapt.parameter_based import (RegularTransferLR,
                                    RegularTransferLC,
@@ -37,6 +41,7 @@ def _get_network(input_shape=(1,), output_shape=(1,)):
     model = Sequential()
     model.add(Dense(np.prod(output_shape),
                     input_shape=input_shape,
+                    kernel_initializer=GlorotUniform(seed=0),
                     use_bias=False))
     model.compile(loss="mse", optimizer=Adam(0.1))
     return model

@@ -89,6 +89,11 @@ html_js_files = [
 
 html_show_sourcelink = False
 
+nbsphinx_thumbnails = {
+"examples/Sample_bias_example": "_static/images/sample_bias_corr_img.png",
+"examples/Office_example": "_static/images/office_item.png",
+"examples/Flowers_example": "_static/images/finetuned.png",
+}
 
 #sphinx_gallery_conf = {
 #    'reference_url': {"adapt": None},

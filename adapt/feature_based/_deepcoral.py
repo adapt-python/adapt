@@ -81,25 +81,14 @@ class DeepCORAL(BaseAdaptDeep):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.feature_based import DeepCORAL
-    >>> np.random.seed(0)
-    >>> Xs = np.random.multivariate_normal(
-    ...      np.array([0, 0]), np.array([[0.001, 0], [0, 1]]), 100)
-    >>> Xt = np.random.multivariate_normal(
-    ...      np.array([0, 0]), np.array([[0.1, 0.2], [0.2, 0.5]]), 100)
-    >>> ys = np.zeros(100)
-    >>> yt = np.zeros(100)
-    >>> ys[Xs[:, 1]>0] = 1
-    >>> yt[(Xt[:, 1]-0.5*Xt[:, 0])>0] = 1
-    >>> model = DeepCORAL(lambda_=0., random_state=0)
-    >>> model.fit(Xs, ys, Xt, epochs=500, batch_size=100, verbose=0)
-    >>> model.score_estimator(Xt, yt)
-    0.0574...
-    >>> model = DeepCORAL(lambda_=1., random_state=0)
-    >>> model.fit(Xs, ys, Xt, epochs=500, batch_size=100, verbose=0)
-    >>> model.score_estimator(Xt, yt)
-    0.0649...
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = DeepCORAL(lambda_=1., Xt=Xt, metrics=["acc"], random_state=0)
+    >>> model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
+    1/1 [==============================] - 0s 99ms/step - loss: 0.2029 - acc: 0.6800
+    0.2029329240322113
         
     See also
     --------
@@ -211,13 +200,13 @@ class DeepCORAL(BaseAdaptDeep):
 
     def _initialize_networks(self):
         if self.encoder is None:
-            self.encoder_ = get_default_encoder(name="encoder")
+            self.encoder_ = get_default_encoder(name="encoder", state=self.random_state)
         else:
             self.encoder_ = check_network(self.encoder,
                                           copy=self.copy,
                                           name="encoder")
         if self.task is None:
-            self.task_ = get_default_task(name="task")
+            self.task_ = get_default_task(name="task", state=self.random_state)
         else:
             self.task_ = check_network(self.task,
                                        copy=self.copy,

@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deep Domain Adaptation: Transfer one domain to another &mdash; adapt 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../_static/js/custom.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> adapt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu"> 
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://github.com/adapt-python/adapt">Github</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../map.html">Choosing the right algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quick_start.html">Quick-Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Developer_Guide.html">Developer Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.PRED.html">PRED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.FA.html">FA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CORAL.html">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.TCA.html">TCA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.fMMD.html">fMMD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.DANN.html">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.ADDA.html">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.WDGRL.html">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CDAN.html">CDAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MCD.html">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.MDD.html">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.feature_based.CCSA.html">CCSA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-instance-based">Instance-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.LDM.html">LDM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KLIEP.html">KLIEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.ULSIF.html">ULSIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.RULSIF.html">RULSIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.IWC.html">IWC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.IWN.html">IWN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.BalancedWeighting.html">BalancedWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.instance_based.WANN.html">WANN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.LinInt.html">LinInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.make_uda_scorer.html">make_uda_scorer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.cov_distance.html">cov_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.neg_j_score.html">neg_j_score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.linear_discrepancy.html">linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.normalized_linear_discrepancy.html">normalized_linear_discrepancy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.frechet_distance.html">frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.normalized_frechet_distance.html">normalized_frechet_distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.domain_classifier.html">domain_classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.metrics.reverse_validation.html">reverse_validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-utils">Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.UpdateLambda.html">UpdateLambda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.accuracy.html">accuracy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_arrays.html">check_arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_estimator.html">check_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_network.html">check_network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_encoder.html">get_default_encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_task.html">get_default_task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.get_default_discriminator.html">get_default_discriminator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.GradientHandler.html">GradientHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_classification_da.html">make_classification_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.make_regression_da.html">make_regression_da</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_sample_weight.html">check_sample_weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.set_random_seed.html">set_random_seed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_fitted_estimator.html">check_fitted_estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.utils.check_fitted_network.html">check_fitted_network</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Classification.html">Classification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Classification.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Classification.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Classification.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Classification.html#Instance-Based">Instance Based</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Two_moons.html">Two Moons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Two_moons.html#CDAN">CDAN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Rotation.html">Rotation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Rotation.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rotation.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rotation.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rotation.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rotation.html#ADDA">ADDA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Regression.html">Toy Regression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#Experimental-Setup">Experimental Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#TGT-Only">TGT Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#Src-Only">Src Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#All">All</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#TrAdaBoostR2">TrAdaBoostR2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Regression.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sample_bias.html">Sample Bias 1D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sample_bias_2d.html">Sample Bias 2D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias_2d.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias_2d.html#Estimator">Estimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias_2d.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias_2d.html#KMM">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample_bias_2d.html#KLIEP">KLIEP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Multi_fidelity.html">Multi-Fidelity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Multi_fidelity.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Multi_fidelity.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Multi_fidelity.html#Low-fidelity-only">Low fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Multi_fidelity.html#High-fidelity-only">High fidelity only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Real Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Sample_bias_example.html">Sample Bias</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Sample_bias_example.html#Sample-Bias-on-the-diabetes-dataset">Diabetes Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sample_bias_example.html#Applying-Transfer-Learning-for-correcting-sample-bias">Sample bias correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sample_bias_example.html#Hidden-bias-and-features-importance-estimation">Features importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Flowers_example.html">Fine-Tuning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Flowers_example.html#Training-a-model-from-scratch">Train from Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Flowers_example.html#Model-based-Transfer">Model-based Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">Deep Domain Adaptation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Dataset-Preprocessing">Dataset Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Fit-without-adaptation">Fit without adaptation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Fit-with-adaptation">Fit with adaptation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tradaboost_experiments.html">TrAdaBoost Experiments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tradaboost_experiments.html#Mushrooms">Mushrooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tradaboost_experiments.html#20-NewsGroup">20-NewsGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Heart_Failure.html">Heart Failure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heart_Failure.html#CDAN">CDAN</a></li>
+</ul>
+</li>
+</ul>
+ 
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">adapt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Deep Domain Adaptation: Transfer one domain to another</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="Deep-Domain-Adaptation:-Transfer-one-domain-to-another">
+<h1>Deep Domain Adaptation: Transfer one domain to another<a class="headerlink" href="#Deep-Domain-Adaptation:-Transfer-one-domain-to-another" title="Permalink to this headline"></a></h1>
+<center><figure><p><img alt="Deep DA" src="../_images/deep_da.png" /></p>
+<figcaption><p>Deep Domain Adaptation from images of Amazon to Webcam pictures</p>
+</figcaption></figure></center><p>Deep learning approaches have proven to be very efficient nowadays, especially in visual computing. However, these approaches require a large amount of labeled data to be efficient. Obtaining labels for a new target dataset can be costly (an expert must annotate each image). However, in some cases, a similar dataset can be accessed with labels easily, the dataset however comes from another domain (source domain) and presents a shift with respect to the target dataset (e.g. a synthetically
+generated set of images compared to a real image dataset).</p>
+<p>This is the case of the example we will study here on the <a class="reference external" href="https://paperswithcode.com/dataset/office-31">Office dataset</a>. We have on one side a real image dataset (taken by a webcam) of pictures of office items. These images are not labeled and we would like to learn a model to find their classes among 31 classes. On the other hand, we have an image dataset coming from the Amazon website, these images are annotated thanks to the website categories. The drawback is that the Amazon images have
+a plain background (usually white) which creates a shift compared to the webcam images (see Figure below). The idea is then to see if it is possible to adapt the domain of the Amazon images to the domain of the real images so that the task learned on Amazon generalizes well to the real images.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</pre></div>
+</div>
+</div>
+<p>The Office dataset can be downloaded <a class="reference external" href="https://www.cc.gatech.edu/~judy/domainadapt/">here</a>. We show below an example of the “back-pack” and “bike” classes on the “Amazon” and “Webcam” domains:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;office/office_nopreprocessing/&quot;</span> <span class="c1"># path to downloaded Office dataset</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">path</span><span class="o">+</span><span class="s2">&quot;amazon/images/back_pack/frame_0001.jpg&quot;</span><span class="p">))</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">path</span><span class="o">+</span><span class="s2">&quot;amazon/images/bike/frame_0001.jpg&quot;</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;label = back-pack&quot;</span><span class="p">);</span> <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;label = bike&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Domain = Amazon&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">path</span><span class="o">+</span><span class="s2">&quot;webcam/images/back_pack/frame_0001.jpg&quot;</span><span class="p">))</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">path</span><span class="o">+</span><span class="s2">&quot;webcam/images/bike/frame_0001.jpg&quot;</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;label = back-pack&quot;</span><span class="p">);</span> <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;label = bike&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Domain = Webcam&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Office_example_5_0.png" src="../_images/examples_Office_example_5_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Office_example_5_1.png" src="../_images/examples_Office_example_5_1.png" />
+</div>
+</div>
+<section id="Dataset-Preprocessing">
+<h2>Dataset Preprocessing<a class="headerlink" href="#Dataset-Preprocessing" title="Permalink to this headline"></a></h2>
+<p>We will first preprocess the dataset. We are going to use a <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/applications/resnet50/ResNet50">ResNet50</a> as a base learning model. The idea will be to finetune the last block of the ResNet to make the adaptation rather than finetuning the whole ResNet. This way, we will reduce the computation time. We then extract, in preprocessing, the features corresponding to the output of the first blocks of the ReSNet50. These features are fixed and will
+be used as input for the model. We thus obtain two matrices <code class="docutils literal notranslate"><span class="pre">Xs</span></code> and <code class="docutils literal notranslate"><span class="pre">Xt</span></code> for the two domains Amazon and Webcam.</p>
+<p>We first fetch the images of the two domains:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_Xy</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">path_to_folder</span><span class="o">=</span><span class="s2">&quot;office/office_nopreprocessing/&quot;</span><span class="p">):</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">path_to_folder</span> <span class="o">+</span> <span class="n">domain</span> <span class="o">+</span><span class="s2">&quot;/images/&quot;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">direct</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;.ipynb_checkpoints&quot;</span> <span class="ow">in</span> <span class="n">direct</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span> <span class="p">,</span> <span class="n">direct</span><span class="p">)):</span>
+                    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="n">path_to_image</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;.ipynb_checkpoints&quot;</span> <span class="ow">in</span> <span class="n">path_to_image</span><span class="p">:</span>
+                            <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path_to_image</span><span class="p">)</span>
+                            <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span> <span class="n">Image</span><span class="o">.</span><span class="n">ANTIALIAS</span><span class="p">)</span>
+                            <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+                            <span class="n">X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+                            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">direct</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">get_Xy</span><span class="p">(</span><span class="s2">&quot;amazon&quot;</span><span class="p">)</span>
+<span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span> <span class="o">=</span> <span class="n">get_Xy</span><span class="p">(</span><span class="s2">&quot;webcam&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We will now split the ResNet into two parts, the first corresponding to the first fixed blocks and the second to the last block which will be finetuned.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tensorflow.keras.applications.resnet50</span> <span class="kn">import</span> <span class="n">preprocess_input</span><span class="p">,</span> <span class="n">ResNet50</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.models</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">load_model</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">Input</span>
+
+<span class="n">resnet50</span> <span class="o">=</span> <span class="n">ResNet50</span><span class="p">(</span><span class="n">include_top</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">pooling</span><span class="o">=</span><span class="s2">&quot;avg&quot;</span><span class="p">)</span>
+
+<span class="n">first_layer</span> <span class="o">=</span> <span class="n">resnet50</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;conv5_block2_out&#39;</span><span class="p">)</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">first_layer</span><span class="o">.</span><span class="n">output_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+<span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">resnet50</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">resnet50</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">first_layer</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:]:</span>
+    <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;conv5_block3_1_conv&quot;</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">layer</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;conv5_block3_add&quot;</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">([</span><span class="n">inputs</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">first_blocks</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">resnet50</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">first_layer</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+<span class="n">last_block</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING:tensorflow:No training configuration found in the save file, so the model was *not* compiled. Compile it manually.
+</pre></div></div>
+</div>
+<p>Here is the summary of the last block of the ResNet, (we don’t display the first blocks summary to avoid overloading, but it’s the same thing for 4 blocks). We also create a load function for the last block of the ResNet, in this function we set the <code class="docutils literal notranslate"><span class="pre">trainable</span></code> parameter of the <code class="docutils literal notranslate"><span class="pre">BatchNormalizationLayer</span></code> to <code class="docutils literal notranslate"><span class="pre">False</span></code> to avoid problems later during the fine-tuning (see <a class="reference external" href="https://www.tensorflow.org/tutorials/images/transfer_learning">Tensorflow documentation</a>)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_resnet50</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;resnet50_last_block.hdf5&quot;</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;BatchNormalization&quot;</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">model</span>
+
+<span class="n">last_block</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="n">last_block</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;resnet50_last_block.hdf5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Model: &#34;functional_3&#34;
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            [(None, 7, 7, 2048)] 0
+__________________________________________________________________________________________________
+conv5_block3_1_conv (Conv2D)    (None, 7, 7, 512)    1049088     input_1[0][0]
+__________________________________________________________________________________________________
+conv5_block3_1_bn (BatchNormali (None, 7, 7, 512)    2048        conv5_block3_1_conv[1][0]
+__________________________________________________________________________________________________
+conv5_block3_1_relu (Activation (None, 7, 7, 512)    0           conv5_block3_1_bn[1][0]
+__________________________________________________________________________________________________
+conv5_block3_2_conv (Conv2D)    (None, 7, 7, 512)    2359808     conv5_block3_1_relu[1][0]
+__________________________________________________________________________________________________
+conv5_block3_2_bn (BatchNormali (None, 7, 7, 512)    2048        conv5_block3_2_conv[1][0]
+__________________________________________________________________________________________________
+conv5_block3_2_relu (Activation (None, 7, 7, 512)    0           conv5_block3_2_bn[1][0]
+__________________________________________________________________________________________________
+conv5_block3_3_conv (Conv2D)    (None, 7, 7, 2048)   1050624     conv5_block3_2_relu[1][0]
+__________________________________________________________________________________________________
+conv5_block3_3_bn (BatchNormali (None, 7, 7, 2048)   8192        conv5_block3_3_conv[1][0]
+__________________________________________________________________________________________________
+conv5_block3_add (Add)          (None, 7, 7, 2048)   0           input_1[0][0]
+                                                                 conv5_block3_3_bn[1][0]
+__________________________________________________________________________________________________
+conv5_block3_out (Activation)   (None, 7, 7, 2048)   0           conv5_block3_add[1][0]
+__________________________________________________________________________________________________
+avg_pool (GlobalAveragePooling2 (None, 2048)         0           conv5_block3_out[1][0]
+==================================================================================================
+Total params: 4,471,808
+Trainable params: 4,465,664
+Non-trainable params: 6,144
+__________________________________________________________________________________________________
+</pre></div></div>
+</div>
+<p>We can now extract the features of the first blocks of the ResNet50. We also onehotencode the labels.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
+
+<span class="n">Xs</span> <span class="o">=</span> <span class="n">first_blocks</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">preprocess_input</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">Xs</span><span class="p">)))</span>
+<span class="n">Xt</span> <span class="o">=</span> <span class="n">first_blocks</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">preprocess_input</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">Xt</span><span class="p">)))</span>
+
+<span class="n">one</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">one</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">ys_lab</span> <span class="o">=</span> <span class="n">one</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">yt_lab</span> <span class="o">=</span> <span class="n">one</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X source shape: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">str</span>(Xs.shape))
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X target shape: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">str</span>(Xt.shape))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+X source shape: (2817, 7, 7, 2048)
+X target shape: (795, 7, 7, 2048)
+</pre></div></div>
+</div>
+<p>We finally define a task network which will be put after the ResNet to classify between the 31 classes. Note that we use, in addition to dropout, a constraint on the norm of the weights of the network, we observed indeed that this constraint is necessary to obtain a good training of the adversarial domaina daptation method that we will use later. We use an SGD optimizer, we also define a decay on the learning rate <code class="docutils literal notranslate"><span class="pre">MyDecay</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tensorflow.keras</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.constraints</span> <span class="kn">import</span> <span class="n">MaxNorm</span>
+
+<span class="k">def</span> <span class="nf">get_task</span><span class="p">(</span><span class="n">dropout</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_norm</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span>
+                   <span class="n">kernel_constraint</span><span class="o">=</span><span class="n">MaxNorm</span><span class="p">(</span><span class="n">max_norm</span><span class="p">),</span>
+                   <span class="n">bias_constraint</span><span class="o">=</span><span class="n">MaxNorm</span><span class="p">(</span><span class="n">max_norm</span><span class="p">)))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span>
+                   <span class="n">kernel_constraint</span><span class="o">=</span><span class="n">MaxNorm</span><span class="p">(</span><span class="n">max_norm</span><span class="p">),</span>
+                   <span class="n">bias_constraint</span><span class="o">=</span><span class="n">MaxNorm</span><span class="p">(</span><span class="n">max_norm</span><span class="p">)))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">,</span>
+                   <span class="n">kernel_constraint</span><span class="o">=</span><span class="n">MaxNorm</span><span class="p">(</span><span class="n">max_norm</span><span class="p">),</span>
+                   <span class="n">bias_constraint</span><span class="o">=</span><span class="n">MaxNorm</span><span class="p">(</span><span class="n">max_norm</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tensorflow.keras.optimizers.schedules</span> <span class="kn">import</span> <span class="n">LearningRateSchedule</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.optimizers</span> <span class="kn">import</span> <span class="n">SGD</span>
+
+<span class="k">class</span> <span class="nc">MyDecay</span><span class="p">(</span><span class="n">LearningRateSchedule</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">mu_0</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.75</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu_0</span> <span class="o">=</span> <span class="n">mu_0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">max_steps</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">step</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">p</span><span class="p">)</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">beta</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Fit-without-adaptation">
+<h2>Fit without adaptation<a class="headerlink" href="#Fit-without-adaptation" title="Permalink to this headline"></a></h2>
+<p>We will first fit the model without adaptation, i.e. we will finetune the ResNet50 on the source data only without using the target data. Note that we consider the target labels unknown, so we cannot use the target data in a classical supervised training.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span> <span class="o">=</span> <span class="mf">0.04</span>
+<span class="n">momentum</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.0002</span>
+
+<span class="n">optimizer_task</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">MyDecay</span><span class="p">(</span><span class="n">mu_0</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">),</span>
+                     <span class="n">momentum</span><span class="o">=</span><span class="n">momentum</span><span class="p">,</span> <span class="n">nesterov</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">optimizer_enc</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">MyDecay</span><span class="p">(</span><span class="n">mu_0</span><span class="o">=</span><span class="n">lr</span><span class="o">/</span><span class="mf">10.</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">),</span>
+                    <span class="n">momentum</span><span class="o">=</span><span class="n">momentum</span><span class="p">,</span> <span class="n">nesterov</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">adapt.parameter_based</span> <span class="kn">import</span> <span class="n">FineTuning</span>
+
+<span class="n">finetunig</span> <span class="o">=</span> <span class="n">FineTuning</span><span class="p">(</span><span class="n">encoder</span><span class="o">=</span><span class="n">load_resnet50</span><span class="p">(),</span>
+                         <span class="n">task</span><span class="o">=</span><span class="n">get_task</span><span class="p">(),</span>
+                         <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer_task</span><span class="p">,</span>
+                         <span class="n">optimizer_enc</span><span class="o">=</span><span class="n">optimizer_enc</span><span class="p">,</span>
+                         <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;categorical_crossentropy&quot;</span><span class="p">,</span>
+                         <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;acc&quot;</span><span class="p">],</span>
+                         <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">pretrain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                         <span class="n">pretrain__epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING:tensorflow:No training configuration found in the save file, so the model was *not* compiled. Compile it manually.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">finetunig</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys_lab</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span> <span class="n">yt_lab</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">acc</span> <span class="o">=</span> <span class="n">finetunig</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;acc&quot;</span><span class="p">];</span> <span class="n">val_acc</span> <span class="o">=</span> <span class="n">finetunig</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;val_acc&quot;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Train acc - final value: </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">acc</span>[-1])
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_acc</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test acc - final value: </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">val_acc</span>[-1])
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Epochs&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Acc&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Office_example_24_0.png" src="../_images/examples_Office_example_24_0.png" />
+</div>
+</div>
+<p>As we can see, we get an accuracy around 75% on the target set which is already a good performance knowing that we used shifted data (Amazon data). It is interesting to visualize the encoded feature space, i.e. the one obtained at the output of the ResNet (see below). We can see that there are different clusters corresponding to the different classes for the source data, which shows that the encoded space learned by the ResNet is good for the classification task. However, we observe that these
+clusters are not aligned with the target data, which explains the loss of accuracy on the real target data.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>
+
+<span class="n">Xs_enc</span> <span class="o">=</span> <span class="n">finetunig</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span>
+<span class="n">Xt_enc</span> <span class="o">=</span> <span class="n">finetunig</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Xs_enc</span><span class="p">,</span> <span class="n">Xt_enc</span><span class="p">))</span>
+<span class="n">X_tsne</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_tsne</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_tsne</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">),</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;source&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_tsne</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">):,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_tsne</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">):,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Encoded Space tSNE for the Source Only model&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Office_example_26_0.png" src="../_images/examples_Office_example_26_0.png" />
+</div>
+</div>
+</section>
+<section id="Fit-with-adaptation">
+<h2>Fit with adaptation<a class="headerlink" href="#Fit-with-adaptation" title="Permalink to this headline"></a></h2>
+<p>Let’s now apply a domain adaptation method to our problem of transfer between Amazon and Webcam. We will use the Maximum Disparity Discrepancy (MDD) method which is an adversarial domain adaptation method that currently obtains the best results for this type of problem. The idea of this method is based on a regularization of the model which forces the encoder to create a feature space in which the classification task can be learned easily on the sources and the source and target data are
+indistinguishable. This is achieved by training a third network similar to the task in an aadversarial fashion. For more details on the loss of the MDD model see the <a class="reference external" href="https://adapt-python.github.io/adapt/generated/adapt.feature_based.MDD.html">ADAPT documentation</a> or the <a class="reference external" href="https://arxiv.org/pdf/1904.05801.pdf">Zangh’s paper</a>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We shuffle the data, it may not be needed but we want to avoid classes being not represented</span>
+<span class="c1"># in some batch due to the fact that the datasets are sorted by classes.</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">shuffle_src</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">shuffle_tgt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Xt</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">Xt</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">Xs</span> <span class="o">=</span> <span class="n">Xs</span><span class="p">[</span><span class="n">shuffle_src</span><span class="p">]</span>
+<span class="n">ys_lab</span> <span class="o">=</span> <span class="n">ys_lab</span><span class="p">[</span><span class="n">shuffle_src</span><span class="p">]</span>
+<span class="n">Xt</span> <span class="o">=</span> <span class="n">Xt</span><span class="p">[</span><span class="n">shuffle_tgt</span><span class="p">]</span>
+<span class="n">yt_lab</span> <span class="o">=</span> <span class="n">yt_lab</span><span class="p">[</span><span class="n">shuffle_tgt</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">adapt.feature_based</span> <span class="kn">import</span> <span class="n">MDD</span>
+<span class="kn">from</span> <span class="nn">adapt.utils</span> <span class="kn">import</span> <span class="n">UpdateLambda</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.04</span>
+<span class="n">momentum</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.0002</span>
+
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">load_resnet50</span><span class="p">()</span>
+<span class="n">task</span> <span class="o">=</span> <span class="n">get_task</span><span class="p">()</span>
+
+<span class="n">optimizer_task</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">MyDecay</span><span class="p">(</span><span class="n">mu_0</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">),</span>
+                     <span class="n">momentum</span><span class="o">=</span><span class="n">momentum</span><span class="p">,</span> <span class="n">nesterov</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">optimizer_enc</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">MyDecay</span><span class="p">(</span><span class="n">mu_0</span><span class="o">=</span><span class="n">lr</span><span class="o">/</span><span class="mf">10.</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">),</span>
+                    <span class="n">momentum</span><span class="o">=</span><span class="n">momentum</span><span class="p">,</span> <span class="n">nesterov</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">optimizer_disc</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">MyDecay</span><span class="p">(</span><span class="n">mu_0</span><span class="o">=</span><span class="n">lr</span><span class="o">/</span><span class="mf">10.</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">))</span>
+
+
+<span class="n">mdd</span> <span class="o">=</span> <span class="n">MDD</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span>
+            <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;categorical_crossentropy&quot;</span><span class="p">,</span>
+            <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;acc&quot;</span><span class="p">],</span>
+            <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">lambda_</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="mf">0.</span><span class="p">),</span>
+            <span class="n">gamma</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span>
+            <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer_task</span><span class="p">,</span>
+            <span class="n">optimizer_enc</span><span class="o">=</span><span class="n">optimizer_enc</span><span class="p">,</span>
+            <span class="n">optimizer_disc</span><span class="o">=</span><span class="n">optimizer_disc</span><span class="p">,</span>
+            <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">UpdateLambda</span><span class="p">(</span><span class="n">lambda_max</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING:tensorflow:No training configuration found in the save file, so the model was *not* compiled. Compile it manually.
+</pre></div></div>
+</div>
+<p>As we can see above, we have defined two networks <code class="docutils literal notranslate"><span class="pre">encoder</span></code> and <code class="docutils literal notranslate"><span class="pre">task</span></code> which are used by MDD. We set <code class="docutils literal notranslate"><span class="pre">copy=False</span></code> so that the <code class="docutils literal notranslate"><span class="pre">MDD</span></code> object does not make a copy of both networks, since our encoder is large we limit the memory space used. The <code class="docutils literal notranslate"><span class="pre">lambda_</span></code> parameter is the trade-off parameter between the classification loss and the regularization which brings the domains closer. This parameter is defined as a variable that will be gradually increased to <code class="docutils literal notranslate"><span class="pre">0.1</span></code> by the callback
+<code class="docutils literal notranslate"><span class="pre">UpdateLambda(lambda_max=0.1)</span></code>. This gradual change of the trade-off allows to start learning the classification task before trying to match the domains. The <code class="docutils literal notranslate"><span class="pre">gamma</span></code> parameter is a specific parameter of MDD. Finally, we use three optimizers for the three networks involved in MDD: the encoder, the task and the discriminator. The learning rate of the encoder and the discriminator are chosen to be 10 times lower than that of the task.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method, we use the data <code class="docutils literal notranslate"><span class="pre">Xs</span></code>, <code class="docutils literal notranslate"><span class="pre">ys_lab</span></code> and <code class="docutils literal notranslate"><span class="pre">Xt</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">yt_lab</span></code> is not available in practice, it is used here to compute the accuracy on the targets but it is not used in the training of the model.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdd</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">Xs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">ys_lab</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">Xt</span><span class="o">=</span><span class="n">Xt</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span> <span class="n">yt_lab</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>Let’s now look at the results we get:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">acc</span> <span class="o">=</span> <span class="n">mdd</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;acc&quot;</span><span class="p">];</span> <span class="n">val_acc</span> <span class="o">=</span> <span class="n">mdd</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;val_acc&quot;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Train acc - final value: </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">acc</span>[-1])
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_acc</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test acc - final value: </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">val_acc</span>[-1])
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Epochs&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Acc&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Office_example_34_0.png" src="../_images/examples_Office_example_34_0.png" />
+</div>
+</div>
+<p>Wow! You can see a clear gain in accuracy of more than 10% with the MDD method! It is very impressive since no target labels has been used. It is indeed the adaptation of the source domain on the target that allowed this gain in performance. This can be visualized in the encoded space:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>
+
+<span class="n">Xs_enc</span> <span class="o">=</span> <span class="n">mdd</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span>
+<span class="n">Xt_enc</span> <span class="o">=</span> <span class="n">mdd</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Xs_enc</span><span class="p">,</span> <span class="n">Xt_enc</span><span class="p">))</span>
+<span class="n">X_tsne</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_tsne</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_tsne</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">),</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;source&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_tsne</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">):,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_tsne</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">):,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Encoded Space tSNE for the MDD model&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_Office_example_36_0.png" src="../_images/examples_Office_example_36_0.png" />
+</div>
+</div>
+<p>We clearly see that the target and the source data are now difficult to distinguish in the encoded space, MDD has succeeded in matching the two distributions. It is this distribution matching that causes this gain of performance.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, ADAPT team, Michelin and Centre Borelli, ENS Paris-Saclay.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

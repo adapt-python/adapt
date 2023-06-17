@@ -2,6 +2,7 @@
 DANN
 """
 
+import warnings
 import numpy as np
 import tensorflow as tf
 
@@ -77,23 +78,14 @@ class DANN(BaseAdaptDeep):
         
     Examples
     --------
-    >>> import numpy as np
+    >>> from adapt.utils import make_classification_da
     >>> from adapt.feature_based import DANN
-    >>> np.random.seed(0)
-    >>> Xs = np.concatenate((np.random.random((100, 1)),
-    ...                      np.zeros((100, 1))), 1)
-    >>> Xt = np.concatenate((np.random.random((100, 1)),
-    ...                      np.ones((100, 1))), 1)
-    >>> ys = 0.2 * Xs[:, 0]
-    >>> yt = 0.2 * Xt[:, 0]
-    >>> model = DANN(lambda_=0., random_state=0)
-    >>> model.fit(Xs, ys, Xt, epochs=100, verbose=0)
-    >>> model.score_estimator(Xt, yt)
-    0.0231...
-    >>> model = DANN(lambda_=0.1, random_state=0)
-    >>> model.fit(Xs, ys, Xt, epochs=100, verbose=0)
-    >>> model.score_estimator(Xt, yt)
-    0.0010...
+    >>> Xs, ys, Xt, yt = make_classification_da()
+    >>> model = DANN(lambda_=0.1, Xt=Xt, metrics=["acc"], random_state=0)
+    >>> model.fit(Xs, ys, epochs=100, verbose=0)
+    >>> model.score(Xt, yt)
+    1/1 [==============================] - 0s 108ms/step - loss: 0.1732 - acc: 0.8100
+    0.17324252426624298
     
     See also
     --------
@@ -113,11 +105,16 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
                  Xt=None,
                  yt=None,
                  lambda_=0.1,
-                 gamma=10.,
                  verbose=1,
                  copy=True,
                  random_state=None,
                  **params):
+        
+        if "gamma" in params:
+            warnings.warn("the `gamma` argument has been removed from DANN."
+                          " If you want to use the lambda update process, please"
+                          " use the `UpdateLambda` callback from adapt.utils")
+            params.pop("gamma")
         
         names = self._get_param_names()
         kwargs = {k: v for k, v in locals().items() if k in names}

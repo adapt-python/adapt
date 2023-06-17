@@ -47,13 +47,17 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../map.html">Choosing the right algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Quick_start.html">Quick-Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Developer_Guide.html">Developer Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.PRED.html">PRED</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.FA.html">FA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.CORAL.html">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.TCA.html">TCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.fMMD.html">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.feature_based.DANN.html">DANN</a></li>
@@ -69,7 +73,12 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.LDM.html">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KLIEP.html">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.ULSIF.html">ULSIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.RULSIF.html">RULSIF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.IWC.html">IWC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.IWN.html">IWN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.BalancedWeighting.html">BalancedWeighting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
@@ -77,11 +86,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.LinInt.html">LinInt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#">FineTuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
@@ -115,7 +126,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../examples/Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
@@ -179,6 +190,45 @@
 </ul>
 </li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Real Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Sample_bias_example.html">Sample Bias</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Sample-Bias-on-the-diabetes-dataset">Diabetes Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Applying-Transfer-Learning-for-correcting-sample-bias">Sample bias correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Sample_bias_example.html#Hidden-bias-and-features-importance-estimation">Features importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Flowers_example.html">Fine-Tuning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Flowers_example.html#Training-a-model-from-scratch">Train from Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Flowers_example.html#Model-based-Transfer">Model-based Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Office_example.html">Deep Domain Adaptation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Dataset-Preprocessing">Dataset Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Fit-without-adaptation">Fit without adaptation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Office_example.html#Fit-with-adaptation">Fit with adaptation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/tradaboost_experiments.html">TrAdaBoost Experiments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/tradaboost_experiments.html#Mushrooms">Mushrooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/tradaboost_experiments.html#20-NewsGroup">20-NewsGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/Heart_Failure.html">Heart Failure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/Heart_Failure.html#CDAN">CDAN</a></li>
+</ul>
+</li>
+</ul>
  
         </div>
       </div>
@@ -238,11 +288,11 @@ pretrained or not, should be given too.</p>
 <p>Finetuning train both networks. The task network can be
 fitted first using the <code class="docutils literal notranslate"><span class="pre">pretrain</span></code> parameter. The layers
 to train in the encoder can be set via the parameter <code class="docutils literal notranslate"><span class="pre">training</span></code>.</p>
-<figure class="align-center" id="id3">
+<figure class="align-center" id="id11">
 <img alt="../_images/regulartransfer.png" src="../_images/regulartransfer.png" />
 <figcaption>
 <p><span class="caption-text">Transferring parameters of a CNN pretrained on Imagenet
-(source: [1])</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+(source: [1])</span><a class="headerlink" href="#id11" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <dl class="field-list simple">
@@ -258,7 +308,7 @@ neurons per layer and ReLU activation is used as task network.</p>
 </dd>
 <dt><strong>yt</strong><span class="classifier">numpy array (default=None)</span></dt><dd><p>Target output data.</p>
 </dd>
-<dt><strong>training</strong><span class="classifier">bool or list of bool, optional (default=True)</span></dt><dd><p>Trade-off parameters.
+<dt><strong>training</strong><span class="classifier">bool or list of bool, optional (default=True)</span></dt><dd><p>Weither to train the <code class="docutils literal notranslate"><span class="pre">encoder</span></code> or not.
 If a list is given, values from <code class="docutils literal notranslate"><span class="pre">training</span></code> are assigned
 successively to the <code class="docutils literal notranslate"><span class="pre">trainable</span></code> attribute of the
 <code class="docutils literal notranslate"><span class="pre">encoder</span></code> layers going from the last layer to the first one.
@@ -329,6 +379,23 @@ on these arguments.</p>
 <dd><p><a class="reference external" href="https://hal.inria.fr/hal-00911179v1/document">[1]</a> Oquab M., Bottou L., Laptev I., Sivic J. “Learning and transferring mid-level image representations using convolutional neural networks”. In CVPR, 2014.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.utils</span> <span class="kn">import</span> <span class="n">make_regression_da</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.parameter_based</span> <span class="kn">import</span> <span class="n">FineTuning</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span> <span class="o">=</span> <span class="n">make_regression_da</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">src_model</span> <span class="o">=</span> <span class="n">FineTuning</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span> <span class="n">pretrain</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">src_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">src_model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">))</span>
+<span class="go">1/1 [==============================] - 0s 82ms/step - loss: 0.2645</span>
+<span class="go">0.26447802782058716</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tgt_model</span> <span class="o">=</span> <span class="n">FineTuning</span><span class="p">(</span><span class="n">encoder</span><span class="o">=</span><span class="n">src_model</span><span class="o">.</span><span class="n">encoder_</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span> <span class="n">pretrain</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">pretrain__epochs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tgt_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xt</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">yt</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tgt_model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">)</span>
+<span class="go">1/1 [==============================] - 0s 78ms/step - loss: 0.1114</span>
+<span class="go">0.11144775152206421</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes</dt>
 <dd class="field-odd"><dl class="simple">
@@ -358,8 +425,14 @@ of the network training.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.fit" title="adapt.parameter_based.FineTuning.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>([Xt, yt])</p></td>
 <td><p>Fit FineTuning.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.get_params" title="adapt.parameter_based.FineTuning.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.get_metrics_result" title="adapt.parameter_based.FineTuning.get_metrics_result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metrics_result</span></code></a>()</p></td>
+<td><p>Returns the model's metrics values as a dict.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.get_params" title="adapt.parameter_based.FineTuning.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
 <td><p>Get parameters for this estimator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.get_weight_paths" title="adapt.parameter_based.FineTuning.get_weight_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weight_paths</span></code></a>()</p></td>
+<td><p>Retrieve all the variables and their paths for the model.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.FineTuning.predict" title="adapt.parameter_based.FineTuning.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, batch_size, verbose, steps, ...])</p></td>
 <td><p>Generates output predictions for the input samples.</p></td>
@@ -503,6 +576,20 @@ will only be called every <cite>N</cite> batches
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.get_metrics_result">
+<span class="sig-name descname"><span class="pre">get_metrics_result</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.get_metrics_result.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.get_metrics_result" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the model’s metrics values as a dict.</p>
+<p>If any of the metric result is a dict (containing multiple metrics),
+each of them gets added to the top level returned dict of this method.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>A <cite>dict</cite> containing values of the metrics listed in <cite>self.metrics</cite>.
+Example:
+<cite>{‘loss’: 0.2, ‘accuracy’: 0.7}</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.get_params">
 <span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.get_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.get_params" title="Permalink to this definition"></a></dt>
 <dd><p>Get parameters for this estimator.</p>
@@ -520,6 +607,66 @@ will only be called every <cite>N</cite> batches
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.parameter_based.FineTuning.get_weight_paths">
+<span class="sig-name descname"><span class="pre">get_weight_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_finetuning.get_weight_paths.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.FineTuning.get_weight_paths" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve all the variables and their paths for the model.</p>
+<p>The variable path (string) is a stable key to indentify a <cite>tf.Variable</cite>
+instance owned by the model. It can be used to specify variable-specific
+configurations (e.g. DTensor, quantization) from a global view.</p>
+<p>This method returns a dict with weight object paths as keys
+and the corresponding <cite>tf.Variable</cite> instances as values.</p>
+<p>Note that if the model is a subclassed model and the weights haven’t
+been initialized, an empty dict will be returned.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>A dict where keys are variable paths and values are <cite>tf.Variable</cite></dt><dd><p>instances.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Example:</p>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a>python
+class SubclassModel(tf.keras.Model):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, name=None):</dt><dd><p>super().__init__(name=name)
+self.d1 = tf.keras.layers.Dense(10)
+self.d2 = tf.keras.layers.Dense(20)</p>
+</dd>
+<dt>def call(self, inputs):</dt><dd><p>x = self.d1(inputs)
+return self.d2(x)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>model = SubclassModel()
+model(tf.zeros((10, 10)))
+weight_paths = model.get_weight_paths()
+# weight_paths:
+# {
+#    ‘d1.kernel’: model.d1.kernel,
+#    ‘d1.bias’: model.d1.bias,
+#    ‘d2.kernel’: model.d2.kernel,
+#    ‘d2.bias’: model.d2.bias,
+# }</p>
+<p># Functional model
+inputs = tf.keras.Input((10,), batch_size=10)
+x = tf.keras.layers.Dense(20, name=’d1’)(inputs)
+output = tf.keras.layers.Dense(30, name=’d2’)(x)
+model = tf.keras.Model(inputs, output)
+d1 = model.layers[1]
+d2 = model.layers[2]
+weight_paths = model.get_weight_paths()
+# weight_paths:
+# {
+#    ‘d1.kernel’: d1.kernel,
+#    ‘d1.bias’: d1.bias,
+#    ‘d2.kernel’: d2.kernel,
+#    ‘d2.bias’: d2.bias,
+# }
+<a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -705,7 +852,33 @@ data and the target input data.</p>
 
 </dd></dl>
 
-<h2> Examples </h2></section>
+<h2> Examples </h2><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="../_static/images/finetuned.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="../examples/Flowers_example.html">
+          <span class="std std-ref">Model-Based Transfer Learning</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="../_static/images/office_item.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="../examples/Office_example.html">
+          <span class="std std-ref">Deep Domain Adaptation: Transfer one domain to another</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-clear"></div></section>
 
 
            </div>

@@ -49,13 +49,17 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="map.html">Choosing the right algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Quick_start.html">Quick-Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Developer_Guide.html">Developer Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="#adapt-feature-based">Feature-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.PRED.html">PRED</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.FA.html">FA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.CORAL.html">CORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.SA.html">SA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.TCA.html">TCA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.fMMD.html">fMMD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.DeepCORAL.html">DeepCORAL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.feature_based.DANN.html">DANN</a></li>
@@ -71,7 +75,12 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.LDM.html">LDM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.KLIEP.html">KLIEP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.KMM.html">KMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.ULSIF.html">ULSIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.RULSIF.html">RULSIF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.NearestNeighborsWeighting.html">NearestNeighborsWeighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.IWC.html">IWC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.IWN.html">IWN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.BalancedWeighting.html">BalancedWeighting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoost.html">TrAdaBoost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoostR2.html">TrAdaBoostR2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html">TwoStageTrAdaBoostR2</a></li>
@@ -79,11 +88,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#adapt-parameter-based">Parameter-based</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.LinInt.html">LinInt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#adapt-metrics">Metrics</a><ul>
@@ -117,7 +128,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Examples Gallery</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/Classification.html">Classification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/Classification.html#Experimental-Setup">Experimental Setup</a></li>
@@ -178,6 +189,45 @@
 <li class="toctree-l2"><a class="reference internal" href="examples/Multi_fidelity.html#Low-fidelity-only">Low fidelity only</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/Multi_fidelity.html#High-fidelity-only">High fidelity only</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/Multi_fidelity.html#RegularTransferNN">RegularTransferNN</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Real Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/Sample_bias_example.html">Sample Bias</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Sample_bias_example.html#Sample-Bias-on-the-diabetes-dataset">Diabetes Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Sample_bias_example.html#Applying-Transfer-Learning-for-correcting-sample-bias">Sample bias correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Sample_bias_example.html#Hidden-bias-and-features-importance-estimation">Features importance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Flowers_example.html">Fine-Tuning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Flowers_example.html#Training-a-model-from-scratch">Train from Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Flowers_example.html#Model-based-Transfer">Model-based Transfer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Office_example.html">Deep Domain Adaptation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Office_example.html#Dataset-Preprocessing">Dataset Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Office_example.html#Fit-without-adaptation">Fit without adaptation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Office_example.html#Fit-with-adaptation">Fit with adaptation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/tradaboost_experiments.html">TrAdaBoost Experiments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/tradaboost_experiments.html#Mushrooms">Mushrooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/tradaboost_experiments.html#20-NewsGroup">20-NewsGroup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Heart_Failure.html">Heart Failure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Heart_Failure.html#Setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Heart_Failure.html#Network">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Heart_Failure.html#Source-Only">Source Only</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Heart_Failure.html#DANN">DANN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Heart_Failure.html#ADDA">ADDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Heart_Failure.html#DeepCORAL">DeepCORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Heart_Failure.html#CORAL">CORAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Heart_Failure.html#MCD">MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Heart_Failure.html#MDD">MDD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Heart_Failure.html#WDGRL">WDGRL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Heart_Failure.html#CDAN">CDAN</a></li>
 </ul>
 </li>
 </ul>
@@ -268,14 +318,20 @@ and <strong>target</strong> distributions. The <strong>task</strong> is then lea
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.FA.html#adapt.feature_based.FA" title="adapt.feature_based.FA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.FA</span></code></a>([estimator, Xt, yt, copy, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.PRED.html#adapt.feature_based.PRED" title="adapt.feature_based.PRED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.PRED</span></code></a>([estimator, Xt, yt, ...])</p></td>
+<td><p>PRED: Feature Augmentation with SrcOnly Prediction</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.FA.html#adapt.feature_based.FA" title="adapt.feature_based.FA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.FA</span></code></a>([estimator, Xt, yt, copy, ...])</p></td>
 <td><p>FA: Feature Augmentation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL" title="adapt.feature_based.CORAL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.CORAL</span></code></a>([estimator, Xt, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.CORAL.html#adapt.feature_based.CORAL" title="adapt.feature_based.CORAL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.CORAL</span></code></a>([estimator, Xt, ...])</p></td>
 <td><p>CORAL: CORrelation ALignment</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA" title="adapt.feature_based.SA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.SA</span></code></a>([estimator, Xt, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.SA.html#adapt.feature_based.SA" title="adapt.feature_based.SA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.SA</span></code></a>([estimator, Xt, ...])</p></td>
 <td><p>SA : Subspace Alignment</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.TCA.html#adapt.feature_based.TCA" title="adapt.feature_based.TCA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.TCA</span></code></a>([estimator, Xt, ...])</p></td>
+<td><p>TCA :  Transfer Component Analysis</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.fMMD.html#adapt.feature_based.fMMD" title="adapt.feature_based.fMMD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.fMMD</span></code></a>([estimator, Xt, ...])</p></td>
 <td><p>fMMD : feature Selection with MMD</p></td>
@@ -290,16 +346,16 @@ and <strong>target</strong> distributions. The <strong>task</strong> is then lea
 <td><p>ADDA: Adversarial Discriminative Domain Adaptation</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.WDGRL.html#adapt.feature_based.WDGRL" title="adapt.feature_based.WDGRL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.WDGRL</span></code></a>([encoder, task, ...])</p></td>
-<td><p>WDGRL (Wasserstein Distance Guided Representation Learning) is an unsupervised domain adaptation method on the model of the  <span class="xref std std-ref">DANN</span>.</p></td>
+<td><p>WDGRL: Wasserstein Distance Guided Representation Learning</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.CDAN.html#adapt.feature_based.CDAN" title="adapt.feature_based.CDAN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.CDAN</span></code></a>([encoder, task, ...])</p></td>
-<td><p>CDAN (Conditional Adversarial Domain Adaptation) is an unsupervised domain adaptation method on the model of the  <span class="xref std std-ref">DANN</span>.</p></td>
+<td><p>CDAN: Conditional Adversarial Domain Adaptation</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.MCD.html#adapt.feature_based.MCD" title="adapt.feature_based.MCD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.MCD</span></code></a>([encoder, task, Xt, ...])</p></td>
-<td><p>MCD: Maximum Classifier Discrepancy is a feature-based domain adaptation method originally introduced for unsupervised classification DA.</p></td>
+<td><p>MCD: Maximum Classifier Discrepancy</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.feature_based.MDD.html#adapt.feature_based.MDD" title="adapt.feature_based.MDD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.MDD</span></code></a>([encoder, task, Xt, ...])</p></td>
-<td><p>MDD: Margin Disparity Discrepancy is a feature-based domain adaptation method originally introduced for unsupervised classification DA.</p></td>
+<td><p>MDD: Margin Disparity Discrepancy</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.feature_based.CCSA.html#adapt.feature_based.CCSA" title="adapt.feature_based.CCSA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_based.CCSA</span></code></a>([encoder, task, Xt, yt, ...])</p></td>
 <td><p>CCSA : Classification and Contrastive Semantic Alignment</p></td>
@@ -332,20 +388,35 @@ This <strong>reweighting</strong> consists in multiplying, during the training p
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.instance_based.KMM.html#adapt.instance_based.KMM" title="adapt.instance_based.KMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.KMM</span></code></a>([estimator, Xt, kernel, ...])</p></td>
 <td><p>KMM: Kernel Mean Matching</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.instance_based.ULSIF.html#adapt.instance_based.ULSIF" title="adapt.instance_based.ULSIF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.ULSIF</span></code></a>([estimator, Xt, ...])</p></td>
+<td><p>ULSIF: Unconstrained Least-Squares Importance Fitting</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.instance_based.RULSIF.html#adapt.instance_based.RULSIF" title="adapt.instance_based.RULSIF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.RULSIF</span></code></a>([estimator, Xt, ...])</p></td>
+<td><p>RULSIF: Relative Unconstrained Least-Squares Importance Fitting</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.instance_based.NearestNeighborsWeighting.html#adapt.instance_based.NearestNeighborsWeighting" title="adapt.instance_based.NearestNeighborsWeighting"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.NearestNeighborsWeighting</span></code></a>([...])</p></td>
 <td><p>NNW : Nearest Neighbors Weighting</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost" title="adapt.instance_based.TrAdaBoost"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.TrAdaBoost</span></code></a>([estimator, Xt, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.instance_based.IWC.html#adapt.instance_based.IWC" title="adapt.instance_based.IWC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.IWC</span></code></a>([estimator, Xt, yt, ...])</p></td>
+<td><p>IWC: Importance Weighting Classifier</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.instance_based.IWN.html#adapt.instance_based.IWN" title="adapt.instance_based.IWN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.IWN</span></code></a>([estimator, weighter, ...])</p></td>
+<td><p>IWN : Importance Weighting Network</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.instance_based.BalancedWeighting.html#adapt.instance_based.BalancedWeighting" title="adapt.instance_based.BalancedWeighting"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.BalancedWeighting</span></code></a>([...])</p></td>
+<td><p>BW : Balanced Weighting</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoost.html#adapt.instance_based.TrAdaBoost" title="adapt.instance_based.TrAdaBoost"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.TrAdaBoost</span></code></a>([estimator, Xt, ...])</p></td>
 <td><p>Transfer AdaBoost for Classification</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoostR2.html#adapt.instance_based.TrAdaBoostR2" title="adapt.instance_based.TrAdaBoostR2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.TrAdaBoostR2</span></code></a>([estimator, Xt, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.instance_based.TrAdaBoostR2.html#adapt.instance_based.TrAdaBoostR2" title="adapt.instance_based.TrAdaBoostR2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.TrAdaBoostR2</span></code></a>([estimator, Xt, ...])</p></td>
 <td><p>Transfer AdaBoost for Regression</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2" title="adapt.instance_based.TwoStageTrAdaBoostR2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.TwoStageTrAdaBoostR2</span></code></a>([...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.instance_based.TwoStageTrAdaBoostR2.html#adapt.instance_based.TwoStageTrAdaBoostR2" title="adapt.instance_based.TwoStageTrAdaBoostR2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.TwoStageTrAdaBoostR2</span></code></a>([...])</p></td>
 <td><p>Two Stage Transfer AdaBoost for Regression</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN" title="adapt.instance_based.WANN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.WANN</span></code></a>([task, weighter, Xt, ...])</p></td>
-<td><p>WANN: Weighting Adversarial Neural Network is an instance-based domain adaptation method suited for regression tasks.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.instance_based.WANN.html#adapt.instance_based.WANN" title="adapt.instance_based.WANN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_based.WANN</span></code></a>([task, weighter, Xt, ...])</p></td>
+<td><p>WANN : Weighting Adversarial Neural Network</p></td>
 </tr>
 </tbody>
 </table>
@@ -364,20 +435,26 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR" title="adapt.parameter_based.RegularTransferLR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.RegularTransferLR</span></code></a>([...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.LinInt.html#adapt.parameter_based.LinInt" title="adapt.parameter_based.LinInt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.LinInt</span></code></a>([estimator, Xt, yt, ...])</p></td>
+<td><p>LinInt: Linear Interpolation between SrcOnly and TgtOnly.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLR.html#adapt.parameter_based.RegularTransferLR" title="adapt.parameter_based.RegularTransferLR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.RegularTransferLR</span></code></a>([...])</p></td>
 <td><p>Regular Transfer with Linear Regression</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC" title="adapt.parameter_based.RegularTransferLC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.RegularTransferLC</span></code></a>([...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLC.html#adapt.parameter_based.RegularTransferLC" title="adapt.parameter_based.RegularTransferLC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.RegularTransferLC</span></code></a>([...])</p></td>
 <td><p>Regular Transfer for Linear Classification</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN" title="adapt.parameter_based.RegularTransferNN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.RegularTransferNN</span></code></a>([task, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN" title="adapt.parameter_based.RegularTransferNN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.RegularTransferNN</span></code></a>([task, ...])</p></td>
 <td><p>Regular Transfer with Neural Network</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning" title="adapt.parameter_based.FineTuning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.FineTuning</span></code></a>([encoder, task, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning" title="adapt.parameter_based.FineTuning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.FineTuning</span></code></a>([encoder, task, ...])</p></td>
 <td><p>FineTuning : finetunes pretrained networks on target data.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier" title="adapt.parameter_based.TransferTreeClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferTreeClassifier</span></code></a>([...])</p></td>
-<td><p>TBA</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier" title="adapt.parameter_based.TransferTreeClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferTreeClassifier</span></code></a>([...])</p></td>
+<td><p>TransferTreeClassifier: Modify a source Decision tree on a target dataset.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferForestClassifier.html#adapt.parameter_based.TransferForestClassifier" title="adapt.parameter_based.TransferForestClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferForestClassifier</span></code></a>([...])</p></td>
+<td><p>TransferForestClassifier: Modify a source Random Forest on a target dataset.</p></td>
 </tr>
 </tbody>
 </table>
@@ -436,7 +513,7 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 <tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.accuracy.html#adapt.utils.accuracy" title="adapt.utils.accuracy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.accuracy</span></code></a>(y_true, y_pred)</p></td>
 <td><p>Custom accuracy function which can handle probas vector in both binary and multi classification</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.check_arrays.html#adapt.utils.check_arrays" title="adapt.utils.check_arrays"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_arrays</span></code></a>(X, y)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.check_arrays.html#adapt.utils.check_arrays" title="adapt.utils.check_arrays"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_arrays</span></code></a>(X, y, **kwargs)</p></td>
 <td><p>Check arrays and reshape 1D array in 2D array of shape (-1, 1).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.check_estimator.html#adapt.utils.check_estimator" title="adapt.utils.check_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_estimator</span></code></a>([estimator, copy, ...])</p></td>
@@ -445,13 +522,13 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.check_network.html#adapt.utils.check_network" title="adapt.utils.check_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.check_network</span></code></a>(network[, copy, name, ...])</p></td>
 <td><p>Check if the given network is a tensorflow Model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_encoder.html#adapt.utils.get_default_encoder" title="adapt.utils.get_default_encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_encoder</span></code></a>([name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_encoder.html#adapt.utils.get_default_encoder" title="adapt.utils.get_default_encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_encoder</span></code></a>([name, state])</p></td>
 <td><p>Return a tensorflow Model of one layer with 10 neurons and a relu activation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_task.html#adapt.utils.get_default_task" title="adapt.utils.get_default_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_task</span></code></a>([activation, name])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_task.html#adapt.utils.get_default_task" title="adapt.utils.get_default_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_task</span></code></a>([activation, name, state])</p></td>
 <td><p>Return a tensorflow Model of two hidden layers with 10 neurons each and relu activations.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_discriminator.html#adapt.utils.get_default_discriminator" title="adapt.utils.get_default_discriminator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_discriminator</span></code></a>([name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.utils.get_default_discriminator.html#adapt.utils.get_default_discriminator" title="adapt.utils.get_default_discriminator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_default_discriminator</span></code></a>([name, state])</p></td>
 <td><p>Return a tensorflow Model of two hidden layers with 10 neurons each and relu activations.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.utils.GradientHandler.html#adapt.utils.GradientHandler" title="adapt.utils.GradientHandler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.GradientHandler</span></code></a>(*args, **kwargs)</p></td>
@@ -479,9 +556,21 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 </table>
 </section>
 </section>
-<section id="examples-gallery">
-<span id="gallery"></span><h1>Examples Gallery<a class="headerlink" href="#examples-gallery" title="Permalink to this headline"></a></h1>
+<section id="synthetic-examples">
+<span id="gallery"></span><h1>Synthetic Examples<a class="headerlink" href="#synthetic-examples" title="Permalink to this headline"></a></h1>
 <div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_static/no_image.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/Quick_start.html">
+          <span class="std std-ref">Quick-Start</span>
+        </a>
+      </span>
+    </p>
+  </div>
 </div>
 <div class="sphx-glr-thumbcontainer">
   <div class="figure align-center">
@@ -562,6 +651,71 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
       <span class="caption-text">
         <a class="reference internal" href="examples/Multi_fidelity.html">
           <span class="std std-ref">Multi-Fidelity</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-clear"></div></section>
+<section id="real-examples">
+<h1>Real Examples<a class="headerlink" href="#real-examples" title="Permalink to this headline"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_static/images/sample_bias_corr_img.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/Sample_bias_example.html">
+          <span class="std std-ref">Correcting Sample Bias with Transfer Leanring</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_static/images/finetuned.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/Flowers_example.html">
+          <span class="std std-ref">Model-Based Transfer Learning</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_static/images/office_item.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/Office_example.html">
+          <span class="std std-ref">Deep Domain Adaptation: Transfer one domain to another</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_static/no_image.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/tradaboost_experiments.html">
+          <span class="std std-ref">Reproduction of the TrAdaBoost experiments</span>
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="sphx-glr-thumbcontainer">
+  <div class="figure align-center">
+    <img alt="thumbnail" src="./_images/examples_Heart_Failure_6_0.png" />
+    <p class="caption">
+      <span class="caption-text">
+        <a class="reference internal" href="examples/Heart_Failure.html">
+          <span class="std std-ref">Heart Failure</span>
         </a>
       </span>
     </p>
