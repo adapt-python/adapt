@@ -2,4 +2,4 @@ numpy
 scipy
 tensorflow < 2.12
 scikit-learn
-cvxopt
+cvxopt <= 1.3.0
