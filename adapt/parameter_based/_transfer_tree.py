@@ -1,8 +1,9 @@
 #from adapt.utils import (check_arrays,set_random_seed,check_estimator)
 import copy
 import numpy as np
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.metrics import roc_auc_score as _auc_
 
 from adapt.base import BaseAdaptEstimator, make_insert_doc
 from adapt.utils import check_arrays, set_random_seed, check_estimator, check_fitted_estimator
@@ -144,24 +145,28 @@ Peignier, Sergio and Mougeot, Mathilde \
         Xt, yt = check_arrays(Xt, yt)
         set_random_seed(self.random_state)
 
-        self._modify_tree(self.estimator_, Xt, yt)
+        self._modify_tree(self.estimator_, Xt, yt, **fit_params)
         
         return self
 
     
-    def _modify_tree(self, dtree, X, y):
+    def _modify_tree(self, dtree, X, y, **fit_params):
         
         # Aiguillage
-        if self.algo == "" or self.algo == "relabel":
-            return self._relab(X, y)
+        if self.algo == "src" or self.algo == "source":
+            return 0
+        elif self.algo == "tgt" or self.algo == "trgt" or self.algo == "target":
+            return self._retrain(X,y, **fit_params)
+        elif self.algo == "" or self.algo == "relab" or self.algo == "relabel":
+            return self._relab(X, y, **fit_params)
         elif self.algo == "ser":
-            return self._ser(X, y)
+            return self._ser(X, y, **fit_params)
         
         elif self.algo == "strut":
-            return self._strut(X, y)
+            return self._strut(X, y, **fit_params)
         
         elif hasattr(self.algo, "__call__"):
-            return self.algo(dtree, X, y)
+            return self.algo(dtree, X, y, **fit_params)
 
     ### @@@ ###
 
@@ -461,6 +466,7 @@ Peignier, Sergio and Mougeot, Mathilde \
                         except:
                             n_feat = self.estimator_.n_features_in_
                         b_infs,b_sups = ut.bounds_rule(rule, n_feat)
+
                         if non_coherent_sense == -1:
                             if b_sups[phi] == np.inf:
                                 self.updateSplit(node,phi,th+D_MARGIN)
@@ -502,9 +508,36 @@ Peignier, Sergio and Mougeot, Mathilde \
     ###########
 
     def updateSplit(self,node,feature,threshold):
+        """
+        Update the (feature,threshold) split for a given node.
+        
+        Parameters
+        ----------
+        node : int
+            Node to update.
+            
+        feature : int
+            New node feature.
+            
+        threshold : float
+            New node threshold.
+        
+        """
         return self._update_split(node,feature,threshold)
         
     def updateValue(self,node,values):
+        """
+        Update class values for a given node.
+        
+        Parameters
+        ----------
+        node : int
+            Node to update.
+            
+        values : numpy array of float
+            Class values to affect at node.
+        
+        """
         #Tree_ = self.estimator_.tree_
         self.estimator_.tree_.value[node] = values
         self.estimator_.tree_.impurity[node] = ut.GINI(values)
@@ -513,6 +546,20 @@ Peignier, Sergio and Mougeot, Mathilde \
         return node
     
     def swap_subtrees(self,node1,node2):
+        """
+        Swap respective sub-trees between two given nodes.
+        
+        Each node must not be a sub-node of the other.
+        Update the (feature,threshold) split for a given node.
+        
+        Parameters
+        ----------
+        node1 : int
+            Node to swap.
+            
+        node2 : int
+            Node to swap.            
+        """
         #Check sub-nodes :
         if node1 == node2:
             print('Warning : same node given twice.')
@@ -553,6 +600,28 @@ Peignier, Sergio and Mougeot, Mathilde \
         return 1
         
     def prune(self,node,include_node=False,lr=0,leaf_value=None):
+        """
+        Pruning the corresponding sub-tree at a given node.
+        
+        If `include_node` is `False`, replaces the node by a leaf (with values `leaf_values` if provided).
+        If `include_node` is `True`, prunes the left (`lr=-1`) or (`lr=1`) child sub-tree and
+        replaces the given node by the other sub-tree.
+        
+        Parameters
+        ----------
+        node : int
+            Node to prune.
+            
+        include_node : boolean (default=False)
+            Type of pruning to apply.
+        
+        lr : float
+            Direction of pruning if `include_node` is `True`.
+            Must be either -1 (left) or 1 (right) in this case.
+            
+        leaf_value : numpy array of float (default=None)
+            If `include_node` is `False`, affects these values to the created leaf.          
+        """
         if include_node:
             n = self._cut_left_right(node,lr)
         else:
@@ -560,12 +629,25 @@ Peignier, Sergio and Mougeot, Mathilde \
         return n
 
     def extend(self,node,subtree):
+        """
+        Extend the underlying decision tree estimator by a sub-tree at a given node.
+        
+        Parameters
+        ----------
+        node : int
+            Node to update.
+            
+        subtree : DecisionTreeClassifier.        
+        """
         n = self._extend(node,subtree)
         return n
 
     ### @@@ ###
 
     ###########
+    
+    def _retrain(self,X_target, Y_target):
+        self.estimator_.fit(X_target, Y_target)
 
 
     def _relab(self, X_target_node, Y_target_node, node=0):
@@ -600,7 +682,26 @@ Peignier, Sergio and Mougeot, Mathilde \
              leaf_loss_quantify=False,leaf_loss_threshold=None,coeffs=[1,1],root_source_values=None,Nkmin=None,max_depth=None):
         
         #Tree_ = self.estimator_.tree_
+        if (no_red_on_cl or no_ext_on_cl ) and node == 0:
+            if Nkmin is None:
+                if no_ext_on_cl:
+                    Nkmin = sum(y_target_node == cl_no_ext )
+                if no_red_on_cl:
+                    Nkmin = sum(y_target_node == cl_no_red )
+            if root_source_values is None:
+                root_source_values = ut.get_node_distribution(self.estimator_, 0).reshape(-1)
 
+
+            if coeffs is None or list(coeffs) == [1,1]:        
+                props_s = root_source_values
+                props_s = props_s / sum(props_s)
+                props_t = np.zeros(props_s.size)
+                
+                for k in range(props_s.size):
+                    props_t[k] = np.sum(y_target_node == k) / y_target_node.size
+                    
+                coeffs = np.divide(props_t, props_s)
+                
         source_values = self.estimator_.tree_.value[node].copy()
         #node_source_label = np.argmax(source_values)
         maj_class = np.argmax(self.estimator_.tree_.value[node, :].copy())
@@ -617,8 +718,9 @@ Peignier, Sergio and Mougeot, Mathilde \
             if no_red_on_cl:
                 cl = cl_no_red[0]
 
-        if leaf_loss_quantify and ((no_red_on_cl  or  no_ext_on_cl) and maj_class == cl) and  self.estimator_.tree_.feature[node] == -2 :
-            
+        if (leaf_loss_quantify is True ) and ((no_red_on_cl  or  no_ext_on_cl) and maj_class == cl) and  self.estimator_.tree_.feature[node] == -2 :
+            if Nkmin is None:
+                Nkmin = sum(y_target_node == cl_no_red )
             ps_rf = self.estimator_.tree_.value[node,0,:]/sum(self.estimator_.tree_.value[node,0,:])
             p1_in_l = self.estimator_.tree_.value[node,0,cl]/root_source_values[cl]
             
@@ -812,7 +914,24 @@ Peignier, Sergio and Mougeot, Mathilde \
           leaf_loss_quantify=False,leaf_loss_threshold=None,root_source_values=None,Nkmin=None):
                 
 #        Tree_ = self.estimator_.tree_
-        
+
+        if (no_prune_on_cl or leaf_loss_quantify or adapt_prop) and node == 0:
+
+            if Nkmin is None:
+                Nkmin = sum(Y_target_node == cl_no_prune )
+            if root_source_values is None:
+                root_source_values = ut.get_node_distribution(self.estimator_, 0).reshape(-1)
+
+            if coeffs is None or list(coeffs) == [1,1]:        
+                props_s = root_source_values
+                props_s = props_s / sum(props_s)
+                props_t = np.zeros(props_s.size)
+                
+                for k in range(props_s.size):
+                    props_t[k] = np.sum(Y_target_node == k) / Y_target_node.size
+                    
+                coeffs = np.divide(props_t, props_s)
+            
         feature_ = self.estimator_.tree_.feature[node]
         classes_ = self.estimator_.classes_
         threshold_ = self.estimator_.tree_.threshold[node]
@@ -840,7 +959,7 @@ Peignier, Sergio and Mougeot, Mathilde \
         if self.estimator_.tree_.feature[node] == -2:
             """ When to apply UpdateValue """
             if leaf_loss_quantify and (no_prune_on_cl and maj_class == cl_no_prune) :
-                
+
                 ps_rf = self.estimator_.tree_.value[node,0,:]/sum(self.estimator_.tree_.value[node,0,:])
                 p1_in_l = self.estimator_.tree_.value[node,0,cl_no_prune]/root_source_values[cl_no_prune]
                 cond1 = np.power(1 - p1_in_l,Nkmin) > leaf_loss_threshold
@@ -853,7 +972,9 @@ Peignier, Sergio and Mougeot, Mathilde \
                 else:
                     return node
             else:
-                self.estimator_.tree_.value[node] = current_class_distribution
+                #self.estimator_.tree_.value[node] = current_class_distribution
+                """ UpdateValue """
+                self.updateValue(node,current_class_distribution)
                 return node
 
         # Only one class remaining in target :
@@ -1027,12 +1148,124 @@ Peignier, Sergio and Mougeot, Mathilde \
               
         return node
 
+        
+class TransferTreeSelector(BaseAdaptEstimator):
+    """
+    TransferTreeSelector : Run several decision tree transfer algorithms on a target dataset and select the best one.
+    """
+    def __init__(self,
+                 estimator=None,
+                 Xt=None,
+                 yt=None,
+                 algorithms=list(),
+                 list_alg_args=list(),
+                 data_size_per_class=None,
+                 root_source_values=None,
+                 coeffs=[1,1],
+                 copy=True,
+                 verbose=1,
+                 random_state=None,
+                 **params):
+               
+        if not hasattr(estimator, "tree_"):
+            raise ValueError("`estimator` argument has no ``tree_`` attribute, "
+                                "please call `fit` on `estimator` or use "
+                                "another estimator as `DecisionTreeClassifier`.")
+        
+        estimator = check_fitted_estimator(estimator)
+        
+        super().__init__(estimator=estimator,
+                         Xt=Xt,
+                         yt=yt,
+                         copy=copy,
+                         verbose=verbose,                       
+                         **params)
 
+        
+        if len(algorithms) == 0:
+            print('Warning : empty list of methods. Default are Source and Target models.')
+            self.algorithms = ['src','trgt']
+            self.list_alg_args = [{},{}]
+        else:
+            self.algorithms = algorithms
+            self.list_alg_args = list_alg_args
+            
+        if len(self.list_alg_args) == 0 and len(self.algorithms) != 0 :
+            self.list_alg_args = list(np.repeat({},len(self.algorithms)))
+        
+        self.n_methods = len(self.algorithms)
+        self.scores = np.zeros(self.n_methods)
+        
+        self.best_score = 0
+        self.best_index = -1
+        
+        self.data_size_per_class = data_size_per_class
+        self.root_source_values = root_source_values
+        self.coeffs = coeffs
+        
+        self.transferred_models = list()
+        
+        for algo in self.algorithms:
 
+            self.transferred_models.append(TransferTreeClassifier(estimator=self.estimator,Xt=self.Xt,yt=self.yt,algo=algo,copy=self.copy))
+            
+      
+    def fit(self, Xt=None, yt=None, **fit_params):
 
+        Xt, yt = self._get_target_data(Xt, yt)
+        Xt, yt = check_arrays(Xt, yt)
+        set_random_seed(self.random_state)
+        
+        for k,algo in enumerate(self.algorithms):
+            kwargs = self.list_alg_args[k]
+            
+            if 'Nkmin' not in kwargs.keys():
+                if 'cl_no_red' in kwargs.keys():
+                    cl = kwargs['cl_no_red']
+                    self.Nkmin = self.data_size_per_class[cl]
+                    kwargs['Nkmin'] = self.Nkmin
+                elif 'cl_no_prune' in kwargs.keys():
+                    cl = kwargs['cl_no_prune']
+                    self.Nkmin = self.data_size_per_class[cl]
+                    kwargs['Nkmin'] = self.Nkmin
+                elif 'cl_no_ext' in kwargs.keys():
+                    cl = kwargs['cl_no_ext']
+                    self.Nkmin = self.data_size_per_class[cl]
+                    kwargs['Nkmin'] = self.Nkmin
+            if ('leaf_loss_quantify' in kwargs.keys() and kwargs['leaf_loss_quantify']) or ('adapt_prop' in kwargs.keys() and kwargs['adapt_prop']):
+                kwargs['root_source_values'] = self.root_source_values
+                kwargs['coeffs'] = self.coeffs
+
+            
+            #self.transferred_models[k].fit(Xt=Xt, yt=yt,Nkmin=self.Nkmin,root_source_values=self.root_source_values,coeffs=self.coeffs,**kwargs,**fit_params)
+            self.transferred_models[k].fit(Xt=Xt, yt=yt,**kwargs,**fit_params)
+            
+    def select(self,Xtest=None,ytest=None,score_type="auc"):
+
+        Xtest, ytest = self._get_target_data(Xtest, ytest)
+        Xtest, ytest = check_arrays(Xtest, ytest)
+        set_random_seed(self.random_state)
+        
+        for k in range(len(self.algorithms)):
+            if score_type == "auc":
+                self.scores[k] = _auc_(ytest,self.transferred_models[k].estimator_.predict_proba(Xtest)[:,1]) 
+            else:
+                self.scores[k] = self.transferred_models[k].score(Xtest,ytest) 
+        
+        self.best_score = np.amax(self.scores)
+        self.best_index = np.argmax(self.scores)
+        self.best_method = self.algorithms[self.best_index]
+        
+        return self.best_score, self.best_index
+    
 class TransferForestClassifier(BaseAdaptEstimator):
     """
     TransferForestClassifier: Modify a source Random Forest on a target dataset.
+    
+    Random forest classifier structure for model-based transfer algorithms.
+    
+    This includes several algorithms : leaves relabeling according to target data, SER and STRUT algorithms
+    and various variants for target class imbalance situations.
     
     Parameters
     ----------    
@@ -1089,7 +1322,7 @@ Peignier, Sergio and Mougeot, Mathilde \
                  yt=None,
                  algo="",
                  bootstrap=False,
-                 cpy=True,
+                 copy=True,
                  verbose=1,
                  random_state=None,
                  **params):
@@ -1129,18 +1362,21 @@ Peignier, Sergio and Mougeot, Mathilde \
 
     ###########
     
-    def _modify_rf(self, rf, X, y):
+    def _modify_rf(self, rf, X, y, **fit_params):
         # Aiguillage
+        if self.algo == "src" or self.algo == "source":
+            return 0
+        elif self.algo == "tgt" or self.algo == "trgt" or self.algo == "target":
+            return self._retrain(X,y, **fit_params)
         if self.algo == "" or self.algo == "relabel":
-            bootstrap = self.bootstrap
-            return self._relab_rf(X, y, bootstrap=bootstrap)
+            return self._relab_rf(X, y, **fit_params)
         elif self.algo == "ser":
-            return self._ser_rf(X, y)        
+            return self._ser_rf(X, y, **fit_params)        
         elif self.algo == "strut":
-            return self._strut_rf(X, y)
+            return self._strut_rf(X, y, **fit_params)
         
         elif hasattr(self.algo, "__call__"):
-            return self.algo(rf, X, y)
+            return self.algo(rf, X, y, **fit_params)
 
     def fit(self, Xt=None, yt=None, **fit_params):
         """
@@ -1166,15 +1402,28 @@ Peignier, Sergio and Mougeot, Mathilde \
         Xt, yt = check_arrays(Xt, yt)
         set_random_seed(self.random_state)
             
-        self._modify_rf(self.estimator_, Xt, yt)
+        self._modify_rf(self.estimator_, Xt, yt, **fit_params)
         
         return self
+    
+    def _copy_rf(self):
+        rf_out = copy.deepcopy(self.estimator)
+        for k in range(self.rf_size):
+            rf_out.estimators_[k] = self.estimators_[k].estimator_
+        self.estimator_ = rf_out
 
-    def _relab_rf(self, X_target_node, Y_target_node,bootstrap=False):
+    def _copy_dt(self):
+        for k in range(self.rf_size):
+            self.estimators_[k].estimator_ = self.estimator_.estimators_[k]
+        
+    def _retrain(self,X_target, Y_target):
+        self.estimator_.fit(X_target, Y_target)
+        self._copy_dt()
+        
+    def _relab_rf(self, X_target_node, Y_target_node):
         
         rf_out = copy.deepcopy(self.estimator)
-        
-        if bootstrap :             
+        if self.bootstrap :             
             inds,oob_inds = ut._bootstrap_(Y_target_node.size,class_wise=True,y=Y_target_node)
             for k in range(self.rf_size):
                 X_target_node_bootstrap = X_target_node[inds]
@@ -1185,10 +1434,10 @@ Peignier, Sergio and Mougeot, Mathilde \
             for k in range(self.rf_size):
                 self.estimators_[k]._relab(X_target_node, Y_target_node, node=0)
                 rf_out.estimators_[k] = self.estimators_[k].estimator_
-        
-        
+                
         self.estimator_ = rf_out
-
+        self._copy_dt()
+        self._copy_rf()
         return self.estimator_
     
     def _ser_rf(self,X_target,y_target,original_ser=True,
@@ -1196,7 +1445,6 @@ Peignier, Sergio and Mougeot, Mathilde \
              leaf_loss_quantify=False,leaf_loss_threshold=None,coeffs=[1,1],root_source_values=None,Nkmin=None,max_depth=None):
         
         rf_out = copy.deepcopy(self.estimator)
-        
         for i in range(self.rf_size):
             root_source_values = None
             coeffs = None
@@ -1225,8 +1473,9 @@ Peignier, Sergio and Mougeot, Mathilde \
             
             rf_out.estimators_[i] = self.estimators_[i].estimator_
             
-
         self.estimator_ = rf_out
+        self._copy_dt()
+        self._copy_rf()
         
         return self.estimator_
     
@@ -1235,7 +1484,6 @@ Peignier, Sergio and Mougeot, Mathilde \
           leaf_loss_quantify=False,leaf_loss_threshold=None,root_source_values=None,Nkmin=None):
                     
         rf_out = copy.deepcopy(self.estimator)
-        
         for i in range(self.rf_size):
     
             if adapt_prop or leaf_loss_quantify:
@@ -1263,8 +1511,8 @@ Peignier, Sergio and Mougeot, Mathilde \
                       use_divergence=use_divergence,
                       measure_default_IG=measure_default_IG,no_prune_with_translation=no_prune_with_translation,
                       leaf_loss_quantify=leaf_loss_quantify,leaf_loss_threshold=leaf_loss_threshold, 
-                      root_source_values=root_source_values,Nkmin=Nkmin)                
-                rf_out.estimators_[i] = self.estimators_[i].estimator_
+                      root_source_values=root_source_values,Nkmin=Nkmin)      
+
                 
             else:
                 self.estimators_[i]._strut(
@@ -1276,13 +1524,149 @@ Peignier, Sergio and Mougeot, Mathilde \
                       use_divergence=use_divergence,
                       measure_default_IG=measure_default_IG,no_prune_with_translation=no_prune_with_translation,
                       root_source_values=root_source_values,Nkmin=Nkmin) 
-                rf_out.estimators_[i] = self.estimators_[i].estimator_
+                
+            rf_out.estimators_[i] = self.estimators_[i].estimator_
                 
         self.estimator_ = rf_out
+        self._copy_dt()
+        self._copy_rf()
         
-        return self.estimator_
+        return self.estimator_      
+       
 
+
+        
+class TransferForestSelector(BaseAdaptEstimator):
+    """
+    TransferForestSelector : Run several decision tree transfer algorithms on a target dataset and select the best one for each tree of the random forest.
+    
+    """
+    def __init__(self,
+                 estimator=None,
+                 Xt=None,
+                 yt=None,
+                 algorithms=list(),
+                 list_alg_args=list(),
+                 bootstrap=True,
+                 copy=True,
+                 verbose=1,
+                 random_state=None,
+                 **params):
+        
+        if not isinstance(estimator, RandomForestClassifier):
+            raise ValueError("`estimator` argument must be a ``RandomForestClassifier`` instance, got %s."%str(type(estimator)))
+
+        if not hasattr(estimator, "estimators_"):
+            raise ValueError("`estimator` argument has no ``estimators_`` attribute, "
+                                "please call `fit` on `estimator`.")
+        
+        estimator = check_fitted_estimator(estimator)
+        
+        super().__init__(estimator=estimator,
+                         Xt=Xt,
+                         yt=yt,
+                         copy=copy,
+                         verbose=verbose,
+                         random_state=random_state,                       
+                         bootstrap=bootstrap,
+                         **params)
+        
+
+        self.estimator_ = check_estimator(self.estimator,
+                                          copy=self.copy,
+                                          force_copy=True)
+                
+        
+        self.rf_size = self.estimator_.n_estimators
+
+        
+        if len(algorithms) == 0:
+            print('Warning : empty list of methods. Default are Source and Target models.')
+            self.algorithms = ['src','trgt']
+            self.list_alg_args = [{},{}]
+        else:
+            self.algorithms = algorithms
+            self.list_alg_args = list_alg_args
             
+        if len(self.list_alg_args) == 0 and len(self.algorithms) != 0 :
+            self.list_alg_args = list(np.repeat({},len(self.algorithms)))
             
+
+        self.n_methods = len(self.algorithms)
+        self.scores = np.zeros(self.n_methods)
+        
+        self.best_score = 0
+        self.best_index = -1
+        
+        self.transferred_models = list()
+        
+        for algo in self.algorithms:
+            self.transferred_models.append(TransferForestClassifier(estimator=self.estimator,Xt=self.Xt,yt=self.yt,algo=algo,bootstrap=self.bootstrap,copy=self.copy))
+            
+        self.STRF_model = TransferForestClassifier(estimator=self.estimator,Xt=self.Xt,yt=self.yt,algo=algo,bootstrap=self.bootstrap,copy=self.copy)
+        self.STRF_indexes = np.zeros(self.rf_size)
+
+                
+    def model_selection(self, Xt=None, yt=None, score_type = "auc", oob_ = False, **fit_params):
+
+        Xt, yt = self._get_target_data(Xt, yt)
+        Xt, yt = check_arrays(Xt, yt)
+        set_random_seed(self.random_state)
+        
+        rf_out = copy.deepcopy(self.estimator)
+
+
+        for k in range(self.rf_size):
+
+            # For imbalance adaptation:
+            data_size_per_class = np.zeros(rf_out.n_classes_)
+            props_t = np.zeros(rf_out.n_classes_)
+            
+            for cl in range(rf_out.n_classes_):
+                data_size_per_class[cl] = sum(yt == cl )
+            props_t = data_size_per_class / yt.size
+            
+            root_source_values = ut.get_node_distribution(rf_out.estimators_[k], 0).reshape(-1)
+
+            props_s = root_source_values
+            props_s = props_s / sum(props_s)     
+            coeffs = np.divide(props_t, props_s)
+
+            TTS = TransferTreeSelector(estimator=self.estimator_.estimators_[k],algorithms=self.algorithms,
+                                       list_alg_args=self.list_alg_args,
+                                       data_size_per_class=data_size_per_class,
+                                       root_source_values=root_source_values,coeffs=coeffs)
+            
+            if self.bootstrap:
+                inds, oob_inds = ut._bootstrap_(yt.size,class_wise=True,y=yt)
+                TTS.fit(Xt[inds],yt[inds],**fit_params)         
+                
+                if len(set(yt[oob_inds])) == 1:
+                    print('Warning: Only one class in OOB samples.')
+                    oob_ = False
+                if oob_:
+                    score, index = TTS.select(Xtest=Xt[oob_inds],ytest=yt[oob_inds],score_type=score_type)
+                else:
+                    score, index = TTS.select(Xtest=Xt[inds],ytest=yt[inds],score_type=score_type)
+            else:
+                TTS.fit(Xt,yt,**fit_params)                
+                score, index = TTS.select(Xtest=Xt,ytest=yt,score_type=score_type)                 
+
+            self.STRF_indexes[k] = index
+            
+            self.STRF_model.estimators_[k] = TTS.transferred_models[index]
+            
+            for j,m in enumerate(self.transferred_models):
+                #rf_out_alg = copy.deepcopy(rf_out)
+                m.estimators_[k] = TTS.transferred_models[j]
+                m.estimator_.estimators_[k] = TTS.transferred_models[j].estimator_
+                #m.estimator_ = rf_out_alg
+                
+            rf_out.estimators_[k] = TTS.transferred_models[index].estimator_
+        
+        self.STRF_model.estimator_ = rf_out
+        self.estimator_ = rf_out
+        
+        return self.STRF_indexes
 
 
