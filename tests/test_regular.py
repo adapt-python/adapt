@@ -5,6 +5,8 @@ Test functions for regular module.
 import pytest
 import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.gaussian_process import GaussianProcessRegressor, GaussianProcessClassifier
+from sklearn.gaussian_process.kernels import Matern, WhiteKernel
 from sklearn.base import clone
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
@@ -15,9 +17,11 @@ except:
     from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.initializers import GlorotUniform
 
+from adapt.utils import make_classification_da, make_regression_da
 from adapt.parameter_based import (RegularTransferLR,
                                    RegularTransferLC,
-                                   RegularTransferNN)
+                                   RegularTransferNN,
+                                   RegularTransferGP)
 
 np.random.seed(0)
 Xs = np.concatenate((
@@ -198,3 +202,40 @@ def test_clone():
     new_model.fit(Xs, ys)
     new_model.predict(Xs);
     assert model is not new_model
+    
+    
+def test_regulargp_reg():
+    Xs, ys, Xt, yt = make_regression_da()
+    kernel = Matern() + WhiteKernel()
+    src_model = GaussianProcessRegressor(kernel)
+    src_model.fit(Xs, ys)
+    score1 = src_model.score(Xt, yt)
+    tgt_model = RegularTransferGP(src_model, lambda_=1.)
+    tgt_model.fit(Xt[:3], yt[:3])
+    score2 = tgt_model.score(Xt, yt)
+    assert score1 < score2
+    
+
+def test_regulargp_classif():
+    Xs, ys, Xt, yt = make_classification_da()
+    kernel = Matern() + WhiteKernel()
+    src_model = GaussianProcessClassifier(kernel)
+    src_model.fit(Xs, ys)
+    score1 = src_model.score(Xt, yt)
+    tgt_model = RegularTransferGP(src_model, lambda_=1.)
+    tgt_model.fit(Xt[:3], yt[:3])
+    score2 = tgt_model.score(Xt, yt)
+    assert score1 < score2
+    
+
+def test_regulargp_multi_classif():
+    Xs, ys, Xt, yt = make_classification_da()
+    ys[:5] = 3
+    kernel = Matern() + WhiteKernel()
+    src_model = GaussianProcessClassifier(kernel)
+    src_model.fit(Xs, ys)
+    score1 = src_model.score(Xt, yt)
+    tgt_model = RegularTransferGP(src_model, lambda_=1.)
+    tgt_model.fit(Xt[:3], yt[:3])
+    score2 = tgt_model.score(Xt, yt)
+    assert score1 < score2
