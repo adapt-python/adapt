@@ -92,9 +92,12 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferGP.html">RegularTransferGP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeSelector.html">TransferTreeSelector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/adapt.parameter_based.TransferForestSelector.html">TransferForestSelector</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#adapt-metrics">Metrics</a><ul>
@@ -447,14 +450,23 @@ the <strong>source</strong> data are adapted to build a suited model for the <st
 <tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferNN.html#adapt.parameter_based.RegularTransferNN" title="adapt.parameter_based.RegularTransferNN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.RegularTransferNN</span></code></a>([task, ...])</p></td>
 <td><p>Regular Transfer with Neural Network</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning" title="adapt.parameter_based.FineTuning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.FineTuning</span></code></a>([encoder, task, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.RegularTransferGP.html#adapt.parameter_based.RegularTransferGP" title="adapt.parameter_based.RegularTransferGP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.RegularTransferGP</span></code></a>([...])</p></td>
+<td><p>Regular Transfer with Gaussian Process</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.FineTuning.html#adapt.parameter_based.FineTuning" title="adapt.parameter_based.FineTuning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.FineTuning</span></code></a>([encoder, task, ...])</p></td>
 <td><p>FineTuning : finetunes pretrained networks on target data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier" title="adapt.parameter_based.TransferTreeClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferTreeClassifier</span></code></a>([...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeClassifier.html#adapt.parameter_based.TransferTreeClassifier" title="adapt.parameter_based.TransferTreeClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferTreeClassifier</span></code></a>([...])</p></td>
 <td><p>TransferTreeClassifier: Modify a source Decision tree on a target dataset.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferForestClassifier.html#adapt.parameter_based.TransferForestClassifier" title="adapt.parameter_based.TransferForestClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferForestClassifier</span></code></a>([...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferForestClassifier.html#adapt.parameter_based.TransferForestClassifier" title="adapt.parameter_based.TransferForestClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferForestClassifier</span></code></a>([...])</p></td>
 <td><p>TransferForestClassifier: Modify a source Random Forest on a target dataset.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferTreeSelector.html#adapt.parameter_based.TransferTreeSelector" title="adapt.parameter_based.TransferTreeSelector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferTreeSelector</span></code></a>([...])</p></td>
+<td><p>TransferTreeSelector : Run several decision tree transfer algorithms on a target dataset and select the best one.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/adapt.parameter_based.TransferForestSelector.html#adapt.parameter_based.TransferForestSelector" title="adapt.parameter_based.TransferForestSelector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_based.TransferForestSelector</span></code></a>([...])</p></td>
+<td><p>TransferForestSelector : Run several decision tree transfer algorithms on a target dataset and select the best one for each tree of the random forest.</p></td>
 </tr>
 </tbody>
 </table>

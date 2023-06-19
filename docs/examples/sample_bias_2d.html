@@ -92,9 +92,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.RegularTransferGP.html">RegularTransferGP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferTreeClassifier.html">TransferTreeClassifier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferTreeSelector.html">TransferTreeSelector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/adapt.parameter_based.TransferForestSelector.html">TransferForestSelector</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
@@ -527,8 +530,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <section id="Sample-Bias-2D">
 <h1>Sample Bias 2D<a class="headerlink" href="#Sample-Bias-2D" title="Permalink to this headline"></a></h1>
-<div class="btn btn-notebook" role="button"><p><img alt="87e40a371aec46aa83cd5ef44d07112e" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/12_9rgPXobyeaKYlXh_fJPNfrbODdvuHY?usp=sharing">Run in Google Colab</a></p>
-</div><div class="btn btn-notebook" role="button"><p><img alt="4d2b6efd1f97446f83b3abb4157834b5" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/sample_bias_2d.ipynb">View on GitHub</a></p>
+<div class="btn btn-notebook" role="button"><p><img alt="04896b8e48ed48c7ad2ae1e0b7734dae" src="../_images/colab_logo_32px.png" /> <a class="reference external" href="https://colab.research.google.com/drive/12_9rgPXobyeaKYlXh_fJPNfrbODdvuHY?usp=sharing">Run in Google Colab</a></p>
+</div><div class="btn btn-notebook" role="button"><p><img alt="df8dc67b1f6f4ee29bc27dd2314f55da" src="../_images/github_logo_32px.png" /> <a class="reference external" href="https://github.com/adapt-python/notebooks/blob/d0364973c642ea4880756cef4e9f2ee8bb5e8495/sample_bias_2d.ipynb">View on GitHub</a></p>
 </div><p>The following example is a 2D regression domain adaptation issue. The goal is to learn the regression task on the target data (orange points) knowing only the labels on the source data (blue points).</p>
 <p>In this example, there is a sample bias between the source and target datasets. The sources are mostly located in X1=0 whereas the targets are uniformly distributed.</p>
 <p>The following methods are being tested:</p>

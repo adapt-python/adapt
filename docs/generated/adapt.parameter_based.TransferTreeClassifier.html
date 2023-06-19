@@ -90,9 +90,12 @@
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLR.html">RegularTransferLR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferLC.html">RegularTransferLC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferNN.html">RegularTransferNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.RegularTransferGP.html">RegularTransferGP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.FineTuning.html">FineTuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#">TransferTreeClassifier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.TransferForestClassifier.html">TransferForestClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.TransferTreeSelector.html">TransferTreeSelector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapt.parameter_based.TransferForestSelector.html">TransferForestSelector</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contents.html#adapt-metrics">Metrics</a><ul>
@@ -351,7 +354,7 @@
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferTreeClassifier.extend" title="adapt.parameter_based.TransferTreeClassifier.extend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend</span></code></a>(node, subtree)</p></td>
-<td><p></p></td>
+<td><p>Extend the underlying decision tree estimator by a sub-tree at a given node.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferTreeClassifier.fit" title="adapt.parameter_based.TransferTreeClassifier.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>([Xt, yt])</p></td>
 <td><p>Fit TransferTreeClassifier.</p></td>
@@ -369,7 +372,7 @@
 <td><p>Return estimator predictions for X.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferTreeClassifier.prune" title="adapt.parameter_based.TransferTreeClassifier.prune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prune</span></code></a>(node[, include_node, lr, leaf_value])</p></td>
-<td><p></p></td>
+<td><p>Pruning the corresponding sub-tree at a given node.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferTreeClassifier.score" title="adapt.parameter_based.TransferTreeClassifier.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y[, sample_weight, domain])</p></td>
 <td><p>Return the estimator score.</p></td>
@@ -378,16 +381,16 @@
 <td><p>Set the parameters of this estimator.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferTreeClassifier.swap_subtrees" title="adapt.parameter_based.TransferTreeClassifier.swap_subtrees"><code class="xref py py-obj docutils literal notranslate"><span class="pre">swap_subtrees</span></code></a>(node1, node2)</p></td>
-<td><p></p></td>
+<td><p>Swap respective sub-trees between two given nodes.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferTreeClassifier.unsupervised_score" title="adapt.parameter_based.TransferTreeClassifier.unsupervised_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unsupervised_score</span></code></a>(Xs, Xt)</p></td>
 <td><p>Return unsupervised score.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferTreeClassifier.updateSplit" title="adapt.parameter_based.TransferTreeClassifier.updateSplit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">updateSplit</span></code></a>(node, feature, threshold)</p></td>
-<td><p></p></td>
+<td><p>Update the (feature,threshold) split for a given node.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.parameter_based.TransferTreeClassifier.updateValue" title="adapt.parameter_based.TransferTreeClassifier.updateValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">updateValue</span></code></a>(node, values)</p></td>
-<td><p></p></td>
+<td><p>Update class values for a given node.</p></td>
 </tr>
 </tbody>
 </table>
@@ -399,7 +402,17 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.parameter_based.TransferTreeClassifier.extend">
 <span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtree</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transfer_tree.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferTreeClassifier.extend" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Extend the underlying decision tree estimator by a sub-tree at a given node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node</strong><span class="classifier">int</span></dt><dd><p>Node to update.</p>
+</dd>
+<dt><strong>subtree</strong><span class="classifier">DecisionTreeClassifier.</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.parameter_based.TransferTreeClassifier.fit">
@@ -534,7 +547,26 @@ target one.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.parameter_based.TransferTreeClassifier.prune">
 <span class="sig-name descname"><span class="pre">prune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transfer_tree.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferTreeClassifier.prune" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Pruning the corresponding sub-tree at a given node.</p>
+<p>If <cite>include_node</cite> is <cite>False</cite>, replaces the node by a leaf (with values <cite>leaf_values</cite> if provided).
+If <cite>include_node</cite> is <cite>True</cite>, prunes the left (<cite>lr=-1</cite>) or (<cite>lr=1</cite>) child sub-tree and
+replaces the given node by the other sub-tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node</strong><span class="classifier">int</span></dt><dd><p>Node to prune.</p>
+</dd>
+<dt><strong>include_node</strong><span class="classifier">boolean (default=False)</span></dt><dd><p>Type of pruning to apply.</p>
+</dd>
+<dt><strong>lr</strong><span class="classifier">float</span></dt><dd><p>Direction of pruning if <cite>include_node</cite> is <cite>True</cite>.
+Must be either -1 (left) or 1 (right) in this case.</p>
+</dd>
+<dt><strong>leaf_value</strong><span class="classifier">numpy array of float (default=None)</span></dt><dd><p>If <cite>include_node</cite> is <cite>False</cite>, affects these values to the created leaf.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.parameter_based.TransferTreeClassifier.score">
@@ -596,7 +628,20 @@ the target one.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.parameter_based.TransferTreeClassifier.swap_subtrees">
 <span class="sig-name descname"><span class="pre">swap_subtrees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node2</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transfer_tree.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferTreeClassifier.swap_subtrees" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Swap respective sub-trees between two given nodes.</p>
+<p>Each node must not be a sub-node of the other.
+Update the (feature,threshold) split for a given node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node1</strong><span class="classifier">int</span></dt><dd><p>Node to swap.</p>
+</dd>
+<dt><strong>node2</strong><span class="classifier">int</span></dt><dd><p>Node to swap.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.parameter_based.TransferTreeClassifier.unsupervised_score">
@@ -626,12 +671,36 @@ data and the target input data.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.parameter_based.TransferTreeClassifier.updateSplit">
 <span class="sig-name descname"><span class="pre">updateSplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transfer_tree.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferTreeClassifier.updateSplit" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Update the (feature,threshold) split for a given node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node</strong><span class="classifier">int</span></dt><dd><p>Node to update.</p>
+</dd>
+<dt><strong>feature</strong><span class="classifier">int</span></dt><dd><p>New node feature.</p>
+</dd>
+<dt><strong>threshold</strong><span class="classifier">float</span></dt><dd><p>New node threshold.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.parameter_based.TransferTreeClassifier.updateValue">
 <span class="sig-name descname"><span class="pre">updateValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/parameter_based/_transfer_tree.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.parameter_based.TransferTreeClassifier.updateValue" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Update class values for a given node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>node</strong><span class="classifier">int</span></dt><dd><p>Node to update.</p>
+</dd>
+<dt><strong>values</strong><span class="classifier">numpy array of float</span></dt><dd><p>Class values to affect at node.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
