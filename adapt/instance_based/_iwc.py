@@ -170,7 +170,7 @@ Training and Test Distributions". In ICML 2007
         else:
             y_pred = self.classifier_.predict(Xs).ravel()
         
-        self.weights_ = 1. / (y_pred + EPS) - 1.
+        self.weights_ = 1. / np.clip(y_pred, EPS, 1.) - 1.
         
         return self.weights_
     

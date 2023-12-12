@@ -1,5 +1,6 @@
 numpy
 scipy
-tensorflow < 2.12
+tensorflow
 scikit-learn
-cvxopt <= 1.3.0
+cvxopt
+scikeras

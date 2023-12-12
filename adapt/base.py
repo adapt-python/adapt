@@ -13,7 +13,10 @@ from sklearn.utils import check_array
 from sklearn.metrics.pairwise import KERNEL_PARAMS
 from sklearn.exceptions import NotFittedError
 from tensorflow.keras import Model
-from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
+try:
+    from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
+except:
+    from scikeras.wrappers import KerasClassifier, KerasRegressor
 try:
     from tensorflow.keras.optimizers.legacy import RMSprop
 except:
@@ -1623,7 +1626,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
         
         
     def _check_for_batch(self, dataset):
-        if dataset.__class__.__name__ == "BatchDataset":
+        if "BatchDataset" in dataset.__class__.__name__:
             return True
         if hasattr(dataset, "_input_dataset"):
             return self._check_for_batch(dataset._input_dataset)

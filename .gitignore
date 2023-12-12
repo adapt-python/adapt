@@ -22,3 +22,4 @@ docs/html/
 docs/doctrees/
 adapt/datasets.py
 datasets/
+debug.ipynb
