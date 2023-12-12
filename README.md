@@ -1,7 +1,7 @@
 # ADAPT
 
 [![PyPI version](https://badge.fury.io/py/adapt.svg)](https://pypi.org/project/adapt)
-[![Build Status](https://github.com/adapt-python/adapt/workflows/build/badge.svg)](https://github.com/adapt-python/adapt/actions)
+[![Build Status](https://github.com/adapt-python/adapt/actions/workflows/run-test.yml/badge.svg)](https://github.com/adapt-python/adapt/actions)
 [![Python Version](https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8|%203.9-blue)](https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8|%203.9-blue)
 [![Codecov Status](https://codecov.io/gh/adapt-python/adapt/branch/master/graph/badge.svg?token=IWQXMYGY2Q)](https://codecov.io/gh/adapt-python/adapt)
 
@@ -72,11 +72,12 @@ The following dependencies are required and will be installed with the library:
 - `tensorflow` (>= 2.0)
 - `scikit-learn`
 - `cvxopt`
+- `scikeras`
 
 If for some reason, these packages failed to install, you can do it manually with:
 
 ```
-pip install numpy scipy tensorflow scikit-learn cvxopt
+pip install numpy scipy tensorflow scikit-learn cvxopt scikeras
 ```
 
 Finally import the module in your python scripts with:
@@ -87,6 +88,15 @@ import adapt
 
 A simple example of usage is given in the [Quick-Start](#Quick-Start) below.
 
+### Stable environments [Updated Dec 2023]
+
+ADAPT sometimes encounters incompatibility issue after a new Tensorflow release. In this case, you can use the following environment, which has passed all tests. ADAPT should work well on it:
+- OS: `ubuntu-22.04, windows-2022, macos-12`
+- Python versions: `3.8 to 3.11`
+
+```
+pip install numpy==1.26.2 scipy==1.11.4 tensorflow==2.15.0 scikit-learn==1.3.2 cvxopt==1.3.2 scikeras==0.12.0
+```
 
 ## ADAPT Guideline
 
