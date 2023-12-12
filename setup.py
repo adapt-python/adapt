@@ -13,7 +13,7 @@ setup(
     author_email='antoine.demat@gmail.com',
     license='BSD-2',
     packages=find_packages(exclude=["tests"]),
-    install_requires=["numpy>=1.16", "scipy>=1.0", "tensorflow<2.12", "scikit-learn>=0.2", "cvxopt<=1.3.0"],
+    install_requires=["numpy", "scipy", "tensorflow", "scikit-learn", "cvxopt", "scikeras"],
     zip_safe=False,
     long_description=long_description,
     long_description_content_type='text/markdown'

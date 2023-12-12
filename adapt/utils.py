@@ -11,7 +11,10 @@ from sklearn.datasets import make_classification
 from sklearn.utils import check_array
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin, clone
-from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
+try:
+    from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
+except:
+    from scikeras.wrappers import KerasClassifier, KerasRegressor
 import tensorflow as tf
 import tensorflow.keras.backend as K
 from tensorflow.keras import Sequential, Model
