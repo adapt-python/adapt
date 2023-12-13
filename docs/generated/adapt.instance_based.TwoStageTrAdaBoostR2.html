@@ -399,9 +399,9 @@ Accepted parameters can be found by calling the method
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Ridge</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.utils</span> <span class="kn">import</span> <span class="n">make_regression_da</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.instance_based</span> <span class="kn">import</span> <span class="n">TrAdaBoostR2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">adapt.instance_based</span> <span class="kn">import</span> <span class="n">TwoStageTrAdaBoostR2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Xt</span><span class="p">,</span> <span class="n">yt</span> <span class="o">=</span> <span class="n">make_regression_da</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">TrAdaBoostR2</span><span class="p">(</span><span class="n">Ridge</span><span class="p">(),</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">Xt</span><span class="o">=</span><span class="n">Xt</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">yt</span><span class="o">=</span><span class="n">yt</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">TwoStageTrAdaBoostR2</span><span class="p">(</span><span class="n">Ridge</span><span class="p">(),</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">Xt</span><span class="o">=</span><span class="n">Xt</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">yt</span><span class="o">=</span><span class="n">yt</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
 <span class="go">Iteration 0 - Cross-validation score: 0.2956 (0.0905)</span>
 <span class="go">Iteration 1 - Cross-validation score: 0.2956 (0.0905)</span>
@@ -449,23 +449,35 @@ labeled target data.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.fit_estimator" title="adapt.instance_based.TwoStageTrAdaBoostR2.fit_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_estimator</span></code></a>(X, y[, sample_weight, ...])</p></td>
 <td><p>Fit estimator on X, y.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.get_params" title="adapt.instance_based.TwoStageTrAdaBoostR2.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.get_metadata_routing" title="adapt.instance_based.TwoStageTrAdaBoostR2.get_metadata_routing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metadata_routing</span></code></a>()</p></td>
+<td><p>Get metadata routing of this object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.get_params" title="adapt.instance_based.TwoStageTrAdaBoostR2.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
 <td><p>Get parameters for this estimator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.predict" title="adapt.instance_based.TwoStageTrAdaBoostR2.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.predict" title="adapt.instance_based.TwoStageTrAdaBoostR2.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(X)</p></td>
 <td><p>Return predictions of the best estimator according to cross-validation scores.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.predict_estimator" title="adapt.instance_based.TwoStageTrAdaBoostR2.predict_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_estimator</span></code></a>(X, **predict_params)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.predict_estimator" title="adapt.instance_based.TwoStageTrAdaBoostR2.predict_estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_estimator</span></code></a>(X, **predict_params)</p></td>
 <td><p>Return estimator predictions for X.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.predict_weights" title="adapt.instance_based.TwoStageTrAdaBoostR2.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>([domain])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.predict_weights" title="adapt.instance_based.TwoStageTrAdaBoostR2.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>([domain])</p></td>
 <td><p>Return sample weights.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.score" title="adapt.instance_based.TwoStageTrAdaBoostR2.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.score" title="adapt.instance_based.TwoStageTrAdaBoostR2.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y)</p></td>
 <td><p>Return the TrAdaboost score on X, y.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.set_fit_request" title="adapt.instance_based.TwoStageTrAdaBoostR2.set_fit_request"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_fit_request</span></code></a>(*[, sample_weight_src, ...])</p></td>
+<td><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.set_params" title="adapt.instance_based.TwoStageTrAdaBoostR2.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**params)</p></td>
 <td><p>Set the parameters of this estimator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.set_predict_request" title="adapt.instance_based.TwoStageTrAdaBoostR2.set_predict_request"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_predict_request</span></code></a>(*[, domain])</p></td>
+<td><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.set_score_request" title="adapt.instance_based.TwoStageTrAdaBoostR2.set_score_request"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_score_request</span></code></a>(*[, domain, sample_weight])</p></td>
+<td><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">score</span></code> method.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2.unsupervised_score" title="adapt.instance_based.TwoStageTrAdaBoostR2.unsupervised_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unsupervised_score</span></code></a>(Xs, Xt)</p></td>
 <td><p>Return unsupervised score.</p></td>
@@ -540,6 +552,23 @@ for tensorflow estimator.</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>estimator_</strong><span class="classifier">fitted estimator</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.TwoStageTrAdaBoostR2.get_metadata_routing">
+<span class="sig-name descname"><span class="pre">get_metadata_routing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_tradaboost.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.TwoStageTrAdaBoostR2.get_metadata_routing" title="Permalink to this definition"></a></dt>
+<dd><p>Get metadata routing of this object.</p>
+<p>Please check <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>routing</strong><span class="classifier">MetadataRequest</span></dt><dd><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">MetadataRequest</span></code> encapsulating
+routing information.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -653,6 +682,51 @@ with the domain parameter.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.TwoStageTrAdaBoostR2.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight_src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight_tgt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2" title="adapt.instance_based._tradaboost.TwoStageTrAdaBoostR2"><span class="pre">adapt.instance_based._tradaboost.TwoStageTrAdaBoostR2</span></a></span></span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_tradaboost.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.TwoStageTrAdaBoostR2.set_fit_request" title="Permalink to this definition"></a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sample_weight_src</strong><span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight_src</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+<dt><strong>sample_weight_tgt</strong><span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight_tgt</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="adapt.instance_based.TwoStageTrAdaBoostR2.set_params">
 <span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_tradaboost.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.TwoStageTrAdaBoostR2.set_params" title="Permalink to this definition"></a></dt>
 <dd><p>Set the parameters of this estimator.</p>
@@ -666,6 +740,94 @@ with the domain parameter.</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>self</strong><span class="classifier">estimator instance</span></dt><dd><p>Estimator instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.TwoStageTrAdaBoostR2.set_predict_request">
+<span class="sig-name descname"><span class="pre">set_predict_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2" title="adapt.instance_based._tradaboost.TwoStageTrAdaBoostR2"><span class="pre">adapt.instance_based._tradaboost.TwoStageTrAdaBoostR2</span></a></span></span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_tradaboost.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.TwoStageTrAdaBoostR2.set_predict_request" title="Permalink to this definition"></a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">predict</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>domain</strong><span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">domain</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.TwoStageTrAdaBoostR2.set_score_request">
+<span class="sig-name descname"><span class="pre">set_score_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#adapt.instance_based.TwoStageTrAdaBoostR2" title="adapt.instance_based._tradaboost.TwoStageTrAdaBoostR2"><span class="pre">adapt.instance_based._tradaboost.TwoStageTrAdaBoostR2</span></a></span></span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_tradaboost.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.TwoStageTrAdaBoostR2.set_score_request" title="Permalink to this definition"></a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">score</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">score</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">score</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>domain</strong><span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">domain</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">score</span></code>.</p>
+</dd>
+<dt><strong>sample_weight</strong><span class="classifier">str, True, False, or None,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">score</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>The updated object.</p>
 </dd>
 </dl>
 </dd>

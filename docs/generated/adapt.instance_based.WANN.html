@@ -421,29 +421,29 @@ on these arguments.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.fit" title="adapt.instance_based.WANN.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X[, y, Xt, yt, domains])</p></td>
 <td><p>Fit Model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.get_metrics_result" title="adapt.instance_based.WANN.get_metrics_result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metrics_result</span></code></a>()</p></td>
-<td><p>Returns the model's metrics values as a dict.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.get_params" title="adapt.instance_based.WANN.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.get_params" title="adapt.instance_based.WANN.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
 <td><p>Get parameters for this estimator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.get_weight_paths" title="adapt.instance_based.WANN.get_weight_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_weight_paths</span></code></a>()</p></td>
-<td><p>Retrieve all the variables and their paths for the model.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.load_weights" title="adapt.instance_based.WANN.load_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_weights</span></code></a>(filepath[, skip_mismatch, ...])</p></td>
+<td><p>Loads all layer weights from a saved files.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.predict" title="adapt.instance_based.WANN.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, batch_size, verbose, steps, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.predict" title="adapt.instance_based.WANN.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>(x[, batch_size, verbose, steps, ...])</p></td>
 <td><p>Generates output predictions for the input samples.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.predict_disc" title="adapt.instance_based.WANN.predict_disc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_disc</span></code></a>(X)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.predict_disc" title="adapt.instance_based.WANN.predict_disc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_disc</span></code></a>(X)</p></td>
 <td><p>Return predictions of the discriminator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.predict_task" title="adapt.instance_based.WANN.predict_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_task</span></code></a>(X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.predict_task" title="adapt.instance_based.WANN.predict_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_task</span></code></a>(X)</p></td>
 <td><p>Return predictions of the task on the encoded features.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.predict_weights" title="adapt.instance_based.WANN.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>(X)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.predict_weights" title="adapt.instance_based.WANN.predict_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_weights</span></code></a>(X)</p></td>
 <td><p>Return the predictions of weighting network</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.pretrain_step" title="adapt.instance_based.WANN.pretrain_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pretrain_step</span></code></a>(data)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.pretrain_step" title="adapt.instance_based.WANN.pretrain_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pretrain_step</span></code></a>(data)</p></td>
 <td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.save_weights" title="adapt.instance_based.WANN.save_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_weights</span></code></a>(filepath[, overwrite, ...])</p></td>
+<td><p>Saves all layer weights.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#adapt.instance_based.WANN.score" title="adapt.instance_based.WANN.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(X, y[, sample_weight])</p></td>
 <td><p>Return the evaluation of the model on X, y.</p></td>
@@ -588,20 +588,6 @@ data. Can be used for multisource purpose.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.WANN.get_metrics_result">
-<span class="sig-name descname"><span class="pre">get_metrics_result</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_wann.get_metrics_result.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.WANN.get_metrics_result" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the model’s metrics values as a dict.</p>
-<p>If any of the metric result is a dict (containing multiple metrics),
-each of them gets added to the top level returned dict of this method.</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>A <cite>dict</cite> containing values of the metrics listed in <cite>self.metrics</cite>.
-Example:
-<cite>{‘loss’: 0.2, ‘accuracy’: 0.7}</cite>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="adapt.instance_based.WANN.get_params">
 <span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_wann.get_params.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.WANN.get_params" title="Permalink to this definition"></a></dt>
 <dd><p>Get parameters for this estimator.</p>
@@ -622,63 +608,50 @@ Example:
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="adapt.instance_based.WANN.get_weight_paths">
-<span class="sig-name descname"><span class="pre">get_weight_paths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_wann.get_weight_paths.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.WANN.get_weight_paths" title="Permalink to this definition"></a></dt>
-<dd><p>Retrieve all the variables and their paths for the model.</p>
-<p>The variable path (string) is a stable key to indentify a <cite>tf.Variable</cite>
-instance owned by the model. It can be used to specify variable-specific
-configurations (e.g. DTensor, quantization) from a global view.</p>
-<p>This method returns a dict with weight object paths as keys
-and the corresponding <cite>tf.Variable</cite> instances as values.</p>
-<p>Note that if the model is a subclassed model and the weights haven’t
-been initialized, an empty dict will be returned.</p>
+<dt class="sig sig-object py" id="adapt.instance_based.WANN.load_weights">
+<span class="sig-name descname"><span class="pre">load_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_mismatch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_wann.load_weights.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.WANN.load_weights" title="Permalink to this definition"></a></dt>
+<dd><p>Loads all layer weights from a saved files.</p>
+<p>The saved file could be a SavedModel file, a <cite>.keras</cite> file (v3 saving
+format), or a file created via <cite>model.save_weights()</cite>.</p>
+<p>By default, weights are loaded based on the network’s
+topology. This means the architecture should be the same as when the
+weights were saved. Note that layers that don’t have weights are not
+taken into account in the topological ordering, so adding or removing
+layers is fine as long as they don’t have weights.</p>
+<p><strong>Partial weight loading</strong></p>
+<p>If you have modified your model, for instance by adding a new layer
+(with weights) or by changing the shape of the weights of a layer,
+you can choose to ignore errors and continue loading
+by setting <cite>skip_mismatch=True</cite>. In this case any layer with
+mismatching weights will be skipped. A warning will be displayed
+for each skipped layer.</p>
+<p><strong>Weight loading by name</strong></p>
+<p>If your weights are saved as a <cite>.h5</cite> file created
+via <cite>model.save_weights()</cite>, you can use the argument <cite>by_name=True</cite>.</p>
+<p>In this case, weights are loaded into layers only if they share
+the same name. This is useful for fine-tuning or transfer-learning
+models where some of the layers have changed.</p>
+<p>Note that only topological loading (<cite>by_name=False</cite>) is supported when
+loading weights from the <cite>.keras</cite> v3 format or from the TensorFlow
+SavedModel format.</p>
 <dl class="simple">
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>A dict where keys are variable paths and values are <cite>tf.Variable</cite></dt><dd><p>instances.</p>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>filepath: String, path to the weights file to load. For weight files</dt><dd><p>in TensorFlow format, this is the file prefix (the same as was
+passed to <cite>save_weights()</cite>). This can also be a path to a
+SavedModel or a <cite>.keras</cite> file (v3 saving format) saved
+via <cite>model.save()</cite>.</p>
+</dd>
+<dt>skip_mismatch: Boolean, whether to skip loading of layers where</dt><dd><p>there is a mismatch in the number of weights, or a mismatch in
+the shape of the weights.</p>
+</dd>
+<dt>by_name: Boolean, whether to load weights by name or by topological</dt><dd><p>order. Only topological loading is supported for weight files in
+the <cite>.keras</cite> v3 format or in the TensorFlow SavedModel format.</p>
+</dd>
+<dt>options: Optional <cite>tf.train.CheckpointOptions</cite> object that specifies</dt><dd><p>options for loading weights (only valid for a SavedModel file).</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<p>Example:</p>
-<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a>python
-class SubclassModel(tf.keras.Model):</p>
-<blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, name=None):</dt><dd><p>super().__init__(name=name)
-self.d1 = tf.keras.layers.Dense(10)
-self.d2 = tf.keras.layers.Dense(20)</p>
-</dd>
-<dt>def call(self, inputs):</dt><dd><p>x = self.d1(inputs)
-return self.d2(x)</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>model = SubclassModel()
-model(tf.zeros((10, 10)))
-weight_paths = model.get_weight_paths()
-# weight_paths:
-# {
-#    ‘d1.kernel’: model.d1.kernel,
-#    ‘d1.bias’: model.d1.bias,
-#    ‘d2.kernel’: model.d2.kernel,
-#    ‘d2.bias’: model.d2.bias,
-# }</p>
-<p># Functional model
-inputs = tf.keras.Input((10,), batch_size=10)
-x = tf.keras.layers.Dense(20, name=’d1’)(inputs)
-output = tf.keras.layers.Dense(30, name=’d2’)(x)
-model = tf.keras.Model(inputs, output)
-d1 = model.layers[1]
-d2 = model.layers[2]
-weight_paths = model.get_weight_paths()
-# weight_paths:
-# {
-#    ‘d1.kernel’: d1.kernel,
-#    ‘d1.bias’: d1.bias,
-#    ‘d2.kernel’: d2.kernel,
-#    ‘d2.bias’: d2.bias,
-# }
-<a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -805,6 +778,87 @@ the generator as they can’t be passed easily to children processes.</p>
 <dt class="sig sig-object py" id="adapt.instance_based.WANN.pretrain_step">
 <span class="sig-name descname"><span class="pre">pretrain_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_wann.pretrain_step.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.WANN.pretrain_step" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adapt.instance_based.WANN.save_weights">
+<span class="sig-name descname"><span class="pre">save_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/antoinedemathelin/adapt/tree/master/adapt/instance_based/_wann.save_weights.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adapt.instance_based.WANN.save_weights" title="Permalink to this definition"></a></dt>
+<dd><p>Saves all layer weights.</p>
+<p>Either saves in HDF5 or in TensorFlow format based on the <cite>save_format</cite>
+argument.</p>
+<dl class="simple">
+<dt>When saving in HDF5 format, the weight file has:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt><cite>layer_names</cite> (attribute), a list of strings</dt><dd><p>(ordered names of model layers).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>For every layer, a <cite>group</cite> named <cite>layer.name</cite></dt><dd><ul>
+<li><dl class="simple">
+<dt>For every such layer group, a group attribute <cite>weight_names</cite>,</dt><dd><p>a list of strings
+(ordered names of weights tensor of the layer).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>For every weight in the layer, a dataset</dt><dd><p>storing the weight value, named after the weight tensor.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p>When saving in TensorFlow format, all objects referenced by the network
+are saved in the same format as <cite>tf.train.Checkpoint</cite>, including any
+<cite>Layer</cite> instances or <cite>Optimizer</cite> instances assigned to object
+attributes. For networks constructed from inputs and outputs using
+<cite>tf.keras.Model(inputs, outputs)</cite>, <cite>Layer</cite> instances used by the network
+are tracked/saved automatically. For user-defined classes which inherit
+from <cite>tf.keras.Model</cite>, <cite>Layer</cite> instances must be assigned to object
+attributes, typically in the constructor. See the documentation of
+<cite>tf.train.Checkpoint</cite> and <cite>tf.keras.Model</cite> for details.</p>
+<p>While the formats are the same, do not mix <cite>save_weights</cite> and
+<cite>tf.train.Checkpoint</cite>. Checkpoints saved by <cite>Model.save_weights</cite> should
+be loaded using <cite>Model.load_weights</cite>. Checkpoints saved using
+<cite>tf.train.Checkpoint.save</cite> should be restored using the corresponding
+<cite>tf.train.Checkpoint.restore</cite>. Prefer <cite>tf.train.Checkpoint</cite> over
+<cite>save_weights</cite> for training checkpoints.</p>
+<p>The TensorFlow format matches objects and variables by starting at a
+root object, <cite>self</cite> for <cite>save_weights</cite>, and greedily matching attribute
+names. For <cite>Model.save</cite> this is the <cite>Model</cite>, and for <cite>Checkpoint.save</cite>
+this is the <cite>Checkpoint</cite> even if the <cite>Checkpoint</cite> has a model attached.
+This means saving a <cite>tf.keras.Model</cite> using <cite>save_weights</cite> and loading
+into a <cite>tf.train.Checkpoint</cite> with a <cite>Model</cite> attached (or vice versa)
+will not match the <cite>Model</cite>’s variables. See the
+[guide to training checkpoints](
+<a class="reference external" href="https://www.tensorflow.org/guide/checkpoint">https://www.tensorflow.org/guide/checkpoint</a>) for details on
+the TensorFlow format.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>filepath: String or PathLike, path to the file to save the weights</dt><dd><p>to. When saving in TensorFlow format, this is the prefix used
+for checkpoint files (multiple files are generated). Note that
+the ‘.h5’ suffix causes weights to be saved in HDF5 format.</p>
+</dd>
+<dt>overwrite: Whether to silently overwrite any existing file at the</dt><dd><p>target location, or provide the user with a manual prompt.</p>
+</dd>
+<dt>save_format: Either ‘tf’ or ‘h5’. A <cite>filepath</cite> ending in ‘.h5’ or</dt><dd><p>‘.keras’ will default to HDF5 if <cite>save_format</cite> is <cite>None</cite>.
+Otherwise, <cite>None</cite> becomes ‘tf’. Defaults to <cite>None</cite>.</p>
+</dd>
+<dt>options: Optional <cite>tf.train.CheckpointOptions</cite> object that specifies</dt><dd><p>options for saving weights.</p>
+</dd>
+</dl>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt>ImportError: If <cite>h5py</cite> is not available when attempting to save in</dt><dd><p>HDF5 format.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="adapt.instance_based.WANN.score">
