@@ -124,7 +124,7 @@ Training and Test Distributions". In ICML 2007
         
         if (not warm_start) or (not hasattr(self, "classifier_")):
             if self.classifier is None:
-                self.classifier_ = LogisticRegression(penalty="none")
+                self.classifier_ = LogisticRegression()
             else:
                 self.classifier_ = check_estimator(self.classifier,
                                                    copy=True,
