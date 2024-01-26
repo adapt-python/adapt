@@ -320,7 +320,10 @@ Yang Q., Xue G., and Yu Y. "Boosting for transfer learning". In ICML, 2007.
         
         if not isinstance(self, TrAdaBoostR2):
             if isinstance(estimator, BaseEstimator):
-                ohe = OneHotEncoder(sparse=False)
+                try:
+                    ohe = OneHotEncoder(sparse=False)
+                except:
+                    ohe = OneHotEncoder(sparse_output=False)
                 ohe.fit(y.reshape(-1, 1))
                 ys = ohe.transform(ys)
                 yt = ohe.transform(yt)

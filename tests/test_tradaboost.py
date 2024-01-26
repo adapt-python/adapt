@@ -36,7 +36,7 @@ yt_classif = np.array(
 
 def test_tradaboost_fit():
     np.random.seed(0)
-    model = TrAdaBoost(LogisticRegression(penalty='none',
+    model = TrAdaBoost(LogisticRegression(penalty=None,
                        solver='lbfgs'),
                        n_estimators=20)
     model.fit(Xs, ys_classif, Xt=Xt[:10], yt=yt_classif[:10])
@@ -111,7 +111,7 @@ def test_twostagetradaboostr2_fit():
     
 def test_tradaboost_deepcopy():
     np.random.seed(0)
-    model = TrAdaBoost(LogisticRegression(penalty='none',
+    model = TrAdaBoost(LogisticRegression(penalty=None,
                        solver='lbfgs'),
                        n_estimators=20)
     model.fit(Xs, ys_classif, Xt=Xt[:10], yt=yt_classif[:10])
@@ -124,7 +124,7 @@ def test_tradaboost_multiclass():
     np.random.seed(0)
     X = np.random.randn(10, 3)
     y = np.random.choice(3, 10)
-    model = TrAdaBoost(LogisticRegression(penalty='none',
+    model = TrAdaBoost(LogisticRegression(penalty=None,
                        solver='lbfgs'), Xt=X, yt=y,
                        n_estimators=20)
     model.fit(X, y)
@@ -177,13 +177,13 @@ def test_tradaboost_above_05():
     
 def test_tradaboost_lr():
     np.random.seed(0)
-    model = TrAdaBoost(LogisticRegression(penalty='none'),
+    model = TrAdaBoost(LogisticRegression(penalty=None),
                          Xt=Xt[:10], yt=yt_classif[:10], 
                          n_estimators=20, lr=.1)
     model.fit(Xs, ys_classif)
     err1 = model.estimator_errors_
     
-    model = TrAdaBoost(LogisticRegression(penalty='none'),
+    model = TrAdaBoost(LogisticRegression(penalty=None),
                          Xt=Xt[:10], yt=yt_classif[:10], 
                          n_estimators=20, lr=2.)
     model.fit(Xs, ys_classif)

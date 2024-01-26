@@ -56,7 +56,7 @@ def test_setup():
     lr.fit(Xs, ys_reg)
     assert np.abs(lr.coef_[0][0] - 10) < 1
     
-    lr = LogisticRegression(penalty='none', solver='lbfgs')
+    lr = LogisticRegression(penalty=None, solver='lbfgs')
     lr.fit(Xs, ys_classif)
     assert (lr.predict(Xt) == yt_classif.ravel()).sum() < 70
 
@@ -116,7 +116,7 @@ def test_regularlr_error():
 
 def test_regularlc_fit():
     np.random.seed(0)
-    lr = LogisticRegression(penalty='none', solver='lbfgs')
+    lr = LogisticRegression(penalty=None, solver='lbfgs')
     lr.fit(Xs, ys_classif)
     model = RegularTransferLC(lr, lambda_=0)
     model.fit(Xt, yt_classif)
@@ -139,7 +139,7 @@ def test_regularlc_multiclass():
     y = np.zeros(len(X))
     y[X[:, :2].sum(1)<0] = 1
     y[X[:, 3:].sum(1)>0] = 2
-    lr = LogisticRegression(penalty='none', solver='lbfgs')
+    lr = LogisticRegression(penalty=None, solver='lbfgs')
     lr.fit(X, y)
     model = RegularTransferLC(lr, lambda_=1.)
     model.fit(X, y)
@@ -193,7 +193,7 @@ def test_clone():
     new_model.predict(Xs);
     assert model is not new_model
     
-    lr = LogisticRegression(penalty='none', solver='lbfgs')
+    lr = LogisticRegression(penalty=None, solver='lbfgs')
     lr.fit(Xs, ys)
     model = RegularTransferLC(lr, lambda_=1.)
     model.fit(Xs, ys)
