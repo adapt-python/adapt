@@ -3,7 +3,7 @@
 [![PyPI version](https://badge.fury.io/py/adapt.svg)](https://pypi.org/project/adapt)
 [![Build Status](https://github.com/adapt-python/adapt/actions/workflows/run-test.yml/badge.svg)](https://github.com/adapt-python/adapt/actions)
 [![Python Version](https://img.shields.io/badge/python-3.8%20|%203.9%20|%203.10|%203.11-blue)](https://img.shields.io/badge/python-3.8%20|%203.9%20|%203.10|%203.11-blue)
-[![Codecov Status](https://codecov.io/gh/adapt-python/adapt/branch/antoinedemathelin-patch-6/graph/badge.svg?token=IWQXMYGY2Q)](https://codecov.io/gh/adapt-python/adapt)
+[![Codecov Status](https://codecov.io/gh/adapt-python/adapt/branch/master/graph/badge.svg?token=IWQXMYGY2Q)](https://codecov.io/gh/adapt-python/adapt)
 
 **A**wesome **D**omain **A**daptation **P**ython **T**oolbox
 
