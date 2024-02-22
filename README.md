@@ -296,3 +296,4 @@ If you use this library in your research, please cite ADAPT using the following 
 This work has been funded by Michelin and the Industrial Data Analytics and Machine Learning chair from ENS Paris-Saclay, Borelli center.
 
 [<img src="https://github.com/adapt-python/adapt/raw/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/michelin.png" width=200px alt="Michelin">](https://www.michelin.com/) [<img src="https://github.com/adapt-python/adapt/raw/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/idaml.jpg" width=200px alt="IDAML">](https://centreborelli.ens-paris-saclay.fr/fr/chaire-idaml) [<img src="https://github.com/adapt-python/adapt/raw/41c13055facc0733faf49c4e3979709e82be10e5/docs/_static/images/borelli.jpg" alt="Centre Borelli" width=150px>](https://centreborelli.ens-paris-saclay.fr/fr)
+
