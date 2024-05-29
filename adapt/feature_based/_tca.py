@@ -123,7 +123,7 @@ Analysis". In IEEE transactions on neural networks 2010
         H = np.eye(n+m) - 1/(n+m) * np.ones((n+m, n+m))
         
         # Compute solution
-        a = np.eye(n+m) + self.mu * K.dot(L.dot(K))
+        a = K.dot(L.dot(K)) + self.mu * np.eye(n+m)
         b = K.dot(H.dot(K))
         sol = linalg.lstsq(a, b)[0]
         
