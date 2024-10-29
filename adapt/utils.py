@@ -16,7 +16,6 @@ try:
 except:
     from scikeras.wrappers import KerasClassifier, KerasRegressor
 import tensorflow as tf
-import tensorflow.keras.backend as K
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Layer, Dense, Flatten, Input
 from tensorflow.keras.models import clone_model
@@ -88,24 +87,25 @@ def accuracy(y_true, y_pred):
     Boolean Tensor
     """
     # TODO: accuracy can't handle 1D ys.
-    multi_columns_t = K.cast(K.greater(K.shape(y_true)[1], 1),
-                           "float32")
-    binary_t = K.reshape(K.sum(K.cast(K.greater(y_true, 0.5),
-                                    "float32"), axis=-1), (-1,))
-    multi_t = K.reshape(K.cast(K.argmax(y_true, axis=-1),
-                             "float32"), (-1,))
+    dtype = y_pred.dtype
+    multi_columns_t = tf.cast(tf.greater(tf.shape(y_true)[1], 1),
+                           dtype)
+    binary_t = tf.reshape(tf.reduce_sum(tf.cast(tf.greater(y_true, 0.5),
+                                    dtype), axis=-1), (-1,))
+    multi_t = tf.reshape(tf.cast(tf.math.argmax(y_true, axis=-1),
+                             dtype), (-1,))
     y_true = ((1 - multi_columns_t) * binary_t +
               multi_columns_t * multi_t)
     
-    multi_columns_p = K.cast(K.greater(K.shape(y_pred)[1], 1),
-                           "float32")
-    binary_p = K.reshape(K.sum(K.cast(K.greater(y_pred, 0.5),
-                                    "float32"), axis=-1), (-1,))
-    multi_p = K.reshape(K.cast(K.argmax(y_pred, axis=-1),
-                             "float32"), (-1,))
+    multi_columns_p = tf.cast(tf.greater(tf.shape(y_pred)[1], 1),
+                           dtype)
+    binary_p = tf.reshape(tf.reduce_sum(tf.cast(tf.greater(y_pred, 0.5),
+                                    dtype), axis=-1), (-1,))
+    multi_p = tf.reshape(tf.cast(tf.math.argmax(y_pred, axis=-1),
+                             dtype), (-1,))
     y_pred = ((1 - multi_columns_p) * binary_p +
-              multi_columns_p * multi_p)        
-    return tf.keras.metrics.get("acc")(y_true, y_pred)
+              multi_columns_p * multi_p)
+    return tf.cast(tf.math.equal(y_true, y_pred), dtype)
 
 
 def predict(self, x, **kwargs):
@@ -259,11 +259,11 @@ def check_network(network, copy=True,
             # but no input_shape
             if hasattr(network, "input_shape"):
                 shape = network.input_shape[1:]
-                new_network = clone_model(network, input_tensors=Input(shape))
+                new_network = clone_model(network)
                 new_network.set_weights(network.get_weights())
             elif network.built:
                 shape = network._build_input_shape[1:]
-                new_network = clone_model(network, input_tensors=Input(shape))
+                new_network = clone_model(network)
                 new_network.set_weights(network.get_weights())
             else:
                 new_network = clone_model(network)
@@ -284,7 +284,7 @@ def check_network(network, copy=True,
         new_network._name = name
     
     # Override the predict method to speed the prediction for small dataset
-    new_network.predict = predict.__get__(new_network)
+    # new_network.predict = predict.__get__(new_network)
     return new_network
 
 
@@ -364,62 +364,6 @@ def get_default_discriminator(name=None, state=None):
         model.add(Dense(10, activation="relu"))
         model.add(Dense(1, activation="sigmoid"))
     return model
-
-
-@tf.custom_gradient
-def _grad_handler(x, lambda_):
-    y = tf.identity(x)
-    def custom_grad(dy):
-        return (lambda_ * dy, 0. * lambda_)
-    return y, custom_grad
-
-class GradientHandler(Layer):
-    """
-    Multiply gradients with a scalar during backpropagation.
-
-    Act as identity in forward step.
-    
-    Parameters
-    ----------
-    lambda_init : float (default=1.)
-        Scalar multiplier
-    """
-    def __init__(self, lambda_init=1., name="g_handler"):
-        super().__init__(name=name)
-        self.lambda_init=lambda_init
-        self.lambda_ = tf.Variable(lambda_init,
-                                   trainable=False,
-                                   dtype="float32")
-
-    def call(self, x):
-        """
-        Call gradient handler.
-        
-        Parameters
-        ----------
-        x: object
-            Inputs
-            
-        Returns
-        -------
-        x, custom gradient function
-        """
-        return _grad_handler(x, self.lambda_)
-
-
-    def get_config(self):
-        """
-        Return config dictionnary.
-        
-        Returns
-        -------
-        dict
-        """
-        config = super().get_config().copy()
-        config.update({
-            'lambda_init': self.lambda_init
-        })
-        return config
 
 
 def make_classification_da(n_samples=100, 
@@ -638,8 +582,18 @@ def check_fitted_network(estimator):
     if isinstance(estimator, Model):
         estimator.__deepcopy__ = __deepcopy__.__get__(estimator)
     return estimator
-        
-        
+
+
+def check_if_compiled(network):
+    """
+    Check if the network is compiled.
+    """
+    if hasattr(network, "compiled") and network.compiled:
+        return True
+    elif hasattr(network, "_is_compiled") and networtf._is_compiled:
+        return True
+    else:
+        return False
         
 # Try to save the initial estimator if it is a Keras Model
 # This is required for cloning the adapt method.

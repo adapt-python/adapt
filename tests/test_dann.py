@@ -8,9 +8,9 @@ import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense
 try:
-    from tensorflow.keras.optimizers.legacy import Adam
+    from tensorflow.keras.optimizers import Adam, SGD
 except:
-    from tensorflow.keras.optimizers import Adam
+    from tensorflow.keras.optimizers.legacy import Adam, SGD
 
 from adapt.feature_based import DANN
 from adapt.utils import UpdateLambda
@@ -64,10 +64,10 @@ def test_fit_lambda_zero():
     tf.random.set_seed(0)
     np.random.seed(0)
     model = DANN(_get_encoder(), _get_task(), _get_discriminator(),
-                 lambda_=0, loss="mse", optimizer=Adam(0.01), metrics=["mae"],
+                 lambda_=0., loss="mse", optimizer=Adam(0.01), metrics=["mae"],
                 random_state=0)
     model.fit(Xs, ys, Xt=Xt, yt=yt,
-              epochs=200, batch_size=32, verbose=0)
+              epochs=400, batch_size=32, verbose=0)
     assert isinstance(model, Model)
     assert model.encoder_.get_weights()[0][1][0] == 1.0
     assert np.sum(np.abs(model.predict(Xs) - ys)) < 0.01
@@ -78,9 +78,9 @@ def test_fit_lambda_one():
     tf.random.set_seed(0)
     np.random.seed(0)
     model = DANN(_get_encoder(), _get_task(), _get_discriminator(),
-                 lambda_=1, loss="mse", optimizer=Adam(0.01), random_state=0)
+                 lambda_=1., loss="mse", optimizer=Adam(0.01), random_state=0)
     model.fit(Xs, ys, Xt, yt,
-              epochs=100, batch_size=32, verbose=0)
+              epochs=200, batch_size=32, verbose=0)
     assert isinstance(model, Model)
     assert np.abs(model.encoder_.get_weights()[0][1][0] / 
             model.encoder_.get_weights()[0][0][0]) < 0.15

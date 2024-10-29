@@ -6,10 +6,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense
-try:
-    from tensorflow.keras.optimizers.legacy import Adam
-except:
-    from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.initializers import GlorotUniform
 
 from adapt.feature_based import CDAN
@@ -66,8 +63,8 @@ def test_fit_lambda_zero():
                  random_state=0, validation_data=(Xt, ytt))
     model.fit(Xs, yss, Xt, ytt,
               epochs=300, verbose=0)
-    assert model.history_['acc'][-1] > 0.9
-    assert model.history_['val_acc'][-1] < 0.9
+    assert model.history_['accuracy'][-1] > 0.9
+    assert model.history_['val_accuracy'][-1] < 0.9
 
 
 def test_fit_lambda_one_no_entropy():
@@ -79,8 +76,8 @@ def test_fit_lambda_one_no_entropy():
                  random_state=0, validation_data=(Xt, ytt))
     model.fit(Xs, yss, Xt, ytt,
               epochs=300, verbose=0)
-    assert model.history_['acc'][-1] > 0.8
-    assert model.history_['val_acc'][-1] > 0.8
+    assert model.history_['accuracy'][-1] > 0.8
+    assert model.history_['val_accuracy'][-1] > 0.8
     
     
 def test_fit_lambda_entropy():

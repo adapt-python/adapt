@@ -282,10 +282,7 @@ In NIPS, 2018
         self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
         
         # Update metrics
-        self.compiled_metrics.update_state(ys, ys_pred)
-        self.compiled_loss(ys, ys_pred)
-        # Return a dict mapping metric names to current value
-        logs = {m.name: m.result() for m in self.metrics}
+        logs = self._update_logs(ys, ys_pred)
         disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
         logs.update({"disc_loss": disc_loss})
         logs.update(disc_metrics)
@@ -303,19 +300,19 @@ In NIPS, 2018
     
     
     def _initialize_weights(self, shape_X):
-        self(np.zeros((1,) + shape_X))
-        Xs_enc = self.encoder_(np.zeros((1,) + shape_X), training=True)
-        ys_pred = self.task_(Xs_enc, training=True)
-        if Xs_enc.get_shape()[1] * ys_pred.get_shape()[1] > self.max_features:
+        self.encoder_.build((None,) + shape_X)
+        self.task_.build(self.encoder_.output_shape)
+        if self.encoder_.output_shape[1] * self.task_.output_shape[1] > self.max_features:
             self.is_overloaded_ = True
-            self._random_task = tf.random.normal([ys_pred.get_shape()[1],
-                                        self.max_features])
-            self._random_enc = tf.random.normal([Xs_enc.get_shape()[1],
-                                           self.max_features])
-            self.discriminator_(np.zeros((1, self.max_features)))
+            self._random_task = tf.random.normal([self.task_.output_shape[1],
+                                                  self.max_features])
+            self._random_enc = tf.random.normal([self.encoder_.output_shape[1],
+                                                 self.max_features])
+            self.discriminator_.build((None, self.max_features))
         else:
             self.is_overloaded_ = False
-            self.discriminator_(np.zeros((1, Xs_enc.get_shape()[1] * ys_pred.get_shape()[1])))
+            self.discriminator_.build((None, self.encoder_.output_shape[1] * self.task_.output_shape[1]))
+        self.build((None,) + shape_X)
     
     
     def _initialize_networks(self):

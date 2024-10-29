@@ -18,13 +18,14 @@ try:
 except:
     from scikeras.wrappers import KerasClassifier, KerasRegressor
 try:
-    from tensorflow.keras.optimizers.legacy import RMSprop
-except:
     from tensorflow.keras.optimizers import RMSprop
+except:
+    from tensorflow.keras.optimizers.legacy import RMSprop
 
 
 from adapt.utils import (check_estimator,
                          check_network,
+                         check_if_compiled,
                          check_arrays,
                          set_random_seed,
                          check_sample_weight,
@@ -560,7 +561,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
             if isinstance(self.estimator_, Model):
                 compile_params = self._filter_params(self.estimator_.compile)
                 if not "loss" in compile_params:
-                    if estimator._is_compiled:
+                    if hasattr(estimator, "loss"):
                         compile_params["loss"] = deepcopy(estimator.loss)
                     else:
                         raise ValueError("The given `estimator` argument"
@@ -568,7 +569,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
                                          "Please give a compiled estimator or "
                                          "give a `loss` and `optimizer` arguments.")
                 if not "optimizer" in compile_params:
-                    if estimator._is_compiled:
+                    if hasattr(estimator, "optimizer"):
                         compile_params["optimizer"] = deepcopy(estimator.optimizer)
                 else:
                     if not isinstance(compile_params["optimizer"], str):
@@ -889,6 +890,12 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         return model
 
 
+def _ensure_compiled(method):
+    def wrapper(self, *args, **kwargs):
+        if not check_if_compiled(self):
+            self.compile()
+        return method(self, *args, **kwargs)
+    return wrapper
 
 
 class BaseAdaptDeep(Model, BaseAdapt):
@@ -925,8 +932,8 @@ class BaseAdaptDeep(Model, BaseAdapt):
             setattr(self, key, value)
             
         self._self_setattr_tracking = True
-    
-    
+
+
     def fit(self, X, y=None, Xt=None, yt=None, domains=None, **fit_params):
         """
         Fit Model. Note that ``fit`` does not reset
@@ -1016,6 +1023,10 @@ class BaseAdaptDeep(Model, BaseAdapt):
             
             dataset_src = tf.data.Dataset.zip((dataset_Xs, dataset_ys))            
         else:
+            if self._check_for_batch(X):
+                raise ValueError(
+                    "X is already divided in batches. Please pass a full Dataset instead,"
+                    " and use the `batch_size` argument for batch division.")
             dataset_src = X
             
         ### 2.2 Target
@@ -1036,30 +1047,18 @@ class BaseAdaptDeep(Model, BaseAdapt):
                 dataset_tgt = tf.data.Dataset.zip((dataset_Xt, dataset_yt))
             
         else:
+            if self._check_for_batch(Xt):
+                raise ValueError(
+                    "Xt is already divided in batches. Please pass a full Dataset instead,"
+                    " and use the `batch_size` argument for batch division.")
             dataset_tgt = Xt
-            
-        # 3. Initialize networks
-        if not hasattr(self, "_is_fitted"):
-            self._is_fitted = True
-            self._initialize_networks()
-            if isinstance(Xt, tf.data.Dataset):
-                first_elem = next(iter(Xt))
-                if not isinstance(first_elem, tuple):
-                    shape = first_elem.shape
-                else:
-                    shape = first_elem[0].shape
-                if self._check_for_batch(Xt):
-                    shape = shape[1:]
-            else:
-                shape = Xt.shape[1:]
-            self._initialize_weights(shape)
-            
         
+
         # 3.5 Get datasets length
         self.length_src_ = self._get_length_dataset(dataset_src, domain="src")
         self.length_tgt_ = self._get_length_dataset(dataset_tgt, domain="tgt")
         
-        
+
         # 4. Prepare validation dataset
         if validation_data is None and validation_split>0.:
             if shuffle:
@@ -1110,7 +1109,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
         
         if self.pretrain_:
                         
-            if self._is_compiled:
+            if check_if_compiled(self):
                 warnings.warn("The model has already been compiled. "
                               "To perform pretraining, the model will be "
                               "compiled again. Please make sure to pass "
@@ -1118,6 +1117,22 @@ class BaseAdaptDeep(Model, BaseAdapt):
             
             compile_params = self._filter_params(super().compile, prefix="pretrain")
             self.compile(**compile_params)
+
+            # 5.5  Initialize networks for pretraining
+            if not hasattr(self, "_is_fitted"):
+                self._is_fitted = True
+                self._initialize_networks()
+                if isinstance(Xt, tf.data.Dataset):
+                    first_elem = next(iter(Xt))
+                    if not isinstance(first_elem, tuple):
+                        shape = first_elem.shape
+                    else:
+                        shape = first_elem[0].shape
+                    if self._check_for_batch(Xt):
+                        shape = shape[1:]
+                else:
+                    shape = Xt.shape[1:]
+                self._initialize_weights(shape)
             
             if not hasattr(self, "pretrain_history_"):
                 self.pretrain_history_ = {}
@@ -1132,8 +1147,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
             # !!! shuffle is already done
             dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt))
             
-            if not self._check_for_batch(dataset):
-                dataset = dataset.batch(pre_batch_size)
+            dataset = dataset.batch(pre_batch_size)
 
             hist = super().fit(dataset, validation_data=validation_data,
                                epochs=pre_epochs, verbose=pre_verbose, **prefit_params)
@@ -1142,19 +1156,34 @@ class BaseAdaptDeep(Model, BaseAdapt):
                 self.pretrain_history_[k] = self.pretrain_history_.get(k, []) + v
                 
             self._initialize_pretain_networks()
-        
-        # 6. Compile
-        if (not self._is_compiled) or (self.pretrain_):
+                
+        # 6 Compile
+        if (not check_if_compiled(self)) or (self.pretrain_):
             self.compile()
-        
+
         if not hasattr(self, "history_"):
             self.history_ = {}
 
+        # 6.5  Initialize networks
+        if not hasattr(self, "_is_fitted"):
+            self._is_fitted = True
+            self._initialize_networks()
+            if isinstance(Xt, tf.data.Dataset):
+                first_elem = next(iter(Xt))
+                if not isinstance(first_elem, tuple):
+                    shape = first_elem.shape
+                else:
+                    shape = first_elem[0].shape
+                if self._check_for_batch(Xt):
+                    shape = shape[1:]
+            else:
+                shape = Xt.shape[1:]
+            self._initialize_weights(shape)
+                
         # .7 Training
         dataset = tf.data.Dataset.zip((dataset_src, dataset_tgt))
         
-        if not self._check_for_batch(dataset):
-            dataset = dataset.batch(batch_size)
+        dataset = dataset.batch(batch_size)
 
         self.pretrain_ = False
         
@@ -1275,31 +1304,35 @@ class BaseAdaptDeep(Model, BaseAdapt):
             metrics_task = metrics
         if metrics_disc is None:
             metrics_disc = []
-        
-        self.disc_metrics = [tf.keras.metrics.get(m) for m in metrics_disc]
-        for metric, i in zip(self.disc_metrics,
-                             range(len(self.disc_metrics))):
-            if hasattr(metric, "name"):
-                name = metric.name
-            elif hasattr(metric, "__name__"):
-                name = metric.__name__
-            elif hasattr(metric, "__class__"):
-                name = metric.__class__.__name__
-            else:
-                name = "met"
-            if "_" in name:
-                new_name = ""
-                for split in name.split("_"):
-                    if len(split) > 0:
-                        new_name += split[0]
-                name = new_name
-            else:
-                name = name[:3]
-            metric.name = name
-            
-            if metric.name in ["acc", "Acc", "accuracy", "Accuracy"]:
-                self.disc_metrics[i] = accuracy
-                self.disc_metrics[i].name = "acc"
+
+        if not hasattr(self, "disc_metrics"):
+            for i in range(len(metrics_disc)):
+                if metrics_disc[i] == "acc":
+                    metrics_disc[i] = "accuracy"
+            self.disc_metrics = [tf.keras.metrics.get(m) for m in metrics_disc]
+            for metric, i in zip(self.disc_metrics,
+                                 range(len(self.disc_metrics))):
+                if hasattr(metric, "name"):
+                    name = metric.name
+                elif hasattr(metric, "__name__"):
+                    name = metric.__name__
+                elif hasattr(metric, "__class__"):
+                    name = metric.__class__.__name__
+                else:
+                    name = "met"
+                if "_" in name:
+                    new_name = ""
+                    for split in name.split("_"):
+                        if len(split) > 0:
+                            new_name += split[0]
+                    name = new_name
+                else:
+                    name = name[:3]
+                metric.name = name
+                
+                if metric.name in ["acc", "Acc", "accuracy", "Accuracy"]:
+                    self.disc_metrics[i] = accuracy
+                    self.disc_metrics[i].name = "acc"
         
         compile_params = dict(
             optimizer=optimizer,
@@ -1330,7 +1363,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
                         optimizer = compile_params["optimizer"]
                     compile_params["optimizer"] = optimizer
         
-        if not "loss" in compile_params:
+        if not "loss" in compile_params or compile_params["loss"] is None:
             compile_params["loss"] = "mse"
         
         self.task_loss_ = tf.keras.losses.get(compile_params["loss"])
@@ -1341,9 +1374,14 @@ class BaseAdaptDeep(Model, BaseAdapt):
         
         # Set optimizer for encoder and discriminator
         if not hasattr(self, "optimizer_enc"):
-            self.optimizer_enc = self.optimizer
+            self.optimizer_enc = self.optimizer.__class__.from_config(self.optimizer.get_config())
         if not hasattr(self, "optimizer_disc"):
-            self.optimizer_disc = self.optimizer
+            self.optimizer_disc = self.optimizer.__class__.from_config(self.optimizer.get_config())
+
+        if self.pretrain_:
+            self.pretrain_optimizer = self.optimizer.__class__.from_config(self.optimizer.get_config())
+            self.pretrain_optimizer_enc = self.optimizer_enc.__class__.from_config(self.optimizer_enc.get_config())
+            self.pretrain_optimizer_disc = self.optimizer_disc.__class__.from_config(self.optimizer_disc.get_config())
     
     
     def call(self, inputs):
@@ -1358,23 +1396,18 @@ class BaseAdaptDeep(Model, BaseAdapt):
         # Run forward pass.
         with tf.GradientTape() as tape:
             y_pred = self(Xs, training=True)
-            loss = self.compiled_loss(
-              ys, y_pred, regularization_losses=self.losses)
+            if hasattr(self, "_compile_loss") and self._compile_loss is not None:
+                loss = self._compile_loss(ys, y_pred)
+            else:
+                loss = self.compiled_loss(ys, y_pred)
+            
             loss = tf.reduce_mean(loss)
+            loss += sum(self.losses)
 
         # Run backwards pass.
         gradients = tape.gradient(loss, self.trainable_variables)
         self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
-        self.compiled_metrics.update_state(ys, y_pred)
-        # Collect metrics to return
-        return_metrics = {}
-        for metric in self.metrics:
-            result = metric.result()
-            if isinstance(result, dict):
-                return_metrics.update(result)
-            else:
-                return_metrics[metric.name] = result
-        return return_metrics
+        return self._update_logs(ys, y_pred)
     
         
     def predict(self,
@@ -1382,10 +1415,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
                 batch_size=None,
                 verbose=0,
                 steps=None,
-                callbacks=None,
-                max_queue_size=10,
-                workers=1,
-                use_multiprocessing=False):
+                callbacks=None):
         """
         Generates output predictions for the input samples.
 
@@ -1423,25 +1453,6 @@ class BaseAdaptDeep(Model, BaseAdapt):
             List of callbacks to apply during prediction.
             See [callbacks](/api_docs/python/tf/keras/callbacks).
 
-        max_queue_size: int (default=10)
-            Used for generator or `keras.utils.Sequence`
-            input only. Maximum size for the generator queue.
-            If unspecified, `max_queue_size` will default to 10.
-
-        workers: int (default=1)
-            Used for generator or `keras.utils.Sequence` input
-            only. Maximum number of processes to spin up when using
-            process-based threading. If unspecified, `workers` will default
-            to 1.
-            
-        use_multiprocessing: bool (default=False)
-            Used for generator or `keras.utils.Sequence` input only.
-            If `True`, use process-based
-            threading. If unspecified, `use_multiprocessing` will default to
-            `False`. Note that because this implementation relies on
-            multiprocessing, you should not pass non-picklable arguments to
-            the generator as they can't be passed easily to children processes.
-
         Returns
         -------
         y_pred : array
@@ -1451,10 +1462,7 @@ class BaseAdaptDeep(Model, BaseAdapt):
                     batch_size=batch_size,
                     verbose=verbose,
                     steps=steps,
-                    callbacks=callbacks,
-                    max_queue_size=max_queue_size,
-                    workers=workers,
-                    use_multiprocessing=use_multiprocessing)
+                    callbacks=callbacks)
     
     
     def transform(self, X):
@@ -1601,11 +1609,13 @@ class BaseAdaptDeep(Model, BaseAdapt):
     
     
     def _initialize_weights(self, shape_X):
-        self(np.zeros((1,) + shape_X))
         if hasattr(self, "encoder_"):
-            X_enc = self.encoder_(np.zeros((1,) + shape_X))
+            self.encoder_.build((None,) + shape_X)
             if hasattr(self, "discriminator_"):
-                self.discriminator_(X_enc)
+                self.discriminator_.build(self.encoder_.output_shape)
+            if hasattr(self, "task_"):
+                self.task_.build(self.encoder_.output_shape)
+        self.build((None,) + shape_X)
                 
     
     def _get_length_dataset(self, dataset, domain="src"):
@@ -1677,6 +1687,26 @@ class BaseAdaptDeep(Model, BaseAdapt):
             self.discriminator_ = check_network(self.discriminator,
                                                 copy=self.copy,
                                                 name="discriminator")
-            
+
+
     def _initialize_pretain_networks(self):
         pass
+
+
+    def _update_logs(self, y, y_pred):
+        version_str = tf.__version__
+        version_tuple = tuple(map(int, version_str.split('.')))
+        if version_tuple >= (2, 16, 0):
+            for metric in self.metrics:
+                  metric.update_state(y, y_pred)
+        else:
+            self.compiled_metrics.update_state(y, y_pred)
+        # Collect metrics to return
+        return_metrics = {}
+        for metric in self.metrics:
+            result = metric.result()
+            if isinstance(result, dict):
+                return_metrics.update(result)
+            else:
+                return_metrics[metric.name] = result
+        return return_metrics
