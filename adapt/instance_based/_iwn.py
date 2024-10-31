@@ -12,7 +12,7 @@ from tensorflow.keras import Model
 
 from adapt.base import BaseAdaptDeep, make_insert_doc
 from adapt.utils import (check_arrays, check_network, get_default_task,
-                         set_random_seed, check_estimator, check_sample_weight)
+                         set_random_seed, check_estimator, check_sample_weight, check_if_compiled)
 
 EPS = np.finfo(np.float32).eps
 
@@ -141,8 +141,21 @@ Correcting Sample Bias" In ECML-PKDD, 2022.
                                           name="weighter")
         self.sigma_ = tf.Variable(self.sigma_init,
                                   trainable=self.update_sigma)
-        
-    
+
+        if not hasattr(self, "estimator_"):
+            self.estimator_ = check_estimator(self.estimator,
+                                              copy=self.copy,
+                                              force_copy=True)
+
+
+    def _initialize_weights(self, shape_X):
+        if hasattr(self, "weighter_"):
+            self.weighter_.build((None,) + shape_X)
+        self.build((None,) + shape_X)
+        if isinstance(self.estimator_, Model):
+            self.estimator_.build((None,) + shape_X)
+
+
     def pretrain_step(self, data):
         # Unpack the data.
         Xs, Xt, ys, yt = self._unpack_data(data)
@@ -163,7 +176,7 @@ Correcting Sample Bias" In ECML-PKDD, 2022.
         gradients = tape.gradient(loss, trainable_vars)
 
         # Update weights
-        self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+        self.pretrain_optimizer.apply_gradients(zip(gradients, trainable_vars))
 
         logs = {"loss": loss}
         return logs
@@ -200,7 +213,7 @@ Correcting Sample Bias" In ECML-PKDD, 2022.
             
             # Update weights
             self.optimizer.apply_gradients(zip(gradients, trainable_vars))
-            self.optimizer.apply_gradients(zip(gradients_sigma, [self.sigma_]))
+            self.optimizer_sigma.apply_gradients(zip(gradients_sigma, [self.sigma_]))
 
             # Return a dict mapping metric names to current value
             logs = {"loss": loss, "sigma": self.sigma_}
@@ -214,6 +227,26 @@ Correcting Sample Bias" In ECML-PKDD, 2022.
         return self
         
         
+    def compile(self,
+                optimizer=None,
+                loss=None,
+                metrics=None,
+                loss_weights=None,
+                weighted_metrics=None,
+                run_eagerly=None,
+                steps_per_execution=None,
+                **kwargs):
+        super().compile(optimizer=optimizer,
+                        loss=loss,
+                        metrics=metrics,
+                        loss_weights=loss_weights,
+                        weighted_metrics=weighted_metrics,
+                        run_eagerly=run_eagerly,
+                        steps_per_execution=steps_per_execution,
+                        **kwargs)
+        self.optimizer_sigma = self.optimizer.__class__.from_config(self.optimizer.get_config())
+    
+    
     def fit_weights(self, Xs, Xt, **fit_params):
         """
         Fit importance weighting.
@@ -276,22 +309,23 @@ Correcting Sample Bias" In ECML-PKDD, 2022.
         X, y = check_arrays(X, y, accept_sparse=True)
         set_random_seed(random_state)
 
-        if (not warm_start) or (not hasattr(self, "estimator_")):
-            estimator = self.estimator
-            self.estimator_ = check_estimator(estimator,
+        if not hasattr(self, "estimator_"):
+            self.estimator_ = check_estimator(self.estimator,
                                               copy=self.copy,
                                               force_copy=True)
-            if isinstance(self.estimator_, Model):
-                compile_params = {}
-                if estimator._is_compiled:
-                    compile_params["loss"] = deepcopy(estimator.loss)
-                    compile_params["optimizer"] = deepcopy(estimator.optimizer)
-                else:
-                    raise ValueError("The given `estimator` argument"
-                                     " is not compiled yet. "
-                                     "Please give a compiled estimator or "
-                                     "give a `loss` and `optimizer` arguments.")
-                self.estimator_.compile(**compile_params)
+        
+        estimator = self.estimator
+        if isinstance(self.estimator_, Model):
+            compile_params = {}
+            if check_if_compiled(estimator):
+                compile_params["loss"] = deepcopy(estimator.loss)
+                compile_params["optimizer"] = deepcopy(estimator.optimizer)
+            else:
+                raise ValueError("The given `estimator` argument"
+                                 " is not compiled yet. "
+                                 "Please give a compiled estimator or "
+                                 "give a `loss` and `optimizer` arguments.")
+            self.estimator_.compile(**compile_params)
 
         fit_args = [
             p.name

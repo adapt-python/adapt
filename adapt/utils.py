@@ -590,7 +590,7 @@ def check_if_compiled(network):
     """
     if hasattr(network, "compiled") and network.compiled:
         return True
-    elif hasattr(network, "_is_compiled") and networtf._is_compiled:
+    elif hasattr(network, "_is_compiled") and network._is_compiled:
         return True
     else:
         return False

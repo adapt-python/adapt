@@ -146,10 +146,7 @@ neural networks". In CVPR, 2014.
         self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
 
         # Update metrics
-        self.compiled_metrics.update_state(ys, ys_pred)
-        self.compiled_loss(ys, ys_pred)
-        # Return a dict mapping metric names to current value
-        logs = {m.name: m.result() for m in self.metrics}
+        logs = self._update_logs(ys, ys_pred)
         return logs
     
     
@@ -185,13 +182,11 @@ neural networks". In CVPR, 2014.
 
             # Update weights
             self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-            self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+            if len(trainable_vars_enc) > 0:
+                self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
 
             # Update metrics
-            self.compiled_metrics.update_state(ys, ys_pred)
-            self.compiled_loss(ys, ys_pred)
-            # Return a dict mapping metric names to current value
-            logs = {m.name: m.result() for m in self.metrics}
+            logs = self._update_logs(ys, ys_pred)
             return logs
         
         

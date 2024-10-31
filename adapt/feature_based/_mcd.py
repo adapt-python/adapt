@@ -122,15 +122,12 @@ domain adaptation". In CVPR, 2018.
         gradients_disc = disc_tape.gradient(disc_loss, trainable_vars_disc)
 
         # Update weights
-        self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
-        self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+        self.pretrain_optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
+        self.pretrain_optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+        self.pretrain_optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
 
         # Update metrics
-        self.compiled_metrics.update_state(ys, ys_pred)
-        self.compiled_loss(ys, ys_pred)
-        # Return a dict mapping metric names to current value
-        logs = {m.name: m.result() for m in self.metrics}
+        logs = self._update_logs(ys, ys_pred)
         return logs
     
     
@@ -162,7 +159,7 @@ domain adaptation". In CVPR, 2018.
                 # Compute gradients
                 trainable_vars_enc = self.encoder_.trainable_variables
                 gradients_enc = enc_tape.gradient(enc_loss, trainable_vars_enc)
-                self.optimizer.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+                self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
             
             # loss
             with tf.GradientTape() as task_tape, tf.GradientTape() as enc_tape, tf.GradientTape() as disc_tape:
@@ -212,10 +209,7 @@ domain adaptation". In CVPR, 2018.
             self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
 
             # Update metrics
-            self.compiled_metrics.update_state(ys, ys_pred)
-            self.compiled_loss(ys, ys_pred)
-            # Return a dict mapping metric names to current value
-            logs = {m.name: m.result() for m in self.metrics}
+            logs = self._update_logs(ys, ys_pred)
             logs.update({"disc_loss": discrepancy})
             return logs
     
@@ -264,12 +258,7 @@ domain adaptation". In CVPR, 2018.
             
     
     def _initialize_weights(self, shape_X):
-        # Init weights encoder
-        self(np.zeros((1,) + shape_X))
-        X_enc = self.encoder_(np.zeros((1,) + shape_X))
-        self.task_(X_enc)
-        self.discriminator_(X_enc)
-        
+        super()._initialize_weights(shape_X)
         # Add noise to discriminator in order to
         # differentiate from task
         weights = self.discriminator_.get_weights()

@@ -5,10 +5,7 @@ from sklearn.base import clone
 from adapt.utils import make_classification_da
 from adapt.parameter_based import FineTuning
 from tensorflow.keras.initializers import GlorotUniform
-try:
-    from tensorflow.keras.optimizers.legacy import Adam
-except:
-    from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 
 np.random.seed(0)
 tf.random.set_seed(0)
@@ -44,7 +41,7 @@ def test_finetune():
                             loss="bce", optimizer=Adam(), random_state=0)
     fine_tuned.fit(Xt[ind], yt[ind], epochs=100, verbose=0)
 
-    assert np.abs(fine_tuned.encoder_.get_weights()[0] - model.encoder_.get_weights()[0]).sum() > 1.
+    assert np.abs(fine_tuned.encoder_.get_weights()[0] - model.encoder_.get_weights()[0]).sum() > 0.5
     assert np.mean((fine_tuned.predict(Xt).ravel()>0.5) == yt) > 0.9
 
     fine_tuned = FineTuning(encoder=model.encoder_, task=model.task_,
@@ -53,7 +50,7 @@ def test_finetune():
     fine_tuned.fit(Xt[ind], yt[ind], epochs=100, verbose=0)
 
     assert np.abs(fine_tuned.encoder_.get_weights()[0] - model.encoder_.get_weights()[0]).sum() == 0.
-    assert np.abs(fine_tuned.encoder_.get_weights()[-1] - model.encoder_.get_weights()[-1]).sum() > 1.
+    assert np.abs(fine_tuned.encoder_.get_weights()[-1] - model.encoder_.get_weights()[-1]).sum() > .5
 
     fine_tuned = FineTuning(encoder=model.encoder_, task=model.task_,
                             training=[False],

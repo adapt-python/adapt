@@ -116,6 +116,16 @@ for Domain Adaptation in Regression". In ICTAI, 2021.
                                                 name="discriminator")
 
 
+    def _initialize_weights(self, shape_X):
+        if hasattr(self, "weighter_"):
+            self.weighter_.build((None,) + shape_X)
+        if hasattr(self, "task_"):
+            self.task_.build((None,) + shape_X)
+        if hasattr(self, "discriminator_"):
+            self.discriminator_.build((None,) + shape_X)
+        self.build((None,) + shape_X)
+
+
     def _add_regularization(self, weighter):                
         for i in range(len(weighter.layers)):
             if hasattr(weighter.layers[i], "kernel_constraint"):
@@ -149,7 +159,7 @@ for Domain Adaptation in Regression". In ICTAI, 2021.
         gradients = tape.gradient(loss, trainable_vars)
 
         # Update weights
-        self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+        self.pretrain_optimizer.apply_gradients(zip(gradients, trainable_vars))
 
         logs = {"loss": loss}
         return logs
@@ -217,15 +227,33 @@ for Domain Adaptation in Regression". In ICTAI, 2021.
 
             # Update weights
             self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-            self.optimizer.apply_gradients(zip(gradients_weight, trainable_vars_weight))
-            self.optimizer.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+            self.optimizer_weight.apply_gradients(zip(gradients_weight, trainable_vars_weight))
+            self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
 
             # Update metrics
-            self.compiled_metrics.update_state(ys, ys_pred)
-            self.compiled_loss(ys, ys_pred)
-            # Return a dict mapping metric names to current value
-            logs = {m.name: m.result() for m in self.metrics}
+            logs = self._update_logs(ys, ys_pred)
             return logs
+
+
+    def compile(self,
+                optimizer=None,
+                loss=None,
+                metrics=None,
+                loss_weights=None,
+                weighted_metrics=None,
+                run_eagerly=None,
+                steps_per_execution=None,
+                **kwargs):
+        super().compile(optimizer=optimizer,
+                        loss=loss,
+                        metrics=metrics,
+                        loss_weights=loss_weights,
+                        weighted_metrics=weighted_metrics,
+                        run_eagerly=run_eagerly,
+                        steps_per_execution=steps_per_execution,
+                        **kwargs)
+        self.optimizer_weight = self.optimizer.__class__.from_config(self.optimizer.get_config())
+        self.optimizer_disc = self.optimizer.__class__.from_config(self.optimizer.get_config())
     
     
     def predict_weights(self, X):
