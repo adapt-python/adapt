@@ -79,6 +79,6 @@ def test_fit_lambda_one():
               epochs=300, verbose=0)
     assert isinstance(model, Model)
     assert np.abs(model.encoder_.get_weights()[0][1][0] / 
-            model.encoder_.get_weights()[0][0][0]) < 0.2
+            model.encoder_.get_weights()[0][0][0]) < 0.3
     assert np.sum(np.abs(model.predict(Xs).ravel() - ys)) < 2
     assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) < 5

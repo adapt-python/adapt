@@ -278,8 +278,9 @@ In NIPS, 2018
         
         # Update weights
         self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
         self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+        if len(gradients_enc) > 0:
+            self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
         
         # Update metrics
         logs = self._update_logs(ys, ys_pred)
@@ -334,21 +335,6 @@ In NIPS, 2018
             self.discriminator_ = check_network(self.discriminator,
                                                 copy=self.copy,
                                                 name="discriminator")
-        
-    
-    
-    # def _initialize_networks(self, shape_Xt):
-        # Call predict to avoid strange behaviour with
-        # Sequential model whith unspecified input_shape
-        # zeros_enc_ = self.encoder_.predict(np.zeros((1,) + shape_Xt));
-        # zeros_task_ = self.task_.predict(zeros_enc_);
-        # if zeros_task_.shape[1] * zeros_enc_.shape[1] > self.max_features:
-        #     self.discriminator_.predict(np.zeros((1, self.max_features)))
-        # else:
-        #     zeros_mapping_ = np.matmul(np.expand_dims(zeros_enc_, 2),
-        #                                np.expand_dims(zeros_task_, 1))
-        #     zeros_mapping_ = np.reshape(zeros_mapping_, (1, -1))
-        #     self.discriminator_.predict(zeros_mapping_);
     
     
     def predict_disc(self, X):

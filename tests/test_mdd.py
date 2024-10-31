@@ -5,7 +5,7 @@ Test functions for dann module.
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.initializers import GlorotUniform
 
@@ -25,8 +25,8 @@ yt = 0.2 * Xt[:, 0].ravel()
 
 def _get_encoder(input_shape=Xs.shape[1:]):
     model = Sequential()
-    model.add(Dense(1, input_shape=input_shape,
-                    kernel_initializer="ones",
+    model.add(Input(shape=input_shape))
+    model.add(Dense(1, kernel_initializer="ones",
                     use_bias=False))
     model.compile(loss="mse", optimizer="adam")
     return model
@@ -34,8 +34,8 @@ def _get_encoder(input_shape=Xs.shape[1:]):
 
 def _get_discriminator(input_shape=(1,)):
     model = Sequential()
+    model.add(Input(shape=input_shape))
     model.add(Dense(10,
-                    input_shape=input_shape,
                     kernel_initializer=GlorotUniform(seed=0),
                     activation="relu"))
     model.add(Dense(1,
@@ -47,10 +47,10 @@ def _get_discriminator(input_shape=(1,)):
 
 def _get_task(input_shape=(1,), output_shape=(1,)):
     model = Sequential()
+    model.add(Input(shape=input_shape))
     model.add(Dense(np.prod(output_shape),
                     use_bias=False,
-                    kernel_initializer=GlorotUniform(seed=0),
-                    input_shape=input_shape))
+                    kernel_initializer=GlorotUniform(seed=0)))
     model.compile(loss="mse", optimizer=Adam(0.1))
     return model
 

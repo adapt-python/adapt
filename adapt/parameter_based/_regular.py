@@ -412,41 +412,65 @@ can help a lot". In EMNLP, 2004.
         else:
             self.task_ = check_network(self.task,
                                        copy=self.copy,
+                                       force_copy=True,
                                        name="task")
+
+
+    def _initialize_weights(self, shape_X):
+        if hasattr(self, "task_"):
+            self.task_.build((None,) + shape_X)
+        self.build((None,) + shape_X)
         self._add_regularization()
     
     
-    def _get_regularizer(self, old_weight, weight, lambda_=1.):
+    def _get_regularizer(self, old_weight, weight, lambda_):
         if self.regularizer == "l2":
-            def regularizer():
-                return lambda_ * tf.reduce_mean(tf.square(old_weight - weight))
+            return lambda_ * tf.reduce_mean(tf.square(old_weight - weight))
         if self.regularizer == "l1":
-            def regularizer():
-                return lambda_ * tf.reduce_mean(tf.abs(old_weight - weight))
+            return lambda_ * tf.reduce_mean(tf.abs(old_weight - weight))
         return regularizer
 
 
-    def _add_regularization(self):
-        i = 0
-        if not hasattr(self.lambdas, "__iter__"):
-            lambdas = [self.lambdas]
-        else:
-            lambdas = self.lambdas
+    def train_step(self, data):
+        # Unpack the data.
+        Xs, Xt, ys, yt = self._unpack_data(data)
         
-        for layer in reversed(self.task_.layers):
-            if (hasattr(layer, "weights") and 
-            layer.weights is not None and
-            len(layer.weights) != 0):
-                if i >= len(lambdas):
-                    lambda_ = lambdas[-1]
-                else:
-                    lambda_ = lambdas[i]
-                for weight in reversed(layer.weights):
-                    old_weight = tf.identity(weight)
-                    old_weight.trainable = False
-                    self.add_loss(self._get_regularizer(
-                        old_weight, weight, lambda_))
-                i += 1
+        # Run forward pass.
+        with tf.GradientTape() as tape:
+            y_pred = self.task_(Xt, training=True)
+            if hasattr(self, "_compile_loss") and self._compile_loss is not None:
+                loss = self._compile_loss(yt, y_pred)
+            else:
+                loss = self.compiled_loss(yt, y_pred)
+            
+            loss = tf.reduce_mean(loss)
+            loss += sum(self.losses)
+            reg_loss = 0.
+            for i in range(len(self.task_.trainable_variables)):
+                reg_loss += self._get_regularizer(self.old_weights_[i],
+                                                  self.task_.trainable_variables[i],
+                                                  self.lambdas_[i])
+            loss += reg_loss
+
+        # Run backwards pass.
+        gradients = tape.gradient(loss, self.task_.trainable_variables)
+        self.optimizer.apply_gradients(zip(gradients, self.task_.trainable_variables))
+        return self._update_logs(yt, y_pred)
+
+
+    def _add_regularization(self):
+        self.old_weights_ = []
+        if not hasattr(self.lambdas, "__iter__"):
+            self.lambdas_ = [self.lambdas] * len(self.task_.weights)
+        else:
+            self.lambdas_ = (self.lambdas +
+                             [self.lambdas[-1]] * (len(self.task_.weights) - len(self.lambdas)))
+        self.lambdas_ = self.lambdas_[::-1]
+        
+        for weight in self.task_.trainable_variables:
+            old_weight = tf.identity(weight)
+            old_weight.trainable = False
+            self.old_weights_.append(old_weight)
         
         
     def call(self, inputs):

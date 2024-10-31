@@ -6,11 +6,8 @@ import pytest
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
-from tensorflow.keras.layers import Dense
-try:
-    from tensorflow.keras.optimizers import Adam, SGD
-except:
-    from tensorflow.keras.optimizers.legacy import Adam, SGD
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.optimizers import Adam, SGD
 
 from adapt.feature_based import DANN
 from adapt.utils import UpdateLambda
@@ -30,7 +27,8 @@ yt = 0.2 * Xt[:, 0].reshape(-1, 1)
 
 def _get_encoder(input_shape=Xs.shape[1:]):
     model = Sequential()
-    model.add(Dense(1, input_shape=input_shape,
+    model.add(Input(shape=input_shape))
+    model.add(Dense(1,
                     kernel_initializer="ones",
                     use_bias=False))
     model.compile(loss="mse", optimizer="adam")
@@ -39,8 +37,8 @@ def _get_encoder(input_shape=Xs.shape[1:]):
 
 def _get_discriminator(input_shape=(1,)):
     model = Sequential()
+    model.add(Input(shape=input_shape))
     model.add(Dense(10,
-                    input_shape=input_shape,
                     kernel_initializer=GlorotUniform(seed=0),
                     activation="elu"))
     model.add(Dense(1,
@@ -52,10 +50,10 @@ def _get_discriminator(input_shape=(1,)):
 
 def _get_task(input_shape=(1,), output_shape=(1,)):
     model = Sequential()
+    model.add(Input(shape=input_shape))
     model.add(Dense(np.prod(output_shape),
                     kernel_initializer=GlorotUniform(seed=0),
-                    use_bias=False,
-                    input_shape=input_shape))
+                    use_bias=False))
     model.compile(loss="mse", optimizer=Adam(0.1))
     return model
 
