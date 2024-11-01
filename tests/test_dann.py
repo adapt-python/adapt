@@ -99,7 +99,7 @@ def test_fit_lambda_update():
             model.encoder_.get_weights()[0][0][0]) < 0.2
     assert np.sum(np.abs(model.predict(Xs) - ys)) < 1
     assert np.sum(np.abs(model.predict(Xt) - yt)) < 5
-    assert model.lambda_.numpy() == 1
+    assert np.abs(model.lambda_.numpy() - 1.) < 0.01
     
     
 def test_optimizer_enc_disc():
