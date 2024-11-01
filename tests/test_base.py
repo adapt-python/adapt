@@ -2,17 +2,15 @@
 Test base
 """
 
+import os
 import copy
 import shutil
 import numpy as np
 import pytest
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
-from tensorflow.keras.layers import Dense
-try:
-    from tensorflow.keras.optimizers.legacy import Adam
-except:
-    from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.optimizers import Adam
 from sklearn.utils.estimator_checks import check_estimator
 from sklearn.base import clone
 
@@ -32,7 +30,7 @@ yt = 0.2 * Xt[:, 0].ravel()
 
 
 def _custom_metric(yt, yp):
-    return tf.shape(yt)[0]
+    return tf.ones_like(yt) * tf.cast(tf.shape(yt)[0], yt.dtype)
 
 
 class DummyFeatureBased(BaseAdaptEstimator):
@@ -104,7 +102,8 @@ def test_base_adapt_score():
 
 def test_base_adapt_keras_estimator():
     est = Sequential()
-    est.add(Dense(1, input_shape=Xs.shape[1:]))
+    est.add(Input(shape=Xs.shape[1:]))
+    est.add(Dense(1))
     est.compile(loss="mse", optimizer=Adam(0.01))
     model = BaseAdaptEstimator(est, Xt=Xt)
     model.fit(Xs, ys)
@@ -126,7 +125,8 @@ def test_base_adapt_keras_estimator():
     assert not isinstance(model.estimator_.optimizer, Adam)
     
     est = Sequential()
-    est.add(Dense(1, input_shape=Xs.shape[1:]))
+    est.add(Input(shape=Xs.shape[1:]))
+    est.add(Dense(1))
     model = BaseAdaptEstimator(est, Xt=Xt, loss="mae",
                                optimizer=Adam(0.01, beta_1=0.5),
                                learning_rate=0.1)
@@ -159,6 +159,39 @@ def test_base_adapt_deep():
     ypt = model.predict_task(Xt)
     ypd = model.predict_disc(Xt)
     
+    model.save_weights("./model.weights.h5")
+    new_model = BaseAdaptDeep(Xt=Xt, loss="mse",
+                                epochs=0,
+                                optimizer=Adam(),
+                                learning_rate=0.1,
+                                random_state=0)
+    new_model.fit(Xs, ys)
+    new_model.load_weights("./model.weights.h5")
+    os.remove("./model.weights.h5")
+    yp3 = new_model.predict(Xt)
+    
+    assert isinstance(model.optimizer, Adam)
+    assert np.abs(model.optimizer.learning_rate.numpy() - 0.1) < 1e-6
+    assert hasattr(model, "encoder_")
+    assert hasattr(model, "task_")
+    assert hasattr(model, "discriminator_")
+    assert np.mean(np.abs(yp - yp3)) < 1e-6
+    
+
+def test_base_adapt_deep_clone():
+    model = BaseAdaptDeep(Xt=Xt, loss="mse",
+                          epochs=2,
+                          optimizer=Adam(),
+                          learning_rate=0.1,
+                          random_state=0)
+    model.fit(Xs, ys)
+    yp = model.predict(Xt)
+    score = model.score(Xt, yt)
+    score_adapt = model.unsupervised_score(Xs, Xt)
+    X_enc = model.transform(Xs)
+    ypt = model.predict_task(Xt)
+    ypd = model.predict_disc(Xt)
+
     new_model = clone(model)
     new_model.fit(Xs, ys)
     yp2 = new_model.predict(Xt)
@@ -168,24 +201,12 @@ def test_base_adapt_deep():
     ypt2 = new_model.predict_task(Xt)
     ypd2 = new_model.predict_disc(Xt)
     
-    model.save("model.tf", save_format="tf")
-    new_model = tf.keras.models.load_model("model.tf")
-    shutil.rmtree("model.tf")
-    yp3 = new_model.predict(Xt)
-    
-    assert isinstance(model.optimizer, Adam)
-    assert np.abs(model.optimizer.learning_rate.numpy() - 0.1) < 1e-6
-    assert hasattr(model, "encoder_")
-    assert hasattr(model, "task_")
-    assert hasattr(model, "discriminator_")
-    
     assert np.all(yp == yp2)
     assert score == score2
     assert score_adapt == score_adapt2
     assert np.all(ypt == ypt2)
     assert np.all(ypd == ypd2)
     assert np.all(X_enc == X_enc2)
-    assert np.mean(np.abs(yp - yp3)) < 1e-6
     
     
 def test_base_deep_validation_data():
@@ -267,9 +288,9 @@ def test_complete_batch():
     model.fit(dataset, batch_size=32, validation_data=dataset)
     assert model.history_["cm"][0] == 32
     
-    model = BaseAdaptDeep(Xt=Xtt.batch(32), metrics=[_custom_metric])
-    model.fit(dataset.batch(32), batch_size=48, validation_data=dataset.batch(32))
-    assert model.history_["cm"][0] == 25
+    model = BaseAdaptDeep(Xt=Xtt, metrics=[_custom_metric])
+    model.fit(dataset, batch_size=48, validation_data=dataset.batch(32))
+    assert model.history_["cm"][0] == 48
     
     def gens():
         for i in range(40):
@@ -289,11 +310,30 @@ def test_complete_batch():
     
     model = BaseAdaptDeep(metrics=[_custom_metric])
     model.fit(dataset, Xt=dataset2, validation_data=dataset, batch_size=22)
-    assert model.history_["cm"][0] == 22
     assert model.total_steps_ == 3
     assert model.length_src_ == 40
     assert model.length_tgt_ == 50
+    assert model.history_["cm"][0] == 22
     
     model.fit(dataset, Xt=dataset2, validation_data=dataset, batch_size=32)
     assert model.total_steps_ == 2
     assert model.history_["cm"][-1] == 32
+
+
+def test_batch_error():   
+    dataset = tf.data.Dataset.zip((tf.data.Dataset.from_tensor_slices(Xs),
+                                   tf.data.Dataset.from_tensor_slices(ys.reshape(-1,1))
+                                  ))
+    Xtt = tf.data.Dataset.from_tensor_slices(Xt)
+    
+    model = BaseAdaptDeep(Xt=Xtt, metrics=[_custom_metric])
+
+    with pytest.raises(ValueError) as excinfo:
+        model.fit(dataset.batch(32), batch_size=48, validation_data=dataset.batch(32))
+    assert "X is already divided" in str(excinfo.value)
+
+    model = BaseAdaptDeep(Xt=Xtt.batch(32), metrics=[_custom_metric])
+
+    with pytest.raises(ValueError) as excinfo:
+        model.fit(dataset, batch_size=48, validation_data=dataset.batch(32))
+    assert "Xt is already divided" in str(excinfo.value)

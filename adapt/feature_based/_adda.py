@@ -183,14 +183,11 @@ In CVPR, 2017.
         gradients_enc = enc_tape.gradient(enc_loss, trainable_vars_enc)
 
         # Update weights
-        self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
+        self.pretrain_optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
+        self.pretrain_optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
 
         # Update metrics
-        self.compiled_metrics.update_state(ys, ys_pred)
-        self.compiled_loss(ys, ys_pred)
-        # Return a dict mapping metric names to current value
-        logs = {m.name: m.result() for m in self.metrics}
+        logs = self._update_logs(ys, ys_pred)
         return logs
     
     
@@ -211,6 +208,8 @@ In CVPR, 2017.
                 else:
                     # encoder src is not needed if pretrain=False
                     Xs_enc = Xs
+
+                ys_pred = self.task_(Xs_enc, training=False)
                     
                 ys_disc = self.discriminator_(Xs_enc, training=True)
 
@@ -245,7 +244,8 @@ In CVPR, 2017.
             # self.compiled_loss(ys, ys_pred)
             # Return a dict mapping metric names to current value
             # logs = {m.name: m.result() for m in self.metrics}
-            logs = self._get_disc_metrics(ys_disc, yt_disc)
+            logs = self._update_logs(ys, ys_pred)
+            logs.update(self._get_disc_metrics(ys_disc, yt_disc))
             return logs
     
     
@@ -262,15 +262,11 @@ In CVPR, 2017.
             ))
         return disc_dict
     
-    
-    def _initialize_weights(self, shape_X):
-        # Init weights encoder
-        self(np.zeros((1,) + shape_X))
-        
-        # Set same weights to encoder_src
+
+    def _initialize_networks(self):
+        super()._initialize_networks()
         if self.pretrain:
             # encoder src is not needed if pretrain=False
-            self.encoder_(np.zeros((1,) + shape_X))
             self.encoder_src_ = check_network(self.encoder_,
                                               copy=True,
                                               name="encoder_src")

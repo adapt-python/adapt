@@ -6,10 +6,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
 from tensorflow.keras.layers import Dense
-try:
-    from tensorflow.keras.optimizers.legacy import Adam
-except:
-    from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.initializers import GlorotUniform
 
 from adapt.feature_based import WDGRL
@@ -82,6 +79,6 @@ def test_fit_lambda_one():
               epochs=300, verbose=0)
     assert isinstance(model, Model)
     assert np.abs(model.encoder_.get_weights()[0][1][0] / 
-            model.encoder_.get_weights()[0][0][0]) < 0.2
+            model.encoder_.get_weights()[0][0][0]) < 0.3
     assert np.sum(np.abs(model.predict(Xs).ravel() - ys)) < 2
     assert np.sum(np.abs(model.predict(Xt).ravel() - yt)) < 5

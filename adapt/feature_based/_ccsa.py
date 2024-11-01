@@ -190,9 +190,6 @@ generalization". In ICCV 2017.
         self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
         
         # Update metrics
-        self.compiled_metrics.update_state(ys, ys_pred)
-        self.compiled_loss(ys, ys_pred)
-        # Return a dict mapping metric names to current value
-        logs = {m.name: m.result() for m in self.metrics}
+        logs = self._update_logs(ys, ys_pred)
         logs.update({"contrast": contrastive_loss})
         return logs

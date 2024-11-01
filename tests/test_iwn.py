@@ -7,10 +7,7 @@ from adapt.utils import make_classification_da
 from adapt.instance_based import IWN
 from adapt.utils import get_default_task
 from sklearn.neighbors import KNeighborsClassifier
-try:
-    from tensorflow.keras.optimizers.legacy import Adam
-except:
-    from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 
 Xs, ys, Xt, yt = make_classification_da()
 

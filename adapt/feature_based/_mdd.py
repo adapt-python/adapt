@@ -157,11 +157,7 @@ domain adaptation". ICML, 2019.
         self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
         
         # Update metrics
-        self.compiled_metrics.update_state(ys, ys_pred)
-        self.compiled_loss(ys, ys_pred)
-        # Return a dict mapping metric names to current value
-        logs = {m.name: m.result() for m in self.metrics}
-        # disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
+        logs = self._update_logs(ys, ys_pred)
         logs.update({"disc_loss": disc_loss})
         return logs
     
@@ -189,11 +185,7 @@ domain adaptation". ICML, 2019.
             
     def _initialize_weights(self, shape_X):
         # Init weights encoder
-        self(np.zeros((1,) + shape_X))
-        X_enc = self.encoder_(np.zeros((1,) + shape_X))
-        self.task_(X_enc)
-        self.discriminator_(X_enc)
-        
+        super()._initialize_weights(shape_X)
         # Add noise to discriminator in order to
         # differentiate from task
         weights = self.discriminator_.get_weights()

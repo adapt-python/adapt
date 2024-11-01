@@ -278,14 +278,12 @@ In NIPS, 2018
         
         # Update weights
         self.optimizer.apply_gradients(zip(gradients_task, trainable_vars_task))
-        self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
         self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
+        if len(gradients_enc) > 0:
+            self.optimizer_enc.apply_gradients(zip(gradients_enc, trainable_vars_enc))
         
         # Update metrics
-        self.compiled_metrics.update_state(ys, ys_pred)
-        self.compiled_loss(ys, ys_pred)
-        # Return a dict mapping metric names to current value
-        logs = {m.name: m.result() for m in self.metrics}
+        logs = self._update_logs(ys, ys_pred)
         disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
         logs.update({"disc_loss": disc_loss})
         logs.update(disc_metrics)
@@ -303,19 +301,19 @@ In NIPS, 2018
     
     
     def _initialize_weights(self, shape_X):
-        self(np.zeros((1,) + shape_X))
-        Xs_enc = self.encoder_(np.zeros((1,) + shape_X), training=True)
-        ys_pred = self.task_(Xs_enc, training=True)
-        if Xs_enc.get_shape()[1] * ys_pred.get_shape()[1] > self.max_features:
+        self.encoder_.build((None,) + shape_X)
+        self.task_.build(self.encoder_.output_shape)
+        if self.encoder_.output_shape[1] * self.task_.output_shape[1] > self.max_features:
             self.is_overloaded_ = True
-            self._random_task = tf.random.normal([ys_pred.get_shape()[1],
-                                        self.max_features])
-            self._random_enc = tf.random.normal([Xs_enc.get_shape()[1],
-                                           self.max_features])
-            self.discriminator_(np.zeros((1, self.max_features)))
+            self._random_task = tf.random.normal([self.task_.output_shape[1],
+                                                  self.max_features])
+            self._random_enc = tf.random.normal([self.encoder_.output_shape[1],
+                                                 self.max_features])
+            self.discriminator_.build((None, self.max_features))
         else:
             self.is_overloaded_ = False
-            self.discriminator_(np.zeros((1, Xs_enc.get_shape()[1] * ys_pred.get_shape()[1])))
+            self.discriminator_.build((None, self.encoder_.output_shape[1] * self.task_.output_shape[1]))
+        self.build((None,) + shape_X)
     
     
     def _initialize_networks(self):
@@ -337,21 +335,6 @@ In NIPS, 2018
             self.discriminator_ = check_network(self.discriminator,
                                                 copy=self.copy,
                                                 name="discriminator")
-        
-    
-    
-    # def _initialize_networks(self, shape_Xt):
-        # Call predict to avoid strange behaviour with
-        # Sequential model whith unspecified input_shape
-        # zeros_enc_ = self.encoder_.predict(np.zeros((1,) + shape_Xt));
-        # zeros_task_ = self.task_.predict(zeros_enc_);
-        # if zeros_task_.shape[1] * zeros_enc_.shape[1] > self.max_features:
-        #     self.discriminator_.predict(np.zeros((1, self.max_features)))
-        # else:
-        #     zeros_mapping_ = np.matmul(np.expand_dims(zeros_enc_, 2),
-        #                                np.expand_dims(zeros_task_, 1))
-        #     zeros_mapping_ = np.reshape(zeros_mapping_, (1, -1))
-        #     self.discriminator_.predict(zeros_mapping_);
     
     
     def predict_disc(self, X):

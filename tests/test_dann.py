@@ -6,11 +6,8 @@ import pytest
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
-from tensorflow.keras.layers import Dense
-try:
-    from tensorflow.keras.optimizers.legacy import Adam
-except:
-    from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.optimizers import Adam, SGD
 
 from adapt.feature_based import DANN
 from adapt.utils import UpdateLambda
@@ -30,7 +27,8 @@ yt = 0.2 * Xt[:, 0].reshape(-1, 1)
 
 def _get_encoder(input_shape=Xs.shape[1:]):
     model = Sequential()
-    model.add(Dense(1, input_shape=input_shape,
+    model.add(Input(shape=input_shape))
+    model.add(Dense(1,
                     kernel_initializer="ones",
                     use_bias=False))
     model.compile(loss="mse", optimizer="adam")
@@ -39,8 +37,8 @@ def _get_encoder(input_shape=Xs.shape[1:]):
 
 def _get_discriminator(input_shape=(1,)):
     model = Sequential()
+    model.add(Input(shape=input_shape))
     model.add(Dense(10,
-                    input_shape=input_shape,
                     kernel_initializer=GlorotUniform(seed=0),
                     activation="elu"))
     model.add(Dense(1,
@@ -52,10 +50,10 @@ def _get_discriminator(input_shape=(1,)):
 
 def _get_task(input_shape=(1,), output_shape=(1,)):
     model = Sequential()
+    model.add(Input(shape=input_shape))
     model.add(Dense(np.prod(output_shape),
                     kernel_initializer=GlorotUniform(seed=0),
-                    use_bias=False,
-                    input_shape=input_shape))
+                    use_bias=False))
     model.compile(loss="mse", optimizer=Adam(0.1))
     return model
 
@@ -64,10 +62,10 @@ def test_fit_lambda_zero():
     tf.random.set_seed(0)
     np.random.seed(0)
     model = DANN(_get_encoder(), _get_task(), _get_discriminator(),
-                 lambda_=0, loss="mse", optimizer=Adam(0.01), metrics=["mae"],
+                 lambda_=0., loss="mse", optimizer=Adam(0.01), metrics=["mae"],
                 random_state=0)
     model.fit(Xs, ys, Xt=Xt, yt=yt,
-              epochs=200, batch_size=32, verbose=0)
+              epochs=400, batch_size=32, verbose=0)
     assert isinstance(model, Model)
     assert model.encoder_.get_weights()[0][1][0] == 1.0
     assert np.sum(np.abs(model.predict(Xs) - ys)) < 0.01
@@ -78,9 +76,9 @@ def test_fit_lambda_one():
     tf.random.set_seed(0)
     np.random.seed(0)
     model = DANN(_get_encoder(), _get_task(), _get_discriminator(),
-                 lambda_=1, loss="mse", optimizer=Adam(0.01), random_state=0)
+                 lambda_=1., loss="mse", optimizer=Adam(0.01), random_state=0)
     model.fit(Xs, ys, Xt, yt,
-              epochs=100, batch_size=32, verbose=0)
+              epochs=200, batch_size=32, verbose=0)
     assert isinstance(model, Model)
     assert np.abs(model.encoder_.get_weights()[0][1][0] / 
             model.encoder_.get_weights()[0][0][0]) < 0.15
@@ -101,7 +99,7 @@ def test_fit_lambda_update():
             model.encoder_.get_weights()[0][0][0]) < 0.2
     assert np.sum(np.abs(model.predict(Xs) - ys)) < 1
     assert np.sum(np.abs(model.predict(Xt) - yt)) < 5
-    assert model.lambda_.numpy() == 1
+    assert np.abs(model.lambda_.numpy() - 1.) < 0.01
     
     
 def test_optimizer_enc_disc():

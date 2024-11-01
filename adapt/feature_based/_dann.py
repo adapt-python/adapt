@@ -2,6 +2,7 @@
 DANN
 """
 
+import inspect
 import warnings
 import numpy as np
 import tensorflow as tf
@@ -170,10 +171,13 @@ and V. Lempitsky. "Domain-adversarial training of neural networks". In JMLR, 201
         self.optimizer_disc.apply_gradients(zip(gradients_disc, trainable_vars_disc))
         
         # Update metrics
-        self.compiled_metrics.update_state(ys, ys_pred)
-        self.compiled_loss(ys, ys_pred)
+        #for metric in self.metrics:
+        #    metric.update_state(ys, ys_pred)
+        #self.compiled_loss(ys, ys_pred)
         # Return a dict mapping metric names to current value
-        logs = {m.name: m.result() for m in self.metrics}
+        #logs = {m.name: m.result() for m in self.metrics}
+
+        logs = self._update_logs(ys, ys_pred)
         disc_metrics = self._get_disc_metrics(ys_disc, yt_disc)
         logs.update({"disc_loss": disc_loss})
         logs.update(disc_metrics)

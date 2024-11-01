@@ -5,11 +5,8 @@ Test functions for cdan module.
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
-from tensorflow.keras.layers import Dense
-try:
-    from tensorflow.keras.optimizers.legacy import Adam
-except:
-    from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.initializers import GlorotUniform
 
 from adapt.feature_based import CDAN
@@ -30,7 +27,8 @@ def _entropy(x):
 
 def _get_encoder(input_shape=Xs.shape[1:], units=10):
     model = Sequential()
-    model.add(Dense(units, input_shape=input_shape,
+    model.add(Input(shape=input_shape))
+    model.add(Dense(units,
                     kernel_initializer=GlorotUniform(seed=0),))
     model.compile(loss="mse", optimizer="adam")
     return model
@@ -38,8 +36,8 @@ def _get_encoder(input_shape=Xs.shape[1:], units=10):
 
 def _get_discriminator(input_shape=(10*2,)):
     model = Sequential()
+    model.add(Input(shape=input_shape))
     model.add(Dense(10,
-                    input_shape=input_shape,
                     kernel_initializer=GlorotUniform(seed=0),
                     activation="relu"))
     model.add(Dense(1, activation="sigmoid", kernel_initializer=GlorotUniform(seed=0)))
@@ -49,9 +47,9 @@ def _get_discriminator(input_shape=(10*2,)):
 
 def _get_task(input_shape=(10,)):
     model = Sequential()
+    model.add(Input(shape=input_shape))
     model.add(Dense(2,
                     kernel_initializer=GlorotUniform(seed=0),
-                    input_shape=input_shape,
                     activation="softmax"))
     model.compile(loss="mse", optimizer=Adam(0.1))
     return model
@@ -66,8 +64,8 @@ def test_fit_lambda_zero():
                  random_state=0, validation_data=(Xt, ytt))
     model.fit(Xs, yss, Xt, ytt,
               epochs=300, verbose=0)
-    assert model.history_['acc'][-1] > 0.9
-    assert model.history_['val_acc'][-1] < 0.9
+    assert model.history_['accuracy'][-1] > 0.9
+    assert model.history_['val_accuracy'][-1] < 0.9
 
 
 def test_fit_lambda_one_no_entropy():
@@ -79,8 +77,8 @@ def test_fit_lambda_one_no_entropy():
                  random_state=0, validation_data=(Xt, ytt))
     model.fit(Xs, yss, Xt, ytt,
               epochs=300, verbose=0)
-    assert model.history_['acc'][-1] > 0.8
-    assert model.history_['val_acc'][-1] > 0.8
+    assert model.history_['accuracy'][-1] > 0.8
+    assert model.history_['val_accuracy'][-1] > 0.8
     
     
 def test_fit_lambda_entropy():

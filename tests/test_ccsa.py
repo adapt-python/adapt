@@ -4,10 +4,7 @@ import tensorflow as tf
 from adapt.utils import make_classification_da
 from adapt.feature_based import CCSA
 from tensorflow.keras.initializers import GlorotUniform
-try:
-    from tensorflow.keras.optimizers.legacy import Adam
-except:
-    from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 
 np.random.seed(0)
 tf.random.set_seed(0)

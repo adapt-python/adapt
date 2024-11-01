@@ -36,7 +36,7 @@ jobs:
         mv -v docs/html/* docs/
         sudo rm -r -f docs/html
         touch .nojekyll
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v3
       with:
         name: DocumentationHTML
         path: docs/

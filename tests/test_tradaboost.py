@@ -8,10 +8,7 @@ import scipy
 from sklearn.linear_model import LinearRegression, LogisticRegression, Ridge, RidgeClassifier
 from sklearn.metrics import r2_score, accuracy_score
 import tensorflow as tf
-try:
-    from tensorflow.keras.optimizers.legacy import Adam
-except:
-    from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 
 from adapt.instance_based import (TrAdaBoost,
                                   TrAdaBoostR2,

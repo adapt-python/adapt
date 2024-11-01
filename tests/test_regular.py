@@ -10,11 +10,8 @@ from sklearn.gaussian_process.kernels import Matern, WhiteKernel
 from sklearn.base import clone
 import tensorflow as tf
 from tensorflow.keras import Sequential, Model
-from tensorflow.keras.layers import Dense
-try:
-    from tensorflow.keras.optimizers.legacy import Adam
-except:
-    from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.initializers import GlorotUniform
 
 from adapt.utils import make_classification_da, make_regression_da
@@ -43,10 +40,10 @@ yt_classif = np.sign(np.array(
 
 def _get_network(input_shape=(1,), output_shape=(1,)):
     model = Sequential()
+    model.add(Input(shape=input_shape))
     model.add(Dense(np.prod(output_shape),
-                    input_shape=input_shape,
                     kernel_initializer=GlorotUniform(seed=0),
-                    use_bias=False))
+                    use_bias=True))
     model.compile(loss="mse", optimizer=Adam(0.1))
     return model
 
@@ -153,17 +150,20 @@ def test_regularnn_fit():
     tf.random.set_seed(0)
     np.random.seed(0)
     network = _get_network()
+    print(network.get_weights())
     network.fit(Xs, ys_reg, epochs=100, batch_size=100, verbose=0)
-    model = RegularTransferNN(network, lambdas=0., optimizer=Adam(0.1))
+    print(network.get_weights())
+    model = RegularTransferNN(network, lambdas=0., optimizer=Adam(0.1), loss="mse")
     model.fit(Xt, yt_reg, epochs=100, batch_size=100, verbose=0)
+    print(model.task_.get_weights())
     # assert np.abs(network.predict(Xs) - ys_reg).sum() < 1
-    assert np.sum(np.abs(network.get_weights()[0] - model.get_weights()[0])) > 4.
+    assert np.sum(np.abs(network.get_weights()[0] - model.task_.get_weights()[0])) > 4.
     assert np.abs(model.predict(Xt) - yt_reg).sum() < 10
     
     model = RegularTransferNN(network, lambdas=10000000., optimizer=Adam(0.1))
     model.fit(Xt, yt_reg, epochs=100, batch_size=100, verbose=0)
     
-    assert np.sum(np.abs(network.get_weights()[0] - model.get_weights()[0])) < 0.001
+    assert np.sum(np.abs(network.get_weights()[0] - model.task_.get_weights()[0])) < 0.001
     assert np.abs(model.predict(Xt) - yt_reg).sum() > 10
     
     

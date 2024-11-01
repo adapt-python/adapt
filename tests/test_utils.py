@@ -6,7 +6,6 @@ import copy
 import numpy as np
 import pytest
 import tensorflow as tf
-import tensorflow.keras.backend as K
 from sklearn.linear_model import LinearRegression, LogisticRegression, Ridge
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -19,7 +18,6 @@ from sklearn.tree._tree import Tree
 # from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 from tensorflow.keras import Model, Sequential
 from tensorflow.keras.layers import Input, Dense, Flatten, Reshape
-from tensorflow.python.keras.engine.input_layer import InputLayer
 
 from adapt.utils import *
 
@@ -50,7 +48,7 @@ def is_equal_estimator(v1, v2):
     elif isinstance(v1, Tree):
         pass # TODO create a function to check if two tree are equal
     else:
-        if not "input" in str(v1):
+        if not "input" in str(v1) and not "input" in str(v2):
             assert v1 == v2
     return True
 
@@ -80,13 +78,10 @@ class CantBeDeepCopied(BaseEstimator):
         raise ValueError("Can not be deep copied!")
 
 
-def _get_model_Model(compiled=True, custom_loss=False):
+def _get_model_Model(compiled=True):
     inputs = Input((10,))
     output = Dense(1)(inputs)
     model = Model(inputs, output)
-    if custom_loss:
-        loss = K.mean(output)
-        model.add_loss(loss)
     if compiled:
         model.compile(loss="mse", optimizer="adam")
     return model
@@ -128,11 +123,11 @@ def test_check_arrays_no_array():
 
     
 networks = [
-    _get_model_Model(compiled=True, custom_loss=False),
+    _get_model_Model(compiled=True),
     _get_model_Sequential(compiled=True, input_shape=(10,)),
     _get_model_Sequential(compiled=True, input_shape=None),
-    _get_model_Model(compiled=False, custom_loss=False),
-    _get_model_Model(compiled=False, custom_loss=True),
+    _get_model_Model(compiled=False),
+    _get_model_Model(compiled=False),
     _get_model_Sequential(compiled=False, input_shape=(10,)),
     _get_model_Sequential(compiled=False, input_shape=None)
 ]
@@ -347,22 +342,6 @@ def test_get_default_discriminator():
     assert model.layers[3].get_config()["activation"] == "sigmoid"
 
 
-scales = [-1, 0, 1., 0.1]
-
-@pytest.mark.parametrize("lambda_", scales)
-def test_gradienthandler(lambda_):
-    grad_handler = GradientHandler(lambda_)
-    inputs = K.variable([1, 2, 3])
-    assert np.all(grad_handler(inputs) == inputs)
-    with tf.GradientTape() as tape:
-        gradient = tape.gradient(grad_handler(inputs),
-                                 inputs)
-    assert np.all(gradient == lambda_ * np.ones(3))
-    config = grad_handler.get_config()
-    assert config['lambda_init'] == lambda_
-    
-
-
 def test_make_classification_da():
     Xs, ys, Xt, yt = make_classification_da()
     assert Xs.shape == (100, 2)
@@ -413,11 +392,13 @@ def test_accuracy():
     
 def test_updatelambda():
     up = UpdateLambda()
-    dummy = DummyModel()
-    dummy.lambda_ = tf.Variable(0.)
-    up.model = dummy
-    for _ in range(1000):
-        up.on_batch_end(0, None)
+    dummy = Sequential()
+    dummy.add(Dense(1))
+    dummy.compile(loss="mse", optimizer="adam")
+    dummy.lambda_ = tf.Variable(0., trainable=False)
+    dummy.fit(np.zeros((100, 1)), np.zeros((100,)),
+              batch_size=1, epochs=10, verbose=0,
+              callbacks=[up])
     assert dummy.lambda_.numpy() == 1.
     
     
