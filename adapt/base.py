@@ -614,7 +614,7 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
                                         **fit_params)
         return self.estimator_
 
-
+    
     def predict_estimator(self, X, **predict_params):
         """
         Return estimator predictions for X.
@@ -629,6 +629,11 @@ class BaseAdaptEstimator(BaseAdapt, BaseEstimator):
         y_pred : array
             prediction of estimator.
         """      
+        if not hasattr(self, "estimator_"):
+            raise NotFittedError(
+                "This BaseAdaptEstimator instance is not fitted yet. "
+                "Call 'fit' with appropriate arguments before using predict()."
+            )
         X = check_array(X, ensure_2d=True, allow_nd=True, accept_sparse=True)
         predict_params = self._filter_params(self.estimator_.predict,
                                             predict_params)
