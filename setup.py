@@ -7,7 +7,7 @@ with open(os.path.join(ROOT, 'README.md'), encoding="utf-8") as f:
 
 setup(
     name='adapt',
-    version='0.4.4',
+    version='0.4.5',
     description='Awesome Domain Adaptation Python Toolbox for Tensorflow and Scikit-learn',
     url='https://github.com/adapt-python/adapt.git',
     author='Antoine de Mathelin',
